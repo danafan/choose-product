@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <link rel="icon" href="<%= BASE_URL %>favicon.ico">
+  <title>选品系统</title>
+  <script src="https://g.alicdn.com/dingding/dinglogin/0.0.5/ddLogin.js"></script>
+  <style type="text/css">
+  *{
+    margin:0;
+    padding: 0;
+  }
+  div{
+    box-sizing: border-box;
+    font-family: SourceHanSansCN-Medium, SourceHanSansCN;
+  }
+  .padding_page{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: 20px;
+  }
+  .page{
+    margin-top: 10px;
+    display:flex;
+    justify-content: flex-end;
+  }
+</style>
+</head>
+<body>
+  <noscript>
+    <strong>We're sorry but illustrations doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
+  </noscript>
+  <div id="app"></div>
+  <script type="text/javascript">
+    (function () {
+      document.addEventListener('DOMContentLoaded', function () {
+        autoWidth();
+      });
+      //监听屏幕大小改变
+      window.onresize = function(){
+        autoWidth();
+      };
+      //修改适配
+      function autoWidth(){
+        var html = document.documentElement;
+        var windowWidth = parseInt(html.clientWidth);       //html宽度
+        var availwidth = parseInt(screen.availWidth);       //屏幕实际宽度
+        html.style.fontSize = windowWidth /1920 + 'px';
+      } 
+    })();
+  </script>
+</body>
+</html>
