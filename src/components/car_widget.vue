@@ -2,13 +2,20 @@
 	<div class="car_button">
 		<div class="icon">
 			<img class="add_car" src="../static/add_car.png">
-			<div class="num">3</div>
+			<div class="num">{{car_goods.length}}</div>
 		</div>
 		<div class="car_text">待选</div>
 	</div>
 </template>
 <script>
-	
+	export default{
+		computed:{
+			//购物车列表
+			car_goods(){
+				return this.$store.state.car_goods;
+			}
+		},
+	}
 </script>
 <style lang="less" scoped>
 .car_button{
