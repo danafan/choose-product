@@ -3,8 +3,18 @@
 		<img class="logo_icon" src="../static/logo_icon.png">
 		<div class="search_box">
 			<img class="search_icon" src="../static/search_icon.png">
-			<input class="search_input" v-model="search_value" :placeholder="placeholder" @keyup.enter="searchFn">
+			<input class="search_input" ref="input" @focus="show_history = true" @blur="closeFn" v-model="search_value" :placeholder="placeholder" @keyup.enter="searchFn">
 			<div class="search_button" @click="searchFn">搜 索</div>
+			<div class="history_list" v-if="show_history">
+				<div class="history_item history_title">
+					<div class="title">最近搜索</div>
+					<div class="delete" @mousedown="$refs.input.focus()" @mouseup="deleteHistory(-1)">全部删除</div>
+				</div>
+				<div class="history_item" :class="{'border_none':index == history_list.length - 1}" v-for="(item,index) in history_list">
+					<div class="title" @mousedown="$refs.input.focus()" @mouseup="checkValue(item)">{{item}}</div>
+					<div class="delete" @mousedown="$refs.input.focus()" @mouseup="deleteHistory(index)">删除</div>
+				</div>
+			</div>
 		</div>
 	</div>
 </template>
@@ -30,6 +40,7 @@
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
+		position: relative;
 		.search_icon{
 			margin-right: 22rem;
 			width: 23rem;
@@ -54,6 +65,46 @@
 			font-weight: bold;
 			color: #ffffff;
 		}
+		.history_list{
+			padding: 6rem 12rem 0 18rem;
+			border:1px solid #DFDFDF;
+			position: absolute;
+			top: 48rem;
+			left: 50%;
+			width: 680rem;
+			max-height: 350rem;
+			transform: translate(-50%);
+			background: #ffffff;
+			overflow-y: scroll;
+			z-index: 9;
+			.history_item{
+				border-bottom: 1px dashed #DEDEDE;
+				height: 30rem;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				font-size: 12rem;
+				color: #666666;
+				.title{
+					flex:1;
+					word-break: break-all;
+					text-overflow: ellipsis;
+					overflow: hidden;
+					display: -webkit-box;
+					-webkit-line-clamp: 1;
+					-webkit-box-orient: vertical;
+				}
+				.delete{
+					white-space: normal;
+				}
+			}
+			.history_title{
+				color: #333333;
+			}
+			.border_none{
+				border:none;
+			}
+		}
 	}
 }
 </style>
@@ -62,16 +113,64 @@
 		data(){
 			return{
 				search_value:"",		//搜索框内容
+				show_history:false,		//搜索历史列表弹窗是否显示
+				history_list:[],		//搜索历史列表
 			}
 		},
 		props:{
+			// 输入框默认提示
 			placeholder:{
 				type:String,
 				default:""
+			},
+			//页面来源
+			page_path:{
+				type:String,
+				default:''
+			}
+		},
+		watch:{
+			//每次打开历史列表都重新获取最新
+			show_history:function(n,o){
+				if(n){
+					let storage_data = localStorage.getItem(this.page_path);
+					this.history_list = storage_data?JSON.parse(storage_data):[];
+				}
 			}
 		},
 		methods:{
+			//鼠标移开延迟
+			closeFn(){
+				setTimeout(()=>{
+					this.show_history = false;
+				},100);
+			},
+			//选中某一个历史记录
+			checkValue(search_value){
+				this.search_value = search_value;
+				this.show_history = false;
+			},
+			//点击删除
+			deleteHistory(index){
+				if(index == -1){	//全部删除
+					localStorage.removeItem(this.page_path);
+					this.history_list = [];
+				}else{	// 单条删除
+					let storage_data = localStorage.getItem(this.page_path);
+					let history_list = JSON.parse(storage_data);
+					history_list.splice(index,1);
+					this.history_list = history_list;
+					localStorage.setItem(this.page_path,JSON.stringify(history_list));
+				}
+			},
+			//点击搜索或回车
 			searchFn(){
+				let storage_data = localStorage.getItem(this.page_path);
+				let history_list = storage_data?JSON.parse(storage_data):[];
+				history_list.unshift(this.search_value);
+				localStorage.setItem(this.page_path,JSON.stringify(history_list));
+				this.show_history = false;
+				this.$refs.input.blur();
 				this.$emit('callback',this.search_value)
 			}
 		}
