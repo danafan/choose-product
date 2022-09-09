@@ -127,17 +127,14 @@
 					</div>
 					<div class="padding_item" v-for="i in 5-(goods_list.length%5) == 5?0:5-(goods_list.length%5)"></div>
 				</div>
-				<div class="page">
-					<el-pagination small background @current-change="handleCurrentChange" :current-page="page" :page-size="10" layout="slot, prev, pager, next,jumper" :total="11">
-						<div class="index_button">首页</div>
-					</el-pagination>
-				</div>
+				<PaginationWidget :total="62" :page="page" @checkPage="checkPage"/>
 			</el-card>
 		</div>
 	</div>
 </template>
 <script>
 	import SearchWidget from '../../components/search_widget.vue'
+	import PaginationWidget from '../../components/pagination_widget.vue'
 	import { getNowDate,getCurrentDate } from "../../api/date.js";
 	export default{
 		data(){
@@ -352,14 +349,14 @@
 				console.log(v)
 			},
 			//翻页
-			handleCurrentChange(val) {
+			checkPage(val) {
 				this.page = val;
-      			//获取列表
-      			this.getData();
+				console.log(this.page)
       		},
       	},
       	components:{
-      		SearchWidget
+      		SearchWidget,
+      		PaginationWidget
       	}
       }
   </script>

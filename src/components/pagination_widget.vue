@@ -1,0 +1,69 @@
+<template>
+	<div class="page">
+		<el-pagination small background @current-change="handleCurrentChange" :current-page="page" :page-size="10" layout="slot, prev, pager, next" :total="11">
+			<div class="index_button" @click="handleCurrentChange(1)">首页</div>
+		</el-pagination>
+		<el-pagination small background @current-change="handleCurrentChange" :current-page="page" :page-size="10" layout="slot,jumper" :total="11">
+			<div class="page_toast">{{page}}/{{Math.floor(total/10) + (total%10>0?1:0)}}</div>
+		</el-pagination>
+	</div>
+</template>
+<style lang="less" scoped>
+.page{
+	margin-top: 10px;
+	display:flex;
+	justify-content: flex-end;
+}
+.el-pagination{
+	display: flex;
+	align-items: center;
+}
+.index_button{
+	background: #f4f4f5;
+	border-radius: 4px;
+	width: 50px;
+	text-align: center;
+	height: 22px;
+	line-height: 22px;
+	font-size: 12px;
+	color: #606266;
+	cursor:pointer;
+}
+.page_toast{
+	font-size: 12px;
+	color: #606266;
+}
+</style>
+<script>
+	export default{
+		props:{
+			page:{
+				type:Number,
+				default:1
+			},
+			total:{
+				type:Number,
+				default:0
+			}
+		},
+		methods:{
+			//翻页
+			handleCurrentChange(val) {
+				this.$emit('checkPage',val);
+			},
+		}
+	}
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
