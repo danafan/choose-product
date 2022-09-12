@@ -219,7 +219,12 @@
       }
     },
     created() {
-      this.$router.push('/index')
+      if(this.$route.path == '/'){
+        this.$router.push('/index');
+      }else{
+        this.$router.push(this.$route.fullPath)
+      }
+      // this.$router.push('/index')
     },
     methods: {
 

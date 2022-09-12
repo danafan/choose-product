@@ -56,7 +56,6 @@
 			searchFn(value){
 				console.log(value);
 			},
-			
 			//翻页
 			checkPage(val) {
 				this.page = val;

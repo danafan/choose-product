@@ -5,6 +5,7 @@ const tab_menu = (resolve) => require(["@/pages/tab_menu"], resolve);
 const index = (resolve) => require(["@/pages/Index/index"], resolve);
 const selected = (resolve) => require(["@/pages/Selected/selected"], resolve);
 const supplier = (resolve) => require(["@/pages/Supplier/supplier"], resolve);
+const supplier_detail = (resolve) => require(["@/pages/Supplier/supplier_detail"], resolve);
 const supply_chain = (resolve) => require(["@/pages/SupplyChain/supply_chain"], resolve);
 
 Vue.use(Router);
@@ -12,7 +13,7 @@ Vue.use(Router);
 const router = new Router({
   routes: [
   {
-    path: "/tab_menu",
+    path: "/",
     component: tab_menu,
     name: "导航页",
     children: [
@@ -30,6 +31,11 @@ const router = new Router({
       path: "/supplier",
       name: "供应商",
       component: supplier
+    },
+    {
+      path: "/supplier_detail",
+      name: "供应商详情",
+      component: supplier_detail
     },
     {
       path: "/supply_chain",

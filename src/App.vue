@@ -6,10 +6,10 @@
 <script>
   export default {
     created() {
-      this.$router.push('/tab_menu')
+      // this.$router.push('/')
     },
     methods: {
-
+      
     },
   };
 </script>
