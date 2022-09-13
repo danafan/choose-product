@@ -39,6 +39,7 @@
 	justify-content: center;
 	z-index: 9;
 	.icon{
+		margin-bottom: 2rem;
 		position: relative;
 		width: 26rem;
 		height: 26rem;
