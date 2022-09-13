@@ -10,7 +10,7 @@
 		</el-popover>
 		<img class="goods_tag" src="../static/bao_icon.png">
 	</div>
-	<div class="goods_info">
+	<div class="goods_info" @click="getDetail">
 		<div class="price_cate">
 			<div class="price">
 				<div class="p_icon">¥</div>
@@ -25,11 +25,11 @@
 		</div>
 		<div class="set_row">
 			<div class="button_row">
-				<div class="add" @click="addCar">
+				<div class="add" @click.stop="addCar">
 					<img class="add_car" src="../static/add_car.png">
 					<div>待选</div>
 				</div>
-				<div class="xk" @click="show_select = true">选款</div>
+				<div class="xk" @click.stop="show_select = true">选款</div>
 			</div>
 			<div class="store_name">聚合服饰聚合服饰聚合服饰聚合服饰聚合服饰</div>
 		</div>
@@ -48,7 +48,7 @@
 				<img class="info_icon" src="../static/pai_icon.png">
 				<img class="info_icon" src="../static/pai_icon.png">
 			</div>
-			<div class="feek_back" @click="feekBack">反馈</div>
+			<div class="feek_back" @click.stop="feekBack">反馈</div>
 		</div>
 	</div>
 	<!-- 选款弹窗 -->
@@ -167,7 +167,7 @@
 <el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" destroy-on-close :visible.sync="more_image_dialog">
 	<div slot="title" class="dialog_title">
 		<div>更多图片</div>
-		<img class="close_icon" src="../static/close_icon.png" @click="ddd">
+		<img class="close_icon" src="../static/close_icon.png" @click="more_image_dialog = false">
 	</div>
 	<div class="image_content">
 		<div class="tab_row">
@@ -613,9 +613,10 @@
     		checkImageType(tab, event) {
     			console.log(tab.name);
     		},
-    		ddd(){
-    			console.log('asdasd')
-    			this.more_image_dialog = false;
+    		//点击跳转详情
+    		getDetail(){
+    			const routeData = this.$router.resolve(`/goods_detail`);
+				window.open(routeData.href);
     		}
     	},
     	components:{

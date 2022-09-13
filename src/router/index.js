@@ -3,6 +3,7 @@ import Router from "vue-router";
 
 const tab_menu = (resolve) => require(["@/pages/tab_menu"], resolve);
 const index = (resolve) => require(["@/pages/Index/index"], resolve);
+const goods_detail = (resolve) => require(["@/pages/GoodsDetail/goods_detail"], resolve);
 const selected = (resolve) => require(["@/pages/Selected/selected"], resolve);
 const car_page = (resolve) => require(["@/pages/CarPage/car_page"], resolve);
 const supplier = (resolve) => require(["@/pages/Supplier/supplier"], resolve);
@@ -22,6 +23,11 @@ const router = new Router({
       path: "/index",
       name: "首页",
       component: index
+    },
+    {
+      path: "/goods_detail",
+      name: "选品详情",
+      component: goods_detail
     },
     {
       path: "/selected",

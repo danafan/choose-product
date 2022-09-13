@@ -58,6 +58,7 @@
   display: flex;
   flex-direction: column;
   .page_header {
+    border-bottom: 1px solid #F3F3F3;
     background: #ffffff;
     width: 100%;
     padding-left: 60rem;
