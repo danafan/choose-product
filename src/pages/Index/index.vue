@@ -24,29 +24,41 @@
 		data(){
 			return{
 				goods_list:[{
-					price:1
+					price:1,
+					image:['http://img.92nu.com/DataCenter_202208311330183144.jpg']
 				},{
-					price:2
+					price:2,
+					image:['http://img.92nu.com/DataCenter_202209080938036416.jpg']
 				},{
-					price:3
+					price:3,
+					image:['http://img.92nu.com/DataCenter_202208311330183144.jpg']
 				},{
-					price:4
+					price:4,
+					image:['http://img.92nu.com/DataCenter_202209080938036416.jpg']
 				},{
-					price:5
+					price:5,
+					image:['http://img.92nu.com/DataCenter_202208311330183144.jpg']
 				},{
-					price:6
+					price:6,
+					image:['http://img.92nu.com/DataCenter_202209080938036416.jpg']
 				},{
-					price:7
+					price:7,
+					image:['http://img.92nu.com/DataCenter_202208311330183144.jpg']
 				},{
-					price:8
+					price:8,
+					image:['http://img.92nu.com/DataCenter_202209080937367725.jpg']
 				},{
-					price:9
+					price:9,
+					image:['http://img.92nu.com/DataCenter_202208311330183144.jpg']
 				},{
-					price:10
+					price:10,
+					image:['http://img.92nu.com/DataCenter_202208311330183144.jpg']
 				},{
-					price:11
+					price:11,
+					image:['http://img.92nu.com/DataCenter_202209080938036416.jpg']
 				},{
-					price:12
+					price:12,
+					image:['http://img.92nu.com/DataCenter_202209081659447849.jpg']
 				}],	//商品列表
 				page:1
 			}

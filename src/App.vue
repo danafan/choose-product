@@ -9,7 +9,7 @@
       // this.$router.push('/')
     },
     methods: {
-      
+
     },
   };
 </script>

@@ -224,7 +224,6 @@
       }else{
         this.$router.push(this.$route.fullPath)
       }
-      // this.$router.push('/index')
     },
     methods: {
 

@@ -1,5 +1,5 @@
 <template>
-	<div class="car_button">
+	<div class="car_button" @click="goCarPage">
 		<div class="icon">
 			<img class="add_car" src="../static/add_car.png">
 			<div class="num">{{car_goods.length}}</div>
@@ -15,6 +15,12 @@
 				return this.$store.state.car_goods;
 			}
 		},
+		methods:{
+			goCarPage(){
+				const routeData = this.$router.resolve(`/car_page`);
+				window.open(routeData.href);
+			}
+		}
 	}
 </script>
 <style lang="less" scoped>

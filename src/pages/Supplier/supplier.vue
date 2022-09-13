@@ -95,14 +95,11 @@
 			//翻页
 			checkPage(val) {
 				this.page = val;
-				console.log(this.page)
 			},
 			//点击跳转供应商详情
 			supplierDetail(){
 				const routeData = this.$router.resolve(`/supplier_detail`);
 				window.open(routeData.href);
-				// this.$router.push('/supplier_detail')
-				// window.open(`${location.origin}/supplier_detail`)
 			}
 		},
 		components:{
