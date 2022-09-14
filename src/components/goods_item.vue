@@ -572,7 +572,12 @@
 		methods:{
 			//点击加入购物车
 			addCar(){
-				this.$store.commit('setCarGoods',this.info);
+				let arg = {
+					goods_items:[],
+					type:'add'
+				}
+				arg.goods_items.push(this.info)
+				this.$store.commit('setCarGoods',arg);
 				localStorage.setItem("car_goods",JSON.stringify(this.$store.state.car_goods));
 			},
 			//幻灯片自动切换事件
