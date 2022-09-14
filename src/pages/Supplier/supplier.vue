@@ -4,7 +4,7 @@
 			<SearchWidget @callback="searchFn" placeholder="供应商搜索"/>
 			<el-card class="card_box" id="card_box">
 				<div class="tab_row" id="tab_row">
-					<div class="tab_item" :class="{'active_tab_item':active_index == index}" v-for="(item,index) in address_list" @click="active_index = index">
+					<div class="tab_item" :class="{'active_item':active_index == index}" v-for="(item,index) in address_list" @click="active_index = index">
 						<div>{{item.name}}</div>
 						<div class="active_line" v-if="active_index == index"></div>
 					</div>
@@ -115,36 +115,31 @@
 	flex-direction: column;
 	.card_box{
 		flex:1;
-		display: flex;
-		flex-direction: column;
 		.tab_row{
-			margin-bottom: 15rem;
-			padding-left: 30rem;
-			border-radius:4rem;
 			border:1px solid var(--color);
+			border-radius: 4rem;
 			background: #FFFCFA;
-			width: 100%;
 			height: 64rem;
 			display: flex;
+			padding-left: 30rem;
+			margin-bottom: 15rem;
 			.tab_item{
-				margin-right: 94rem;
+				margin-right: 80rem;
 				position: relative;
 				height: 64rem;
-				display: flex;
-				align-items: center;
-				font-size:14rem;
-				color:#333333;
+				line-height: 64rem;
+				color: #333333;
+				font-size: 14rem;
 				font-weight: bold;
 				.active_line{
 					background: var(--color);
 					position: absolute;
-					left: 0;
-					bottom:3rem;
+					bottom: 2rem;
 					width: 100%;
-					height: 2px;
+					height: 2rem;
 				}
 			}
-			.active_tab_item{
+			.active_item{
 				color: var(--color);
 			}
 		}

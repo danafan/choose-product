@@ -28,12 +28,12 @@
 					<el-table-column label="价格" prop="price"></el-table-column>
 					<el-table-column label="操作" width="80" fixed="right">
 						<template slot-scope="scope">
-							<el-button type="text" size="small" @click="deleteCar(scope.row)">移除</el-button>
+							<el-button type="text" size="small" @click="deleteFn(scope.row)">移除</el-button>
 						</template>
 					</el-table-column>
 				</el-table>
 				<div class="bottom_row" id="bottom_row">
-					<el-button size='mini' type="text" :disabled="selected_list.length == 0" @click="allDelete">移除</el-button>
+					<el-button size='mini' type="text" :disabled="selected_list.length == 0" @click="deleteFn">移除</el-button>
 					<div class="all_selected">
 						<div class="selcted_num">已选 {{selected_list.length}} 件</div>
 						<el-button size='mini' type="primary" @click="selectFn">去选中</el-button>
@@ -198,22 +198,17 @@
 					this.show_select = true;
 				}
 			},
-			//点击批量删除
-			allDelete(){
-				let arg = {
-					goods_items:this.selected_list,
-					type:'del'
-				}
-				this.$store.commit('setCarGoods',arg);
-				localStorage.setItem("car_goods",JSON.stringify(this.$store.state.car_goods));
-			},
-			//点击单个移除
-			deleteCar(item){
+			//点击删除
+			deleteFn(item){
 				let arg = {
 					goods_items:[],
 					type:'del'
 				}
-				arg.goods_items.push(item)
+				if(item.price){		//单个删除
+					arg.goods_items.push(item);
+				}else{				//批量删除
+					arg.goods_items = this.selected_list;
+				}
 				this.$store.commit('setCarGoods',arg);
 				localStorage.setItem("car_goods",JSON.stringify(this.$store.state.car_goods));
 			},

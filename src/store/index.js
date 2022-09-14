@@ -24,15 +24,9 @@ const store = new Vuex.Store({
       })
       if(type == 'del'){    //删除
         let car_goods = state.car_goods;
-        index_list.map(i => {
-          car_goods.splice(i,1);
-        })
-
-        // let car_goods = state.car_goods;
-        // let current_index = car_goods.findIndex((item)=>{
-        //   return item.price == goods_item.price
-        // })
-        // car_goods.splice(current_index,1);
+        for(let i = index_list.length - 1;i >= 0;i --){
+          car_goods.splice(index_list[i],1);
+        }
         state.car_goods = car_goods;
         Message({
           type: "success",

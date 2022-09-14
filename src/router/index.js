@@ -9,6 +9,12 @@ const car_page = (resolve) => require(["@/pages/CarPage/car_page"], resolve);
 const supplier = (resolve) => require(["@/pages/Supplier/supplier"], resolve);
 const supplier_detail = (resolve) => require(["@/pages/Supplier/supplier_detail"], resolve);
 const supply_chain = (resolve) => require(["@/pages/SupplyChain/supply_chain"], resolve);
+const chain_message_page = (resolve) => require(["@/pages/SupplyChain/pages/chain_message_page"], resolve);
+const chain_goods_page = (resolve) => require(["@/pages/SupplyChain/pages/chain_goods_page"], resolve);
+const chain_supplier_page = (resolve) => require(["@/pages/SupplyChain/pages/chain_supplier_page"], resolve);
+const chain_setting_page = (resolve) => require(["@/pages/SupplyChain/pages/chain_setting_page"], resolve);
+const chain_permissions_page = (resolve) => require(["@/pages/SupplyChain/pages/chain_permissions_page"], resolve);
+const chain_feekback_page = (resolve) => require(["@/pages/SupplyChain/pages/chain_feekback_page"], resolve);
 
 Vue.use(Router);
 
@@ -52,7 +58,39 @@ const router = new Router({
     {
       path: "/supply_chain",
       name: "供应链中心",
-      component: supply_chain
+      component: supply_chain,
+      children: [
+      {
+        path: "/chain_message_page",
+        name: "公告",
+        component: chain_message_page
+      },
+      {
+        path: "/chain_goods_page",
+        name: "商品",
+        component: chain_goods_page
+      },
+      {
+        path: "/chain_supplier_page",
+        name: "供应商",
+        component: chain_supplier_page
+      },
+      {
+        path: "/chain_setting_page",
+        name: "配置",
+        component: chain_setting_page
+      },
+      {
+        path: "/chain_permissions_page",
+        name: "权限",
+        component: chain_permissions_page
+      },
+      {
+        path: "/chain_feekback_page",
+        name: "反馈",
+        component: chain_feekback_page
+      },
+      ]
     },
     ],
   },

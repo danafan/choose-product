@@ -560,6 +560,8 @@
 					id:'2'
 				}],						//更多图片类型
 				active_tab_index:0,		//选中的下标
+				popover_img:false,	
+				timer:null	
 			}
 		},
 		props:{
@@ -621,7 +623,7 @@
     		//点击跳转详情
     		getDetail(){
     			const routeData = this.$router.resolve(`/goods_detail`);
-				window.open(routeData.href);
+    			window.open(routeData.href);
     		}
     	},
     	components:{

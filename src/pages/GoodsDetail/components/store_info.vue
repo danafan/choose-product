@@ -22,13 +22,19 @@
 				<div class="store_info_lable">结算方式</div>
 				<div class="store_info_value">月结</div>
 			</div>
-			<div class="get_detail">查看详情</div>
+			<div class="get_detail" @click="supplierDetail">查看详情</div>
 		</div>
 	</div>
 </template>
 <script>
 	export default{
-
+		methods:{
+			//点击跳转供应商详情
+			supplierDetail(){
+				const routeData = this.$router.resolve(`/supplier_detail`);
+				window.open(routeData.href);
+			}
+		}
 	}
 </script>
 <style lang="less" scoped>
