@@ -70,7 +70,7 @@
 						<div class="view_card_img" @mouseenter="show_icon = true" @mouseleave="show_icon = false" v-else>
 							<el-image class="card_img" :src="domain + image_url" fit="contain"></el-image>
 							<div class="delete_img" v-if="show_icon == true">
-								<img class="delete_icon" src="../../../static/delete_icon.png" @click="deleteFile(item.urls,index)">
+								<img class="delete_icon" src="../../../../static/delete_icon.png" @click="deleteFile(item.urls,index)">
 							</div>
 						</div>
 					</el-form-item>
@@ -81,7 +81,7 @@
 	</div>
 </template>
 <script>
-	import UploadFile from '../../../components/upload_file.vue'
+	import UploadFile from '../../../../components/upload_file.vue'
 	export default{
 		data(){
 			return{

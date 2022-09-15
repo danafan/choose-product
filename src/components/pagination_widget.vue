@@ -1,6 +1,6 @@
 <template>
 	<div class="page">
-		<el-pagination small background @current-change="handleCurrentChange" :current-page="page" :page-size="10" layout="slot, prev, pager, next" :total="11">
+		<el-pagination small background @current-change="handleCurrentChange" :current-page="page" :page-size="10" layout="slot, prev, pager, next" :total="total">
 			<div class="index_button" @click="handleCurrentChange(1)">首页</div>
 		</el-pagination>
 		<el-pagination small background @current-change="handleCurrentChange" :current-page="page" :page-size="10" layout="slot,jumper" :total="11">
