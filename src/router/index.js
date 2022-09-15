@@ -12,6 +12,8 @@ const supply_chain = (resolve) => require(["@/pages/SupplyChain/supply_chain"], 
 const chain_message_page = (resolve) => require(["@/pages/SupplyChain/pages/chain_message_page"], resolve);
 const chain_goods_page = (resolve) => require(["@/pages/SupplyChain/pages/chain_goods_page"], resolve);
 const chain_supplier_page = (resolve) => require(["@/pages/SupplyChain/pages/chain_supplier_page"], resolve);
+const add_edit_supplier = (resolve) => require(["@/pages/SupplyChain/pages/add_edit_supplier"], resolve);
+const chain_supplier_detail = (resolve) => require(["@/pages/SupplyChain/pages/supplier_detail"], resolve);
 const chain_setting_page = (resolve) => require(["@/pages/SupplyChain/pages/chain_setting_page"], resolve);
 const chain_permissions_page = (resolve) => require(["@/pages/SupplyChain/pages/chain_permissions_page"], resolve);
 const chain_feekback_page = (resolve) => require(["@/pages/SupplyChain/pages/chain_feekback_page"], resolve);
@@ -74,6 +76,16 @@ const router = new Router({
         path: "/chain_supplier_page",
         name: "供应商",
         component: chain_supplier_page
+      },
+      {
+        path: "/add_edit_supplier",
+        name: "添加/编辑供应商",
+        component: add_edit_supplier
+      },
+      {
+        path: "/chain_supplier_detail",
+        name: "供应商详情",
+        component: chain_supplier_detail
       },
       {
         path: "/chain_setting_page",

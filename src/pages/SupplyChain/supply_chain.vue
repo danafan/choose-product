@@ -66,7 +66,11 @@
 				this.$router.push(path);
 			},
 			$route:function(to,from){
-				this.title = to.name;
+				if(to.query.supplier_type){	//供应链中心（供应商）
+					this.title = to.query.supplier_type == '1'?"添加供应商":"编辑供应商";
+				}else{
+					this.title = to.name;
+				}
 			}
 		},
 		created(){
