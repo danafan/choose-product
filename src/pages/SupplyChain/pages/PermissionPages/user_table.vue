@@ -1,0 +1,308 @@
+<template>
+	<div class="setting_content">
+		<el-card class="card_box" id="card_box">
+			<TableTitle title="数据列表" id="table_title">
+				<el-button size="mini" type="primary" @click="addFn('1')">添加</el-button>
+			</TableTitle>
+			<el-table size="mini" :data="data.data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height">
+				<el-table-column label="序号" width="55" type="index" :index="0">
+				</el-table-column>
+				<el-table-column label="姓名" prop="ding_user_name" show-overflow-tooltip></el-table-column>
+				<el-table-column label="主部门" prop="main_dept_name" show-overflow-tooltip></el-table-column>
+				<el-table-column label="职位" prop="position" show-overflow-tooltip></el-table-column>
+				<el-table-column label="角色" prop="menu_role_name" show-overflow-tooltip></el-table-column>
+				<el-table-column label="创建时间" prop="add_time" show-overflow-tooltip></el-table-column>
+				<el-table-column label="操作" width="180" fixed="right">
+					<template slot-scope="scope">
+						<el-button type="text" size="small" @click="addFn('2',scope.row.user_id)">编辑</el-button>
+					</template>
+				</el-table-column>
+			</el-table>
+			<PaginationWidget id="bottom_row" :total="data.total" :page="page" @checkPage="checkPage"/>
+		</el-card>
+		<!-- 添加或编辑 -->
+		<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" @close="name = ''" :visible.sync="show_dialog">
+			<div slot="title" class="dialog_title">
+				<div>{{dialog_title}}</div>
+				<img class="close_icon" src="../../../../static/close_icon.png" @click="show_dialog = false">
+			</div>
+			<div class="dialog_content">
+				<el-form size="small" label-width="120px">
+					<el-form-item label="员工：" required>
+						<el-select v-model="user_id" clearable placeholder="请选择员工" v-if="type == '1'">
+							<el-option v-for="item in user_list" :key="item.user_id" :label="item.real_name" :value="item.user_id">
+							</el-option>
+						</el-select>
+						<div v-else>{{user_name}}</div>
+					</el-form-item>
+					<el-form-item label="角色：" required>
+						<el-select v-model="menu_role_ids" clearable multiple filterable collapse-tags placeholder="请选择角色">
+							<el-option v-for="item in role_list" :key="item.menu_role_id" :label="item.menu_role_name" :value="item.menu_role_id">
+							</el-option>
+						</el-select>
+					</el-form-item>
+					<el-form-item label="绑定部门：" required>
+						<el-select v-model="dept_names" clearable multiple filterable collapse-tags placeholder="选择部门" @change="ajaxViewShop">
+							<el-option v-for="item in dept_list" :key="item.dept_name" :label="item.dept_name" :value="item.dept_name">
+							</el-option>
+						</el-select>
+					</el-form-item>
+					<el-form-item label="绑定店铺：" required>
+						<el-select v-model="shop_codes" clearable multiple filterable collapse-tags placeholder="选择店铺">
+							<el-option v-for="item in shop_list" :key="item.shop_code" :label="item.shop_name" :value="item.shop_code">
+							</el-option>
+						</el-select>
+						<el-checkbox style="margin-left: 8px" :indeterminate="isIndeterminate" v-model="checkAll" @change="checkAllStore"></el-checkbox>
+					</el-form-item>
+					<el-form-item label="是否查看记录：">
+						<el-radio-group v-model="view_type">
+							<el-radio :label="1">是</el-radio>
+							<el-radio :label="0">否</el-radio>
+						</el-radio-group>
+					</el-form-item>
+				</el-form>
+			</div>
+			<div slot="footer" class="dialog_footer">
+				<el-button size="small" @click="show_dialog = false">取消</el-button>
+				<el-button type="primary" size="small" @click="commitFn">提交</el-button>
+			</div>
+		</el-dialog>
+	</div>
+</template>
+<script>
+	import TableTitle from '../../components/table_title.vue'
+	import PaginationWidget from '../../../../components/pagination_widget.vue'
+
+	import resource from '../../../../api/chain_resource.js'
+	import commonResource from '../../../../api/common_resource.js'
+	export default{
+		data(){
+			return{
+				data:{},					//返回数据
+				page:1,						//当前页码
+				max_height:0,				//表格最大高度
+				id:"",						//点击的ID
+				show_dialog:false,			//添加或编辑弹窗
+				user_list:[],				//所有员工列表
+				user_id:"",					//选中的员工
+				user_name:"",				//编辑时的员工姓名
+				role_list:[],				//所有角色列表
+				menu_role_ids:[],			//选中的角色
+				dept_list:[],				//所有部门列表
+				dept_names:[],				//选中的部门
+				shop_list:[],				//店铺列表
+				shop_codes:[],				//选中的店铺列表
+				view_type:1,				//是否查看记录
+				dialog_title:"",			//弹窗标题
+				type:"",					//弹窗类型
+				isIndeterminate: false,		//当前半全选状态
+				checkAll: false,			//当前全选状态
+			}
+		},
+		created(){
+			//获取列表
+			this.getData();
+		},
+		destroyed() {
+			window.removeEventListener("resize", () => {});
+		},
+		mounted() {
+    		//获取表格最大高度
+    		this.onResize();
+    		window.addEventListener("resize", this.onResize());
+    	},
+    	methods: {
+    		//监听屏幕大小变化
+    		onResize() {
+    			this.$nextTick(() => {
+    				let card_box_height = document.getElementById("card_box").offsetHeight;
+    				let table_title_height = document.getElementById("table_title").offsetHeight;
+    				let bottom_row_height = document.getElementById("bottom_row").offsetHeight;
+    				this.max_height =
+    				card_box_height -
+    				table_title_height -
+    				bottom_row_height -
+    				55 +
+    				"px";
+    			});
+    		},
+			//获取列表
+			getData(){
+				let arg = {
+					pagesize:10,
+					page:this.page
+				}
+				resource.getUserList(arg).then(res => {
+					if(res.data.code == 1){
+						this.data = res.data.data;
+					}else{
+						this.$message.warning(res.data.msg);
+					}
+				})
+			},
+			//点击添加或编辑
+			addFn(type,user_id){
+				this.type = type;
+				if(type == '1'){	//添加
+					this.id = "";
+					this.dialog_title = '添加用户';
+					//创建get
+					this.addUserGet();
+				}else{				//编辑
+					this.id = user_id;
+					this.dialog_title = '编辑用户';
+					//编辑get
+					this.editUserGet();
+				}
+			},
+			//创建get
+			addUserGet(){
+				resource.addUserGet().then(res => {
+					if(res.data.code == 1){
+						let data = res.data.data;
+						this.user_list = data.user_list;
+						this.role_list = data.role_list;
+						this.dept_list = data.dept_list;
+						//获取店铺列表
+						this.ajaxViewShop();
+						this.show_dialog = true;
+					}else{
+						this.$message.warning(res.data.msg);
+					}
+				})
+			},
+			//编辑get
+			editUserGet(){
+				let arg = {
+					user_id:this.id
+				}
+				resource.editUserGet(arg).then(res => {
+					if(res.data.code == 1){
+						let data = res.data.data;
+						this.user_name = data.info.ding_user_name;
+						this.role_list = data.menu_role_list;
+						this.menu_role_ids = data.info.menu_role_ids;
+						this.dept_list = data.dept_list;
+						this.dept_names = data.selected_depts;
+						//获取店铺列表
+						this.ajaxViewShop(this.dept_names,data.selected_shops);
+						this.show_dialog = true;
+					}else{
+						this.$message.warning(res.data.msg);
+					}
+				})
+			},
+			//获取店铺列表
+			ajaxViewShop(dept_names,selected_shops) {
+				let arg = {
+					type: 2,
+					dept_name: dept_names.join(","),
+				};
+				commonResource.ajaxViewShop(arg).then((res) => {
+					if (res.data.code == 1) {
+						this.shop_list = res.data.data;
+						if (!!selected_shops) {
+							this.shop_codes = selected_shops;
+							this.isIndeterminate =
+							selected_shops.length > 0 &&
+							selected_shops.length < this.shop_list.length;
+							this.checkAll = selected_shops.length == this.shop_list.length;
+						} else {
+							this.shop_codes = [];
+							this.isIndeterminate = false;
+							this.checkAll = false;
+						}
+					} else {
+						this.$message.warning(res.data.msg);
+					}
+				});
+			},
+			//切换选中店铺
+			selectedStore(selected_shops) {
+				this.isIndeterminate =
+				selected_shops.length > 0 &&
+				selected_shops.length < this.shop_list.length;
+				this.checkAll = selected_shops.length == this.shop_list.length;
+			},
+    		//切换是否全选店铺
+    		checkAllStore(val) {
+    			this.isIndeterminate = false;
+    			if (val) {
+    				let arr = [];
+    				this.shop_list.map((item) => {
+    					arr.push(item.shop_code);
+    				});
+    				this.shop_codes = arr;
+    			} else {
+    				this.shop_codes = [];
+    			}
+    		},
+			//点击确认
+			commitFn(){
+				// if(this.name == ''){	
+				// 	this.$message.warning('请输入类目!');
+				// 	return;
+				// }
+				// let arg = {
+				// 	name:""
+				// }
+				// if (this.name.indexOf("\n") > -1) {
+				// 	arg.name = this.name.replaceAll("\n", ",");
+				// } else {
+				// 	arg.name = this.name;
+				// }
+				// if(this.type == '1'){		//添加类目
+				// 	resource.addCate(arg).then(res => {
+				// 		if(res.data.code == 1){
+				// 			this.$message.success(res.data.msg);
+				// 			this.show_dialog = false;
+				// 			//获取列表
+				// 			this.getData();
+				// 		}else{
+				// 			this.$message.warning(res.data.msg);
+				// 		}
+				// 	})
+				// }else{						//编辑类目
+				// 	arg.id = this.id;
+				// 	resource.editCate(arg).then(res => {
+				// 		if(res.data.code == 1){
+				// 			this.$message.success(res.data.msg);
+				// 			this.show_dialog = false;
+				// 			//获取列表
+				// 			this.getData();
+				// 		}else{
+				// 			this.$message.warning(res.data.msg);
+				// 		}
+				// 	})
+				// }
+			},
+			//分页
+			checkPage(v){
+				this.page = v;
+				//获取列表
+				this.getData();
+			}
+		},
+		components:{
+			TableTitle,
+			PaginationWidget
+		}
+	}
+</script>
+<style lang="less" scoped>
+.setting_content{
+	flex:1;
+	position: relative;
+	.card_box{
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+	}
+}
+.dialog_content{
+	padding-top: 50rem;
+	padding-bottom: 20rem;
+}
+</style>

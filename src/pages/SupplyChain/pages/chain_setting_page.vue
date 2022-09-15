@@ -24,7 +24,6 @@
 			return{
 				tab_list:['类目','分类','风格','季节'],	//顶部导航列表
 				active_index:0,			//当前选中的导航下标
-				card_height:0,			//card的高度
 			}
 		},
 		components:{
