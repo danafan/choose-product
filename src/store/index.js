@@ -7,6 +7,7 @@ Vue.use(Vuex);
 const store = new Vuex.Store({
   state: {
     car_goods:localStorage.getItem("car_goods")?JSON.parse(localStorage.getItem("car_goods")):[],     //购物车列表
+    domain:localStorage.getItem("domain")?localStorage.getItem("domain"):"",
   },
   mutations: {
     //设置购物车
@@ -49,6 +50,10 @@ const store = new Vuex.Store({
         }
       }
     },
+    //设置图片前缀
+    setDomain(state, domain){
+      state.domain = domain;
+    }
   },
   actions: {},
 });

@@ -34,6 +34,9 @@ let path = {
   accessEdit:'access/edit',							//编辑权限
   accessDel:'access/del',							//删除权限
   accessInfo:'access/getinfo',						//权限详情
+  feedBackList:'feedback/list',						//反馈列表
+  feedBackHandle:'feedback/handle',					//确认处理
+  feedBackEditGoods:'feedback/edit_goods',			//编辑商品
 };
 export default {
   //类目列表接口
@@ -187,5 +190,17 @@ export default {
   //权限详情
   accessInfo(params) {
     return http.get(path.accessInfo, params);
+  },
+  //反馈列表
+  feedBackList(params) {
+    return http.get(path.feedBackList, params);
+  },
+  //确认处理
+  feedBackHandle(params) {
+    return http.post(path.feedBackHandle, params);
+  },
+  //反馈-编辑商品(get)
+  feedBackEditGoodsGet(params) {
+    return http.get(path.feedBackEditGoods, params);
   },
 };

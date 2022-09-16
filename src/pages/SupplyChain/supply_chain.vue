@@ -68,6 +68,8 @@
 			$route:function(to,from){
 				if(to.query.supplier_type){	//供应链中心（供应商）
 					this.title = to.query.supplier_type == '1'?"添加供应商":"编辑供应商";
+				}else if(to.query.goods_type){	//供应链中心（商品）
+					this.title = to.query.goods_type == '1'?"添加商品":"编辑商品";
 				}else{
 					this.title = to.name;
 				}

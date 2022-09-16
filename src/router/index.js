@@ -11,6 +11,7 @@ const supplier_detail = (resolve) => require(["@/pages/Supplier/supplier_detail"
 const supply_chain = (resolve) => require(["@/pages/SupplyChain/supply_chain"], resolve);
 const chain_message_page = (resolve) => require(["@/pages/SupplyChain/pages/chain_message_page"], resolve);
 const chain_goods_page = (resolve) => require(["@/pages/SupplyChain/pages/chain_goods_page"], resolve);
+const edit_goods = (resolve) => require(["@/pages/SupplyChain/pages/GoodsPages/edit_goods"], resolve);
 const chain_supplier_page = (resolve) => require(["@/pages/SupplyChain/pages/chain_supplier_page"], resolve);
 const add_edit_supplier = (resolve) => require(["@/pages/SupplyChain/pages/SupplierPages/add_edit_supplier"], resolve);
 const chain_supplier_detail = (resolve) => require(["@/pages/SupplyChain/pages/SupplierPages/supplier_detail"], resolve);
@@ -71,6 +72,11 @@ const router = new Router({
         path: "/chain_goods_page",
         name: "商品",
         component: chain_goods_page
+      },
+      {
+        path: "/edit_goods",
+        name: "上传/编辑商品",
+        component: edit_goods
       },
       {
         path: "/chain_supplier_page",
