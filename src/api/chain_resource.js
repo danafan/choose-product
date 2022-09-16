@@ -20,6 +20,20 @@ let path = {
   getUserList:'user/list',							//（权限配置）用户列表
   addUser:'user/add',								//创建用户
   editUser:'user/edit',								//编辑用户
+  menuroleList:'menurole/list',						//角色列表
+  menuRoleAdd:'menurole/add',						//添加角色
+  menuRoleEdit:'menurole/edit',						//编辑角色
+  menuRoleInfo:'menurole/info',						//查看角色
+  delMenuRole:'menurole/del',						//删除角色
+  accessList:'access/accesslist',					//权限列表
+  getMainMenus:'access/getmainmenus',				//所有菜单列表
+  getControllers:'access/getcontrollers',			//所有控制器列表
+  getMethods:'access/getmethods',					//控制器下所有方法列表
+  ajaxAccess:'access/ajaxaccess',					//选择按钮的列表
+  accessAdd:'access/add',							//添加权限
+  accessEdit:'access/edit',							//编辑权限
+  accessDel:'access/del',							//删除权限
+  accessInfo:'access/getinfo',						//权限详情
 };
 export default {
   //类目列表接口
@@ -98,8 +112,80 @@ export default {
   addUserGet(params) {
     return http.get(path.addUser, params);
   },
+  //创建用户（post）
+  addUserPost(params) {
+    return http.post(path.addUser, params);
+  },
   //编辑用户（get）
   editUserGet(params) {
     return http.get(path.editUser, params);
+  },
+  //编辑用户（post）
+  editUserPost(params) {
+    return http.post(path.editUser, params);
+  },
+  //角色列表
+  menuroleList(params) {
+    return http.get(path.menuroleList, params);
+  },
+  //添加角色get
+  menuRoleAddGet(params) {
+    return http.get(path.menuRoleAdd, params);
+  },
+  //添加角色post
+  menuRoleAddPost(params) {
+    return http.post(path.menuRoleAdd, params);
+  },
+  //编辑角色get
+  menuRoleEditGet(params) {
+    return http.get(path.menuRoleEdit, params);
+  },
+  //编辑角色get
+  menuRoleEditPost(params) {
+    return http.post(path.menuRoleEdit, params);
+  },
+  //查看角色
+  menuRoleInfo(params) {
+    return http.get(path.menuRoleInfo, params);
+  },
+  //删除角色
+  delMenuRole(params) {
+    return http.post(path.delMenuRole, params);
+  },
+  //权限列表
+  accessList(params) {
+    return http.get(path.accessList, params);
+  },
+  //所有菜单列表
+  getMainMenus(params) {
+    return http.get(path.getMainMenus, params);
+  },
+  //所有控制器
+  getControllers(params) {
+    return http.get(path.getControllers, params);
+  },
+  //控制器下所有方法列表
+  getMethods(params) {
+    return http.get(path.getMethods, params);
+  },
+  //选择按钮的列表
+  ajaxAccess(params) {
+    return http.get(path.ajaxAccess, params);
+  },
+  //添加权限
+  accessAdd(params) {
+    return http.post(path.accessAdd, params);
+  },
+  //编辑权限
+  accessEdit(params) {
+    return http.post(path.accessEdit, params);
+  },
+  //删除权限
+  accessDel(params) {
+    return http.post(path.accessDel, params);
+  },
+  //权限详情
+  accessInfo(params) {
+    return http.get(path.accessInfo, params);
   },
 };

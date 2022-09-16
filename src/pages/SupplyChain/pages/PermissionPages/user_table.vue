@@ -2,7 +2,7 @@
 	<div class="setting_content">
 		<el-card class="card_box" id="card_box">
 			<TableTitle title="数据列表" id="table_title">
-				<el-button size="mini" type="primary" @click="addFn('1')">添加</el-button>
+				<el-button size="mini" type="primary" @click="addFn('1')" v-if="button_list.add == 1">添加</el-button>
 			</TableTitle>
 			<el-table size="mini" :data="data.data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height">
 				<el-table-column label="序号" width="55" type="index" :index="0">
@@ -14,14 +14,14 @@
 				<el-table-column label="创建时间" prop="add_time" show-overflow-tooltip></el-table-column>
 				<el-table-column label="操作" width="180" fixed="right">
 					<template slot-scope="scope">
-						<el-button type="text" size="small" @click="addFn('2',scope.row.user_id)">编辑</el-button>
+						<el-button type="text" size="small" @click="addFn('2',scope.row.user_id)" v-if="button_list.edit == 1">编辑</el-button>
 					</template>
 				</el-table-column>
 			</el-table>
 			<PaginationWidget id="bottom_row" :total="data.total" :page="page" @checkPage="checkPage"/>
 		</el-card>
 		<!-- 添加或编辑 -->
-		<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" @close="name = ''" :visible.sync="show_dialog">
+		<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" @close="closeDialog" :visible.sync="show_dialog">
 			<div slot="title" class="dialog_title">
 				<div>{{dialog_title}}</div>
 				<img class="close_icon" src="../../../../static/close_icon.png" @click="show_dialog = false">
@@ -41,20 +41,20 @@
 							</el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item label="绑定部门：" required>
+					<el-form-item label="绑定部门：" required v-if="menu_role_ids.indexOf(1) == -1">
 						<el-select v-model="dept_names" clearable multiple filterable collapse-tags placeholder="选择部门" @change="ajaxViewShop">
 							<el-option v-for="item in dept_list" :key="item.dept_name" :label="item.dept_name" :value="item.dept_name">
 							</el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item label="绑定店铺：" required>
-						<el-select v-model="shop_codes" clearable multiple filterable collapse-tags placeholder="选择店铺">
+					<el-form-item label="绑定店铺：" required v-if="menu_role_ids.indexOf(1) == -1">
+						<el-select v-model="shop_codes" clearable multiple filterable collapse-tags placeholder="选择店铺" @change="selectedStore">
 							<el-option v-for="item in shop_list" :key="item.shop_code" :label="item.shop_name" :value="item.shop_code">
 							</el-option>
 						</el-select>
 						<el-checkbox style="margin-left: 8px" :indeterminate="isIndeterminate" v-model="checkAll" @change="checkAllStore"></el-checkbox>
 					</el-form-item>
-					<el-form-item label="是否查看记录：">
+					<el-form-item label="是否查看记录：" v-if="menu_role_ids.indexOf(1) == -1">
 						<el-radio-group v-model="view_type">
 							<el-radio :label="1">是</el-radio>
 							<el-radio :label="0">否</el-radio>
@@ -79,6 +79,7 @@
 		data(){
 			return{
 				data:{},					//返回数据
+				button_list:{},				//按钮权限
 				page:1,						//当前页码
 				max_height:0,				//表格最大高度
 				id:"",						//点击的ID
@@ -135,6 +136,7 @@
 				resource.getUserList(arg).then(res => {
 					if(res.data.code == 1){
 						this.data = res.data.data;
+						this.button_list = this.data.button_list;
 					}else{
 						this.$message.warning(res.data.msg);
 					}
@@ -155,6 +157,14 @@
 					this.editUserGet();
 				}
 			},
+			//关闭弹窗
+			closeDialog(){
+				this.user_id = "";
+				this.menu_role_ids = [];
+				this.dept_names = [];
+				this.shop_codes = [];
+				this.view_type = 1;
+			},
 			//创建get
 			addUserGet(){
 				resource.addUserGet().then(res => {
@@ -164,7 +174,7 @@
 						this.role_list = data.role_list;
 						this.dept_list = data.dept_list;
 						//获取店铺列表
-						this.ajaxViewShop();
+						this.ajaxViewShop(this.dept_names);
 						this.show_dialog = true;
 					}else{
 						this.$message.warning(res.data.msg);
@@ -239,42 +249,52 @@
     		},
 			//点击确认
 			commitFn(){
-				// if(this.name == ''){	
-				// 	this.$message.warning('请输入类目!');
-				// 	return;
-				// }
-				// let arg = {
-				// 	name:""
-				// }
-				// if (this.name.indexOf("\n") > -1) {
-				// 	arg.name = this.name.replaceAll("\n", ",");
-				// } else {
-				// 	arg.name = this.name;
-				// }
-				// if(this.type == '1'){		//添加类目
-				// 	resource.addCate(arg).then(res => {
-				// 		if(res.data.code == 1){
-				// 			this.$message.success(res.data.msg);
-				// 			this.show_dialog = false;
-				// 			//获取列表
-				// 			this.getData();
-				// 		}else{
-				// 			this.$message.warning(res.data.msg);
-				// 		}
-				// 	})
-				// }else{						//编辑类目
-				// 	arg.id = this.id;
-				// 	resource.editCate(arg).then(res => {
-				// 		if(res.data.code == 1){
-				// 			this.$message.success(res.data.msg);
-				// 			this.show_dialog = false;
-				// 			//获取列表
-				// 			this.getData();
-				// 		}else{
-				// 			this.$message.warning(res.data.msg);
-				// 		}
-				// 	})
-				// }
+				if(this.type == '1' && this.user_id == ''){	
+					this.$message.warning('请选择用户!');
+					return;
+				}
+				if(this.menu_role_ids.length == 0){	
+					this.$message.warning('请选择角色!');
+					return;
+				}
+				if(this.menu_role_ids.indexOf(1) == -1 && this.dept_names.length == 0){	
+					this.$message.warning('请选择部门!');
+					return;
+				}
+				if(this.menu_role_ids.indexOf(1) == -1 && this.shop_codes.length == 0){	
+					this.$message.warning('请选择店铺!');
+					return;
+				}
+				let arg = {
+					user_id:this.type == '1'?this.user_id:this.id,
+					menu_role_id:this.menu_role_ids.join(','),
+					dept_names:this.menu_role_ids.indexOf(1) == -1?this.dept_names.join(','):'-1',
+					shop_codes:this.menu_role_ids.indexOf(1) == -1?this.shop_codes.join(','):'-1',
+					view_type:this.view_type
+				}
+				if(this.type == '1'){		//添加
+					resource.addUserPost(arg).then(res => {
+						if(res.data.code == 1){
+							this.$message.success(res.data.msg);
+							this.show_dialog = false;
+							//获取列表
+							this.getData();
+						}else{
+							this.$message.warning(res.data.msg);
+						}
+					})
+				}else{						//编辑
+					resource.editUserPost(arg).then(res => {
+						if(res.data.code == 1){
+							this.$message.success(res.data.msg);
+							this.show_dialog = false;
+							//获取列表
+							this.getData();
+						}else{
+							this.$message.warning(res.data.msg);
+						}
+					})
+				}
 			},
 			//分页
 			checkPage(v){

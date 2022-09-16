@@ -7,6 +7,8 @@
 			</div>
 		</div>
 		<UserTable v-if="active_index == 0"/>
+		<RoleTable v-if="active_index == 1"/>
+		<EntryTable v-if="active_index == 2"/>
 	</div>
 </template>
 <script>
@@ -14,6 +16,8 @@
 	import PaginationWidget from '../../../components/pagination_widget.vue'
 
 	import UserTable from './PermissionPages/user_table.vue'
+	import RoleTable from './PermissionPages/role_table.vue'
+	import EntryTable from './PermissionPages/entry_table.vue'
 	export default{
 		data(){
 			return{
@@ -24,7 +28,9 @@
 		components:{
 			TableTitle,
 			PaginationWidget,
-			UserTable
+			UserTable,
+			RoleTable,
+			EntryTable
 		}
 	}
 </script>
@@ -50,7 +56,6 @@
 			position: relative;
 			height: 64rem;
 			line-height: 64rem;
-			width: 50rem;
 			text-align: center;
 			font-size: 16rem;
 			color: #333333;
