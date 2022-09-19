@@ -53,36 +53,67 @@
 					</el-input>
 				</el-form-item>
 				<el-form-item class="form_item">
-					<el-button type="primary">查询</el-button>
+					<el-button type="primary" @click="checkPage(1)">查询</el-button>
 				</el-form-item>
 			</el-form>
 		</el-card>
 		<el-card class="card_box" id="card_box">
 			<TableTitle title="数据列表" id="table_title">
-				<!-- <el-button size="mini" type="primary" @click="addFn('1')">添加</el-button> -->
+				<el-button size="mini" type="primary" @click="$router.push('/edit_goods?page_type=goods&goods_type=1')">添加</el-button>
+				<el-button size="mini" type="primary">导入</el-button>
 			</TableTitle>
-			<!-- <el-table size="mini" :data="supplier_data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height">
-				<el-table-column label="供应商名称" prop="name" show-overflow-tooltip></el-table-column>
-				<el-table-column label="供应商地址" prop="common_text" show-overflow-tooltip></el-table-column>
-				<el-table-column label="供应商联系方式" width="120" prop="common_text" show-overflow-tooltip></el-table-column>
-				<el-table-column label="主营" prop="common_text" show-overflow-tooltip></el-table-column>
-				<el-table-column label="微信" prop="common_text" show-overflow-tooltip></el-table-column>
-				<el-table-column label="拍照" prop="common_text" show-overflow-tooltip></el-table-column>
-				<el-table-column label="退货" prop="common_text" show-overflow-tooltip></el-table-column>
-				<el-table-column label="代发" prop="common_text" show-overflow-tooltip></el-table-column>
-				<el-table-column label="入仓" prop="common_text" show-overflow-tooltip></el-table-column>
-				<el-table-column label="结算" prop="common_text" show-overflow-tooltip></el-table-column>
-				<el-table-column label="评级" prop="common_text" show-overflow-tooltip></el-table-column>
-				<el-table-column label="操作" width="180" fixed="right">
+			<el-table size="mini" :data="data.data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height">
+				<el-table-column label="款号" prop="style_id" show-overflow-tooltip></el-table-column>
+				<el-table-column label="款式编码" prop="i_id" show-overflow-tooltip></el-table-column>
+				<el-table-column label="图片" width="120">
 					<template slot-scope="scope">
-						<el-button type="text" size="small" @click="getDetail">查看</el-button>
-						<el-button type="text" size="small" @click="addFn('2',scope.row.name)">编辑</el-button>
-						<el-button type="text" size="small">删除</el-button>
-						<el-button type="text" size="small" @click="level_dialog = true">评级</el-button>
+						<div v-if="scope.row.images.length == 0">暂无</div>
+						<el-image :z-index="2006" class="image" :src="scope.row.images[0]" fit="contain" :preview-src-list="scope.row.images" v-else></el-image>
 					</template>
 				</el-table-column>
-			</el-table> -->
-			<PaginationWidget id="bottom_row" :total="62" :page="page" @checkPage="checkPage"/>
+				<el-table-column label="成本价" prop="cost_price" show-overflow-tooltip></el-table-column>
+				<el-table-column label="颜色" prop="color" show-overflow-tooltip></el-table-column>
+				<el-table-column label="尺码" prop="size" show-overflow-tooltip></el-table-column>
+				<el-table-column label="面料" prop="fabric" show-overflow-tooltip></el-table-column>
+				<el-table-column label="市场" prop="market" show-overflow-tooltip></el-table-column>
+				<el-table-column label="供应商" prop="supplier" show-overflow-tooltip></el-table-column>
+				<el-table-column label="提供拍照" prop="common_text" show-overflow-tooltip>
+					<template slot-scope="scope">
+						<div>{{scope.row.photograph == 1?'是':'否'}}</div>
+					</template>
+				</el-table-column>
+				<el-table-column label="拍摄风格" prop="shooting_style" show-overflow-tooltip></el-table-column>
+				<el-table-column label="类目" prop="category" show-overflow-tooltip></el-table-column>
+				<el-table-column label="分类" prop="classification" show-overflow-tooltip></el-table-column>
+				<el-table-column label="合作模式" prop="mode" show-overflow-tooltip></el-table-column>
+				<el-table-column label="备注" prop="remark" show-overflow-tooltip></el-table-column>
+				<el-table-column label="上新时间" prop="new_time_name" show-overflow-tooltip></el-table-column>
+				<el-table-column label="共享盘地址" prop="shared_disk_address" show-overflow-tooltip></el-table-column>
+				<el-table-column label="审核状态" prop="common_text" show-overflow-tooltip>
+					<template slot-scope="scope">
+						<div v-if="scope.row.check_status == 1">待审核</div>
+						<div v-if="scope.row.check_status == 2">审核通过</div>
+						<div v-if="scope.row.check_status == 3">审核拒绝</div>
+					</template>
+				</el-table-column>
+				<el-table-column label="操作" width="160" fixed="right">
+					<template slot-scope="scope">
+						<el-button type="text" size="small" v-if="scope.row.check_status == 1">同意</el-button>
+						<el-button type="text" size="small" v-if="scope.row.check_status == 1">拒绝</el-button>
+						<el-button style="margin-right: 10px" type="text" size="small" v-if="scope.row.check_status == 2">图片管理</el-button>
+						<el-dropdown size="small" split-button type="text" @command="handleCommand($event,scope.row.style_id)" v-if="scope.row.check_status == 2">
+							<span class="el-dropdown-link">更多</span>
+							<el-dropdown-menu slot="dropdown">
+								<el-dropdown-item command="1">查看</el-dropdown-item>
+								<el-dropdown-item command="2">编辑</el-dropdown-item>
+								<el-dropdown-item command="3">删除</el-dropdown-item>
+							</el-dropdown-menu>
+						</el-dropdown>
+						<el-button type="text" size="small" v-if="scope.row.check_status == 3">重新提交</el-button>
+					</template>
+				</el-table-column>
+			</el-table>
+			<PaginationWidget id="bottom_row" :total="data.total" :page="page" @checkPage="checkPage"/>
 		</el-card>
 	</div>
 </template>
@@ -104,11 +135,16 @@
 	}
 	.card_box{
 		flex:1;
+		.image{
+			width: 58rem;
+			height: 58rem;
+		}
 	}
 }
 </style>
 <script>
 	import commonResource from '../../../api/common_resource.js'
+	import resource from '../../../api/chain_resource.js'
 	import { getNowDate,getCurrentDate } from "../../../api/date.js";
 
 	import TableTitle from '../components/table_title.vue'
@@ -177,6 +213,7 @@
 				search:"",				//款式编码
 				max_height:0,	
 				page:1,
+				data:{},				//获取的数据
 			}
 		},
 		created(){
@@ -190,6 +227,8 @@
     		this.ajaxStyleList();
     		//分类列表
     		this.ajaxClassList();
+    		//获取列表
+    		this.getGoodsList();
     	},
     	destroyed() {
     		window.removeEventListener("resize", () => {});
@@ -199,7 +238,13 @@
     		this.onResize();
     		window.addEventListener("resize", this.onResize());
     	},
-    	methods: {
+    	computed:{
+			//图片前缀
+			domain(){
+				return this.$store.state.domain;
+			}
+		},
+		methods: {
     		//监听屏幕大小变化
     		onResize() {
     			this.$nextTick(() => {
@@ -264,10 +309,54 @@
 					}
 				})
 			},
+			//获取列表
+			getGoodsList(){
+				let arg = {
+					supplier_id:this.supplier_ids.join(','),
+					category_id:this.category_ids.join(','),
+					market_id:this.market_ids.join(','),
+					classification_id:this.classification_ids.join(','),
+					shooting_id:this.shooting_style_ids.join(','),
+					start_time:this.date && this.date.length > 0?this.date[0]:"",
+					end_time:this.date && this.date.length > 0?this.date[1]:"",
+					check_status:this.check_status_id,
+					status:this.status_id,
+					search:this.search,
+					page:this.page,
+					pagesize:10
+				}
+				resource.getGoodsList(arg).then(res => {
+					if(res.data.code == 1){
+						let data = res.data.data;
+						data.data.map(item => {
+							let images = [];
+							item.img.map(i => {
+								images.push(this.domain + i);
+							})
+							item.images = images;
+						})
+						this.data = data;
+					}else{
+						this.$message.warning(res.data.msg);
+					}
+				})
+			},
 			//切换页码
 			checkPage(v){
-				console.log(v)
+				this.page = v;
+				//获取列表
+				this.getGoodsList();
 			},
+			//监听更多操作按钮
+			handleCommand(e,id){
+				if(e == '1'){	//查看
+
+				}else if(e == '2'){	//编辑
+					this.$router.push('/edit_goods?page_type=goods&goods_type=2&style_id=' + id)
+				}else if(e == '3'){	//删除
+
+				}
+			}
 		},
 		components:{
 			TableTitle,

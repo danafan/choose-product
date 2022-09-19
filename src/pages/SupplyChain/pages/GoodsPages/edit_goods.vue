@@ -178,12 +178,36 @@
 			getGoodsDetail(){
 				//商品ID
 				this.style_id = this.$route.query.style_id;
+				var arg = {
+					style_id:this.style_id
+				}
 				if(this.page_type == 'goods'){	//商品管理
-
+					resource.editGoodsGet(arg).then(res => {
+						if(res.data.code == 1){
+							let data_info = res.data.data;
+							data_info.img.map(item => {
+								let img_obj = {
+									urls:item,
+									show_icon:false
+								}
+								this.img_list.push(img_obj);
+							})
+							for(let key in this.arg){
+								for(let k in data_info){
+									if(key == k){
+										//款式编码逗号转分号
+										if(k == 'i_id' && data_info[k].indexOf(',') > -1){
+											data_info[k] = data_info[k].replaceAll(",", ";");
+										}
+										this.arg[key] = data_info[k];
+									}
+								}
+							}
+						}else{
+							this.$message.warning(res.data.msg);
+						}
+					})
 				}else{		//反馈管理
-					let arg = {
-						style_id:this.style_id
-					}
 					resource.feedBackEditGoodsGet(arg).then(res => {
 						if(res.data.code == 1){
 							let data_info = res.data.data;
@@ -318,10 +342,24 @@
 						arg.i_id = arg.i_id.replaceAll(";", ",");
 					}
 					if(this.goods_type == '1'){	//添加
-						
+						resource.addGoods(arg).then(res => {
+							if(res.data.code == 1){
+								this.$message.success(res.data.msg);
+								this.$router.go(-1);
+							}else{
+								this.$message.warning(res.data.msg);
+							}
+						})
 					}else{			//编辑
 						if(this.page_type == 'goods'){	//商品管理
-
+							resource.editGoodsPost(arg).then(res => {
+								if(res.data.code == 1){
+									this.$message.success(res.data.msg);
+									this.$router.go(-1);
+								}else{
+									this.$message.warning(res.data.msg);
+								}
+							})
 						}else{		//反馈管理
 							resource.feedBackEditGoodsPost(arg).then(res => {
 								if(res.data.code == 1){

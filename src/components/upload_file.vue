@@ -83,7 +83,7 @@
 			}
 		},
 		computed:{
-			//购物车列表
+			//图片前缀
 			domain(){
 				return this.$store.state.domain;
 			}
