@@ -40,7 +40,7 @@
 				</el-form>
 				<el-form size="small" label-width="100px">
 					<el-form-item label="商品款号：" required>
-						<el-input placeholder="商品款号" v-model="arg.style_id">
+						<el-input placeholder="商品款号" v-model="arg.style_name">
 						</el-input>
 					</el-form-item>
 					<el-form-item label="标题：" required>
@@ -70,10 +70,10 @@
 				</el-form>
 			</div>
 			<div class="form_row margin_bottom">
-				<el-checkbox v-model="arg.hot_style">爆款</el-checkbox>
-				<el-checkbox v-model="arg.sole_style">独家款</el-checkbox>
-				<el-checkbox v-model="arg.data_style">主推款</el-checkbox>
-				<el-checkbox v-model="arg.again_style">二开款</el-checkbox>
+				<el-checkbox v-model="arg.hot_style" :true-label="1" :false-label="0">爆款</el-checkbox>
+				<el-checkbox v-model="arg.sole_style" :true-label="1" :false-label="0">独家款</el-checkbox>
+				<el-checkbox v-model="arg.data_style" :true-label="1" :false-label="0">主推款</el-checkbox>
+				<el-checkbox v-model="arg.again_style" :true-label="1" :false-label="0">二开款</el-checkbox>
 			</div>
 			<div class="form_row">
 				<el-form size="small" label-width="100px">
@@ -101,7 +101,7 @@
 				</el-form>
 			</div>
 			<div class="bottom_row">
-				<el-button size="small" type="primary">提交</el-button>
+				<el-button size="small" type="primary" @click="commitEditGoods">提交</el-button>
 			</div>
 		</el-card>
 	</div>
@@ -122,9 +122,10 @@
 				style_list:[],			//拍摄风格列表
 				class_list:[],			//分类列表
 				img_list:[],			
+				style_id:"",			//商品ID
 				arg:{
 					i_id:"",				//款式编码
-					style_id:"",			//商品款号
+					style_name:"",			//商品款号
 					supplier_id:"",			//选中的供应商
 					title:"",				//标题
 					category_id:"",			//选中的类目
@@ -187,15 +188,19 @@
 						if(res.data.code == 1){
 							let data_info = res.data.data;
 							data_info.img.map(item => {
-								let o = {
+								let img_obj = {
 									urls:item,
 									show_icon:false
 								}
-								this.img_list.push(o);
+								this.img_list.push(img_obj);
 							})
 							for(let key in this.arg){
 								for(let k in data_info){
 									if(key == k){
+										//款式编码逗号转分号
+										if(k == 'i_id' && data_info[k].indexOf(',') > -1){
+											data_info[k] = data_info[k].replaceAll(",", ";");
+										}
 										this.arg[key] = data_info[k];
 									}
 								}
@@ -273,8 +278,63 @@
 			},
 			//监听图片列表回调
 			callbackFn(img_arr) {
-				this.img = img_arr;
+				this.arg.img = img_arr;
 			},
+			//底部提交
+			commitEditGoods(){
+				if(!this.arg.i_id){
+					this.$message.warning('请输入款式编码!');
+				}else if(!this.arg.style_name){
+					this.$message.warning('请输入商品款号!');
+				}else if(!this.arg.supplier_id){
+					this.$message.warning('请选择供应商!');
+				}else if(!this.arg.title){
+					this.$message.warning('请输入标题!');
+				}else if(!this.arg.category_id){
+					this.$message.warning('请选择类目!');
+				}else if(!this.arg.market_id){
+					this.$message.warning('请选择市场!');
+				}else if(!this.arg.shooting_style_id){
+					this.$message.warning('请选择拍摄风格!');
+				}else if(!this.arg.classification_id){
+					this.$message.warning('请选择分类!');
+				}else if(!this.arg.fabric){
+					this.$message.warning('请输入面料!');
+				}else if(!this.arg.mode){
+					this.$message.warning('请输入合作模式!');
+				}else if(!this.arg.cost_price){
+					this.$message.warning('请输入成本价!');
+				}else if(!this.arg.size){
+					this.$message.warning('请输入尺码!');
+				}else if(!this.arg.color){
+					this.$message.warning('请输入颜色!');
+				}else if(!this.arg.net_disk_address){
+					this.$message.warning('请输入网盘地址!');
+				}else if(!this.arg.shared_disk_address){
+					this.$message.warning('请输入共享盘地址!');
+				}else{
+					var arg = this.goods_type == '1'?this.arg:{...this.arg,...{style_id:this.style_id}};
+					if (arg.i_id.indexOf(";") > -1) {
+						arg.i_id = arg.i_id.replaceAll(";", ",");
+					}
+					if(this.goods_type == '1'){	//添加
+						
+					}else{			//编辑
+						if(this.page_type == 'goods'){	//商品管理
+
+						}else{		//反馈管理
+							resource.feedBackEditGoodsPost(arg).then(res => {
+								if(res.data.code == 1){
+									this.$message.success(res.data.msg);
+									this.$router.go(-1);
+								}else{
+									this.$message.warning(res.data.msg);
+								}
+							})
+						}
+					}
+				}
+			}
 		},
 		components:{
 			UploadFile
@@ -305,35 +365,6 @@
 		.margin_bottom{
 			margin-bottom: 20px;
 		}
-		// .image_list {
-		// 	display: flex;
-		// 	flex-wrap: wrap;
-		// 	.view_card_img {
-		// 		margin-right: 40rem;
-		// 		margin-bottom: 20rem;
-		// 		border-radius: 2rem;
-		// 		position: relative;
-		// 		width: 160rem;
-		// 		height: 160rem;
-		// 		.card_img,
-		// 		.delete_img {
-		// 			border-radius: 2rem;
-		// 			position: absolute;
-		// 			width: 100%;
-		// 			height: 100%;
-		// 		}
-		// 		.delete_img {
-		// 			background: rgba(0, 0, 0, 0.4);
-		// 			display: flex;
-		// 			align-items: center;
-		// 			justify-content: center;
-		// 			.delete_icon {
-		// 				width: 40rem;
-		// 				height: 40rem;
-		// 			}
-		// 		}
-		// 	}
-		// }
 		.bottom_row{
 			display: flex;
 			justify-content: center;

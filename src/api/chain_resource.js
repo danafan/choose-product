@@ -203,4 +203,8 @@ export default {
   feedBackEditGoodsGet(params) {
     return http.get(path.feedBackEditGoods, params);
   },
+  //反馈-编辑商品(post)
+  feedBackEditGoodsPost(params) {
+    return http.post(path.feedBackEditGoods, params);
+  },
 };
