@@ -69,7 +69,19 @@
 				if(to.query.supplier_type){	//供应链中心（供应商）
 					this.title = to.query.supplier_type == '1'?"添加供应商":"编辑供应商";
 				}else if(to.query.goods_type){	//供应链中心（商品）
-					this.title = to.query.goods_type == '1'?"添加商品":"编辑商品";
+					switch(to.query.goods_type){
+						case '1':
+							this.title = "添加商品";
+							break;
+						case '2':
+							this.title = "编辑商品";
+							break;
+						case '3':
+							this.title = "商品详情";
+							break;
+						default: 
+							return;
+					}
 				}else{
 					this.title = to.name;
 				}

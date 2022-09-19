@@ -40,6 +40,8 @@ let path = {
   getGoodsList:'productstyle/getallproductstyle',	//获取商品列表
   addGoods:'productstyle/addproductstyle',			//添加商品
   editGoods:'productstyle/editproductstyle',		//编辑商品
+  auditGoods:'productstyle/examine',				//审批商品
+  delGoods:'productstyle/delproductstyle',			//删除商品
 };
 export default {
   //类目列表接口
@@ -225,5 +227,13 @@ export default {
   //编辑商品
   editGoodsPost(params) {
     return http.post(path.editGoods, params);
+  },
+  //审批商品
+  auditGoods(params) {
+    return http.post(path.auditGoods, params);
+  },
+  //删除商品
+  delGoods(params) {
+    return http.get(path.delGoods, params);
   },
 };

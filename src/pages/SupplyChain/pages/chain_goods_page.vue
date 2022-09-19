@@ -98,8 +98,8 @@
 				</el-table-column>
 				<el-table-column label="操作" width="160" fixed="right">
 					<template slot-scope="scope">
-						<el-button type="text" size="small" v-if="scope.row.check_status == 1">同意</el-button>
-						<el-button type="text" size="small" v-if="scope.row.check_status == 1">拒绝</el-button>
+						<el-button type="text" size="small" v-if="scope.row.check_status == 1" @click="auditFn('1',scope.row.style_id)">同意</el-button>
+						<el-button type="text" size="small" v-if="scope.row.check_status == 1" @click="auditFn('2',scope.row.style_id)">拒绝</el-button>
 						<el-button style="margin-right: 10px" type="text" size="small" v-if="scope.row.check_status == 2">图片管理</el-button>
 						<el-dropdown size="small" split-button type="text" @command="handleCommand($event,scope.row.style_id)" v-if="scope.row.check_status == 2">
 							<span class="el-dropdown-link">更多</span>
@@ -109,7 +109,7 @@
 								<el-dropdown-item command="3">删除</el-dropdown-item>
 							</el-dropdown-menu>
 						</el-dropdown>
-						<el-button type="text" size="small" v-if="scope.row.check_status == 3">重新提交</el-button>
+						<el-button type="text" size="small" v-if="scope.row.check_status == 3" @click="$router.push('/edit_goods?page_type=goods&goods_type=2&style_id=' + scope.row.style_id)">重新提交</el-button>
 					</template>
 				</el-table-column>
 			</el-table>
@@ -347,14 +347,63 @@
 				//获取列表
 				this.getGoodsList();
 			},
+			//审批
+			auditFn(type,id){
+				this.$confirm(`确认${type == '1'?'同意':'拒绝'}?`, '提示', {
+					confirmButtonText: '确定',
+					cancelButtonText: '取消',
+					type: 'warning'
+				}).then(() => {
+					let arg = {
+						type:type,
+						id:id
+					}
+					resource.auditGoods(arg).then(res => {
+						if(res.data.code == 1){
+							this.$message.success(res.data.msg);
+							//获取列表
+							this.getGoodsList();
+						}else{
+							this.$message.warning(res.data.msg);
+						}
+					})
+				}).catch(() => {
+					this.$message({
+						type: 'info',
+						message: '已取消'
+					});          
+				});
+			},
 			//监听更多操作按钮
 			handleCommand(e,id){
 				if(e == '1'){	//查看
-
+					this.$router.push('/edit_goods?page_type=goods&goods_type=3&style_id=' + id);
 				}else if(e == '2'){	//编辑
-					this.$router.push('/edit_goods?page_type=goods&goods_type=2&style_id=' + id)
+					this.$router.push('/edit_goods?page_type=goods&goods_type=2&style_id=' + id);
 				}else if(e == '3'){	//删除
-
+					this.$confirm(`确认删除?`, '提示', {
+						confirmButtonText: '确定',
+						cancelButtonText: '取消',
+						type: 'warning'
+					}).then(() => {
+						let arg = {
+							style_id:id
+						}
+						resource.delGoods(arg).then(res => {
+							if(res.data.code == 1){
+								this.$message.success(res.data.msg);
+								//获取列表
+								this.getGoodsList();
+							}else{
+								this.$message.warning(res.data.msg);
+							}
+						})
+					}).catch(() => {
+						this.$message({
+							type: 'info',
+							message: '已取消'
+						});          
+					});
 				}
 			}
 		},

@@ -4,87 +4,87 @@
 			<div class="form_row">
 				<el-form size="small" label-width="100px">
 					<el-form-item label="款式编码：" required>
-						<el-input type="textarea" autosize placeholder="多个请用分号间隔" v-model="arg.i_id">
+						<el-input type="textarea" autosize placeholder="多个请用分号间隔" v-model="arg.i_id" :disabled="is_detail">
 						</el-input>
 					</el-form-item>
 					<el-form-item label="供应商：" required>
-						<el-select v-model="arg.supplier_id" clearable placeholder="请选择供应商">
+						<el-select v-model="arg.supplier_id" clearable placeholder="请选择供应商" :disabled="is_detail">
 							<el-option v-for="item in supplier_list" :key="item.supplier_id" :label="item.supplier_name" :value="item.supplier_id">
 							</el-option>
 						</el-select>
 					</el-form-item>
 					<el-form-item label="类目：" required>
-						<el-select v-model="arg.category_id" clearable placeholder="请选择类目">
+						<el-select v-model="arg.category_id" clearable placeholder="请选择类目" :disabled="is_detail">
 							<el-option v-for="item in cate_list" :key="item.category_id" :label="item.category_name" :value="item.category_id">
 							</el-option>
 						</el-select>
 					</el-form-item>
 					<el-form-item label="拍摄风格：" required>
-						<el-select v-model="arg.shooting_style_id" clearable placeholder="请选择拍摄风格">
+						<el-select v-model="arg.shooting_style_id" clearable placeholder="请选择拍摄风格" :disabled="is_detail">
 							<el-option v-for="item in style_list" :key="item.shooting_style_id" :label="item.shooting_style_name" :value="item.shooting_style_id">
 							</el-option>
 						</el-select>
 					</el-form-item>
 					<el-form-item label="面料：" required>
-						<el-input placeholder="面料" v-model="arg.fabric">
+						<el-input placeholder="面料" v-model="arg.fabric" :disabled="is_detail">
 						</el-input>
 					</el-form-item>
 					<el-form-item label="成本价：" required>
-						<el-input type="number" placeholder="成本价" v-model="arg.cost_price">
+						<el-input type="number" placeholder="成本价" v-model="arg.cost_price" :disabled="is_detail">
 						</el-input>
 					</el-form-item>
 					<el-form-item label="颜色：" required>
-						<el-input placeholder="颜色" v-model="arg.color">
+						<el-input placeholder="颜色" v-model="arg.color" :disabled="is_detail">
 						</el-input>
 					</el-form-item>
 				</el-form>
 				<el-form size="small" label-width="100px">
 					<el-form-item label="商品款号：" required>
-						<el-input placeholder="商品款号" v-model="arg.style_name">
+						<el-input placeholder="商品款号" v-model="arg.style_name" :disabled="is_detail">
 						</el-input>
 					</el-form-item>
 					<el-form-item label="标题：" required>
-						<el-input placeholder="标题" v-model="arg.title">
+						<el-input placeholder="标题" v-model="arg.title" :disabled="is_detail">
 						</el-input>
 					</el-form-item>
 					<el-form-item label="市场：" required>
-						<el-select v-model="arg.market_id" clearable placeholder="请选择市场">
+						<el-select v-model="arg.market_id" clearable placeholder="请选择市场" :disabled="is_detail">
 							<el-option v-for="item in market_list" :key="item.market_id" :label="item.market_name" :value="item.market_id">
 							</el-option>
 						</el-select>
 					</el-form-item>
 					<el-form-item label="分类：" required>
-						<el-select v-model="arg.classification_id" clearable placeholder="请选择分类">
+						<el-select v-model="arg.classification_id" clearable placeholder="请选择分类" :disabled="is_detail">
 							<el-option v-for="item in class_list" :key="item.classification_id" :label="item.classification_name" :value="item.classification_id">
 							</el-option>
 						</el-select>
 					</el-form-item>
 					<el-form-item label="合作模式：" required>
-						<el-input placeholder="合作模式" v-model="arg.mode">
+						<el-input placeholder="合作模式" v-model="arg.mode" :disabled="is_detail">
 						</el-input>
 					</el-form-item>
 					<el-form-item label="尺码：" required>
-						<el-input placeholder="尺码" v-model="arg.size">
+						<el-input placeholder="尺码" v-model="arg.size" :disabled="is_detail">
 						</el-input>
 					</el-form-item>
 				</el-form>
 			</div>
 			<div class="form_row margin_bottom">
-				<el-checkbox v-model="arg.hot_style" :true-label="1" :false-label="0">爆款</el-checkbox>
-				<el-checkbox v-model="arg.sole_style" :true-label="1" :false-label="0">独家款</el-checkbox>
-				<el-checkbox v-model="arg.data_style" :true-label="1" :false-label="0">主推款</el-checkbox>
-				<el-checkbox v-model="arg.again_style" :true-label="1" :false-label="0">二开款</el-checkbox>
+				<el-checkbox v-model="arg.hot_style" :true-label="1" :false-label="0" :disabled="is_detail">爆款</el-checkbox>
+				<el-checkbox v-model="arg.sole_style" :true-label="1" :false-label="0" :disabled="is_detail">独家款</el-checkbox>
+				<el-checkbox v-model="arg.data_style" :true-label="1" :false-label="0" :disabled="is_detail">主推款</el-checkbox>
+				<el-checkbox v-model="arg.again_style" :true-label="1" :false-label="0" :disabled="is_detail">二开款</el-checkbox>
 			</div>
 			<div class="form_row">
 				<el-form size="small" label-width="100px">
 					<el-form-item label="网盘地址：" required>
-						<el-input placeholder="网盘地址" v-model="arg.net_disk_address">
+						<el-input placeholder="网盘地址" v-model="arg.net_disk_address" :disabled="is_detail">
 						</el-input>
 					</el-form-item>
 				</el-form>
 				<el-form size="small" label-width="150px">
 					<el-form-item label="共享盘地址：" required>
-						<el-input placeholder="共享盘地址" v-model="arg.shared_disk_address">
+						<el-input placeholder="共享盘地址" v-model="arg.shared_disk_address" :disabled="is_detail">
 						</el-input>
 					</el-form-item>
 				</el-form>
@@ -92,10 +92,13 @@
 			<div class="form_row">
 				<el-form size="small" label-width="100px">
 					<el-form-item label="商品图：">
-						<UploadFile :img_list="img_list" :is_multiple="true" :current_num="arg.img.length" :max_num="99" @callbackFn="callbackFn"/>
+						<div v-if="is_detail">
+							<el-image class="card_img" v-for="item in preview_image" :src="item" fit="contain" :preview-src-list="preview_image"></el-image>
+						</div>
+						<UploadFile :img_list="img_list" :is_multiple="true" :current_num="arg.img.length" :max_num="99" @callbackFn="callbackFn" v-else/>
 					</el-form-item>
 					<el-form-item label="备注：">
-						<el-input type="textarea" :rows="5" placeholder="请输入备注" v-model="arg.remark">
+						<el-input type="textarea" :rows="5" placeholder="请输入备注" v-model="arg.remark" :disabled="is_detail">
 						</el-input>
 					</el-form-item>
 				</el-form>
@@ -114,6 +117,7 @@
 	export default{
 		data(){
 			return{
+				is_detail:false,		//是否是详情详情
 				page_type:'',			//页面来源（goods:商品；feekback:反馈）
 				goods_type:"",			//类型（1:添加；2:编辑）
 				supplier_list:[],		//供应商列表
@@ -121,6 +125,7 @@
 				market_list:[],			//市场列表
 				style_list:[],			//拍摄风格列表
 				class_list:[],			//分类列表
+				preview_image:[],		//查看详情的图片列表
 				img_list:[],			
 				style_id:"",			//商品ID
 				arg:{
@@ -149,12 +154,19 @@
 			}
 		},
 		created(){
+			this.is_detail = this.$route.query.goods_type == '3'?true:false;
 			//页面来源
 			this.page_type = this.$route.query.page_type;
 			//类型
 			this.goods_type = this.$route.query.goods_type;
 			//获取数据列表
 			this.getInfoList();
+		},
+		computed:{
+			//图片前缀
+			domain(){
+				return this.$store.state.domain;
+			}
 		},
 		methods: {
 			//获取数据列表
@@ -169,7 +181,7 @@
 				await this.ajaxStyleList();
 				//分类列表
 				await this.ajaxClassList();
-				if(this.goods_type == '2'){	//编辑
+				if(this.goods_type == '2' || this.goods_type == '3'){	//2:编辑;3:详情
 					//获取商品详情
 					this.getGoodsDetail();
 				}
@@ -191,6 +203,7 @@
 									show_icon:false
 								}
 								this.img_list.push(img_obj);
+								this.preview_image.push(this.domain + item);
 							})
 							for(let key in this.arg){
 								for(let k in data_info){
@@ -399,6 +412,13 @@
 			width: 1000rem;
 			display: flex;
 			justify-content: space-between;
+			.card_img{
+				margin-right: 40rem;
+				margin-bottom: 20rem;
+				border-radius: 2rem;
+				width: 160rem;
+				height: 160rem;
+			}
 		}
 		.margin_bottom{
 			margin-bottom: 20px;
