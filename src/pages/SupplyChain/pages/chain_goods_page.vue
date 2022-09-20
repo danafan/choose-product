@@ -100,7 +100,7 @@
 					<template slot-scope="scope">
 						<el-button type="text" size="small" v-if="scope.row.check_status == 1" @click="auditFn('1',scope.row.style_id)">同意</el-button>
 						<el-button type="text" size="small" v-if="scope.row.check_status == 1" @click="auditFn('2',scope.row.style_id)">拒绝</el-button>
-						<el-button style="margin-right: 10px" type="text" size="small" v-if="scope.row.check_status == 2">图片管理</el-button>
+						<el-button style="margin-right: 10px" type="text" size="small" v-if="scope.row.check_status == 2" @click="$router.push('/image_setting?style_id=' + scope.row.style_id)">图片管理</el-button>
 						<el-dropdown size="small" split-button type="text" @command="handleCommand($event,scope.row.style_id)" v-if="scope.row.check_status == 2">
 							<span class="el-dropdown-link">更多</span>
 							<el-dropdown-menu slot="dropdown">

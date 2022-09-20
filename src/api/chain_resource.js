@@ -42,6 +42,14 @@ let path = {
   editGoods:'productstyle/editproductstyle',		//编辑商品
   auditGoods:'productstyle/examine',				//审批商品
   delGoods:'productstyle/delproductstyle',			//删除商品
+  styleImageList:'productstyle/styleimagelist',		//风格图列表
+  addStyleImg:'productstyle/addstyleimg',			//添加风格图
+  editStyleImg:'productstyle/editstyleimg',			//编辑风格图
+  delStyleImg:'productstyle/delstyleimg',			//删除风格图
+  upLoadImgList:'productstyle/uploadimglist',		//商品图列表
+  addUploadImg:'productstyle/adduploadimg',			//添加商品图
+  editUploadImg:'productstyle/edituploadimg',		//编辑商品图
+  delUploadImg:'productstyle/deluploadimg',			//删除商品图
 };
 export default {
   //类目列表接口
@@ -235,5 +243,45 @@ export default {
   //删除商品
   delGoods(params) {
     return http.get(path.delGoods, params);
+  },
+  //风格图列表
+  styleImageList(params) {
+    return http.get(path.styleImageList, params);
+  },
+  //上传风格图
+  addStyleImg(params) {
+    return http.post(path.addStyleImg, params);
+  },
+  //编辑风格图（get）
+  editStyleImgGet(params) {
+    return http.get(path.editStyleImg, params);
+  },
+  //编辑风格图（post）
+  editStyleImgPost(params) {
+    return http.post(path.editStyleImg, params);
+  },
+  //删除风格图
+  delStyleImg(params) {
+    return http.get(path.delStyleImg, params);
+  },
+  //商品图列表
+  upLoadImgList(params) {
+    return http.get(path.upLoadImgList, params);
+  },
+  //添加商品图
+  addUploadImg(params) {
+    return http.post(path.addUploadImg, params);
+  },
+  //编辑商品图(get)
+  editUploadImgGet(params) {
+    return http.get(path.editUploadImg, params);
+  },
+  //编辑商品图(post)
+  editUploadImgPost(params) {
+    return http.post(path.editUploadImg, params);
+  },
+  //删除商品图
+  delUploadImg(params) {
+    return http.get(path.delUploadImg, params);
   },
 };

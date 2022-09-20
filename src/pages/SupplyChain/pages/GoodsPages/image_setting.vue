@@ -6,29 +6,27 @@
 				<div class="active_line" v-if="active_index == index"></div>
 			</div>
 		</div>
-		<CategoryTable v-if="active_index == 0"/>
-		<ClassTable v-if="active_index == 1"/>
-		<StyleTable v-if="active_index == 2"/>
-		<SeasonTable v-if="active_index == 3"/>
+		<StyleTable :style_id="style_id" v-if="active_index == 0"/>
+		<GoodsTable :style_id="style_id" v-if="active_index == 1"/>
 	</div>
 </template>
 <script>
-	import CategoryTable from './SettingPages/category_table.vue'
-	import ClassTable from './SettingPages/class_table.vue'
-	import StyleTable from './SettingPages/style_table.vue'
-	import SeasonTable from './SettingPages/season_table.vue'
+	import StyleTable from './ImageSetting/style_table.vue'
+	import GoodsTable from './ImageSetting/goods_table.vue'
 	export default{
 		data(){
 			return{
-				tab_list:['类目','分类','风格','季节'],	//顶部导航列表
-				active_index:0,			//当前选中的导航下标
+				style_id:"",					//商品ID
+				tab_list:['风格图','商品图'],		//顶部导航列表
+				active_index:0,					//当前选中的导航下标
 			}
 		},
+		created(){
+			this.style_id = this.$route.query.style_id;
+		},
 		components:{
-			CategoryTable,
-			ClassTable,
 			StyleTable,
-			SeasonTable
+			GoodsTable,
 		}
 	}
 </script>
@@ -54,7 +52,7 @@
 			position: relative;
 			height: 64rem;
 			line-height: 64rem;
-			width: 50rem;
+			width: 80rem;
 			text-align: center;
 			font-size: 16rem;
 			color: #333333;

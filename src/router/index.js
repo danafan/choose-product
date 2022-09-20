@@ -12,6 +12,7 @@ const supply_chain = (resolve) => require(["@/pages/SupplyChain/supply_chain"], 
 const chain_message_page = (resolve) => require(["@/pages/SupplyChain/pages/chain_message_page"], resolve);
 const chain_goods_page = (resolve) => require(["@/pages/SupplyChain/pages/chain_goods_page"], resolve);
 const edit_goods = (resolve) => require(["@/pages/SupplyChain/pages/GoodsPages/edit_goods"], resolve);
+const image_setting = (resolve) => require(["@/pages/SupplyChain/pages/GoodsPages/image_setting"], resolve);
 const chain_supplier_page = (resolve) => require(["@/pages/SupplyChain/pages/chain_supplier_page"], resolve);
 const add_edit_supplier = (resolve) => require(["@/pages/SupplyChain/pages/SupplierPages/add_edit_supplier"], resolve);
 const chain_supplier_detail = (resolve) => require(["@/pages/SupplyChain/pages/SupplierPages/supplier_detail"], resolve);
@@ -77,6 +78,11 @@ const router = new Router({
         path: "/edit_goods",
         name: "上传/编辑商品",
         component: edit_goods
+      },
+      {
+        path: "/image_setting",
+        name: "图片管理",
+        component: image_setting
       },
       {
         path: "/chain_supplier_page",
