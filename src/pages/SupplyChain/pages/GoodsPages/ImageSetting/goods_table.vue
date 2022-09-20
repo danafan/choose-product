@@ -21,14 +21,14 @@
 					<template slot-scope="scope">
 						<el-button type="text" size="small" @click="addFn('2',scope.row.commodity_id)">编辑</el-button>
 						<el-button type="text" size="small" @click="deleteFn(scope.row.commodity_id)">删除</el-button>
-						<el-button type="text" size="small">设为主图</el-button>
+						<el-button type="text" size="small" @click="changeMainImg(scope.row.commodity_id)" v-if="scope.row.is_main == 0">设为主图</el-button>
 					</template>
 				</el-table-column>
 			</el-table>
 			<PaginationWidget id="bottom_row" :total="data.total" :page="page" @checkPage="checkPage"/>
 		</el-card>
 		<!-- 添加或编辑 -->
-		<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" @close="closeDialog" :visible.sync="show_dialog">
+		<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" destroy-on-close @close="closeDialog" :visible.sync="show_dialog">
 			<div slot="title" class="dialog_title">
 				<div>{{dialog_title}}</div>
 				<img class="close_icon" src="../../../../../static/close_icon.png" @click="show_dialog = false">
@@ -39,7 +39,7 @@
 						{{data.i_id}}
 					</el-form-item>
 					<el-form-item label="图片：" required>
-						<UploadFile :img_list="img_list" :is_multiple="true" :current_num="img.length" :max_num="99" @callbackFn="callbackFn"/>
+						<UploadFile :img_list="img_list" :is_multiple="true" :current_num="img.length" :max_num="type == '1'?99:1" @callbackFn="callbackFn"/>
 					</el-form-item>
 				</el-form>
 			</div>
@@ -62,7 +62,9 @@
 				max_height:0,	
 				page:1,						//页码
 				data:{},					//获取的数据
+				commodity_id:"",
 				show_dialog:false,			//弹窗
+				type:"",
 				dialog_title:"",			//弹窗标题
 				img:[],						//已上传的图片列表（参数）
 				img_list:[],				//已上传的图片列表（显示）
@@ -134,19 +136,18 @@
 				this.type = type;
 				this.dialog_title = type == '1'?'添加商品图':'编辑商品图';
 				if(type == '2'){
+					this.commodity_id = commodity_id;
 					let arg = {
 						commodity_id:commodity_id
 					}
 					resource.editUploadImgGet(arg).then(res => {
 						if(res.data.code == 1){
 							let data = res.data.data;
-							data.img.map(item => {
-								let img_obj = {
-									urls:item,
-									show_icon:false
-								}
-								this.img_list.push(img_obj);
-							})		
+							let img_obj = {
+								urls:data.img,
+								show_icon:false
+							}
+							this.img_list.push(img_obj);
 							this.img = data.img;				
 						}else{
 							this.$message.warning(res.data.msg);
@@ -210,6 +211,33 @@
 						commodity_id:commodity_id
 					}
 					resource.delUploadImg(arg).then(res => {
+						if(res.data.code == 1){
+							this.$message.success(res.data.msg);
+							//获取列表
+							this.upLoadImgList();
+						}else{
+							this.$message.warning(res.data.msg);
+						}
+					})
+				}).catch(() => {
+					this.$message({
+						type: 'info',
+						message: '已取消'
+					});          
+				});
+			},
+			//设为主图
+			changeMainImg(commodity_id){
+				this.$confirm('确认删除商品图?', '提示', {
+					confirmButtonText: '确定',
+					cancelButtonText: '取消',
+					type: 'warning'
+				}).then(() => {
+					let arg = {
+						commodity_id:commodity_id,
+						style_id:this.style_id
+					}
+					resource.changeMainImg(arg).then(res => {
 						if(res.data.code == 1){
 							this.$message.success(res.data.msg);
 							//获取列表

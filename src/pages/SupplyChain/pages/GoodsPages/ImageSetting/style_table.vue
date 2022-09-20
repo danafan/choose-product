@@ -25,7 +25,7 @@
 			<PaginationWidget id="bottom_row" :total="data.total" :page="page" @checkPage="checkPage"/>
 		</el-card>
 		<!-- 添加或编辑 -->
-		<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" @close="closeDialog" :visible.sync="show_dialog">
+		<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" destroy-on-close @close="closeDialog" :visible.sync="show_dialog">
 			<div slot="title" class="dialog_title">
 				<div>{{dialog_title}}</div>
 				<img class="close_icon" src="../../../../../static/close_icon.png" @click="show_dialog = false">
@@ -145,6 +145,7 @@
 				this.type = type;
 				this.dialog_title = type == '1'?'添加风格图':'编辑风格图';
 				if(type == '2'){
+					this.gallery_id = gallery_id;
 					let arg = {
 						gallery_id:gallery_id
 					}
@@ -153,21 +154,24 @@
 							let data = res.data.data;
 							this.shooting_style_name = data.shooting_style_name;
 							this.shared_disk_address = data.shared_disk_address;
-							this.net_disk_address = data.net_disk_address;	
+							this.net_disk_address = data.net_disk_address;
 							data.img.map(item => {
 								let img_obj = {
 									urls:item,
 									show_icon:false
 								}
 								this.img_list.push(img_obj);
-							})		
+							})	
 							this.img = data.img;				
+							this.show_dialog = true;		
 						}else{
 							this.$message.warning(res.data.msg);
 						}
 					})
+				}else{
+					this.show_dialog = true;
 				}
-				this.show_dialog = true;
+				
 			},
 			//监听图片列表回调
 			callbackFn(img_arr) {

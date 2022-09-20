@@ -50,6 +50,7 @@ let path = {
   addUploadImg:'productstyle/adduploadimg',			//添加商品图
   editUploadImg:'productstyle/edituploadimg',		//编辑商品图
   delUploadImg:'productstyle/deluploadimg',			//删除商品图
+  changeMainImg:'productstyle/changemainimg',		//设为主图
 };
 export default {
   //类目列表接口
@@ -283,5 +284,9 @@ export default {
   //删除商品图
   delUploadImg(params) {
     return http.get(path.delUploadImg, params);
+  },
+  //设为主图
+  changeMainImg(params) {
+    return http.post(path.changeMainImg, params);
   },
 };
