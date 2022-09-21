@@ -5,8 +5,10 @@ import md5 from "js-md5";
 export function middleWare(params, type) {
   for (let k in params) {
     if (typeof params[k] == "string" && params[k] != "") {
+      //去掉两边
+      params[k] = params[k].toString().replace(/(^\s*)|(\s*$)/g,"");
       //去掉所有空格
-      params[k] = params[k].toString().replace(/\s+/g, "");
+      // params[k] = params[k].toString().replace(/\s+/g, "");
       //去掉#
       params[k] = params[k].toString().replace(/[#]/g, "");
     }

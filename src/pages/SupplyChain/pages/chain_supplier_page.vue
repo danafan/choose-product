@@ -3,16 +3,13 @@
 		<el-card class="form_card">
 			<el-form :inline="true" size="mini">
 				<el-form-item class="form_item">
-					<el-input clearable v-model="keyword" placeholder="供应商名称/旺旺号"></el-input>
+					<el-input clearable v-model="supplier_name" placeholder="供应商"></el-input>
 				</el-form-item>
 				<el-form-item class="form_item">
-					<el-select v-model="business_ids" clearable placeholder="主营业务">
-						<el-option v-for="item in business_list" :key="item.id" :label="item.name" :value="item.id">
-						</el-option>
-					</el-select>
+					<el-input clearable v-model="main_business" placeholder="主营业务"></el-input>
 				</el-form-item>
 				<el-form-item class="form_item">
-					<el-button type="primary">查询</el-button>
+					<el-button type="primary" @click="checkPage(1)">查询</el-button>
 				</el-form-item>
 			</el-form>
 		</el-card>
@@ -20,56 +17,53 @@
 			<TableTitle title="数据列表" id="table_title">
 				<el-button size="mini" type="primary" @click="addFn('1')">添加</el-button>
 			</TableTitle>
-			<el-table size="mini" :data="supplier_data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height">
-				<el-table-column label="供应商名称" prop="name" show-overflow-tooltip></el-table-column>
-				<el-table-column label="供应商地址" prop="common_text" show-overflow-tooltip></el-table-column>
-				<el-table-column label="供应商联系方式" width="120" prop="common_text" show-overflow-tooltip></el-table-column>
-				<el-table-column label="主营" prop="common_text" show-overflow-tooltip></el-table-column>
-				<el-table-column label="微信" prop="common_text" show-overflow-tooltip></el-table-column>
-				<el-table-column label="拍照" prop="common_text" show-overflow-tooltip></el-table-column>
-				<el-table-column label="退货" prop="common_text" show-overflow-tooltip></el-table-column>
-				<el-table-column label="代发" prop="common_text" show-overflow-tooltip></el-table-column>
-				<el-table-column label="入仓" prop="common_text" show-overflow-tooltip></el-table-column>
-				<el-table-column label="结算" prop="common_text" show-overflow-tooltip></el-table-column>
-				<el-table-column label="评级" prop="common_text" show-overflow-tooltip></el-table-column>
+			<el-table size="mini" :data="data.data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height">
+				<el-table-column label="供应商名称" prop="supplier_name" show-overflow-tooltip></el-table-column>
+				<el-table-column label="供应商地址" prop="address" show-overflow-tooltip></el-table-column>
+				<el-table-column label="供应商联系方式" width="120" prop="contact_information" show-overflow-tooltip></el-table-column>
+				<el-table-column label="主营" prop="main_business" show-overflow-tooltip></el-table-column>
+				<el-table-column label="微信" prop="weixin" show-overflow-tooltip></el-table-column>
+				<el-table-column label="拍照">
+					<template slot-scope="scope">
+						{{scope.row.supply_photograph == 1?'是':'否'}}
+					</template>
+				</el-table-column>
+				<el-table-column label="退货">
+					<template slot-scope="scope">
+						{{scope.row.supply_return_goods == 1?'是':'否'}}
+					</template>
+				</el-table-column>
+				<el-table-column label="换货">
+					<template slot-scope="scope">
+						{{scope.row.supply_exchange_goods == 1?'是':'否'}}
+					</template>
+				</el-table-column>
+				<el-table-column label="代发">
+					<template slot-scope="scope">
+						{{scope.row.supply_replace_send == 1?'是':'否'}}
+					</template>
+				</el-table-column>
+				<el-table-column label="入仓">
+					<template slot-scope="scope">
+						{{scope.row.supply_warehousing == 1?'是':'否'}}
+					</template>
+				</el-table-column>
+				<el-table-column label="结算">
+					<template slot-scope="scope">
+						{{scope.row.supply_monthly_settlement == 1?'月结':'现结'}}
+					</template>
+				</el-table-column>
+				<el-table-column label="评级" prop="grade_name" show-overflow-tooltip></el-table-column>
 				<el-table-column label="操作" width="180" fixed="right">
 					<template slot-scope="scope">
-						<el-button type="text" size="small" @click="getDetail">查看</el-button>
-						<el-button type="text" size="small" @click="addFn('2',scope.row.name)">编辑</el-button>
-						<el-button type="text" size="small">删除</el-button>
-						<el-button type="text" size="small" @click="level_dialog = true">评级</el-button>
+						<el-button type="text" size="small" @click="getDetail(scope.row.supplier_id)">查看</el-button>
+						<el-button type="text" size="small" @click="addFn('2',scope.row.supplier_id)">编辑</el-button>
+						<el-button type="text" size="small" @click="deleteFn(scope.row.supplier_id)">删除</el-button>
 					</template>
 				</el-table-column>
 			</el-table>
-			<PaginationWidget id="bottom_row" :total="62" :page="page" @checkPage="checkPage"/>
+			<PaginationWidget id="bottom_row" :total="data.total" :page="page" @checkPage="checkPage"/>
 		</el-card>
-		<!-- 评级弹窗 -->
-		<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" destroy-on-close :visible.sync="level_dialog">
-			<div slot="title" class="dialog_title">
-				<div>请为供应商进行评级</div>
-				<img class="close_icon" src="../../../static/close_icon.png" @click="level_dialog = false">
-			</div>
-			<div class="dialog_content">
-				<el-form size="small" label-width="100px">
-					<el-form-item label="供应商名称：">
-						常务副校长
-					</el-form-item>
-					<el-form-item label="主营：">
-						各方面
-					</el-form-item>
-					<el-form-item label="评级：">
-						<el-select v-model="level_ids" clearable placeholder="请选择评级">
-							<el-option v-for="item in level_list" :key="item" :label="item" :value="item">
-							</el-option>
-						</el-select>
-					</el-form-item>
-				</el-form>
-			</div>
-			<div slot="footer" class="dialog_footer">
-				<el-button size="small" @click="level_dialog = false">取消</el-button>
-				<el-button type="primary" size="small" @click="level_dialog = false">提交</el-button>
-			</div>
-		</el-dialog>
 	</div>
 </template>
 <style lang="less" scoped>
@@ -92,47 +86,25 @@
 		flex:1;
 	}
 }
-.dialog_content{
-	padding: 20rem;
-}
 </style>
 <script>
+	import resource from '../../../api/chain_resource.js'
+
 	import TableTitle from '../components/table_title.vue'
 	import PaginationWidget from '../../../components/pagination_widget.vue'
 	export default{
 		data(){
 			return{
-				keyword:"",			//供应商名称/旺旺号
-				business_list:[{
-					name:'男装',
-					id:'1'
-				},{
-					name:'女装',
-					id:'2'
-				}],					//主营业务列表
-				business_ids:[],	//选中的主营业务
+				supplier_name:"",			//供应商名称
+				main_business:"",			//主营业务
 				max_height:0,	
 				page:1,
-				supplier_data:[{
-					name:'供应商名称',
-					common_text:'公用内容'
-				},{
-					name:'供应商名称',
-					common_text:'公用内容'
-				},{
-					name:'供应商名称',
-					common_text:'公用内容'
-				},{
-					name:'供应商名称',
-					common_text:'公用内容'
-				},{
-					name:'供应商名称',
-					common_text:'公用内容'
-				}],						//表格数据
-				level_dialog:false,		//评级弹窗
-				level_list:['SSS','AAA','BBB','CCC'],	//级别列表
-				level_ids:[],			//选中的级别
+				data:{},				//获取的数据
 			}
+		},
+		created(){
+			//获取供应商列表
+			this.supplierManagerList();
 		},
 		destroyed() {
 			window.removeEventListener("resize", () => {});
@@ -157,22 +129,66 @@
     				"px";
     			});
     		},
+    		//获取供应商列表
+    		supplierManagerList(){
+    			let arg = {
+    				supplier_name:this.supplier_name,
+    				main_business:this.main_business,
+    				pagesize:10,
+    				page:this.page
+    			}
+    			resource.supplierManagerList(arg).then(res => {
+    				if(res.data.code == 1){
+    					this.data = res.data.data;
+    				}else{
+    					this.$message.warning(res.data.msg);
+    				}
+    			})
+    		},
 			//切换页码
 			checkPage(v){
-				console.log(v)
+				this.page = v;
+				//获取供应商列表
+				this.supplierManagerList();
 			},
 			//点击查看
-			getDetail(){
-				this.$router.push('/chain_supplier_detail')
+			getDetail(supplier_id){
+				this.$router.push(`/chain_supplier_detail?supplier_id=${supplier_id}`);
 			},
 			//点击添加或编辑
-			addFn(type,id){
+			addFn(type,supplier_id){
 				if(type == '1'){
 					this.$router.push('/add_edit_supplier?supplier_type=1')
 				}else{
-					this.$router.push(`/add_edit_supplier?supplier_type=2&id=${id}`);
+					this.$router.push(`/add_edit_supplier?supplier_type=2&supplier_id=${supplier_id}`);
 				}
-			}
+			},
+			//点击删除
+			deleteFn(supplier_id){
+				this.$confirm('确认删除该供应商?', '提示', {
+					confirmButtonText: '确定',
+					cancelButtonText: '取消',
+					type: 'warning'
+				}).then(() => {
+					let arg = {
+						supplier_id:supplier_id
+					}
+					resource.supplierManagerDel(arg).then(res => {
+						if(res.data.code == 1){
+							this.$message.success(res.data.msg);
+							//获取供应商列表
+    						this.supplierManagerList();
+						}else{
+							this.$message.warning(res.data.msg);
+						}
+					})
+				}).catch(() => {
+					this.$message({
+						type: 'info',
+						message: '已取消'
+					});          
+				});
+			},
 		},
 		components:{
 			TableTitle,

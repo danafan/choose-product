@@ -8,6 +8,7 @@ let path = {
   ajaxClassList:'setting/ajax_class_list',                   //分类列表
   uploadFile:'common/upload',                                //上传图片
   delFile:'common/del_file',                                 //删除图片
+  ajaxSupplierGradeList:'supplier_manager/ajax_supplier_grade_list',  //供应商等级列表
 }
 export default {
   //类目列表
@@ -41,5 +42,9 @@ export default {
   //删除图片
   delFile(params) {
     return http.post(path.delFile, params);
+  },
+  //供应商等级列表
+  ajaxSupplierGradeList(params) {
+    return http.get(path.ajaxSupplierGradeList, params);
   },
 };

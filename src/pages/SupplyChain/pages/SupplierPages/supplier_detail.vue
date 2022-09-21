@@ -4,45 +4,48 @@
 			<div class="form_row">
 				<el-form size="small" label-width="120px">
 					<el-form-item label="供应商名称：">
-						供应商名称
+						{{data_info.supplier_name}}
 					</el-form-item>
 					<el-form-item label="供应商地址：">
-						供应商地址
+						{{data_info.address}}
 					</el-form-item>
-					<el-form-item label="供应商微信：">
-						供应商微信
+					<el-form-item label="主营：">
+						{{data_info.main_business}}
 					</el-form-item>
 					<el-form-item label="提供拍照：">
-						是
+						{{data_info.supply_photograph==1?'是':'否'}}
 					</el-form-item>
 					<el-form-item label="提供退货：">
-						是
+						{{data_info.supply_return_goods==1?'是':'否'}}
 					</el-form-item>
 					<el-form-item label="提供换货：">
-						是
+						{{data_info.supply_exchange_goods==1?'是':'否'}}
 					</el-form-item>
 					<el-form-item label="提供代发：">
-						是
+						{{data_info.supply_replace_send==1?'是':'否'}}
 					</el-form-item>
 					<el-form-item label="提供入仓：">
-						是
+						{{data_info.supply_warehousing==1?'是':'否'}}
 					</el-form-item>
 				</el-form>
 				<el-form size="small" label-width="140px">
-					<el-form-item label="选择市场：">
-						市场
-					</el-form-item>
 					<el-form-item label="供应商联系方式：">
-						供应商联系方式
+						{{data_info.contact_information}}
 					</el-form-item>
-					<el-form-item label="主营：">
-						主营
+					<el-form-item label="供应商微信：">
+						{{data_info.weixin}}
 					</el-form-item>
 					<el-form-item label="结算方式：">
-						结算方式
+						{{data_info.supply_warehousing==1?'月结':'现结'}}
 					</el-form-item>
-					<el-form-item label="供应商营业执照：">
-						<el-image class="card_img" :src="image_list[0]" fit="contain" :preview-src-list="image_list"></el-image>
+					<el-form-item label="核心供应商：">
+						{{data_info.is_core==1?'是':'否'}}
+					</el-form-item>
+					<el-form-item label="供应商等级：">
+						{{data_info.grade_name}}
+					</el-form-item>
+					<el-form-item label="营业执照：">
+						<el-image class="card_img" :src="img_list[0]" fit="contain" :preview-src-list="img_list"></el-image>
 					</el-form-item>
 				</el-form>
 			</div>
@@ -51,16 +54,39 @@
 	</div>
 </template>
 <script>
+	import resource from '../../../../api/chain_resource.js'
 	export default{
 		data(){
 			return{
-				image_list:["http://img.92nu.com/DataCenter_202208311330183144.jpg"],	//营业执照
+				data_info:{},		//详情
+				img_list:[],		//营业执照
 			}
 		},
 		created(){
-			let id = this.$route.query.id;
+			//获取详情
+			this.supplierManagerInfo()
+		},
+		computed:{
+			//图片前缀
+			domain(){
+				return this.$store.state.domain;
+			}
 		},
 		methods:{
+			//获取详情
+			supplierManagerInfo(){
+				let arg = {
+					supplier_id:this.$route.query.supplier_id
+				}
+				resource.supplierManagerInfo(arg).then(res => {
+					if(res.data.code == 1){
+						this.data_info = res.data.data;
+						this.img_list.push(this.domain + this.data_info.business_license);
+					}else{
+						this.$message.warning(res.data.msg);
+					}
+				})
+			},
 			//点击返回
 			backFn(){
 				this.$router.go(-1);

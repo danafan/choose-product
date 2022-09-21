@@ -51,6 +51,17 @@ let path = {
   editUploadImg:'productstyle/edituploadimg',		//编辑商品图
   delUploadImg:'productstyle/deluploadimg',			//删除商品图
   changeMainImg:'productstyle/changemainimg',		//设为主图
+  checkStatus:'productstyle/upanddown',				//商品上架或下架
+  noticeList:'notice/list',							//公告列表
+  addNotice:'notice/add',							//创建公告
+  noticeInfo:'notice/info',							//公告详情
+  editNotice:'notice/edit',							//编辑公告
+  noticeDel:'notice/del',							//删除公告
+  supplierManagerList:'supplier_manager/index',		//供应商列表
+  addSupplierManager:'supplier_manager/add',		//创建供应商
+  supplierManagerInfo:'supplier_manager/info',		//获取供应商详情
+  supplierManagerEdit:'supplier_manager/edit',		//编辑供应商
+  supplierManagerDel:'supplier_manager/del',		//删除供应商
 };
 export default {
   //类目列表接口
@@ -288,5 +299,49 @@ export default {
   //设为主图
   changeMainImg(params) {
     return http.post(path.changeMainImg, params);
+  },
+  //商品上架或下架
+  checkStatus(params) {
+    return http.post(path.checkStatus, params);
+  },
+  //公告列表
+  noticeList(params) {
+    return http.get(path.noticeList, params);
+  },
+  //创建公告
+  addNotice(params) {
+    return http.post(path.addNotice, params);
+  },
+  //公告详情
+  noticeInfo(params) {
+    return http.get(path.noticeInfo, params);
+  },
+  //编辑公告
+  editNotice(params) {
+    return http.post(path.editNotice, params);
+  },
+  //删除公告
+  noticeDel(params) {
+    return http.post(path.noticeDel, params);
+  },
+  //供应商列表
+  supplierManagerList(params) {
+    return http.get(path.supplierManagerList, params);
+  },
+  //创建供应商
+  addSupplierManager(params) {
+    return http.post(path.addSupplierManager, params);
+  },
+  //获取供应商详情
+  supplierManagerInfo(params) {
+    return http.get(path.supplierManagerInfo, params);
+  },
+  //编辑供应商
+  supplierManagerEdit(params) {
+    return http.post(path.supplierManagerEdit, params);
+  },
+  //删除供应商
+  supplierManagerDel(params) {
+    return http.post(path.supplierManagerDel, params);
   },
 };

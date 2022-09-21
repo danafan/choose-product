@@ -109,6 +109,7 @@
 								<el-dropdown-item command="3">删除</el-dropdown-item>
 							</el-dropdown-menu>
 						</el-dropdown>
+						<el-button type="text" size="small" v-if="scope.row.check_status == 2" @click="checkStatus(scope.row.style_id,scope.row.status)">{{scope.row.status == 1?'下架':'上架'}}</el-button>
 						<el-button type="text" size="small" v-if="scope.row.check_status == 3" @click="$router.push('/edit_goods?page_type=goods&goods_type=2&style_id=' + scope.row.style_id)">重新提交</el-button>
 					</template>
 				</el-table-column>
@@ -405,6 +406,33 @@
 						});          
 					});
 				}
+			},
+			//切换上架或下架
+			checkStatus(style_id,type){
+				this.$confirm(`确认${type == 0?'上架':'下架'}?`, '提示', {
+					confirmButtonText: '确定',
+					cancelButtonText: '取消',
+					type: 'warning'
+				}).then(() => {
+					let arg = {
+						style_id:style_id,
+						type:type == 0?1:0
+					}
+					resource.checkStatus(arg).then(res => {
+						if(res.data.code == 1){
+							this.$message.success(res.data.msg);
+								//获取列表
+								this.getGoodsList();
+							}else{
+								this.$message.warning(res.data.msg);
+							}
+						})
+				}).catch(() => {
+					this.$message({
+						type: 'info',
+						message: '已取消'
+					});          
+				});
 			}
 		},
 		components:{

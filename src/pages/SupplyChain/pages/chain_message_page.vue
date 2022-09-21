@@ -6,7 +6,7 @@
 					<el-input clearable v-model="keyword" placeholder="请输入关键字"></el-input>
 				</el-form-item>
 				<el-form-item class="form_item">
-					<el-button type="primary">查询</el-button>
+					<el-button type="primary" @click="checkPage(1)">查询</el-button>
 				</el-form-item>
 			</el-form>
 		</el-card>
@@ -14,24 +14,25 @@
 			<TableTitle title="数据列表" id="table_title">
 				<el-button size="mini" type="primary" @click="addFn('1')">添加公告</el-button>
 			</TableTitle>
-			<el-table size="mini" :data="message_list" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height">
-				<el-table-column label="公告标题" prop="title" show-overflow-tooltip></el-table-column>
-				<el-table-column label="公告内容" prop="content" show-overflow-tooltip></el-table-column>
-				<el-table-column label="发布日期" prop="time" show-overflow-tooltip></el-table-column>
-				<el-table-column label="开始时间" prop="time" show-overflow-tooltip></el-table-column>
-				<el-table-column label="结束时间" prop="time" show-overflow-tooltip></el-table-column>
-				<el-table-column label="发布人" prop="time" show-overflow-tooltip></el-table-column>
+			<el-table size="mini" :data="data.data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height">
+				<el-table-column label="公告标题" prop="notice_title" show-overflow-tooltip></el-table-column>
+				<el-table-column label="公告内容" prop="notice_content" show-overflow-tooltip></el-table-column>
+				<el-table-column label="发布日期" prop="add_time" show-overflow-tooltip></el-table-column>
+				<el-table-column label="开始时间" prop="start_day" show-overflow-tooltip></el-table-column>
+				<el-table-column label="结束时间" prop="end_day" show-overflow-tooltip></el-table-column>
+				<el-table-column label="发布人" prop="add_user_name" show-overflow-tooltip></el-table-column>
 				<el-table-column label="操作" width="140" fixed="right">
 					<template slot-scope="scope">
-						<el-button type="text" size="small" disabled>已发布</el-button>
-						<el-button type="text" size="small" @click="addFn('2')">编辑</el-button>
+						<el-button type="text" size="small" disabled v-if="scope.row.is_online">已发布</el-button>
+						<el-button type="text" size="small" @click="addFn('2',scope.row.notice_id)" v-if="!scope.row.is_online">编辑</el-button>
+						<el-button type="text" size="small" @click="deleteFn(scope.row.notice_id)">删除</el-button>
 					</template>
 				</el-table-column>
 			</el-table>
 			<PaginationWidget id="bottom_row" :total="62" :page="page" @checkPage="checkPage"/>
 		</el-card>
 		<!-- 添加或编辑 -->
-		<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" destroy-on-close :visible.sync="show_dialog">
+		<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" destroy-on-close @close="closeDialog" :visible.sync="show_dialog">
 			<div slot="title" class="dialog_title">
 				<div>{{dialog_title}}</div>
 				<img class="close_icon" src="../../../static/close_icon.png" @click="show_dialog = false">
@@ -39,27 +40,26 @@
 			<div class="dialog_content">
 				<el-form size="small" label-width="100px">
 					<el-form-item label="公告标题：" required>
-						<el-input style="width: 260px" clearable v-model="message_title" placeholder="请输入公告标题"></el-input>
+						<el-input style="width: 260px" clearable v-model="notice_title" placeholder="请输入公告标题"></el-input>
 					</el-form-item>
 					<el-form-item label="公告内容：" required>
-						<el-input style="width: 420px" type="textarea" :rows="5" clearable v-model="message_content" placeholder="请输入公告内容">
+						<el-input style="width: 320px" type="textarea" :rows="5" clearable v-model="notice_content" placeholder="请输入公告内容">
 						</el-input>
 					</el-form-item>
-					<el-form-item>
-						<el-checkbox v-model="is_time">开始时间~结束时间</el-checkbox>
-					</el-form-item>
-					<el-form-item v-if="is_time">
-						<el-date-picker v-model="date" type="daterange" unlink-panels value-format="yyyy-MM-dd" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期">
-						</el-date-picker>
-					</el-form-item>
-				</el-form>
-			</div>
-			<div slot="footer" class="dialog_footer">
-				<el-button size="small" @click="show_dialog = false">取消</el-button>
-				<el-button type="primary" size="small" @click="show_dialog = false">提交</el-button>
-			</div>
-		</el-dialog>
-	</div>
+					<el-form-item label="在线时间：" required>
+						<el-date-picker v-model="date" type="datetimerange"
+						value-format="yyyy-MM-dd HH:mm:ss" range-separator="至"
+						start-placeholder="开始时间" end-placeholder="结束时间" :picker-options="pickerOptions">
+					</el-date-picker>
+				</el-form-item>
+			</el-form>
+		</div>
+		<div slot="footer" class="dialog_footer">
+			<el-button size="small" @click="show_dialog = false">取消</el-button>
+			<el-button type="primary" size="small" @click="commitFn">提交</el-button>
+		</div>
+	</el-dialog>
+</div>
 </template>
 <style lang="less" scoped>
 .chain_page_content{
@@ -86,6 +86,8 @@
 }
 </style>
 <script>
+	import resource from '../../../api/chain_resource.js'
+
 	import TableTitle from '../components/table_title.vue'
 	import PaginationWidget from '../../../components/pagination_widget.vue'
 	export default{
@@ -94,51 +96,24 @@
 				keyword:"",			//关键字
 				max_height:0,	
 				page:1,
-				message_list:[{
-					title:'公告标题',
-					content:'公告内容公告内容公告内容公告内容公告内容',
-					time:'2022-09-09 12:00'
-				},{
-					title:'公告标题',
-					content:'公告内容公告内容公告内容公告内容公告内容',
-					time:'2022-09-09 12:00'
-				},{
-					title:'公告标题',
-					content:'公告内容公告内容公告内容公告内容公告内容',
-					time:'2022-09-09 12:00'
-				},{
-					title:'公告标题',
-					content:'公告内容公告内容公告内容公告内容公告内容',
-					time:'2022-09-09 12:00'
-				},{
-					title:'公告标题',
-					content:'公告内容公告内容公告内容公告内容公告内容',
-					time:'2022-09-09 12:00'
-				},{
-					title:'公告标题',
-					content:'公告内容公告内容公告内容公告内容公告内容',
-					time:'2022-09-09 12:00'
-				},{
-					title:'公告标题',
-					content:'公告内容公告内容公告内容公告内容公告内容',
-					time:'2022-09-09 12:00'
-				},{
-					title:'公告标题',
-					content:'公告内容公告内容公告内容公告内容公告内容',
-					time:'2022-09-09 12:00'
-				},{
-					title:'公告标题',
-					content:'公告内容公告内容公告内容公告内容公告内容',
-					time:'2022-09-09 12:00'
-				}],					//公告列表
+				data:{},				//获取的数据
 				show_dialog:false,		//添加或编辑弹窗
 				dialog_title:"",		//弹窗标题
 				type:"",				//弹窗类型（1:添加；2:编辑）
-				message_title:"",		//公告标题
-				message_content:"",		//公告内容
-				is_time:false,			//是否有开始和结束时间
+				notice_id:"",
+				notice_title:"",		//公告标题
+				notice_content:"",		//公告内容
 				date:[],				//开始和结束时间
+				pickerOptions:{                                 
+					disabledDate(time) {
+						return time.getTime() < Date.now() - 8.64e7;
+					},
+				}
 			}
+		},
+		created(){
+			//公告列表
+			this.noticeList();
 		},
 		destroyed() {
 			window.removeEventListener("resize", () => {});
@@ -163,15 +138,140 @@
     				"px";
     			});
     		},
+    		//公告列表
+    		noticeList(){
+    			let arg = {
+    				page:this.page,
+    				pagesize:10,
+    				title:this.keyword
+    			}
+    			resource.noticeList(arg).then(res => {
+    				if(res.data.code == 1){
+    					let data = res.data.data;
+    					data.data.map(item => {
+    						var start_day = new Date(item.start_day).getTime();
+    						var end_day = new Date(item.end_day).getTime();
+    						var current_time = new Date().valueOf();
+    						let is_online = false;
+    						if((current_time > start_day && current_time < end_day)  || current_time > end_day){
+    							is_online = true
+    						}
+    						item.is_online = is_online;
+    					})
+    					this.data = data;
+    				}else{
+    					this.$message.warning(res.data.msg);
+    				}
+    			})
+    		},
 			//切换页码
 			checkPage(v){
-				console.log(v)
+				this.page = v;
+				//公告列表
+				this.noticeList();
 			},
 			//点击添加或编辑
-			addFn(type){
+			addFn(type,notice_id){
 				this.type = type;
+				if(this.type == '2'){
+					this.notice_id = notice_id;
+					//获取公告详情
+					this.noticeInfo();
+				}
 				this.dialog_title = type == '1'?'添加公告':'编辑公告';
 				this.show_dialog = true;
+			},
+			//获取公告详情
+			noticeInfo(){
+				let arg = {
+					notice_id:this.notice_id
+				}
+				resource.noticeInfo(arg).then(res => {
+					if(res.data.code == 1){
+						let data = res.data.data;
+						this.notice_title = data.notice_title;
+						this.notice_content = data.notice_content;
+						let info_date = [];
+						info_date[0] = data.start_day;
+						info_date[1] = data.end_day;
+						this.date = info_date;
+					}else{
+						this.$message.warning(res.data.msg);
+					}
+				})
+			},
+			//点击确认
+			commitFn(){
+				if(this.notice_title == ''){
+					this.$message.warning('请输入公告标题');
+				}else if(this.notice_content == ''){
+					this.$message.warning('请输入公告内容');
+				}else if(!this.date || this.date.length == 0){
+					this.$message.warning('请选择在线时间');
+				}else{
+					var arg = {
+						notice_title:this.notice_title,
+						notice_content:this.notice_content,
+						start_date:this.date && this.date.length > 0?this.date[0]:"",
+						end_date:this.date && this.date.length > 0?this.date[1]:"",
+					}
+					if(this.type == '1'){		//创建
+						resource.addNotice(arg).then(res => {
+							if(res.data.code == 1){
+								this.$message.success(res.data.msg);
+								this.show_dialog = false;
+								//公告列表
+								this.noticeList();
+							}else{
+								this.$message.warning(res.data.msg);
+							}
+						})
+					}else{				//编辑
+						arg.notice_id = this.notice_id;
+						resource.editNotice(arg).then(res => {
+							if(res.data.code == 1){
+								this.$message.success(res.data.msg);
+								this.show_dialog = false;
+								//公告列表
+								this.noticeList();
+							}else{
+								this.$message.warning(res.data.msg);
+							}
+						})
+					}
+				}
+			},
+			//点击删除
+			deleteFn(notice_id){
+				this.$confirm('确认删除该公告?', '提示', {
+					confirmButtonText: '确定',
+					cancelButtonText: '取消',
+					type: 'warning'
+				}).then(() => {
+					let arg = {
+						notice_id:notice_id
+					}
+					resource.noticeDel(arg).then(res => {
+						if(res.data.code == 1){
+							this.$message.success(res.data.msg);
+							//获取列表
+							this.noticeList();
+						}else{
+							this.$message.warning(res.data.msg);
+						}
+					})
+				}).catch(() => {
+					this.$message({
+						type: 'info',
+						message: '已取消'
+					});          
+				});
+			},
+			//关闭弹窗
+			closeDialog(){
+				this.notice_title = '';
+				this.notice_content = '';
+				this.date = [];
 			}
 		},
 		components:{
