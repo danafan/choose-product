@@ -5,17 +5,17 @@
 			<div class="selected_left">
 				<div>已选条件</div>
 				<img class="right_arrow" src="../static/down_arrow.png">
-				<div>{{supplier_list[supplier_index].name}}</div>
+				<div v-if="supplier_list.length > 0">{{supplier_list[supplier_index].supplier_name}}</div>
 				<img class="right_arrow" src="../static/down_arrow.png">
-				<div>{{market_list[market_index].name}}</div>
+				<div v-if="market_list.length > 0">{{market_list[market_index].market_name}}</div>
 				<img class="right_arrow" src="../static/down_arrow.png">
-				<div>{{category_list[category_index].name}}</div>
+				<div v-if="category_list.length > 0">{{category_list[category_index].category_name}}</div>
 				<img class="right_arrow" src="../static/down_arrow.png">
-				<div>{{class_list[class_index].name}}</div>
+				<div v-if="class_list.length > 0">{{class_list[class_index].classification_name}}</div>
 				<img class="right_arrow" src="../static/down_arrow.png">
-				<div>{{style_list[style_index].name}}</div>
+				<div v-if="style_list.length > 0">{{style_list[style_index].shooting_style_name}}</div>
 				<img class="right_arrow" src="../static/down_arrow.png">
-				<div>{{rating_list[rating_index].name}}</div>
+				<div v-if="rating_list.length > 0">{{rating_list[rating_index].grade_name}}</div>
 			</div>
 			<div class="selected_right" @click="checkFn">
 				<div>{{title}}</div>
@@ -26,37 +26,37 @@
 			<div class="conditions_row">
 				<div class="lable">供应商：</div>
 				<div class="list">
-					<div class="item" :class="{'active_item':supplier_index == index}" v-for="(item,index) in supplier_list" @click="checkIndex('supplier',index)">{{item.name}}</div>
+					<div class="item" :class="{'active_item':supplier_index == index}" v-for="(item,index) in supplier_list" @click="checkIndex('supplier',index)">{{item.supplier_name}}</div>
 				</div>
 			</div>
 			<div class="conditions_row">
 				<div class="lable">市场：</div>
 				<div class="list">
-					<div class="item" :class="{'active_item':market_index == index}" v-for="(item,index) in market_list" @click="checkIndex('market',index)">{{item.name}}</div>
+					<div class="item" :class="{'active_item':market_index == index}" v-for="(item,index) in market_list" @click="checkIndex('market',index)">{{item.market_name}}</div>
 				</div>
 			</div>
 			<div class="conditions_row">
 				<div class="lable">类目：</div>
 				<div class="list">
-					<div class="item" :class="{'active_item':category_index == index}" v-for="(item,index) in category_list" @click="checkIndex('category',index)">{{item.name}}</div>
+					<div class="item" :class="{'active_item':category_index == index}" v-for="(item,index) in category_list" @click="checkIndex('category',index)">{{item.category_name}}</div>
 				</div>
 			</div>
 			<div class="conditions_row">
 				<div class="lable">分类：</div>
 				<div class="list">
-					<div class="item" :class="{'active_item':class_index == index}" v-for="(item,index) in class_list" @click="checkIndex('class',index)">{{item.name}}</div>
+					<div class="item" :class="{'active_item':class_index == index}" v-for="(item,index) in class_list" @click="checkIndex('class',index)">{{item.classification_name}}</div>
 				</div>
 			</div>
 			<div class="conditions_row">
 				<div class="lable">拍摄风格：</div>
 				<div class="list">
-					<div class="item" :class="{'active_item':style_index == index}" v-for="(item,index) in style_list" @click="checkIndex('style',index)">{{item.name}}</div>
+					<div class="item" :class="{'active_item':style_index == index}" v-for="(item,index) in style_list" @click="checkIndex('style',index)">{{item.shooting_style_name}}</div>
 				</div>
 			</div>
 			<div class="conditions_row none_border">
 				<div class="lable">供应商评级：</div>
 				<div class="list">
-					<div class="item" :class="{'active_item':rating_index == index}" v-for="(item,index) in rating_list" @click="checkIndex('rating',index)">{{item.name}}</div>
+					<div class="item" :class="{'active_item':rating_index == index}" v-for="(item,index) in rating_list" @click="checkIndex('rating',index)">{{item.grade_name}}</div>
 				</div>
 			</div>
 		</div>
@@ -70,126 +70,62 @@
 				</div>
 			</div>
 			<div class="style_row">
-				<div class="style_item" :class="{'active_color':item.is_selected == true}" v-for="(item,index) in cate_style_list" @click="checkStyle(index)">{{item.name}}</div>
+				<div class="style_item" :class="{'active_color':item.is_selected === 1}" v-for="(item,index) in cate_style_list" @click="checkStyle(index)">{{item.name}}</div>
 			</div>
-			<el-date-picker v-model="date" size="mini" type="daterange" unlink-panels value-format="yyyy-MM-dd" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions" @change="checkDate">
+			<el-date-picker v-model="date" size="mini" type="daterange" unlink-panels value-format="yyyy-MM-dd" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions" @change="callbackFn">
 			</el-date-picker>
 		</div>
 	</div>
 </template>
 <script>
 	import { getNowDate,getCurrentDate } from "../api/date.js";
+
+	import commonResource from '../api/common_resource.js'
 	export default{
 		data(){
 			return{
 				supplier_index:0,		//选中的供应商下标
-				supplier_list:[{
-					name:'全部',
-					id:'0'
-				},{
-					name:'供应商1',
-					id:'1'
-				},{
-					name:'供应商2',
-					id:'2'
-				},{
-					name:'供应商3',
-					id:'3'
-				}],						//供应商列表
+				supplier_list:[],		//供应商列表
 				market_index:0,			//选中的市场下标
-				market_list:[{
-					name:'全部',
-					id:'0'
-				},{
-					name:'市场1',
-					id:'1'
-				},{
-					name:'市场2',
-					id:'2'
-				},{
-					name:'市场3',
-					id:'3'
-				}],						//市场列表
+				market_list:[],			//市场列表
 				category_index:0,		//选中的类目下标
-				category_list:[{
-					name:'全部',
-					id:'0'
-				},{
-					name:'类目1',
-					id:'1'
-				},{
-					name:'类目2',
-					id:'2'
-				},{
-					name:'类目3',
-					id:'3'
-				}],						//类目列表
-				class_index:0,	//选中的分类下标
-				class_list:[{
-					name:'全部',
-					id:'0'
-				},{
-					name:'分类1',
-					id:'1'
-				},{
-					name:'分类2',
-					id:'2'
-				},{
-					name:'分类3',
-					id:'3'
-				}],						//分类列表
+				category_list:[],		//类目列表
+				class_index:0,			//选中的分类下标
+				class_list:[],			//分类列表
 				style_index:0,			//选中的拍摄风格下标
-				style_list:[{
-					name:'全部',
-					id:'0'
-				},{
-					name:'风格1',
-					id:'1'
-				},{
-					name:'风格2',
-					id:'2'
-				},{
-					name:'风格3',
-					id:'3'
-				}],						//拍摄风格列表
+				style_list:[],			//拍摄风格列表
 				rating_index:0,			//选中的供应商评级下标
-				rating_list:[{
-					name:'全部',
-					id:'0'
-				},{
-					name:'评级1',
-					id:'1'
-				},{
-					name:'评级2',
-					id:'2'
-				},{
-					name:'评级3',
-					id:'3'
-				}],						//供应商评级列表
+				rating_list:[],			//供应商评级列表
 				show_conditions_box:false,		//默认下拉条件不显示
 				title:"展开",					//下拉条件按钮名称
 				sort_list:[{
 					name:'销量',
+					key:'sales',
+					val:'sales_num_all',
 					sort:'default'
 				},{
 					name:'选中量',
+					key:'select',
+					val:'select_num',
 					sort:'default'
 				},{
 					name:'浏览量',
+					key:'views',
+					val:'views_num',
 					sort:'default'
 				}],								//排序列表
 				cate_style_list:[{
 					name:'爆款',
-					id:'1',
-					is_selected:false
+					is_selected:0
 				},{
-					name:'数据款',
-					id:'2',
-					is_selected:false
+					name:'主推款',
+					is_selected:0
 				},{
 					name:'独家款',
-					id:'3',
-					is_selected:false
+					is_selected:0
+				},{
+					name:'二开款',
+					is_selected:0
 				}],								//款式列表
 				date:[],						//上新日期
 				pickerOptions: {
@@ -229,7 +165,27 @@
 				default:0
 			}
 		},
+		created(){
+			//获取筛选条件列表
+			this.getScreenList();
+		},
 		methods:{
+			//获取筛选条件列表
+			getScreenList(){
+				commonResource.getScreenList().then(res => {
+					if(res.data.code == 1){
+						let data = res.data.data;
+						this.supplier_list = data.supplier;
+						this.market_list = data.market;
+						this.category_list = data.category;
+						this.class_list = data.classification;
+						this.style_list = data.shooting_style;
+						this.rating_list = data.grade;
+					}else{
+						this.$message.warning(res.data.msg);
+					}
+				})
+			},
 			//点击展开或收起
 			checkFn(){
 				this.show_conditions_box = !this.show_conditions_box;
@@ -257,6 +213,8 @@
 					this.rating_index = index;
 					break;
 				}
+				//获取当前条件并传递
+				this.callbackFn();
 			},
 			//点击切换排序条件
 			sortFn(index){
@@ -277,21 +235,44 @@
 						item.sort = 'default';
 					}
 				})
+				//获取当前条件并传递
+				this.callbackFn();
 			},
 			//点击切换款式
 			checkStyle(index){
 				this.cate_style_list.map((item,i) => {
 					if(index == i){
-						item.is_selected = !item.is_selected
-					}else{
-						item.is_selected = false;
+						item.is_selected = item.is_selected == 1?0:1;
 					}
 				})
+				//获取当前条件并传递
+				this.callbackFn();
 			},
-			//切换日期
-			checkDate(v){
-				console.log(v)
-			},
+			//获取当前条件并传递
+			callbackFn(){	
+				var arg = {
+					supplier_id:this.supplier_list[this.supplier_index].supplier_id,
+					market_id:this.market_list[this.market_index].market_id,
+					category_id:this.category_list[this.category_index].category_id,
+					classification_id:this.class_list[this.class_index].classification_id,
+					shooting_style_id:this.style_list[this.style_index].shooting_style_id,
+					grade_id:this.rating_list[this.rating_index].grade_id,
+					hot_style:this.cate_style_list[0].is_selected,
+					data_style:this.cate_style_list[1].is_selected,
+					sole_style:this.cate_style_list[2].is_selected,
+					again_style:this.cate_style_list[3].is_selected,
+					start_time:this.date && this.date.length > 0?this.date[0]:"",
+					end_time:this.date && this.date.length > 0?this.date[1]:"",
+				}
+				//处理排序
+				let sort_arr = this.sort_list.filter(item => {
+					return item.sort != 'default';
+				})
+				if(sort_arr.length > 0){
+					arg[sort_arr[0].key] = sort_arr[0].val + '-' + sort_arr[0].sort;
+				}
+				this.$emit('callback',arg);
+			}
 		}
 	}
 </script>

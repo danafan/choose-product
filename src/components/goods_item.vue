@@ -3,25 +3,29 @@
 		<div class="image_box">
 			<el-popover
 			placement="right-start"
-			width="450"
 			trigger="hover">
-			<img style="width: 100%" fit="contain" src="http://img.92nu.com/DataCenter_202208311330183144.jpg"/>
-			<img class="goods_image" src="../static/user_img.png" slot="reference" @click="more_image_dialog = true"/>
+			<el-image fit="contain" :src="domain + info.img"></el-image>
+			<el-image :src="domain + info.img" slot="reference" @click="getMoreImage" fit="contain"></el-image>
 		</el-popover>
-		<img class="goods_tag" src="../static/bao_icon.png">
 	</div>
 	<div class="goods_info" @click="getDetail">
 		<div class="price_cate">
 			<div class="price">
 				<div class="p_icon">¥</div>
-				<div class="p_value">{{info.price}}</div>
+				<div class="p_value">{{info.cost_price}}</div>
 			</div>
-			<div class="cate">日系、平铺</div>
+			<div class="style_row">
+				<img class="goods_tag" src="../static/bao_icon.png" v-if="info.hot_style == 1">
+				<img class="goods_tag" src="../static/du_icon.png" v-if="info.sole_style == 1">
+				<img class="goods_tag" src="../static/tui_tag_icon.png" v-if="info.data_style == 1">
+				<img class="goods_tag" src="../static/kai_icon.png" v-if="info.again_style == 1">
+			</div>
+			<div class="cate">{{info.style_name}}</div>
 		</div>
-		<div class="desc">这是描述这是描述这是描述这是描述这是描述这是描述</div>
+		<div class="desc">{{info.title}}</div>
 		<div class="code_time">
-			<div class="code">asdhkjasdasdhkjasd</div>
-			<div class="time">2022-09-09 19:09</div>
+			<div class="code">{{info.i_id}}</div>
+			<div class="time">{{info.new_time_name}}</div>
 		</div>
 		<div class="set_row">
 			<div class="button_row">
@@ -31,22 +35,22 @@
 				</div>
 				<div class="xk" @click.stop="show_select = true">选款</div>
 			</div>
-			<div class="store_name">聚合服饰聚合服饰聚合服饰聚合服饰聚合服饰</div>
+			<div class="store_name">{{info.supplier_name}}</div>
 		</div>
 		<div class="num_row">
-			<div>浏览：3354</div>
-			<div>选中：3354</div>
-			<div>销量：3354</div>
+			<div>浏览：{{info.views_num}}</div>
+			<div>选中：{{info.select_num}}</div>
+			<div>销量：{{info.sales_num_all}}</div>
 		</div>
 		<div class="img_back">
 			<div class="img_list">
-				<img class="info_icon" src="../static/pai_icon.png">
-				<img class="info_icon" src="../static/pai_icon.png">
-				<img class="info_icon" src="../static/pai_icon.png">
-				<img class="info_icon" src="../static/pai_icon.png">
-				<img class="info_icon" src="../static/pai_icon.png">
-				<img class="info_icon" src="../static/pai_icon.png">
-				<img class="info_icon" src="../static/pai_icon.png">
+				<img class="info_icon" src="../static/tui_icon.png" v-if="info.supply_return_goods == 1">
+				<img class="info_icon" src="../static/ru_icon.png" v-if="info.supply_warehousing == 1">
+				<img class="info_icon" src="../static/huan_icon.png" v-if="info.supply_exchange_goods == 1">
+				<img class="info_icon" src="../static/pai_icon.png" v-if="info.supply_photograph == 1">
+				<img class="info_icon" src="../static/dai_icon.png" v-if="info.supply_replace_send == 1">
+				<img class="info_icon" src="../static/xian_icon.png" v-if="info.supply_monthly_settlement == 0">
+				<img class="info_icon" src="../static/yue_icon.png" v-if="info.supply_monthly_settlement == 1">
 			</div>
 			<div class="feek_back" @click.stop="feekBack">反馈</div>
 		</div>
@@ -164,7 +168,7 @@
 	</div>
 </el-dialog>
 <!-- 更多图片 -->
-<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" destroy-on-close :visible.sync="more_image_dialog">
+<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" :visible.sync="more_image_dialog">
 	<div slot="title" class="dialog_title">
 		<div>更多图片</div>
 		<img class="close_icon" src="../static/close_icon.png" @click="more_image_dialog = false">
@@ -172,14 +176,23 @@
 	<div class="image_content">
 		<div class="tab_row">
 			<div class="tab_item" :class="{'active_tab_item':active_tab_index == index}" v-for="(item,index) in image_title_list" @click="active_tab_index = index">
-				<div>风格图</div>
+				<div>{{item}}</div>
 				<div class="active_line" v-if="active_tab_index == index"></div>
 			</div>
 		</div>
-		<div class="source_url">共享盘地址：共享盘地址：www.huapen.con</div>
-		<div class="source_url">网盘地址：共享盘地址：www.huapen.con</div>
-		<div class="more_image">
-			<el-image :z-index="2006" class="more_image_item" :src="item" fit="contain" v-for="item in banner_list" :preview-src-list="banner_list"></el-image>
+		<el-tabs size="small" v-if="active_tab_index == 0">
+			<el-tab-pane :label="item.shooting_style_name" v-for="(item,index) in style_data" :key="index">
+				<div class="source_url">共享盘地址：{{item.shared_disk_address}}</div>
+				<div class="source_url">网盘地址：{{item.net_disk_address}}</div>
+				<div class="more_image">
+					<el-image :z-index="9009" class="more_image_item" :src="img_url" fit="contain" v-for="(img_url,i) in item.img_arr" :key="i" :preview-src-list="item.img_arr"></el-image>
+				</div>
+			</el-tab-pane>
+		</el-tabs>
+		<div v-else>
+			<div class="more_image">
+				<el-image :z-index="9009" class="more_image_item" :src="item" fit="contain" v-for="item in commodity_data" :preview-src-list="commodity_data"></el-image>
+			</div>
 		</div>
 	</div>
 	<div slot="footer" class="dialog_footer">
@@ -193,6 +206,9 @@
 	width: 240rem !important;
 	height: 240rem !important; 
 }
+.el-popover,.el-popper{
+	max-width: 450px!important;
+}
 </style>
 <style lang="less" scoped>
 .goods_item{
@@ -201,23 +217,11 @@
 	width: 265rem;
 	height: 436rem;
 	.image_box{
-		position: relative;
 		width: 263rem;
 		height: 263rem;
-		.goods_image{
-			position: absolute;
-			top: 0;
-			left: 0;
-			width: 100%;
-			height: 100%;
-		}
-		.goods_tag{
-			position: absolute;
-			top: 0;
-			right: 0;
-			width: 44rem;
-			height: 44rem;
-		}
+		display: flex;
+		align-items: center;
+		justify-content: center;
 	}
 	.goods_info{
 		padding: 8rem 10rem;
@@ -240,9 +244,24 @@
 					font-size:18rem;
 				}
 			}
+			.style_row{
+				flex: 1;
+				display: flex;
+				align-items: center;
+				.goods_tag{
+					width: 22rem;
+					height: 22rem;
+				}
+			}
 			.cate{
 				font-size: 12rem;
 				color: #333333;
+				word-break: break-all;
+				text-overflow: ellipsis;
+				overflow: hidden;
+				display: -webkit-box;
+				-webkit-line-clamp: 1;
+				-webkit-box-orient: vertical;
 			}
 		}
 		.desc{
@@ -496,6 +515,8 @@
 }
 </style>
 <script>
+	import resource from '../api/resource.js'
+
 	import QuillEditor from '../components/quill_editor.vue'
 	import UploadFile from '../components/upload_file.vue'
 	export default{
@@ -552,16 +573,10 @@
 				feekback_value:"",		//反馈文字
 				preview_images:[],		//上传的图片列表
 				more_image_dialog:false,		//更多图片
-				image_title_list:[{
-					name:'风格图',
-					id:'1'
-				},{
-					name:'封面图',
-					id:'2'
-				}],						//更多图片类型
+				image_title_list:['风格图','封面图'],	//更多图片类型
 				active_tab_index:0,		//选中的下标
-				popover_img:false,	
-				timer:null	
+				style_data:[],			//风格图数据
+				commodity_data:[],		//封面图数据
 			}
 		},
 		props:{
@@ -571,7 +586,65 @@
 				default:{}
 			}
 		},
+		watch:{
+			active_tab_index:function(n,o){
+				if(n == 0){
+					//获取风格图
+					this.getMoreImage();
+				}else{
+					//获取封面图
+					this.moreImgCommodity();
+				}
+			}
+		},
+		computed:{
+			//图片前缀
+			domain(){
+				return this.$store.state.domain;
+			}
+		},
 		methods:{
+			//获取风格图
+			getMoreImage(){
+				let arg = {
+					style_id:this.info.style_id
+				}
+				resource.moreImgStyle(arg).then(res => {
+					if(res.data.code == 1){
+						let style_data = res.data.data;
+						style_data.map(item => {
+							let img_arr = [];
+							item.img.map(iii => {
+								img_arr.push(this.domain + iii);
+							})
+							item['img_arr'] = img_arr;
+						})
+						this.style_data = style_data;
+						this.more_image_dialog = true;
+					}else{
+						this.$message.warning(res.data.msg);
+					}
+				})		
+			},
+			//获取封面图
+			moreImgCommodity(){
+				let arg = {
+					style_id:this.info.style_id
+				}
+				resource.moreImgCommodity(arg).then(res => {
+					if(res.data.code == 1){
+						let commodity_data = res.data.data.img;
+						let img_arr = [];
+						commodity_data.map(item => {
+							img_arr.push(this.domain + item);
+						})
+						this.commodity_data = img_arr;
+						this.more_image_dialog = true;
+					}else{
+						this.$message.warning(res.data.msg);
+					}
+				})
+			},
 			//点击加入购物车
 			addCar(){
 				let arg = {

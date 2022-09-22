@@ -29,7 +29,7 @@
 					</template>
 				</el-table-column>
 			</el-table>
-			<PaginationWidget id="bottom_row" :total="62" :page="page" @checkPage="checkPage"/>
+			<PaginationWidget id="bottom_row" :total="data.total" :page="page" @checkPage="checkPage"/>
 		</el-card>
 		<!-- 添加或编辑 -->
 		<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" destroy-on-close @close="closeDialog" :visible.sync="show_dialog">

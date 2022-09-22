@@ -3,12 +3,12 @@
 		<div class="padding_page_content">
 			<SearchWidget page_path="index_history" @callback="searchFn" placeholder="首页搜索"/>
 			<el-card class="card_box">
-				<ScreeningWidget :total_num="goods_list.length"/>
+				<ScreeningWidget :total_num="goods_list.length" @callback="screenFn"/>
 				<div class="goods_list">
 					<GoodsItem :info="item" v-for="item in goods_list"/>
 					<div class="padding_item" v-for="i in 5-(goods_list.length%5) == 5?0:5-(goods_list.length%5)"></div>
 				</div>
-				<PaginationWidget :total="62" :page="page" @checkPage="checkPage"/>
+				<PaginationWidget :total="total" :page="arg.page" @checkPage="checkPage"/>
 			</el-card>
 			<CarWidget/>
 		</div>
@@ -20,58 +20,54 @@
 	import GoodsItem from '../../components/goods_item.vue'
 	import PaginationWidget from '../../components/pagination_widget.vue'
 	import CarWidget from '../../components/car_widget.vue'
+
+	import resource from '../../api/resource.js'
 	export default{
 		data(){
 			return{
-				goods_list:[{
-					price:1,
-					image:['http://img.92nu.com/DataCenter_202208311330183144.jpg']
-				},{
-					price:2,
-					image:['http://img.92nu.com/DataCenter_202209080938036416.jpg']
-				},{
-					price:3,
-					image:['http://img.92nu.com/DataCenter_202208311330183144.jpg']
-				},{
-					price:4,
-					image:['http://img.92nu.com/DataCenter_202209080938036416.jpg']
-				},{
-					price:5,
-					image:['http://img.92nu.com/DataCenter_202208311330183144.jpg']
-				},{
-					price:6,
-					image:['http://img.92nu.com/DataCenter_202209080938036416.jpg']
-				},{
-					price:7,
-					image:['http://img.92nu.com/DataCenter_202208311330183144.jpg']
-				},{
-					price:8,
-					image:['http://img.92nu.com/DataCenter_202209080937367725.jpg']
-				},{
-					price:9,
-					image:['http://img.92nu.com/DataCenter_202208311330183144.jpg']
-				},{
-					price:10,
-					image:['http://img.92nu.com/DataCenter_202208311330183144.jpg']
-				},{
-					price:11,
-					image:['http://img.92nu.com/DataCenter_202209080938036416.jpg']
-				},{
-					price:12,
-					image:['http://img.92nu.com/DataCenter_202209081659447849.jpg']
-				}],	//商品列表
-				page:1
+				goods_list:[],	//商品列表
+				total:0,		//总数量
+				arg:{
+					page:1
+				},		//查询条件
+				
 			}
+		},
+		created(){
+			//获取列表
+			this.getList();
 		},
 		methods:{
 			//搜索
 			searchFn(value){
-				console.log(value);
+				let obj = {search:value};
+				this.arg = {...this.arg,...obj};
+				//获取列表
+				this.getList();
+			},
+			//查询条件回调
+			screenFn(arg){
+				this.arg = {...this.arg,...arg};
+				//获取列表
+				this.getList();
 			},
 			//翻页
 			checkPage(val) {
-				this.page = val;
-				console.log(this.page)
+				this.arg.page = val;
+				//获取列表
+				this.getList();
+			},
+			//获取列表
+			getList(){
+				resource.getGoodsList(this.arg).then(res => {
+					if(res.data.code == 1){
+						let data = res.data.data;
+						this.goods_list = data.data;
+						this.total = data.total;
+					}else{
+						this.$message.warning(res.data.msg);
+					}
+				})
 			},
 		},
 		components:{

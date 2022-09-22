@@ -279,7 +279,7 @@
 		height: 100%;
 		.image{
 			width: 188rem;
-			height: 88reml
+			height: 88rem;
 		}
 	}
 }

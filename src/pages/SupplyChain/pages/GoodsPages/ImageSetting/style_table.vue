@@ -8,7 +8,7 @@
 				<el-table-column label="序号" width="55" type="index" :index="0">
 				</el-table-column>
 				<el-table-column label="风格" prop="shooting_style_name" show-overflow-tooltip></el-table-column>
-				<el-table-column label="图片" width="120">
+				<el-table-column label="图片" width="200">
 					<template slot-scope="scope">
 						<el-image :z-index="2006" class="image" :src="scope.row.image_list[0]" fit="contain" :preview-src-list="scope.row.image_list"></el-image>
 					</template>
@@ -281,7 +281,7 @@
 		height: 100%;
 		.image{
 			width: 188rem;
-			height: 88reml
+			height: 88rem;
 		}
 	}
 }
