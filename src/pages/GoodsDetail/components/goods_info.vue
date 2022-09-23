@@ -1,38 +1,38 @@
 <template>
 	<div class="goods_info">
-		<div class="goods_name">男式防紫外线轻薄便携连帽防晒外套男式防紫外线轻薄便携连帽防晒外套男式防紫外线轻薄便携连帽防晒外套</div>
+		<div class="goods_name">{{goods_info.title}}</div>
 		<div class="info_content">
 			<div class="content_row">
 				<div class="row_lable">成本价</div>
-				<div class="row_price">¥56.88</div>
+				<div class="row_price">¥{{goods_info.cost_price}}</div>
 			</div>
 			<div class="content_row">
 				<div class="row_lable">款式编码</div>
-				<div class="row_value">五月五IEu人员68374</div>
+				<div class="row_value">{{goods_info.i_id}}</div>
 			</div>
 			<div class="content_row">
 				<div class="row_lable">款号</div>
-				<div class="row_value">五月五IEu人员68374</div>
+				<div class="row_value">{{goods_info.style_name}}</div>
 			</div>
 			<div class="content_row">
 				<div class="row_lable">类目</div>
-				<div class="row_value">五月五IEu人员68374</div>
+				<div class="row_value">{{goods_info.category_name}}</div>
 			</div>
 			<div class="content_row">
 				<div class="row_lable">分类</div>
-				<div class="row_value">五月五IEu人员68374</div>
+				<div class="row_value">{{goods_info.classification_name}}</div>
 			</div>
 			<div class="content_row">
 				<div class="row_lable">颜色</div>
-				<div class="row_value">五月五IEu人员68374</div>
+				<div class="row_value">{{goods_info.color}}</div>
 			</div>
 			<div class="content_row">
 				<div class="row_lable">尺码</div>
-				<div class="row_value">五月五IEu人员68374</div>
+				<div class="row_value">{{goods_info.size}}</div>
 			</div>
 			<div class="content_row">
 				<div class="row_lable">面料</div>
-				<div class="row_value">五月五IEu人员68374</div>
+				<div class="row_value">{{goods_info.fabric}}</div>
 			</div>
 		</div>
 		<div class="button_row">
@@ -40,7 +40,7 @@
 				<img class="add_car" src="../../../static/add_car.png">
 				<div>加入选中</div>
 			</div>
-			<div class="button_item select" @click="show_select = true">
+			<div class="button_item select" @click="selectStyle">
 				<div>立即选款</div>
 			</div>
 		</div>
@@ -54,28 +54,28 @@
 				<div class="content_top">
 					<div class="top_form">
 						<div class="form_item">
-							<div class="value">情侣装秋装开衫连帽卫衣学生宽松</div>
+							<div class="value">{{goods_info.title}}</div>
 						</div>
 						<div class="form_item">
 							<div class="lable">供应商：</div>
-							<div class="value">123908</div>
+							<div class="value">{{goods_info.supplier_name}}</div>
 						</div>
 						<div class="form_item">
 							<div class="lable">款号：</div>
-							<div class="value">123908</div>
+							<div class="value">{{goods_info.style_name}}</div>
 						</div>
 						<div class="form_item">
 							<div class="lable">价格：</div>
-							<div class="value">56</div>
+							<div class="value">{{goods_info.cost_price}}</div>
 						</div>
 						<div class="form_item">
-							<div class="value">2021-09-08 18:00</div>
+							<div class="value">{{goods_info.select_time}}</div>
 						</div>
 						<div class="form_item">
 							<div class="lable">店铺：</div>
 							<div class="value">
-								<el-select v-model="store_ids" size="mini" clearable placeholder="选择店铺">
-									<el-option v-for="item in store_list" :key="item.id" :label="item.name" :value="item.id">
+								<el-select v-model="shop_code" size="mini" clearable placeholder="选择店铺">
+									<el-option v-for="item in store_list" :key="item.shop_code" :label="item.shop_name" :value="item.shop_code">
 									</el-option>
 								</el-select>
 							</div>
@@ -83,16 +83,16 @@
 						<div class="form_item">
 							<div class="lable">需求类型：</div>
 							<div class="value">
-								<el-radio-group size="mini" v-model="need_type_id">
-									<el-radio :label="item.id" v-for="item in need_type">{{item.name}}</el-radio>
-								</el-radio-group>
+								<el-checkbox-group size="mini" v-model="demand_type">
+									<el-checkbox :label="item.name" v-for="item in need_type">{{item.name}}</el-checkbox>
+								</el-checkbox-group>
 							</div>
 						</div>
 						<div class="form_item">
 							<div class="lable">发货类型：</div>
 							<div class="value">
-								<el-select v-model="delivery_type_ids" size="mini" clearable placeholder="选择发货类型">
-									<el-option v-for="item in delivery_type_list" :key="item.id" :label="item.name" :value="item.id">
+								<el-select v-model="send_type" size="mini" clearable placeholder="选择发货类型">
+									<el-option v-for="item in delivery_type_list" :key="item.name" :label="item.name" :value="item.name">
 									</el-option>
 								</el-select>
 							</div>
@@ -100,21 +100,21 @@
 						<div class="form_item">
 							<div class="lable">需求日期：</div>
 							<div class="value">
-								<el-date-picker size="mini" v-model="date" type="date" value-format="yyyy-MM-dd" placeholder="选择日期">
+								<el-date-picker size="mini" v-model="demand_date" type="date" value-format="yyyy-MM-dd" placeholder="选择日期">
 								</el-date-picker>
 							</div>
 						</div>
 						<div class="form_item">
 							<div class="lable">售卖价格：</div>
 							<div class="value">
-								<el-input size="mini" clearable v-model="price" placeholder="请输入售卖价格"></el-input>
+								<el-input size="mini" type="number" clearable v-model="selling_price" placeholder="请输入售卖价格"></el-input>
 							</div>
 						</div>
 					</div>
 					<div class="banner">
 						<el-carousel indicator-position="none" arrow="never" @change="changeImage" ref="cardShow">
 							<el-carousel-item v-for="item in banner_list" :key="item">
-								<el-image :z-index="2006" class="image" :src="item" fit="contain" :preview-src-list="banner_list"></el-image>
+								<el-image :z-index="2009" class="image" :src="item" fit="contain" :preview-src-list="banner_list"></el-image>
 							</el-carousel-item>
 						</el-carousel>
 						<div class="indicator_box">
@@ -125,74 +125,147 @@
 				<QuillEditor @callback="getEditor"/>
 			</div>
 			<div slot="footer" class="dialog_footer">
-				<el-button type="primary" size="small" @click="show_select = false">确认选择</el-button>
+				<el-button type="primary" size="small" @click="confirmSelect">确认选择</el-button>
 			</div>
 		</el-dialog>
 	</div>
 </template>
 <script>
 	import QuillEditor from '../../../components/quill_editor.vue'
+
+	import resource from '../../../api/resource.js'
+	import commonResource from '../../../api/common_resource.js'
 	export default{
 		data(){
 			return{
 				show_select:false,		//选款弹窗
-				store_list:[{
-					name:'店铺1',
-					id:'1'
-				},{
-					name:'店铺2',
-					id:'2'
-				},{
-					name:'店铺3',
-					id:'3'
-				}],						//店铺列表
-				store_ids:[],			//选中的店铺
-				need_type:[{
-					name:'上架',
-					id:'1'
-				},{
-					name:'调样',
-					id:'2'
-				},{
-					name:'拍摄',
-					id:'3'
-				},{
-					name:'其他',
-					id:'4'
-				}],						//需求类型列表
-				need_type_id:"",		//选中的需求类型
-				delivery_type_list:[{
-					name:'发货类型1',
-					id:'1'
-				},{
-					name:'发货类型2',
-					id:'2'
-				},{
-					name:'发货类型3',
-					id:'3'
-				}],						//发货类型列表
-				delivery_type_ids:[],	//选中的发货类型
-				date:"",				//需求日期
-				price:"",				//售卖价格
-				banner_list:[
-				'http://img.92nu.com/DataCenter_202209081659447849.jpg',
-				'http://img.92nu.com/DataCenter_202209080938036416.jpg',
-				'http://img.92nu.com/DataCenter_202209080937367725.jpg',
-				'http://img.92nu.com/DataCenter_202209080938036416.jpg',
-				],
+				store_list:[],			//店铺列表
+				shop_code:"",			//选中的店铺
+				need_type:[],			//需求类型列表
+				demand_type:[],			//选中的需求类型
+				delivery_type_list:[],	//发货类型列表
+				send_type:"",			//选中的发货类型
+				demand_date:"",			//需求日期
+				selling_price:"",		//售卖价格
+				remark:"",				//备注
+				banner_list:[],			//选款弹窗的轮播图
 				active_index:0,			//当前显示的图片下标
 			}
 		},
+		props:{	
+			//商品信息
+			goods_info:{
+				type:Object,
+				default:{}
+			},
+			//商品id
+			style_id:{
+				type:String,
+				default:""
+			}
+		},
+		computed:{
+			//图片前缀
+			domain(){
+				return this.$store.state.domain;
+			}
+		},
 		methods:{
-			//点击加入购物车
-			addCar(){
-				// let arg = {
-				// 	goods_items:[],
-				// 	type:'add'
-				// }
-				// arg.goods_items.push(this.info)
-				// this.$store.commit('setCarGoods',arg);
-				// localStorage.setItem("car_goods",JSON.stringify(this.$store.state.car_goods));
+			//点击选款
+			selectStyle(){
+				//获取选款轮播图
+				this.chooseBeforGetImg();
+				//获取店铺列表
+				this.ajaxViewShop();
+				//获取所有需求/发货类型
+				this.getAllDemandSendType();
+				this.show_select = true;
+			},
+			//提交选款
+			confirmSelect(){
+				if(this.shop_code == ''){
+					this.$message.warning('请选择店铺!');
+				}else if(this.demand_type.length == 0){
+					this.$message.warning('请选择需求类型!');
+				}else if(this.send_type == ''){
+					this.$message.warning('请选择发货类型!');
+				}else if(this.demand_date == ''){
+					this.$message.warning('请选择需求时间!');
+				}else if(this.selling_price == ''){
+					this.$message.warning('请输入售卖价格!');
+				}else{
+					let shop_arr = this.store_list.filter(item => {
+						return item.shop_code == this.shop_code;
+					})
+					let arg = {
+						style_id:this.style_id,
+						shop_code:this.shop_code,
+						shop_name:shop_arr[0].shop_name,
+						demand_type:this.demand_type.join(','),
+						send_type:this.send_type,
+						demand_date:this.demand_date,
+						selling_price:this.selling_price,
+						remark:this.remark
+					}
+					resource.chooseGoods(arg).then(res => {
+						if(res.data.code == 1){
+							this.$message.success(res.data.msg);
+							this.show_select = false;
+							this.$emit('callback');
+						}else{
+							this.$message.warning(res.data.msg);
+						}
+					})
+				}
+			},
+			//获取选款轮播图
+			chooseBeforGetImg(){
+				let arg = {
+					style_id:this.style_id
+				}
+				resource.chooseBeforGetImg(arg).then(res => {
+					if(res.data.code == 1){
+						let img_arr = res.data.data.img;
+						let banner_list = [];
+						img_arr.map(item => {
+							banner_list.push(this.domain + item);
+						})
+						this.banner_list = banner_list;
+					}else{
+						this.$message.warning(res.data.msg);
+					}
+				})
+			},
+			//获取店铺列表
+			ajaxViewShop(){
+				let arg = {
+					type:1,
+				}
+				commonResource.ajaxViewShop(arg).then(res => {
+					if(res.data.code == 1){
+						this.store_list = res.data.data;
+					}else{
+						this.$message.warning(res.data.msg);
+					}
+				})
+			},
+			//获取所有需求/发货类型
+			getAllDemandSendType(){
+				commonResource.getAllDemandSendType().then(res => {
+					if(res.data.code == 1){
+						let data = res.data.data;
+						//需求类型
+						this.need_type = data.filter(item => {
+							return item.type == 1;
+						})
+						//发货类型
+						this.delivery_type_list = data.filter(item => {
+							return item.type == 2;
+						})
+					}else{
+						this.$message.warning(res.data.msg);
+					}
+				})
 			},
 			//幻灯片自动切换事件
 			changeImage(e){
@@ -204,8 +277,19 @@
 			},
 			//监听富文本编辑器内容变化
 			getEditor(v){
-				console.log(v)
+				this.remark = v;
 			},
+			//点击加入购物车
+			addCar(){
+				// let arg = {
+				// 	goods_items:[],
+				// 	type:'add'
+				// }
+				// arg.goods_items.push(this.info)
+				// this.$store.commit('setCarGoods',arg);
+				// localStorage.setItem("car_goods",JSON.stringify(this.$store.state.car_goods));
+			},
+			
 		},
 		components:{
 			QuillEditor

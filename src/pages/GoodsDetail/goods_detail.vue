@@ -7,7 +7,7 @@
 					<!-- 主图部分 -->
 					<MainImage :image_list="image_list"/>
 					<!-- 商品信息 -->
-					<GoodsInfo/>
+					<GoodsInfo :goods_info="goods_info" :style_id="style_id"/>
 					<!-- 店铺信息 -->
 					<StoreInfo/>
 				</div>
@@ -26,6 +26,8 @@
 	</div>
 </template>
 <script>
+	import resource from '../../api/resource.js'
+
 	import PageTitle from '../../components/page_title.vue'
 	import MainImage from './components/main_image.vue'
 	import GoodsInfo from './components/goods_info.vue'
@@ -37,6 +39,8 @@
 	export default{
 		data(){
 			return{
+				style_id:"",		//商品ID
+				goods_info:{},		//商品详情
 				image_list:[[{
 					url:'http://img.92nu.com/DataCenter_202209021557051929.jpg',
 					is_active:true
@@ -94,8 +98,25 @@
 				}],						//选中记录
 			}
 		},
+		created(){
+			this.style_id = this.$route.query.style_id;
+			//获取商品详情
+			this.getGoodsInfo();
+		},
 		methods:{
-			
+			//获取商品详情
+			getGoodsInfo(){
+				let arg = {
+					style_id:this.style_id
+				}
+				resource.getGoodsInfo(arg).then(res => {
+					if(res.data.code == 1){
+						this.goods_info = res.data.data;
+					}else{
+						this.$message.warning(res.data.msg);
+					}
+				})
+			}
 		},
 		components:{
 			PageTitle,

@@ -5,7 +5,7 @@
 			<el-card class="card_box">
 				<ScreeningWidget :total_num="goods_list.length" @callback="screenFn"/>
 				<div class="goods_list">
-					<GoodsItem :info="item" v-for="item in goods_list"/>
+					<GoodsItem :info="item" v-for="item in goods_list" @callback="getList"/>
 					<div class="padding_item" v-for="i in 5-(goods_list.length%5) == 5?0:5-(goods_list.length%5)"></div>
 				</div>
 				<PaginationWidget :total="total" :page="arg.page" @checkPage="checkPage"/>

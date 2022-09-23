@@ -33,7 +33,7 @@
 					<img class="add_car" src="../static/add_car.png">
 					<div>待选</div>
 				</div>
-				<div class="xk" @click.stop="show_select = true">选款</div>
+				<div class="xk" @click.stop="selectStyle(info.style_id)">选款</div>
 			</div>
 			<div class="store_name">{{info.supplier_name}}</div>
 		</div>
@@ -52,7 +52,7 @@
 				<img class="info_icon" src="../static/xian_icon.png" v-if="info.supply_monthly_settlement == 0">
 				<img class="info_icon" src="../static/yue_icon.png" v-if="info.supply_monthly_settlement == 1">
 			</div>
-			<div class="feek_back" @click.stop="feekBack">反馈</div>
+			<div class="feek_back" @click.stop="feekback_dialog = true">反馈</div>
 		</div>
 	</div>
 	<!-- 选款弹窗 -->
@@ -65,28 +65,28 @@
 			<div class="content_top">
 				<div class="top_form">
 					<div class="form_item">
-						<div class="value">情侣装秋装开衫连帽卫衣学生宽松</div>
+						<div class="value">{{info.title}}</div>
 					</div>
 					<div class="form_item">
 						<div class="lable">供应商：</div>
-						<div class="value">123908</div>
+						<div class="value">{{info.supplier_name}}</div>
 					</div>
 					<div class="form_item">
 						<div class="lable">款号：</div>
-						<div class="value">123908</div>
+						<div class="value">{{info.i_id}}</div>
 					</div>
 					<div class="form_item">
 						<div class="lable">价格：</div>
-						<div class="value">56</div>
+						<div class="value">{{info.cost_price}}</div>
 					</div>
 					<div class="form_item">
-						<div class="value">2021-09-08 18:00</div>
+						<div class="value">{{info.new_time_name}}</div>
 					</div>
 					<div class="form_item">
 						<div class="lable">店铺：</div>
 						<div class="value">
-							<el-select v-model="store_ids" size="mini" clearable placeholder="选择店铺">
-								<el-option v-for="item in store_list" :key="item.id" :label="item.name" :value="item.id">
+							<el-select v-model="shop_code" size="mini" clearable placeholder="选择店铺">
+								<el-option v-for="item in store_list" :key="item.shop_code" :label="item.shop_name" :value="item.shop_code">
 								</el-option>
 							</el-select>
 						</div>
@@ -94,16 +94,16 @@
 					<div class="form_item">
 						<div class="lable">需求类型：</div>
 						<div class="value">
-							<el-radio-group size="mini" v-model="need_type_id">
-								<el-radio :label="item.id" v-for="item in need_type">{{item.name}}</el-radio>
-							</el-radio-group>
+							<el-checkbox-group size="mini" v-model="demand_type">
+								<el-checkbox :label="item.name" v-for="item in need_type">{{item.name}}</el-checkbox>
+							</el-checkbox-group>
 						</div>
 					</div>
 					<div class="form_item">
 						<div class="lable">发货类型：</div>
 						<div class="value">
-							<el-select v-model="delivery_type_ids" size="mini" clearable placeholder="选择发货类型">
-								<el-option v-for="item in delivery_type_list" :key="item.id" :label="item.name" :value="item.id">
+							<el-select v-model="send_type" size="mini" clearable placeholder="选择发货类型">
+								<el-option v-for="item in delivery_type_list" :key="item.name" :label="item.name" :value="item.name">
 								</el-option>
 							</el-select>
 						</div>
@@ -111,21 +111,21 @@
 					<div class="form_item">
 						<div class="lable">需求日期：</div>
 						<div class="value">
-							<el-date-picker size="mini" v-model="date" type="date" value-format="yyyy-MM-dd" placeholder="选择日期">
+							<el-date-picker size="mini" v-model="demand_date" type="date" value-format="yyyy-MM-dd" placeholder="选择日期">
 							</el-date-picker>
 						</div>
 					</div>
 					<div class="form_item">
 						<div class="lable">售卖价格：</div>
 						<div class="value">
-							<el-input size="mini" clearable v-model="price" placeholder="请输入售卖价格"></el-input>
+							<el-input size="mini" type="number" clearable v-model="selling_price" placeholder="请输入售卖价格"></el-input>
 						</div>
 					</div>
 				</div>
 				<div class="banner">
 					<el-carousel indicator-position="none" arrow="never" @change="changeImage" ref="cardShow">
 						<el-carousel-item v-for="item in banner_list" :key="item">
-							<el-image :z-index="2006" class="image" :src="item" fit="contain" :preview-src-list="banner_list"></el-image>
+							<el-image :z-index="2009" class="image" :src="item" fit="contain" :preview-src-list="banner_list"></el-image>
 						</el-carousel-item>
 					</el-carousel>
 					<div class="indicator_box">
@@ -136,7 +136,7 @@
 			<QuillEditor @callback="getEditor"/>
 		</div>
 		<div slot="footer" class="dialog_footer">
-			<el-button type="primary" size="small" @click="show_select = false">确认选择</el-button>
+			<el-button type="primary" size="small" @click="confirmSelect">确认选择</el-button>
 		</div>
 	</el-dialog>
 	<!-- 反馈弹窗 -->
@@ -146,59 +146,49 @@
 			<img class="close_icon" src="../static/close_icon.png" @click="feekback_dialog = false">
 		</div>
 		<div class="feekback_content">
-			<el-input type="textarea" :rows="5" placeholder="请描述哪条描述数据不对，或者缺失，我们尽快调整" v-model="feekback_value">
+			<el-input type="textarea" :rows="5" placeholder="请描述哪条描述数据不对，或者缺失，我们尽快调整" v-model="feedback_content">
 			</el-input>
 			<div class="upload_title">上传截图</div>
-			<div class="image_list">
-				<div class="view_card_img" @mouseenter="item.show_icon = true" @mouseleave="item.show_icon = false"
-				v-for="(item,index) in preview_images" :key="index">
-				<el-image class="card_img" :src="item.domain + item.urls" fit="contain"></el-image>
-				<div class="delete_img" v-if="item.show_icon == true">
-					<img class="delete_icon" src="../static/delete_icon.png" @click="deleteFile(item.urls,index)">
+			<UploadFile :img_list="feedback_img" :is_multiple="true" :current_num="feedback_img.length" :max_num="5" @callbackFn="uploadFn"/>
+			<div class="upload_toast">上传“有效截图”，可以让问题优先被发现哦！最多可以上传5张截图</div>
+		</div>
+		<div slot="footer" class="dialog_footer">
+			<el-button size="small" @click="feekback_dialog = false">取消</el-button>
+			<el-button type="primary" size="small" @click="confirmFeekBack">提交</el-button>
+		</div>
+	</el-dialog>
+	<!-- 更多图片 -->
+	<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" :visible.sync="more_image_dialog">
+		<div slot="title" class="dialog_title">
+			<div>更多图片</div>
+			<img class="close_icon" src="../static/close_icon.png" @click="more_image_dialog = false">
+		</div>
+		<div class="image_content">
+			<div class="tab_row">
+				<div class="tab_item" :class="{'active_tab_item':active_tab_index == index}" v-for="(item,index) in image_title_list" @click="active_tab_index = index">
+					<div>{{item}}</div>
+					<div class="active_line" v-if="active_tab_index == index"></div>
 				</div>
 			</div>
-			<UploadFile :is_multiple="true" :current_num="preview_images.length" :max_num="5" @callbackFn="callbackFn"
-			v-if="preview_images.length < 5" />
-		</div>
-		<div class="upload_toast">上传“有效截图”，可以让问题优先被发现哦！最多可以上传5张截图</div>
-	</div>
-	<div slot="footer" class="dialog_footer">
-		<el-button size="small" @click="feekback_dialog = false">取消</el-button>
-		<el-button type="primary" size="small" @click="feekback_dialog = false">提交</el-button>
-	</div>
-</el-dialog>
-<!-- 更多图片 -->
-<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" :visible.sync="more_image_dialog">
-	<div slot="title" class="dialog_title">
-		<div>更多图片</div>
-		<img class="close_icon" src="../static/close_icon.png" @click="more_image_dialog = false">
-	</div>
-	<div class="image_content">
-		<div class="tab_row">
-			<div class="tab_item" :class="{'active_tab_item':active_tab_index == index}" v-for="(item,index) in image_title_list" @click="active_tab_index = index">
-				<div>{{item}}</div>
-				<div class="active_line" v-if="active_tab_index == index"></div>
-			</div>
-		</div>
-		<el-tabs size="small" v-if="active_tab_index == 0">
-			<el-tab-pane :label="item.shooting_style_name" v-for="(item,index) in style_data" :key="index">
-				<div class="source_url">共享盘地址：{{item.shared_disk_address}}</div>
-				<div class="source_url">网盘地址：{{item.net_disk_address}}</div>
+			<el-tabs size="small" v-if="active_tab_index == 0">
+				<el-tab-pane :label="item.shooting_style_name" v-for="(item,index) in style_data" :key="index">
+					<div class="source_url">共享盘地址：{{item.shared_disk_address}}</div>
+					<div class="source_url">网盘地址：{{item.net_disk_address}}</div>
+					<div class="more_image">
+						<el-image :z-index="9009" class="more_image_item" :src="img_url" fit="contain" v-for="(img_url,i) in item.img_arr" :key="i" :preview-src-list="item.img_arr"></el-image>
+					</div>
+				</el-tab-pane>
+			</el-tabs>
+			<div v-else>
 				<div class="more_image">
-					<el-image :z-index="9009" class="more_image_item" :src="img_url" fit="contain" v-for="(img_url,i) in item.img_arr" :key="i" :preview-src-list="item.img_arr"></el-image>
+					<el-image :z-index="9009" class="more_image_item" :src="item" fit="contain" v-for="item in commodity_data" :preview-src-list="commodity_data"></el-image>
 				</div>
-			</el-tab-pane>
-		</el-tabs>
-		<div v-else>
-			<div class="more_image">
-				<el-image :z-index="9009" class="more_image_item" :src="item" fit="contain" v-for="item in commodity_data" :preview-src-list="commodity_data"></el-image>
 			</div>
 		</div>
-	</div>
-	<div slot="footer" class="dialog_footer">
-		<el-button type="primary" size="small" @click="more_image_dialog = false">关闭</el-button>
-	</div>
-</el-dialog>
+		<div slot="footer" class="dialog_footer">
+			<el-button type="primary" size="small" @click="more_image_dialog = false">关闭</el-button>
+		</div>
+	</el-dialog>
 </div>
 </template>
 <style type="text/css">
@@ -430,35 +420,6 @@
 		font-size:14rem;
 		color: #333333;
 	}
-	.image_list {
-		display: flex;
-		flex-wrap: wrap;
-		.view_card_img {
-			margin-right: 40rem;
-			margin-bottom: 20rem;
-			border-radius: 2rem;
-			position: relative;
-			width: 160rem;
-			height: 160rem;
-			.card_img,
-			.delete_img {
-				border-radius: 2rem;
-				position: absolute;
-				width: 100%;
-				height: 100%;
-			}
-			.delete_img {
-				background: rgba(0, 0, 0, 0.4);
-				display: flex;
-				align-items: center;
-				justify-content: center;
-				.delete_icon {
-					width: 40rem;
-					height: 40rem;
-				}
-			}
-		}
-	}
 	.upload_toast{
 		margin-top: 10rem;
 		font-size:14rem;
@@ -516,62 +477,28 @@
 </style>
 <script>
 	import resource from '../api/resource.js'
+	import commonResource from '../api/common_resource.js'
 
 	import QuillEditor from '../components/quill_editor.vue'
 	import UploadFile from '../components/upload_file.vue'
 	export default{
 		data(){
 			return{
-				image_dialog:false,
 				show_select:false,		//选款弹窗
-				store_list:[{
-					name:'店铺1',
-					id:'1'
-				},{
-					name:'店铺2',
-					id:'2'
-				},{
-					name:'店铺3',
-					id:'3'
-				}],						//店铺列表
-				store_ids:[],			//选中的店铺
-				need_type:[{
-					name:'上架',
-					id:'1'
-				},{
-					name:'调样',
-					id:'2'
-				},{
-					name:'拍摄',
-					id:'3'
-				},{
-					name:'其他',
-					id:'4'
-				}],						//需求类型列表
-				need_type_id:"",		//选中的需求类型
-				delivery_type_list:[{
-					name:'发货类型1',
-					id:'1'
-				},{
-					name:'发货类型2',
-					id:'2'
-				},{
-					name:'发货类型3',
-					id:'3'
-				}],						//发货类型列表
-				delivery_type_ids:[],	//选中的发货类型
-				date:"",				//需求日期
-				price:"",				//售卖价格
-				banner_list:[
-				'http://img.92nu.com/DataCenter_202209081659447849.jpg',
-				'http://img.92nu.com/DataCenter_202209080938036416.jpg',
-				'http://img.92nu.com/DataCenter_202209080937367725.jpg',
-				'http://img.92nu.com/DataCenter_202209080938036416.jpg',
-				],
+				store_list:[],			//店铺列表
+				shop_code:"",			//选中的店铺
+				need_type:[],			//需求类型列表
+				demand_type:[],			//选中的需求类型
+				delivery_type_list:[],	//发货类型列表
+				send_type:"",			//选中的发货类型
+				demand_date:"",			//需求日期
+				selling_price:"",		//售卖价格
+				remark:"",				//备注
+				banner_list:[],			//选款弹窗的轮播图
 				active_index:0,			//当前显示的图片下标
 				feekback_dialog:false,	//反馈弹窗
-				feekback_value:"",		//反馈文字
-				preview_images:[],		//上传的图片列表
+				feedback_content:"",		//反馈文字
+				feedback_img:[],		//上传的图片列表
 				more_image_dialog:false,		//更多图片
 				image_title_list:['风格图','封面图'],	//更多图片类型
 				active_tab_index:0,		//选中的下标
@@ -604,6 +531,110 @@
 			}
 		},
 		methods:{
+			//点击选款
+			selectStyle(style_id){
+				//获取选款轮播图
+				this.chooseBeforGetImg(style_id);
+				//获取店铺列表
+				this.ajaxViewShop();
+				//获取所有需求/发货类型
+				this.getAllDemandSendType();
+				this.show_select = true;
+			},
+			//提交选款
+			confirmSelect(){
+				if(this.shop_code == ''){
+					this.$message.warning('请选择店铺!');
+				}else if(this.demand_type.length == 0){
+					this.$message.warning('请选择需求类型!');
+				}else if(this.send_type == ''){
+					this.$message.warning('请选择发货类型!');
+				}else if(this.demand_date == ''){
+					this.$message.warning('请选择需求时间!');
+				}else if(this.selling_price == ''){
+					this.$message.warning('请输入售卖价格!');
+				}else{
+					let shop_arr = this.store_list.filter(item => {
+						return item.shop_code == this.shop_code;
+					})
+					let arg = {
+						style_id:this.info.style_id,
+						shop_code:this.shop_code,
+						shop_name:shop_arr[0].shop_name,
+						demand_type:this.demand_type.join(','),
+						send_type:this.send_type,
+						demand_date:this.demand_date,
+						selling_price:this.selling_price,
+						remark:this.remark
+					}
+					resource.chooseGoods(arg).then(res => {
+						if(res.data.code == 1){
+							this.$message.success(res.data.msg);
+							this.show_select = false;
+							this.$emit('callback');
+						}else{
+							this.$message.warning(res.data.msg);
+						}
+					})
+				}
+			},
+			//获取选款轮播图
+			chooseBeforGetImg(style_id){
+				let arg = {
+					style_id:style_id
+				}
+				resource.chooseBeforGetImg(arg).then(res => {
+					if(res.data.code == 1){
+						let img_arr = res.data.data.img;
+						let banner_list = [];
+						img_arr.map(item => {
+							banner_list.push(this.domain + item);
+						})
+						this.banner_list = banner_list;
+					}else{
+						this.$message.warning(res.data.msg);
+					}
+				})
+			},
+			//获取店铺列表
+			ajaxViewShop(){
+				let arg = {
+					type:1,
+				}
+				commonResource.ajaxViewShop(arg).then(res => {
+					if(res.data.code == 1){
+						this.store_list = res.data.data;
+					}else{
+						this.$message.warning(res.data.msg);
+					}
+				})
+			},
+			//获取所有需求/发货类型
+			getAllDemandSendType(){
+				commonResource.getAllDemandSendType().then(res => {
+					if(res.data.code == 1){
+						let data = res.data.data;
+						//需求类型
+						this.need_type = data.filter(item => {
+							return item.type == 1;
+						})
+						//发货类型
+						this.delivery_type_list = data.filter(item => {
+							return item.type == 2;
+						})
+					}else{
+						this.$message.warning(res.data.msg);
+					}
+				})
+			},
+			//幻灯片自动切换事件
+			changeImage(e){
+				this.active_index = e;
+			},
+			//鼠标移入指示器切换当前显示图片
+			checkIndex(index){
+				this.$refs.cardShow.setActiveItem(index);
+			},
 			//获取风格图
 			getMoreImage(){
 				let arg = {
@@ -655,47 +686,40 @@
 				this.$store.commit('setCarGoods',arg);
 				localStorage.setItem("car_goods",JSON.stringify(this.$store.state.car_goods));
 			},
-			//幻灯片自动切换事件
-			changeImage(e){
-				this.active_index = e;
-			},
-			//鼠标移入指示器切换当前显示图片
-			checkIndex(index){
-				this.$refs.cardShow.setActiveItem(index);
-			},
 			//监听富文本编辑器内容变化
 			getEditor(v){
-				console.log(v)
-			},
-			//点击反馈
-			feekBack(){
-				this.feekback_dialog = true;
+				this.remark = v;
 			},
 			//上传图片回调
-			callbackFn(v) {
-				v.file.show_icon = false;
-				this.preview_images.push(v.file);
+			uploadFn(v) {
+				this.feedback_img = v;
 			},
-    		//删除文件
-    		deleteFile(url, index) {
-    			// let arg = {
-    			// 	url: url,
-    			// };
-    			// resource.deleteFile(arg).then((res) => {
-    			// 	if (res.data.code == 1) {
-    			// 		this.preview_images.splice(index, 1);
-    			// 	} else {
-    			// 		this.$message.warning(res.data.msg);
-    			// 	}
-    			// });
-    		},
-    		//切换图片类型
-    		checkImageType(tab, event) {
-    			console.log(tab.name);
-    		},
+			//提交反馈
+			confirmFeekBack(){
+				if(this.feedback_content == ''){
+					this.$message.warning('请输入反馈内容!');
+				}else if(this.feedback_img.length == 0){
+					this.$message.warning('请上传反馈截图!');
+				}else{
+					let arg = {
+						style_id:this.info.style_id,
+						feedback_content:this.feedback_content,
+						feedback_img:this.feedback_img.join(',')
+					}
+					resource.confirmFeekBack(arg).then(res => {
+						if(res.data.code == 1){
+							this.$message.success(res.data.msg);
+							this.feekback_dialog = false;
+							this.$emit('callback');
+						}else{
+							this.$message.warning(res.data.msg);
+						}
+					})
+				}
+			},
     		//点击跳转详情
     		getDetail(){
-    			const routeData = this.$router.resolve(`/goods_detail`);
+    			const routeData = this.$router.resolve(`/goods_detail?style_id=${this.info.style_id}`);
     			window.open(routeData.href);
     		}
     	},

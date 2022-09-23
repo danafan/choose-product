@@ -10,6 +10,7 @@ let path = {
   delFile:'common/del_file',                                 //删除图片
   ajaxSupplierGradeList:'supplier_manager/ajax_supplier_grade_list',  //供应商等级列表
   getScreenList:'home/getscreenlist',                       //筛选项列表
+  getAllDemandSendType:'home/getalldemandsendtype',         //获取所有需求/发货类型
 }
 export default {
   //类目列表
@@ -51,5 +52,9 @@ export default {
   //筛选项列表
   getScreenList(params) {
     return http.get(path.getScreenList, params);
+  },
+  //获取所有需求/发货类型
+  getAllDemandSendType(params) {
+    return http.get(path.getAllDemandSendType, params);
   },
 };
