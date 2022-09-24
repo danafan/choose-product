@@ -158,11 +158,6 @@
 				type:Object,
 				default:{}
 			},
-			//商品id
-			style_id:{
-				type:String,
-				default:""
-			}
 		},
 		computed:{
 			//图片前缀
@@ -198,7 +193,7 @@
 						return item.shop_code == this.shop_code;
 					})
 					let arg = {
-						style_id:this.style_id,
+						style_id:this.goods_info.style_id,
 						shop_code:this.shop_code,
 						shop_name:shop_arr[0].shop_name,
 						demand_type:this.demand_type.join(','),
@@ -221,7 +216,7 @@
 			//获取选款轮播图
 			chooseBeforGetImg(){
 				let arg = {
-					style_id:this.style_id
+					style_id:this.goods_info.style_id
 				}
 				resource.chooseBeforGetImg(arg).then(res => {
 					if(res.data.code == 1){
@@ -281,13 +276,21 @@
 			},
 			//点击加入购物车
 			addCar(){
-				// let arg = {
-				// 	goods_items:[],
-				// 	type:'add'
-				// }
-				// arg.goods_items.push(this.info)
-				// this.$store.commit('setCarGoods',arg);
-				// localStorage.setItem("car_goods",JSON.stringify(this.$store.state.car_goods));
+				let arg = {
+					style_id:this.goods_info.style_id
+				}
+				resource.addSelectCart(arg).then(res => {
+					if(res.data.code == 1){
+						this.$message.success(res.data.msg);
+						let arg = {
+							type:'add',
+							num:1
+						}
+						this.$store.commit('setCarGoods',arg);
+					}else{
+						this.$message.warning(res.data.msg);
+					}
+				})
 			},
 			
 		},

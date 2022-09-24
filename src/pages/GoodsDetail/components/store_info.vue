@@ -1,26 +1,22 @@
 <template>
 	<div class="store_info">
-		<div class="store_name">鸿涛利彬鸿涛利彬鸿涛利彬鸿涛利彬鸿涛利彬</div>
+		<div class="store_name">{{goods_info.shop_name}}</div>
 		<div class="store_info">
 			<div class="store_info_row">
 				<div class="store_info_lable">评级</div>
-				<div class="store_info_pj">AAA</div>
-			</div>
-			<div class="store_info_row">
-				<div class="store_info_lable">市场</div>
-				<div class="store_info_value">杭州</div>
+				<div class="store_info_pj">{{goods_info.grade_name}}</div>
 			</div>
 			<div class="store_info_row">
 				<div class="store_info_lable">供应商</div>
-				<div class="store_info_value">九阿哥</div>
+				<div class="store_info_value">{{goods_info.supplier_name}}</div>
 			</div>
 			<div class="store_info_row">
 				<div class="store_info_lable">主营</div>
-				<div class="store_info_value">男装</div>
+				<div class="store_info_value">{{goods_info.main_business}}</div>
 			</div>
 			<div class="store_info_row">
 				<div class="store_info_lable">结算方式</div>
-				<div class="store_info_value">月结</div>
+				<div class="store_info_value">{{goods_info.supply_monthly_settlement}}</div>
 			</div>
 			<div class="get_detail" @click="supplierDetail">查看详情</div>
 		</div>
@@ -28,10 +24,16 @@
 </template>
 <script>
 	export default{
+		props:{
+			goods_info:{
+				type:Object,
+				default:{}
+			}
+		},
 		methods:{
 			//点击跳转供应商详情
 			supplierDetail(){
-				const routeData = this.$router.resolve(`/supplier_detail`);
+				const routeData = this.$router.resolve(`/supplier_detail?supplier_id=${this.goods_info.supplier_id}`);
 				window.open(routeData.href);
 			}
 		}

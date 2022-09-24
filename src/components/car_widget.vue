@@ -2,20 +2,39 @@
 	<div class="car_button" @click="goCarPage">
 		<div class="icon">
 			<img class="add_car" src="../static/add_car.png">
-			<div class="num">{{car_goods.length}}</div>
+			<div class="num">{{car_goods_num}}</div>
 		</div>
 		<div class="car_text">待选</div>
 	</div>
 </template>
 <script>
+	import resource from '../api/resource.js'
 	export default{
 		computed:{
-			//购物车列表
-			car_goods(){
-				return this.$store.state.car_goods;
+			//购物车商品数量
+			car_goods_num(){
+				return this.$store.state.car_goods_num;
 			}
 		},
+		created(){
+			//获取购物车列表数量
+			this.getCarList();
+		},
 		methods:{
+			//获取购物车列表数量
+			getCarList(){
+				resource.getCarList().then(res => {
+					if(res.data.code == 1){
+						let arg = {
+							type:'set',
+							num:res.data.data.length
+						}
+						this.$store.commit('setCarGoods',arg);
+					}else{
+						this.$message,warning(res.data.msg);
+					}
+				})
+			},
 			goCarPage(){
 				const routeData = this.$router.resolve(`/car_page`);
 				window.open(routeData.href);

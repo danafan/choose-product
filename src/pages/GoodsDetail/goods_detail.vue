@@ -5,19 +5,19 @@
 			<div class="detail_content">
 				<div class="detail_top_row">
 					<!-- 主图部分 -->
-					<MainImage :image_list="image_list"/>
+					<MainImage :image_list="banner_list" v-if="over_loading"/>
 					<!-- 商品信息 -->
-					<GoodsInfo :goods_info="goods_info" :style_id="style_id"/>
+					<GoodsInfo :goods_info="goods_info"/>
 					<!-- 店铺信息 -->
-					<StoreInfo/>
+					<StoreInfo :goods_info="goods_info"/>
 				</div>
 				<div class="bottom_content">
 					<div class="content_top_tab">
 						<div class="content_top_tab_item" :class="{'active_content_top_tab_item':active_index == 0}" @click="active_index = 0">详情</div>
 						<div class="content_top_tab_item" :class="{'active_content_top_tab_item':active_index == 1}" @click="active_index = 1">选中记录</div>
 					</div>
-					<TabDetail :style_list="style_list" :style_image_list="style_image_list" v-if="active_index == 0"/>
-					<TabRecord :selected_record="selected_record" v-if="active_index == 1"/>
+					<TabDetail :goods_info="goods_info" v-if="active_index == 0 && over_loading"/>
+					<TabRecord :selected_record="goods_info.info_log" v-if="active_index == 1"/>
 				</div>
 			</div>
 			<CarWidget/>
@@ -39,50 +39,11 @@
 	export default{
 		data(){
 			return{
+				over_loading:false,	//是否加载完成
 				style_id:"",		//商品ID
 				goods_info:{},		//商品详情
-				image_list:[[{
-					url:'http://img.92nu.com/DataCenter_202209021557051929.jpg',
-					is_active:true
-				},{
-					url:'http://img.92nu.com/DataCenter_202209021613479967.jpg',
-					is_active:false
-				},{
-					url:'http://img.92nu.com/DataCenter_202209061504027316.jpg',
-					is_active:false
-				},{
-					url:'http://img.92nu.com/DataCenter_202209061744551069.jpg',
-					is_active:false
-				},{
-					url:'http://img.92nu.com/DataCenter_202208311020224346.jpg',
-					is_active:false
-				}],[{
-					url:'http://img.92nu.com/DataCenter_202208311330183144.jpg',
-					is_active:false
-				},{
-					url:'http://img.92nu.com/DataCenter_202209081717555858.jpg',
-					is_active:false
-				},{
-					url:'http://img.92nu.com/DataCenter_202209011650464990.jpg',
-					is_active:false
-				}]],					//所有图片列表
-				active_index:0,			//详情或选中记录下标
-				style_list:[{
-					name:'平铺',
-					id:'1'
-				},{
-					name:'背景墙',
-					id:'2'
-				}],						//风格列表
-				style_image_list:[
-				'http://img.92nu.com/DataCenter_202209011650464990.jpg',
-				'http://img.92nu.com/DataCenter_202209081717555858.jpg',
-				'http://img.92nu.com/DataCenter_202208311330183144.jpg',
-				'http://img.92nu.com/DataCenter_202208311020224346.jpg',
-				'http://img.92nu.com/DataCenter_202209061744551069.jpg',
-				'http://img.92nu.com/DataCenter_202209061504027316.jpg',
-				'http://img.92nu.com/DataCenter_202209021613479967.jpg',
-				],						//底部的图片列表
+				banner_list:[],		//所有图片列表
+				active_index:0,		//详情或选中记录下标
 				selected_record:[{
 					store_name:'胖胖哥旗舰店：张三',
 					num:'56' ,
@@ -103,6 +64,12 @@
 			//获取商品详情
 			this.getGoodsInfo();
 		},
+		computed:{
+			//图片前缀
+			domain(){
+				return this.$store.state.domain;
+			}
+		},
 		methods:{
 			//获取商品详情
 			getGoodsInfo(){
@@ -112,6 +79,22 @@
 				resource.getGoodsInfo(arg).then(res => {
 					if(res.data.code == 1){
 						this.goods_info = res.data.data;
+						//处理banner图片
+						let banner = this.goods_info.banner;
+						let banner_list = [];
+						banner.map((item,index) => {
+							let img_obj = {
+								url:this.domain + item,
+								is_active:index == 0?true:false
+							}
+							banner_list.push(img_obj);
+						})
+						let newCardList = [];
+						for (var i = 0; i < banner_list.length; i += 5) {
+							newCardList.push(banner_list.slice(i, i + 5));
+						}
+						this.banner_list = newCardList;
+						this.over_loading = true;
 					}else{
 						this.$message.warning(res.data.msg);
 					}

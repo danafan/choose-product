@@ -2,25 +2,25 @@
 	<div>
 		<div class="detail_info">
 			<div class="info_box">
-				<div>浏览量：95次</div>
-				<div>销量：95件</div>
+				<div>浏览量：{{goods_info.views_num}}次</div>
+				<div>销量：{{goods_info.sales_num_all}}件</div>
 			</div>
 			<div class="info_box">
-				<div>选中量：95</div>
-				<div>市场：杭州</div>
+				<div>选中量：{{goods_info.select_num}}</div>
+				<div>市场：{{goods_info.market_name}}</div>
 			</div>
 			<div class="info_box">
-				<div>提供拍照：是</div>
+				<div>提供拍照：{{goods_info.supply_photograph}}</div>
 				<div>&nbsp</div>
 			</div>
 		</div>
 		<div class="style_row">
 			<div class="style_item">拍摄风格：</div>
-			<div class="style_item" :class="{'active_style_item':active_style_index == index}" v-for="(item,index) in style_list" @click="active_style_index = index">平铺</div>
+			<div class="style_item" :class="{'active_style_item':active_style_index == index}" v-for="(item,index) in goods_info.style_img" @click="active_style_index = index">{{item.shooting_style_name}}</div>
 		</div>
 		<div class="source_box">
-			<div class="source_item">共享盘：www.xinyifu.com</div>
-			<div class="source_item">百度网盘：www.xinyifu.com</div>
+			<div class="source_item">共享盘地址：{{shared_disk_address}}</div>
+			<div class="source_item">网盘地址：{{net_disk_address}}</div>
 		</div>
 		<div class="image_box">
 			<el-image :z-index="2006" class="style_image" :src="item" fit="contain" :preview-src-list="style_image_list" v-for="item in style_image_list"></el-image>
@@ -33,18 +33,45 @@
 		data(){
 			return{
 				active_style_index:0,			//当前选中的风格下标
+				shared_disk_address:"",			//共享盘地址
+				net_disk_address:"",			//网盘地址
+				style_image_list:[],			//图片列表
 			}
 		},
 		props:{
-			//风格列表
-			style_list:{
-				type:Array,
-				default:[]
-			},
-			//下面图片列表
-			style_image_list:{
-				type:Array,
-				default:[]
+			// 商品详情
+			goods_info:{
+				type:Object,
+				default:{}
+			}
+		},
+		computed:{
+			//图片前缀
+			domain(){
+				return this.$store.state.domain;
+			}
+		},
+		created(){
+			//设置默认元素
+			this.setInfoFn(0);
+		},
+		watch:{
+			//切换风格
+			active_style_index:function(n,o){
+				//设置默认元素
+				this.setInfoFn(n);
+			}
+		},
+		methods:{
+			//设置默认元素
+			setInfoFn(n){
+				this.shared_disk_address = this.goods_info.style_img[n].shared_disk_address;
+				this.net_disk_address = this.goods_info.style_img[n].net_disk_address;
+				let images = [];
+				this.goods_info.style_img[n].img.map(item => {
+					images.push(this.domain + item);
+				})
+				this.style_image_list = images;
 			}
 		}
 	}

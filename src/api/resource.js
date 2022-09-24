@@ -7,6 +7,8 @@ let path = {
   chooseGoods:'home/choosegoods',                     //选款
   confirmFeekBack:'feedback/add',                     //提交反馈
   getGoodsInfo:'selectcart/selectedinfo',             //获取商品详情
+  addSelectCart:'home/addselectcart',                 //加入购物车
+  getCarList:'selectcart/getwaitselect',              //获取购物车列表
 }
 export default {
   //首页商品列表
@@ -36,5 +38,13 @@ export default {
   //获取商品详情
   getGoodsInfo(params) {
     return http.get(path.getGoodsInfo, params);
+  },
+  //加入购物车
+  addSelectCart(params) {
+    return http.post(path.addSelectCart, params);
+  },
+  //购物车列表
+  getCarList(params) {
+    return http.get(path.getCarList, params);
   },
 };

@@ -8,7 +8,7 @@
 				<el-carousel-item v-for="(item,index) in image_list">
 					<div class="carousel_item">
 						<el-image class="img_list_item" :class="{'border_style':iii.is_active == true}" :src="iii.url" fit="contain" v-for="(iii,i) in item" @mouseenter="enterImage(index,i)"></el-image>
-						<div class="img_list_item" v-for="i in (5-item.length%5==0?5:item.length%5)"></div>
+						<div class="img_list_item" v-for="i in (item.length==5?0:5-item.length)"></div>
 					</div>
 				</el-carousel-item>
 			</el-carousel>
@@ -45,6 +45,7 @@
 		.carousel_box{
 			height: 66rem !important;
 			flex: 1 !important;
+			overflow-y: hidden;
 			.carousel_item{
 				display: flex;
 				justify-content: space-between;

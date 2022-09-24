@@ -679,12 +679,20 @@
 			//点击加入购物车
 			addCar(){
 				let arg = {
-					goods_items:[],
-					type:'add'
+					style_id:this.info.style_id
 				}
-				arg.goods_items.push(this.info)
-				this.$store.commit('setCarGoods',arg);
-				localStorage.setItem("car_goods",JSON.stringify(this.$store.state.car_goods));
+				resource.addSelectCart(arg).then(res => {
+					if(res.data.code == 1){
+						this.$message.success(res.data.msg);
+						let arg = {
+							type:'add',
+							num:1
+						}
+						this.$store.commit('setCarGoods',arg);
+					}else{
+						this.$message.warning(res.data.msg);
+					}
+				})
 			},
 			//监听富文本编辑器内容变化
 			getEditor(v){

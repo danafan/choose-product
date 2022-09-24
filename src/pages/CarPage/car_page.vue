@@ -8,24 +8,21 @@
 					<el-table-column type="selection" width="55" fixed="left" :selectable="setStatus"></el-table-column>
 					<el-table-column label="图片" width="120">
 						<template slot-scope="scope">
-							<el-image :z-index="2006" class="image" :src="scope.row.image[0]" fit="contain" :preview-src-list="scope.row.image"></el-image>
+							<el-image :z-index="2008" class="image" :src="scope.row.images[0]" fit="contain" :preview-src-list="scope.row.images"></el-image>
 						</template>
 					</el-table-column>
 					<el-table-column label="标题" prop="price" width="160">
 						<template slot-scope="scope">
-							<div class="record_title">这是标题这是标题这是标题这是标题这是标题这是标题这是标题</div>
+							<div class="record_title">{{scope.row.title}}</div>
 						</template>
 					</el-table-column>
-					<el-table-column label="供应商" prop="price" width="160" show-overflow-tooltip></el-table-column>
-					<el-table-column label="上新时间" prop="price" width="150">
-						<template slot-scope="scope">
-							<div>2022-08-05 12:00</div>
-						</template>
+					<el-table-column label="供应商" prop="supplier_name" width="160" show-overflow-tooltip></el-table-column>
+					<el-table-column label="上新时间" prop="new_time_name" width="150">
 					</el-table-column>
-					<el-table-column label="款号" prop="price" show-overflow-tooltip></el-table-column>
-					<el-table-column label="款式编码" prop="price" show-overflow-tooltip></el-table-column>
-					<el-table-column label="拍摄风格" prop="price" show-overflow-tooltip></el-table-column>
-					<el-table-column label="价格" prop="price"></el-table-column>
+					<el-table-column label="款号" prop="style_name" show-overflow-tooltip></el-table-column>
+					<el-table-column label="款式编码" prop="i_id" show-overflow-tooltip></el-table-column>
+					<el-table-column label="拍摄风格" prop="shooting_style_name" show-overflow-tooltip></el-table-column>
+					<el-table-column label="价格" prop="cost_price"></el-table-column>
 					<el-table-column label="操作" width="80" fixed="right">
 						<template slot-scope="scope">
 							<el-button type="text" size="small" @click="deleteFn(scope.row)">移除</el-button>
@@ -54,8 +51,8 @@
 						<div class="form_item">
 							<div class="lable">店铺：</div>
 							<div class="value">
-								<el-select style="width: 220px" v-model="store_ids" size="mini" clearable placeholder="选择店铺">
-									<el-option v-for="item in store_list" :key="item.id" :label="item.name" :value="item.id">
+								<el-select v-model="shop_code" size="mini" clearable placeholder="选择店铺">
+									<el-option v-for="item in store_list" :key="item.shop_code" :label="item.shop_name" :value="item.shop_code">
 									</el-option>
 								</el-select>
 							</div>
@@ -63,14 +60,14 @@
 						<div class="form_item">
 							<div class="lable">需求日期：</div>
 							<div class="value">
-								<el-date-picker size="mini" v-model="date" type="date" value-format="yyyy-MM-dd" placeholder="选择日期">
+								<el-date-picker size="mini" v-model="demand_date" type="date" value-format="yyyy-MM-dd" placeholder="选择日期">
 								</el-date-picker>
 							</div>
 						</div>
 						<div class="form_item">
 							<div class="lable">售卖价格：</div>
 							<div class="value">
-								<el-input style="width: 220px" size="mini" clearable v-model="price" placeholder="请输入售卖价格"></el-input>
+								<el-input size="mini" type="number" clearable v-model="selling_price" placeholder="请输入售卖价格"></el-input>
 							</div>
 						</div>
 					</div>
@@ -78,16 +75,16 @@
 						<div class="form_item">
 							<div class="lable">需求类型：</div>
 							<div class="value">
-								<el-radio-group size="mini" v-model="need_type_id">
-									<el-radio :label="item.id" v-for="item in need_type">{{item.name}}</el-radio>
-								</el-radio-group>
+								<el-checkbox-group size="mini" v-model="demand_type">
+									<el-checkbox :label="item.name" v-for="item in need_type">{{item.name}}</el-checkbox>
+								</el-checkbox-group>
 							</div>
 						</div>
 						<div class="form_item">
 							<div class="lable">发货类型：</div>
 							<div class="value">
-								<el-select style="width: 220px" v-model="delivery_type_ids" size="mini" clearable placeholder="选择发货类型">
-									<el-option v-for="item in delivery_type_list" :key="item.id" :label="item.name" :value="item.id">
+								<el-select v-model="send_type" size="mini" clearable placeholder="选择发货类型">
+									<el-option v-for="item in delivery_type_list" :key="item.name" :label="item.name" :value="item.name">
 									</el-option>
 								</el-select>
 							</div>
@@ -103,62 +100,42 @@
 	</div>
 </template>
 <script>
+	import resource from '../../api/resource.js'
+	import commonResourcefrom '../../api/common_resource.js'
+
 	import PageTitle from '../../components/page_title.vue'
 	import QuillEditor from '../../components/quill_editor.vue'
 	export default{
 		data(){
 			return{
+				car_goods:[],				//购物车列表
 				selected_list: [],			//已选中的列表
 				max_height:0,
 				show_select:false,			//选款弹窗
-				store_list:[{
-					name:'店铺1',
-					id:'1'
-				},{
-					name:'店铺2',
-					id:'2'
-				},{
-					name:'店铺3',
-					id:'3'
-				}],						//店铺列表
-				store_ids:[],			//选中的店铺
-				need_type:[{
-					name:'上架',
-					id:'1'
-				},{
-					name:'调样',
-					id:'2'
-				},{
-					name:'拍摄',
-					id:'3'
-				},{
-					name:'其他',
-					id:'4'
-				}],						//需求类型列表
-				need_type_id:"",		//选中的需求类型
-				delivery_type_list:[{
-					name:'发货类型1',
-					id:'1'
-				},{
-					name:'发货类型2',
-					id:'2'
-				},{
-					name:'发货类型3',
-					id:'3'
-				}],						//发货类型列表
-				delivery_type_ids:[],	//选中的发货类型
-				date:"",				//需求日期
-				price:"",				//售卖价格
-			}
-		},
-		computed:{
-			//购物车列表
-			car_goods(){
-				return this.$store.state.car_goods;
+				store_list:[],			//店铺列表
+				shop_code:"",			//选中的店铺
+				need_type:[],			//需求类型列表
+				demand_type:[],			//选中的需求类型
+				delivery_type_list:[],	//发货类型列表
+				send_type:"",			//选中的发货类型
+				demand_date:"",			//需求日期
+				selling_price:"",		//售卖价格
+				remark:"",				//备注
+				
 			}
 		},
 		destroyed() {
 			window.removeEventListener("resize", () => {});
+		},
+		created(){
+			//获取购物车列表数量
+			this.getCarList();
+		},
+		computed:{
+			//图片前缀
+			domain(){
+				return this.$store.state.domain;
+			}
 		},
 		mounted() {
     		//获取表格最大高度
@@ -180,9 +157,25 @@
     				"px";
     			});
     		},
+    		//获取购物车列表数量
+    		getCarList(){
+    			resource.getCarList().then(res => {
+    				if(res.data.code == 1){
+    					let car_goods = res.data.data;
+    					car_goods.map(item => {
+    						let arr = [];
+    						arr.push(this.domain + item.img);
+    						item.images = arr;
+    					})
+    					this.car_goods = car_goods;
+    				}else{
+    					this.$message,warning(res.data.msg);
+    				}
+    			})
+    		},
     		//判断是否可以选中
     		setStatus(row){
-    			if (row.price != 3) {  
+    			if (row.status == 1) {  
     				return true;  
     			}
     		},
@@ -195,8 +188,80 @@
 				if(this.selected_list.length == 0){
 					this.$message.warning('你还没有选中记录哦~')
 				}else{
+					//获取店铺列表
+					this.ajaxViewShop();
+					//获取所有需求/发货类型
+					this.getAllDemandSendType();
 					this.show_select = true;
 				}
+			},
+			//提交选款
+			confirmSelect(){
+				if(this.shop_code == ''){
+					this.$message.warning('请选择店铺!');
+				}else if(this.demand_type.length == 0){
+					this.$message.warning('请选择需求类型!');
+				}else if(this.send_type == ''){
+					this.$message.warning('请选择发货类型!');
+				}else if(this.demand_date == ''){
+					this.$message.warning('请选择需求时间!');
+				}else if(this.selling_price == ''){
+					this.$message.warning('请输入售卖价格!');
+				}else{
+					let shop_arr = this.store_list.filter(item => {
+						return item.shop_code == this.shop_code;
+					})
+					let arg = {
+						style_id:this.info.style_id,
+						shop_code:this.shop_code,
+						shop_name:shop_arr[0].shop_name,
+						demand_type:this.demand_type.join(','),
+						send_type:this.send_type,
+						demand_date:this.demand_date,
+						selling_price:this.selling_price,
+						remark:this.remark
+					}
+					resource.chooseGoods(arg).then(res => {
+						if(res.data.code == 1){
+							this.$message.success(res.data.msg);
+							this.show_select = false;
+							this.$emit('callback');
+						}else{
+							this.$message.warning(res.data.msg);
+						}
+					})
+				}
+			},
+			//获取店铺列表
+			ajaxViewShop(){
+				let arg = {
+					type:1,
+				}
+				commonResource.ajaxViewShop(arg).then(res => {
+					if(res.data.code == 1){
+						this.store_list = res.data.data;
+					}else{
+						this.$message.warning(res.data.msg);
+					}
+				})
+			},
+			//获取所有需求/发货类型
+			getAllDemandSendType(){
+				commonResource.getAllDemandSendType().then(res => {
+					if(res.data.code == 1){
+						let data = res.data.data;
+						//需求类型
+						this.need_type = data.filter(item => {
+							return item.type == 1;
+						})
+						//发货类型
+						this.delivery_type_list = data.filter(item => {
+							return item.type == 2;
+						})
+					}else{
+						this.$message.warning(res.data.msg);
+					}
+				})
 			},
 			//点击删除
 			deleteFn(item){
