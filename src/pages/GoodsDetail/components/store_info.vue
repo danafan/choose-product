@@ -1,14 +1,14 @@
 <template>
-	<div class="store_info">
-		<div class="store_name">{{goods_info.shop_name}}</div>
+	<div class="store_info_container">
+		<img class="store_info_back" src="../../../static/store_info_back.png">
 		<div class="store_info">
-			<div class="store_info_row">
-				<div class="store_info_lable">评级</div>
-				<div class="store_info_pj">{{goods_info.grade_name}}</div>
-			</div>
 			<div class="store_info_row">
 				<div class="store_info_lable">供应商</div>
 				<div class="store_info_value">{{goods_info.supplier_name}}</div>
+			</div>
+			<div class="store_info_row">
+				<div class="store_info_lable">编码</div>
+				<div class="store_info_value">{{goods_info.supplier_id}}</div>
 			</div>
 			<div class="store_info_row">
 				<div class="store_info_lable">主营</div>
@@ -17,6 +17,10 @@
 			<div class="store_info_row">
 				<div class="store_info_lable">结算方式</div>
 				<div class="store_info_value">{{goods_info.supply_monthly_settlement}}</div>
+			</div>
+			<div class="store_info_row">
+				<div class="store_info_lable">评级</div>
+				<div class="store_info_pj">{{goods_info.grade_name}}</div>
 			</div>
 			<div class="get_detail" @click="supplierDetail">查看详情</div>
 		</div>
@@ -40,26 +44,27 @@
 	}
 </script>
 <style lang="less" scoped>
-.store_info{
-	width: 198rem;
-	height: 546rem;
-	display: flex;
-	flex-direction: column;
-	.store_name{
-		border:1px solid #FFDABB;
-		background: #FFFCFA;
-		padding:20rem;
-		font-size: 14rem;
-		color: #333333;
-		font-weight: 500;
+.store_info_container{
+	position: relative;
+	width: 214rem;
+	height: 308rem;
+	.store_info_back{
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
 	}
 	.store_info{
-		position: relative;
-		border-left: 1px solid #E8E8E8;
-		border-right: 1px solid #E8E8E8;
-		border-bottom: 1px solid #E8E8E8;
-		flex:1;
-		padding: 25rem 20rem;
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		display: flex;
+		flex-direction: column;
+		padding: 40rem 30rem;
+		z-index: 9;
 		.store_info_row{
 			margin-bottom: 20rem;
 			display: flex;
@@ -78,10 +83,7 @@
 			}
 		}
 		.get_detail{
-			position: absolute;
-			bottom: 126rem;
-			left: 50%;
-			transform: translate(-50%);
+			margin: 0 auto;
 			border:1px solid var(--color);
 			border-radius: 4rem;
 			width: 120rem;

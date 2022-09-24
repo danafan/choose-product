@@ -9,30 +9,52 @@
 						<div class="active_line" v-if="active_index == index"></div>
 					</div>
 				</div>
-				<el-table size="mini" :data="car_goods" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height">
-					<el-table-column label="图片" width="120">
+				<div class="form_row">
+					<el-form :inline="true" size="mini">
+						<el-form-item label="店铺：">
+							<el-select v-model="shop_code" clearable placeholder="全部">
+								<el-option v-for="item in store_list" :key="item.shop_code" :label="item.shop_name" :value="item.shop_code">
+								</el-option>
+							</el-select>
+						</el-form-item>
+						<el-form-item class="form_item">
+							<el-button type="primary" @click="checkPage(1)">查询</el-button>
+						</el-form-item>
+					</el-form>
+				</div>
+				<el-table size="mini" :data="data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height">
+					<el-table-column label="图片" width="160">
 						<template slot-scope="scope">
-							<el-image :z-index="2006" class="image" :src="scope.row.image[0]" fit="contain" :preview-src-list="scope.row.image"></el-image>
+							<el-image :z-index="2008" class="image" :src="scope.row.images[0]" fit="contain" :preview-src-list="scope.row.images"></el-image>
 						</template>
 					</el-table-column>
-					<el-table-column label="款号" prop="price" show-overflow-tooltip></el-table-column>
-					<el-table-column label="款式编码" prop="price" show-overflow-tooltip></el-table-column>
-					<el-table-column label="成本价" prop="price" show-overflow-tooltip></el-table-column>
-					<el-table-column label="售卖价" prop="price" show-overflow-tooltip></el-table-column>
-					<el-table-column label="需求部门" prop="price" show-overflow-tooltip></el-table-column>
-					<el-table-column label="需求店铺" prop="price" show-overflow-tooltip></el-table-column>
-					<el-table-column label="需求日期" prop="price" show-overflow-tooltip></el-table-column>
-					<el-table-column label="需求人" prop="price" show-overflow-tooltip></el-table-column>
-					<el-table-column label="需求类型" prop="price" show-overflow-tooltip></el-table-column>
-					<el-table-column label="当前状态" prop="price" show-overflow-tooltip></el-table-column>
+					<el-table-column label="款号" prop="style_name" show-overflow-tooltip></el-table-column>
+					<el-table-column label="款式编码" prop="i_id" show-overflow-tooltip></el-table-column>
+					<el-table-column label="成本价" prop="cost_price" show-overflow-tooltip></el-table-column>
+					<el-table-column label="售卖价" prop="selling_price" show-overflow-tooltip></el-table-column>
+					<el-table-column label="需求部门" prop="select_main_dept_name" show-overflow-tooltip></el-table-column>
+					<el-table-column label="需求店铺" prop="shop_name" show-overflow-tooltip></el-table-column>
+					<el-table-column label="需求日期" prop="demand_date" show-overflow-tooltip></el-table-column>
+					<el-table-column label="需求人" prop="ding_user_name" show-overflow-tooltip></el-table-column>
+					<el-table-column label="需求类型" prop="demand_type" show-overflow-tooltip>
+					</el-table-column>
+					<el-table-column label="当前状态" show-overflow-tooltip>
+						<template slot-scope="scope">
+							<div v-if="scope.row.audit_status == 1">待审核</div>
+							<div v-if="scope.row.audit_status == 2">已确认</div>
+							<div v-if="scope.row.audit_status == 3">已取消</div>
+							<div v-if="scope.row.audit_status == 0">已撤销</div>
+						</template>
+					</el-table-column>
 					<el-table-column label="操作" width="120" fixed="right">
 						<template slot-scope="scope">
-							<el-button type="text" size="small">撤销</el-button>
-							<el-button type="text" size="small" @click="detail_dialog = true">详情</el-button>
+							<el-button type="text" size="small" @click="cancelSelected(scope.row.select_id)" v-if="scope.row.audit_status == 2">取消</el-button>
+							<el-button type="text" size="small" @click="undoSelected(scope.row.select_id)" v-if="scope.row.audit_status == 1">撤销</el-button>
+							<el-button type="text" size="small" @click="selectedInfo(scope.row.select_id)">详情</el-button>
 						</template>
 					</el-table-column>
 				</el-table>
-				<PaginationWidget id="bottom_row" :total="62" :page="page" @checkPage="checkPage"/>
+				<PaginationWidget id="bottom_row" :total="total" :page="page" @checkPage="checkPage"/>
 			</el-card>
 			<CarWidget/>
 		</div>
@@ -45,163 +67,187 @@
 			<div class="dialog_content">
 				<div class="detail_row">
 					<div class="lable">标题</div>
-					<div class="value">男式防紫外线轻薄便携连帽防晒外套</div>
+					<div class="value">{{goods_info.title}}</div>
 				</div>
 				<div class="detail_row">
 					<div class="lable">款号</div>
-					<div class="value">男式防紫外线轻薄便携连帽防晒外套</div>
+					<div class="value">{{goods_info.style_name}}</div>
 				</div>
 				<div class="detail_row">
 					<div class="lable">款式编码</div>
-					<div class="value">男式防紫外线轻薄便携连帽防晒外套</div>
+					<div class="value">{{goods_info.i_id}}</div>
 				</div>
 				<div class="detail_row">
 					<div class="lable">供应商</div>
-					<div class="value">男式防紫外线轻薄便携连帽防晒外套</div>
+					<div class="value">{{goods_info.supplier_name}}</div>
 				</div>
 				<div class="detail_row">
 					<div class="lable">市场</div>
-					<div class="value">男式防紫外线轻薄便携连帽防晒外套</div>
+					<div class="value">{{goods_info.market_name}}</div>
 				</div>
 				<div class="detail_row">
 					<div class="lable">提供拍照</div>
-					<div class="value">男式防紫外线轻薄便携连帽防晒外套</div>
+					<div class="value">{{goods_info.supply_photograph == 1?'是':'否'}}</div>
 				</div>
 				<div class="detail_row">
 					<div class="lable">提供退货</div>
-					<div class="value">男式防紫外线轻薄便携连帽防晒外套</div>
+					<div class="value">{{goods_info.supply_return_goods == 1?'是':'否'}}</div>
 				</div>
 				<div class="detail_row">
 					<div class="lable">提供换货</div>
-					<div class="value">男式防紫外线轻薄便携连帽防晒外套</div>
+					<div class="value">{{goods_info.supply_exchange_goods == 1?'是':'否'}}</div>
 				</div>
 				<div class="detail_row">
 					<div class="lable">提供代发</div>
-					<div class="value">男式防紫外线轻薄便携连帽防晒外套</div>
+					<div class="value">{{goods_info.supply_replace_send == 1?'是':'否'}}</div>
 				</div>
 				<div class="detail_row">
 					<div class="lable">结算方式</div>
-					<div class="value">男式防紫外线轻薄便携连帽防晒外套</div>
+					<div class="value">{{goods_info.supply_monthly_settlement == 1?'月结':'现结'}}</div>
 				</div>
 				<div class="detail_row">
 					<div class="lable">类目</div>
-					<div class="value">男式防紫外线轻薄便携连帽防晒外套</div>
+					<div class="value">{{goods_info.category_name}}</div>
 				</div>
 				<div class="detail_row">
 					<div class="lable">分类</div>
-					<div class="value">男式防紫外线轻薄便携连帽防晒外套</div>
+					<div class="value">{{goods_info.classification_name}}</div>
 				</div>
 				<div class="detail_row">
-					<div class="lable">拍摄份个股</div>
-					<div class="value">男式防紫外线轻薄便携连帽防晒外套</div>
+					<div class="lable">拍摄风格</div>
+					<div class="value">{{goods_info.shooting_style_name}}</div>
 				</div>
 				<div class="detail_row">
 					<div class="lable">合作模式</div>
-					<div class="value">男式防紫外线轻薄便携连帽防晒外套</div>
+					<div class="value">{{goods_info.mode}}</div>
 				</div>
 				<div class="detail_row">
 					<div class="lable">备注</div>
-					<div class="value">男式防紫外线轻薄便携连帽防晒外套</div>
+					<div class="value">{{goods_info.remark}}</div>
 				</div>
 				<div class="detail_row">
 					<div class="lable">面料</div>
-					<div class="value">男式防紫外线轻薄便携连帽防晒外套</div>
+					<div class="value">{{goods_info.fabric}}</div>
 				</div>
 				<div class="detail_row">
 					<div class="lable">尺码</div>
-					<div class="value">男式防紫外线轻薄便携连帽防晒外套</div>
+					<div class="value">{{goods_info.size}}</div>
 				</div>
 				<div class="detail_row">
 					<div class="lable">成本价</div>
-					<div class="value">男式防紫外线轻薄便携连帽防晒外套</div>
+					<div class="value">{{goods_info.cost_price}}</div>
 				</div>
 				<div class="detail_row">
 					<div class="lable">共享盘地址</div>
-					<div class="value">男式防紫外线轻薄便携连帽防晒外套</div>
+					<div class="value">{{goods_info.shared_disk_address}}</div>
 				</div>
 				<div class="detail_row">
 					<div class="lable">百度网盘</div>
-					<div class="value">男式防紫外线轻薄便携连帽防晒外套</div>
+					<div class="value">{{goods_info.net_disk_address}}</div>
 				</div>
 				<div class="detail_row">
 					<div class="lable">店铺</div>
-					<div class="value">男式防紫外线轻薄便携连帽防晒外套</div>
+					<div class="value">{{goods_info.shop_name}}</div>
 				</div>
 				<div class="detail_row">
 					<div class="lable">需求类型</div>
-					<div class="value">男式防紫外线轻薄便携连帽防晒外套</div>
+					<div class="value">{{goods_info.demand_type}}</div>
 				</div>
 				<div class="detail_row">
 					<div class="lable">发货类型</div>
-					<div class="value">男式防紫外线轻薄便携连帽防晒外套</div>
+					<div class="value">{{goods_info.send_type}}</div>
 				</div>
 				<div class="detail_row">
 					<div class="lable">需求日期</div>
-					<div class="value">男式防紫外线轻薄便携连帽防晒外套</div>
+					<div class="value">{{goods_info.demand_date}}</div>
 				</div>
 				<div class="detail_row">
 					<div class="lable">售卖价格</div>
-					<div class="value">男式防紫外线轻薄便携连帽防晒外套</div>
+					<div class="value">{{goods_info.selling_price}}</div>
 				</div>
 				<div class="detail_row">
 					<div class="lable">当前状态</div>
-					<div class="value">男式防紫外线轻薄便携连帽防晒外套</div>
+					<div class="value" v-if="goods_info.audit_status == 0">已撤销</div>
+					<div class="value" v-if="goods_info.audit_status == 1">待审核</div>
+					<div class="value" v-if="goods_info.audit_status == 2">已确认</div>
+					<div class="value" v-if="goods_info.audit_status == 3">已取消</div>
 				</div>
 				<div class="detail_row">
 					<div class="lable">拒绝原因</div>
-					<div class="value">男式防紫外线轻薄便携连帽防晒外套</div>
+					<div class="value">{{goods_info.refund_reason}}</div>
 				</div>
 			</div>
 			<div slot="footer" class="dialog_footer">
-				<el-button type="primary" size="small" @click="detail_dialog = false">取消</el-button>
+				<el-button type="primary" size="small" @click="detail_dialog = false">关闭</el-button>
 			</div>
 		</el-dialog>
 	</div>
 </template>
 <script>
+	import resource from '../../api/resource.js'
+	import commonResource from '../../api/common_resource.js'
+
 	import SearchWidget from '../../components/search_widget.vue'
 	import PaginationWidget from '../../components/pagination_widget.vue'
 	import CarWidget from '../../components/car_widget.vue'
 	export default{
 		data(){
 			return{
+				store_list:[],			//店铺列表
+				shop_code:"",			//选中的店铺
 				tab_list:[{
 					name:'全部',
-					id:'0'
+					id:''
 				},{
 					name:'待确认',
-					id:'0'
+					id:'1'
 				},{
 					name:'已确认',
-					id:'0'
+					id:'2'
 				},{
 					name:'已取消',
-					id:'0'
+					id:'3'
 				},{
 					name:'已撤销',
 					id:'0'
 				}],							//tab列表
 				active_index:0,				//当前选中的tab下标
+				search:"",					//搜索框的内容
 				page:1,
+				data:[],
+				total:0,
 				max_height:0,	
 				detail_dialog:false,		//详情弹窗
-			}
-		},
-		computed:{
-			//购物车列表
-			car_goods(){
-				return this.$store.state.car_goods;
+				goods_info:{},				//详情数据
 			}
 		},
 		destroyed() {
 			window.removeEventListener("resize", () => {});
+		},
+		watch:{
+			active_index:function(n,o){
+				//获取列表
+				this.getSelected();
+			}
+		},
+		created(){
+			//获取所有店铺列表
+			this.ajaxViewShop();
+			//获取列表
+			this.getSelected();
 		},
 		mounted() {
     		//获取表格最大高度
     		this.onResize();
     		window.addEventListener("resize", this.onResize());
     	},
-    	methods: {
+    	computed:{
+			//图片前缀
+			domain(){
+				return this.$store.state.domain;
+			}
+		},
+		methods: {
     		//监听屏幕大小变化
     		onResize() {
     			this.$nextTick(() => {
@@ -212,19 +258,125 @@
     				card_box_height -
     				all_title_height -
     				bottom_row_height -
-    				60 +
+    				110 +
     				"px";
     			});
     		},
+    		//获取所有店铺列表
+    		ajaxViewShop(){
+    			commonResource.ajaxViewShop().then(res => {
+    				if(res.data.code == 1){
+    					this.store_list = res.data.data;
+    				}else{
+    					this.$message.warning(res.data.msg);
+    				}
+    			})
+    		},
 			//搜索
 			searchFn(value){
-				console.log(value);
+				this.search = value;
+				//获取列表
+				this.getSelected();
+			},
+			//获取列表
+			getSelected(){
+				let arg = {
+					status:this.tab_list[this.active_index].id,
+					search:this.search,
+					shop_code:this.shop_code,
+					page:this.page
+				}
+				resource.getSelected(arg).then(res => {
+					if(res.data.code == 1){
+						let data = res.data.data;
+						let data_list = data.data;
+						data_list.map(item => {
+							let images = [];
+							images.push(this.domain + item.img);
+							item.images = images;
+						})
+						this.data = data_list;
+						this.total = data.total;
+					}else{
+						this.$message.warning(res.data.msg);
+					}
+				})
 			},
 			//翻页
 			checkPage(val) {
 				this.page = val;
-				console.log(this.page)
+				//获取列表
+				this.getSelected();
 			},
+			//获取详情
+			selectedInfo(select_id){
+				let arg = {
+					select_id:select_id,
+					select_type:1
+				}
+				resource.selectedInfo(arg).then(res => {
+					if(res.data.code == 1){
+						this.goods_info = res.data.data;
+						this.detail_dialog = true;
+					}else{
+						this.$message.warning(res.data.msg);
+					}
+				})
+			},
+			//点击撤销
+			undoSelected(select_id){
+				this.$confirm('确认撤销?', '提示', {
+					confirmButtonText: '确定',
+					cancelButtonText: '取消',
+					type: 'warning'
+				}).then(() => {
+					//商品ID
+					let arg = {
+						select_id:select_id
+					}
+					resource.undoSelected(arg).then(res => {
+						if(res.data.code == 1){
+							this.$message.success(res.data.msg);
+							//获取列表
+							this.getSelected();
+						}else{
+							this.$message.warning(res.data.msg);
+						}
+					})
+				}).catch(() => {
+					this.$message({
+						type: 'info',
+						message: '已取消'
+					});          
+				});
+			},
+			//点击取消
+			cancelSelected(select_id){
+				this.$confirm('确认取消?', '提示', {
+					confirmButtonText: '确定',
+					cancelButtonText: '取消',
+					type: 'warning'
+				}).then(() => {
+					//商品ID
+					let arg = {
+						select_id:select_id
+					}
+					resource.cancelSelected(arg).then(res => {
+						if(res.data.code == 1){
+							this.$message.success(res.data.msg);
+							//获取列表
+							this.getSelected();
+						}else{
+							this.$message.warning(res.data.msg);
+						}
+					})
+				}).catch(() => {
+					this.$message({
+						type: 'info',
+						message: '已取消'
+					});          
+				});
+			}
 		},
 		components:{
 			SearchWidget,
@@ -234,9 +386,9 @@
 	}
 </script>
 <style type="text/css">
-	.el-dialog__body{
-		padding: 0!important;
-	}
+.el-dialog__body{
+	padding: 0!important;
+}
 </style>
 <style lang="less" scoped>
 .padding_page_content{

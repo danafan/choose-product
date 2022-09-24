@@ -25,12 +25,12 @@
 					<el-table-column label="价格" prop="cost_price"></el-table-column>
 					<el-table-column label="操作" width="80" fixed="right">
 						<template slot-scope="scope">
-							<el-button type="text" size="small" @click="deleteFn(scope.row)">移除</el-button>
+							<el-button type="text" size="small" @click="deleteFn('1',scope.row.select_cart_id)">移除</el-button>
 						</template>
 					</el-table-column>
 				</el-table>
 				<div class="bottom_row" id="bottom_row">
-					<el-button size='mini' type="text" :disabled="selected_list.length == 0" @click="deleteFn">移除</el-button>
+					<el-button size='mini' type="text" :disabled="selected_list.length == 0" @click="deleteFn('2')">移除</el-button>
 					<div class="all_selected">
 						<div class="selcted_num">已选 {{selected_list.length}} 件</div>
 						<el-button size='mini' type="primary" @click="selectFn">去选中</el-button>
@@ -94,14 +94,14 @@
 				<QuillEditor @callback="getEditor"/>
 			</div>
 			<div slot="footer" class="dialog_footer">
-				<el-button type="primary" size="small" @click="show_select = false">确认选择</el-button>
+				<el-button type="primary" size="small" @click="confirmSelect">确认选择</el-button>
 			</div>
 		</el-dialog>
 	</div>
 </template>
 <script>
 	import resource from '../../api/resource.js'
-	import commonResourcefrom '../../api/common_resource.js'
+	import commonResource from '../../api/common_resource.js'
 
 	import PageTitle from '../../components/page_title.vue'
 	import QuillEditor from '../../components/quill_editor.vue'
@@ -208,11 +208,17 @@
 				}else if(this.selling_price == ''){
 					this.$message.warning('请输入售卖价格!');
 				}else{
+					//店铺名称
 					let shop_arr = this.store_list.filter(item => {
 						return item.shop_code == this.shop_code;
 					})
+					//商品ID
+					let style_id_arr = [];
+					this.selected_list.map(item => {
+						style_id_arr.push(item.style_id);
+					})
 					let arg = {
-						style_id:this.info.style_id,
+						style_id:style_id_arr.join(','),
 						shop_code:this.shop_code,
 						shop_name:shop_arr[0].shop_name,
 						demand_type:this.demand_type.join(','),
@@ -225,7 +231,8 @@
 						if(res.data.code == 1){
 							this.$message.success(res.data.msg);
 							this.show_select = false;
-							this.$emit('callback');
+							//获取购物车列表数量
+    						this.getCarList();
 						}else{
 							this.$message.warning(res.data.msg);
 						}
@@ -263,24 +270,41 @@
 					}
 				})
 			},
-			//点击删除
-			deleteFn(item){
-				let arg = {
-					goods_items:[],
-					type:'del'
-				}
-				if(item.price){		//单个删除
-					arg.goods_items.push(item);
-				}else{				//批量删除
-					arg.goods_items = this.selected_list;
-				}
-				this.$store.commit('setCarGoods',arg);
-				localStorage.setItem("car_goods",JSON.stringify(this.$store.state.car_goods));
-			},
-			//监听富文本内容变化
+			//监听富文本编辑器内容变化
 			getEditor(v){
-				console.log(v)
-			}
+				this.remark = v;
+			},
+			//点击删除
+			deleteFn(type,style_id){
+				this.$confirm('确认删除商品图?', '提示', {
+					confirmButtonText: '确定',
+					cancelButtonText: '取消',
+					type: 'warning'
+				}).then(() => {
+					//商品ID
+					let style_id_arr = [];
+					this.selected_list.map(item => {
+						style_id_arr.push(item.select_cart_id);
+					})
+					let arg = {
+						select_cart_id:type == '1'?style_id:style_id_arr.join(',')
+					}
+					resource.removeCarGoods(arg).then(res => {
+						if(res.data.code == 1){
+							this.$message.success(res.data.msg);
+							//获取列表
+							this.getCarList();
+						}else{
+							this.$message.warning(res.data.msg);
+						}
+					})
+				}).catch(() => {
+					this.$message({
+						type: 'info',
+						message: '已取消'
+					});          
+				});
+			},
 		},
 		components:{
 			PageTitle,

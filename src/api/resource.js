@@ -9,7 +9,12 @@ let path = {
   getGoodsInfo:'selectcart/selectedinfo',             //获取商品详情
   addSelectCart:'home/addselectcart',                 //加入购物车
   getCarList:'selectcart/getwaitselect',              //获取购物车列表
-}
+  removeCarGoods:'selectcart/removewaitselect',       //删除购物车
+  getSelected:'selected/getselected',                 //获取已选列表
+  selectedInfo:'selected/selectedinfo',               //已选详情
+  undoSelected:'selected/revocationselected',         //撤销已选
+  cancelSelected:'selected/cancelselected',           //取消已选
+} 
 export default {
   //首页商品列表
   getGoodsList(params) {
@@ -46,5 +51,25 @@ export default {
   //购物车列表
   getCarList(params) {
     return http.get(path.getCarList, params);
+  },
+  //删除购物车
+  removeCarGoods(params) {
+    return http.post(path.removeCarGoods, params);
+  },
+  //获取已选列表
+  getSelected(params) {
+    return http.get(path.getSelected, params);
+  },
+  //已选详情
+  selectedInfo(params) {
+    return http.get(path.selectedInfo, params);
+  },
+  //撤销已选
+  undoSelected(params) {
+    return http.post(path.undoSelected, params);
+  },
+  //取消已选
+  cancelSelected(params) {
+    return http.post(path.cancelSelected, params);
   },
 };
