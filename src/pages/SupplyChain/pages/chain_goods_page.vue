@@ -68,7 +68,7 @@
 				<el-table-column label="图片" width="120">
 					<template slot-scope="scope">
 						<div v-if="scope.row.images.length == 0">暂无</div>
-						<el-image :z-index="2006" class="image" :src="scope.row.images[0]" fit="contain" :preview-src-list="scope.row.images" v-else></el-image>
+						<el-image :z-index="2006" class="image" :src="scope.row.images[0]" fit="scale-down" :preview-src-list="scope.row.images" v-else></el-image>
 					</template>
 				</el-table-column>
 				<el-table-column label="成本价" prop="cost_price" show-overflow-tooltip></el-table-column>

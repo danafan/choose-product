@@ -25,7 +25,7 @@
 				<el-table size="mini" :data="data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height">
 					<el-table-column label="图片" width="160">
 						<template slot-scope="scope">
-							<el-image :z-index="2008" class="image" :src="scope.row.images[0]" fit="contain" :preview-src-list="scope.row.images"></el-image>
+							<el-image :z-index="2008" class="image" :src="scope.row.images[0]" fit="scale-down" :preview-src-list="scope.row.images"></el-image>
 						</template>
 					</el-table-column>
 					<el-table-column label="款号" prop="style_name" show-overflow-tooltip></el-table-column>

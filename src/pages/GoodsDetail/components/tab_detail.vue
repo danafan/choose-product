@@ -23,7 +23,7 @@
 			<div class="source_item">网盘地址：{{net_disk_address}}</div>
 		</div>
 		<div class="image_box">
-			<el-image :z-index="2006" class="style_image" :src="item" fit="contain" :preview-src-list="style_image_list" v-for="item in style_image_list"></el-image>
+			<el-image :z-index="2006" class="style_image" :src="item" fit="scale-down" :preview-src-list="style_image_list" v-for="item in style_image_list"></el-image>
 			<div class="style_image" v-if="style_image_list.length%2 > 0"></div>
 		</div>
 	</div>

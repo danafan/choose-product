@@ -6,9 +6,9 @@
 				<div class="all_title" id="all_title">待选（全部{{car_goods.length}}）</div>
 				<el-table ref="multipleTable" size="mini" :data="car_goods" tooltip-effect="dark" style="width: 100%" @selection-change="changeSelected" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height">
 					<el-table-column type="selection" width="55" fixed="left" :selectable="setStatus"></el-table-column>
-					<el-table-column label="图片" width="120">
+					<el-table-column label="图片" width="160">
 						<template slot-scope="scope">
-							<el-image :z-index="2008" class="image" :src="scope.row.images[0]" fit="contain" :preview-src-list="scope.row.images"></el-image>
+							<el-image :z-index="2008" class="image" :src="scope.row.images[0]" fit="scale-down" :preview-src-list="scope.row.images"></el-image>
 						</template>
 					</el-table-column>
 					<el-table-column label="标题" prop="price" width="160">

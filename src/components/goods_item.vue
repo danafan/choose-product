@@ -4,8 +4,8 @@
 			<el-popover
 			placement="right-start"
 			trigger="hover">
-			<el-image fit="contain" :src="domain + info.img"></el-image>
-			<el-image :src="domain + info.img" slot="reference" @click="getMoreImage" fit="contain"></el-image>
+			<el-image fit="scale-down" :src="domain + info.img"></el-image>
+			<el-image :src="domain + info.img" slot="reference" @click="getMoreImage" fit="scale-down"></el-image>
 		</el-popover>
 	</div>
 	<div class="goods_info" @click="getDetail">
@@ -125,7 +125,7 @@
 				<div class="banner">
 					<el-carousel indicator-position="none" arrow="never" @change="changeImage" ref="cardShow">
 						<el-carousel-item v-for="item in banner_list" :key="item">
-							<el-image :z-index="2009" class="image" :src="item" fit="contain" :preview-src-list="banner_list"></el-image>
+							<el-image :z-index="2009" class="image" :src="item" fit="scale-down" :preview-src-list="banner_list"></el-image>
 						</el-carousel-item>
 					</el-carousel>
 					<div class="indicator_box">
@@ -175,13 +175,13 @@
 					<div class="source_url">共享盘地址：{{item.shared_disk_address}}</div>
 					<div class="source_url">网盘地址：{{item.net_disk_address}}</div>
 					<div class="more_image">
-						<el-image :z-index="9009" class="more_image_item" :src="img_url" fit="contain" v-for="(img_url,i) in item.img_arr" :key="i" :preview-src-list="item.img_arr"></el-image>
+						<el-image :z-index="9009" class="more_image_item" :src="img_url" fit="scale-down" v-for="(img_url,i) in item.img_arr" :key="i" :preview-src-list="item.img_arr"></el-image>
 					</div>
 				</el-tab-pane>
 			</el-tabs>
 			<div v-else>
 				<div class="more_image">
-					<el-image :z-index="9009" class="more_image_item" :src="item" fit="contain" v-for="item in commodity_data" :preview-src-list="commodity_data"></el-image>
+					<el-image :z-index="9009" class="more_image_item" :src="item" fit="scale-down" v-for="item in commodity_data" :preview-src-list="commodity_data"></el-image>
 				</div>
 			</div>
 		</div>

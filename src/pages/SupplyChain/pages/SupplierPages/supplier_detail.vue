@@ -45,7 +45,7 @@
 						{{data_info.grade_name}}
 					</el-form-item>
 					<el-form-item label="营业执照：">
-						<el-image class="card_img" :src="img_list[0]" fit="contain" :preview-src-list="img_list"></el-image>
+						<el-image class="card_img" :src="img_list[0]" fit="scale-down" :preview-src-list="img_list"></el-image>
 					</el-form-item>
 				</el-form>
 			</div>

@@ -93,7 +93,7 @@
 				<el-form size="small" label-width="100px">
 					<el-form-item label="商品图：">
 						<div v-if="is_detail">
-							<el-image class="card_img" v-for="item in preview_image" :src="item" fit="contain" :preview-src-list="preview_image"></el-image>
+							<el-image class="card_img" v-for="item in preview_image" :src="item" fit="scale-down" :preview-src-list="preview_image"></el-image>
 						</div>
 						<UploadFile :img_list="img_list" :is_multiple="true" :current_num="arg.img.length" :max_num="99" @callbackFn="callbackFn" v-else/>
 					</el-form-item>

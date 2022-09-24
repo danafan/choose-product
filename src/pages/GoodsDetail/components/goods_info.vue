@@ -114,7 +114,7 @@
 					<div class="banner">
 						<el-carousel indicator-position="none" arrow="never" @change="changeImage" ref="cardShow">
 							<el-carousel-item v-for="item in banner_list" :key="item">
-								<el-image :z-index="2009" class="image" :src="item" fit="contain" :preview-src-list="banner_list"></el-image>
+								<el-image :z-index="2009" class="image" :src="item" fit="scale-down" :preview-src-list="banner_list"></el-image>
 							</el-carousel-item>
 						</el-carousel>
 						<div class="indicator_box">

@@ -1,7 +1,7 @@
 <template>
 	<div class="image_list">
 		<div class="view_card_img" @mouseenter="item.show_icon = true" @mouseleave="item.show_icon = false" v-for="(item,index) in preview_images" :key="index">
-			<el-image class="card_img" :src="domain + item.urls" fit="contain"></el-image>
+			<el-image class="card_img" :src="domain + item.urls" fit="scale-down"></el-image>
 			<div class="delete_img" v-if="item.show_icon == true">
 				<img class="delete_icon" src="../static/delete_icon.png" @click="deleteFile(item.urls,index)">
 			</div>

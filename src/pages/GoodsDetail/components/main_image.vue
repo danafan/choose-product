@@ -1,13 +1,13 @@
 <template>
 	<div class="image_box">
-		<el-image :z-index="2006" class="goods_image" :src="current_image_list[0]" fit="contain" :preview-src-list="current_image_list"></el-image>
+		<el-image :z-index="2006" class="goods_image" :src="current_image_list[0]" fit="scale-down" :preview-src-list="current_image_list"></el-image>
 		<div class="img_list_title">图片列表</div>
 		<div class="carousel_content">
 			<img class="detail_arrow" src="../../../static/detail_left.png" @click="checkBanner(-1)">
 			<el-carousel class="carousel_box" :autoplay="false" indicator-position="none" arrow="never" ref="detail_carousel">
 				<el-carousel-item v-for="(item,index) in image_list">
 					<div class="carousel_item">
-						<el-image class="img_list_item" :class="{'border_style':iii.is_active == true}" :src="iii.url" fit="contain" v-for="(iii,i) in item" @mouseenter="enterImage(index,i)"></el-image>
+						<el-image class="img_list_item" :class="{'border_style':iii.is_active == true}" :src="iii.url" fit="scale-down" v-for="(iii,i) in item" @mouseenter="enterImage(index,i)"></el-image>
 						<div class="img_list_item" v-for="i in (item.length==5?0:5-item.length)"></div>
 					</div>
 				</el-carousel-item>

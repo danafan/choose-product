@@ -12,14 +12,14 @@
 				<div class="list_content" :style="{height: scroll_height}">
 					<div class="supplier_item" v-for="i in 9">
 						<div class="text_info">
-							<div class="info_item">市场：杭州</div>
 							<div class="info_item">供应商：九阿哥</div>
+							<div class="info_item">供应商编码：杭州</div>
 							<div class="info_item">主营：男装</div>
 							<div class="info_item">结算方式：月结</div>
 							<div class="info_item">评级：<span>AAA</span></div>
 						</div>
 						<div class="image_list">
-							<el-image :z-index="2006" class="image_item" :src="item" fit="contain" v-for="item in banner_list" :preview-src-list="banner_list"></el-image>
+							<el-image :z-index="2006" class="image_item" :src="item" fit="scale-down" v-for="item in banner_list" :preview-src-list="banner_list"></el-image>
 						</div>
 						<div class="detail_box">
 							<div class="detail_button" @click="supplierDetail">查看更多</div>

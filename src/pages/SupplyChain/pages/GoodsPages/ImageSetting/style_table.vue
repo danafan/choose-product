@@ -10,7 +10,7 @@
 				<el-table-column label="风格" prop="shooting_style_name" show-overflow-tooltip></el-table-column>
 				<el-table-column label="图片" width="200">
 					<template slot-scope="scope">
-						<el-image :z-index="2006" class="image" :src="scope.row.image_list[0]" fit="contain" :preview-src-list="scope.row.image_list"></el-image>
+						<el-image :z-index="2006" class="image" :src="scope.row.image_list[0]" fit="scale-down" :preview-src-list="scope.row.image_list"></el-image>
 					</template>
 				</el-table-column>
 				<el-table-column label="共享盘地址" prop="shared_disk_address" show-overflow-tooltip></el-table-column>

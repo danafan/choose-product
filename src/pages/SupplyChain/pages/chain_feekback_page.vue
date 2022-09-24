@@ -11,7 +11,7 @@
 				<el-table-column prop="feedback_content" label="反馈内容" show-overflow-tooltip align="center"></el-table-column>
 				<el-table-column label="反馈截图" width="180">
 					<template slot-scope="scope">
-						<el-image :z-index="2006" class="image" :src="scope.row.feedback_img[0]" fit="contain" :preview-src-list="scope.row.feedback_img"></el-image>
+						<el-image :z-index="2006" class="image" :src="scope.row.feedback_img[0]" fit="scale-down" :preview-src-list="scope.row.feedback_img"></el-image>
 					</template>
 				</el-table-column>
 				<el-table-column prop="feedback_real_name" width="160" label="反馈人" show-overflow-tooltip align="center"></el-table-column>
