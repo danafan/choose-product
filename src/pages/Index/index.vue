@@ -2,13 +2,16 @@
 	<div class="padding_page">
 		<div class="padding_page_content">
 			<SearchWidget page_path="index_history" @callback="searchFn" placeholder="首页搜索"/>
-			<el-card class="card_box">
-				<ScreeningWidget :total_num="goods_list.length" @callback="screenFn"/>
-				<div class="goods_list">
-					<GoodsItem :info="item" v-for="item in goods_list" @callback="getList"/>
-					<div class="padding_item" v-for="i in 5-(goods_list.length%5) == 5?0:5-(goods_list.length%5)"></div>
+			<el-card class="card_box" id="card_box">
+				<ScreeningWidget id="screen_widget" v-if="show_screen" :total_num="total" @callback="screenFn"/>
+				<div class="scroll_view" :style="{height:max_height}" v-if="goods_list.length > 0">
+					<div class="goods_list">
+						<GoodsItem :info="item" v-for="item in goods_list" @callback="getList"/>
+						<div class="padding_item" v-for="i in 5-(goods_list.length%5) == 5?0:5-(goods_list.length%5)"></div>
+					</div>
+					<PaginationWidget :total="total" :page="page" @checkPage="checkPage"/>
 				</div>
-				<PaginationWidget :total="total" :page="arg.page" @checkPage="checkPage"/>
+				<EmptyPage :style="{height:max_height}" :is_loading="loading" v-else/>
 			</el-card>
 			<CarWidget/>
 		</div>
@@ -20,50 +23,90 @@
 	import GoodsItem from '../../components/goods_item.vue'
 	import PaginationWidget from '../../components/pagination_widget.vue'
 	import CarWidget from '../../components/car_widget.vue'
+	import EmptyPage from '../../components/empty_page.vue'
 
 	import resource from '../../api/resource.js'
 	export default{
 		data(){
 			return{
+				loading:true,
+				show_screen:true,
 				goods_list:[],	//商品列表
+				max_height:0,
 				total:0,		//总数量
-				arg:{
-					page:1
-				},		//查询条件
+				page:1,			//页码
+				search:"",
+				arg:{}
 				
 			}
 		},
-		created(){
-			//获取列表
-			this.getList();
+		destroyed() {
+			window.removeEventListener("resize", () => {});
 		},
-		methods:{
+		created(){
+			let arg = {
+				page:this.page
+			} 
+			//获取列表
+			this.getList(arg);
+		},
+		mounted() {
+    		//获取表格最大高度
+    		this.onResize();
+    		window.addEventListener("resize", this.onResize());
+    	},
+    	methods:{
+			//监听屏幕大小变化
+			onResize() {
+				this.$nextTick(() => {
+					let card_box_height = document.getElementById("card_box").offsetHeight;
+					let screen_widget_height = document.getElementById("screen_widget").offsetHeight;
+					this.max_height =
+					card_box_height -
+					screen_widget_height -
+					50 +
+					"px";
+				});
+			},
 			//搜索
 			searchFn(value){
-				let obj = {search:value};
-				this.arg = {...this.arg,...obj};
+				this.page = 1;
+				this.search = value;
+				let arg = {
+					page:this.page
+				} 
 				//获取列表
-				this.getList();
+				this.getList(arg);
+				//重新加载筛选条件
+				this.show_screen = false;
+				this.$nextTick(() => {
+					this.show_screen = true;
+				})
 			},
 			//查询条件回调
 			screenFn(arg){
-				this.arg = {...this.arg,...arg};
+				this.page = 1;
+				this.arg = arg;
+				let obj = {...this.arg,...{page:this.page}};
 				//获取列表
-				this.getList();
+				this.getList(obj);
 			},
 			//翻页
 			checkPage(val) {
-				this.arg.page = val;
+				this.page = val;
+				let obj = {...this.arg,...{page:this.page}};
 				//获取列表
-				this.getList();
+				this.getList(obj);
 			},
 			//获取列表
-			getList(){
-				resource.getGoodsList(this.arg).then(res => {
+			getList(arg){
+				arg.search = this.search;
+				resource.getGoodsList(arg).then(res => {
 					if(res.data.code == 1){
 						let data = res.data.data;
 						this.goods_list = data.data;
 						this.total = data.total;
+						this.loading = false;
 					}else{
 						this.$message.warning(res.data.msg);
 					}
@@ -75,7 +118,8 @@
 			ScreeningWidget,
 			GoodsItem,
 			PaginationWidget,
-			CarWidget
+			CarWidget,
+			EmptyPage
 		}
 	}
 </script>
@@ -88,13 +132,17 @@
 	position: relative;
 	.card_box{
 		flex:1;
-		overflow-y: scroll;
-		.goods_list{
-			display: flex;
-			flex-wrap: wrap;
-			justify-content: space-between;
-			.padding_item{
-				width: 265rem;
+		display: flex;
+		flex-direction: column;
+		.scroll_view{
+			overflow-y: scroll;
+			.goods_list{
+				display: flex;
+				flex-wrap: wrap;
+				justify-content: space-between;
+				.padding_item{
+					width: 265rem;
+				}
 			}
 		}
 	}

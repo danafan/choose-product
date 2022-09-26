@@ -14,6 +14,9 @@ let path = {
   selectedInfo:'selected/selectedinfo',               //已选详情
   undoSelected:'selected/revocationselected',         //撤销已选
   cancelSelected:'selected/cancelselected',           //取消已选
+  supplierList:'supplier/index',                      //获取供应商列表
+  supplierInfo:'supplier/info',                       //供应商基本信息
+  supplierGoods:'supplier/goods',                     //供应商商品列表
 } 
 export default {
   //首页商品列表
@@ -71,5 +74,17 @@ export default {
   //取消已选
   cancelSelected(params) {
     return http.post(path.cancelSelected, params);
+  },
+  //获取供应商列表
+  supplierList(params) {
+    return http.get(path.supplierList, params);
+  },
+  //供应商基本信息
+  supplierInfo(params) {
+    return http.get(path.supplierInfo, params);
+  },
+  //供应商商品列表
+  supplierGoods(params) {
+    return http.get(path.supplierGoods, params);
   },
 };

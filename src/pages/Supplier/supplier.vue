@@ -3,64 +3,38 @@
 		<div class="padding_page_content">
 			<SearchWidget @callback="searchFn" placeholder="供应商搜索"/>
 			<el-card class="card_box" id="card_box">
-				<div class="tab_row" id="tab_row">
-					<div class="tab_item" :class="{'active_item':active_index == index}" v-for="(item,index) in address_list" @click="active_index = index">
-						<div>{{item.name}}</div>
-						<div class="active_line" v-if="active_index == index"></div>
-					</div>
-				</div>
 				<div class="list_content" :style="{height: scroll_height}">
-					<div class="supplier_item" v-for="i in 9">
+					<div class="supplier_item" v-for="item in supplier_list">
 						<div class="text_info">
-							<div class="info_item">供应商：九阿哥</div>
-							<div class="info_item">供应商编码：杭州</div>
-							<div class="info_item">主营：男装</div>
-							<div class="info_item">结算方式：月结</div>
-							<div class="info_item">评级：<span>AAA</span></div>
+							<div class="info_item">供应商：{{item.supplier_name}}</div>
+							<div class="info_item">供应商编码：{{item.supplier_code}}</div>
+							<div class="info_item">主营：{{item.main_business}}</div>
+							<div class="info_item">结算方式：{{item.supply_monthly_settlement == 1?'月结':'现结'}}</div>
+							<div class="info_item">评级：<span>{{item.grade_name}}</span></div>
 						</div>
 						<div class="image_list">
-							<el-image :z-index="2006" class="image_item" :src="item" fit="scale-down" v-for="item in banner_list" :preview-src-list="banner_list"></el-image>
+							<el-image :z-index="2006" class="image_item" :src="domain + i.img" fit="scale-down" v-for="i in item.goods_list" @click="getDetail(i.style_id)"></el-image>
 						</div>
 						<div class="detail_box">
-							<div class="detail_button" @click="supplierDetail">查看更多</div>
+							<div class="detail_button" @click="supplierDetail(item.supplier_id)">查看更多</div>
 						</div>
 					</div>
 				</div>
-				<PaginationWidget id="pagination" :total="62" :page="page" @checkPage="checkPage"/>
+				<PaginationWidget id="pagination" :total="total" :page="page" @checkPage="checkPage"/>
 			</el-card>
 		</div>
 	</div>
 </template>
 <script>
+	import resource from '../../api/resource.js'
+
 	import SearchWidget from '../../components/search_widget.vue'
 	import PaginationWidget from '../../components/pagination_widget.vue'
 	export default{
 		data(){
 			return{
-				address_list:[{
-					name:"全部",
-					id:""
-				},{
-					name:"武汉",
-					id:"1"
-				},{
-					name:"广州",
-					id:"2"
-				},{
-					name:"沧州",
-					id:"3"
-				},{
-					name:"厂家",
-					id:"4"
-				}],						//地址列表
-				active_index:0,			//选中的地址
-				banner_list:[
-				'http://img.92nu.com/DataCenter_202209081659447849.jpg',
-				'http://img.92nu.com/DataCenter_202209080938036416.jpg',
-				'http://img.92nu.com/DataCenter_202209080937367725.jpg',
-				'http://img.92nu.com/DataCenter_202209080938036416.jpg',
-				'http://img.92nu.com/DataCenter_202209081659447849.jpg',
-				],
+				supplier_list:[],		//供应商列表
+				total:0,				//总数
 				page:1,
 				scroll_height:0
 			}
@@ -68,21 +42,29 @@
 		destroyed() {
 			window.removeEventListener("resize", () => {});
 		},
+		created(){
+			//获取供应商列表
+			this.supplierList();
+		},
 		mounted() {
     		//获取表格最大高度
     		this.onResize();
     		window.addEventListener("resize", this.onResize());
     	},
+    	computed:{
+			//图片前缀
+			domain(){
+				return this.$store.state.domain;
+			}
+		},
     	methods: {
     		//监听屏幕大小变化
     		onResize() {
     			this.$nextTick(() => {
     				let card_box_height = document.getElementById("card_box").offsetHeight;
-    				let tab_row_height = document.getElementById("tab_row").offsetHeight;
     				let pagination_height = document.getElementById("pagination").offsetHeight;
     				this.scroll_height =
     				card_box_height -
-    				tab_row_height -
     				pagination_height -
     				55 +
     				"px";
@@ -90,15 +72,42 @@
     		},
 			//搜索
 			searchFn(value){
-				console.log(value);
+				this.search = value;
+				this.page = 1;
+				//获取供应商列表
+				this.supplierList();
 			},
+			//获取供应商列表
+			supplierList(){
+				let arg = {
+					search:this.search,
+					page:this.page,
+					pagesize:10
+				}
+				resource.supplierList(arg).then(res => {
+					if(res.data.code == 1){
+						let data = res.data.data;
+						this.supplier_list = data.data;
+						this.total = data.total;
+					}else{
+						this.$message.warning(res.data.msg);
+					}
+				})
+			},	
 			//翻页
 			checkPage(val) {
 				this.page = val;
+				//获取供应商列表
+				this.supplierList();
 			},
+			//点击跳转商品详情
+    		getDetail(style_id){
+    			const routeData = this.$router.resolve(`/goods_detail?style_id=${style_id}`);
+    			window.open(routeData.href);
+    		},
 			//点击跳转供应商详情
-			supplierDetail(){
-				const routeData = this.$router.resolve(`/supplier_detail`);
+			supplierDetail(supplier_id){
+				const routeData = this.$router.resolve(`/supplier_detail?supplier_id=${supplier_id}`);
 				window.open(routeData.href);
 			}
 		},
@@ -115,34 +124,6 @@
 	flex-direction: column;
 	.card_box{
 		flex:1;
-		.tab_row{
-			border:1px solid var(--color);
-			border-radius: 4rem;
-			background: #FFFCFA;
-			height: 64rem;
-			display: flex;
-			padding-left: 30rem;
-			margin-bottom: 15rem;
-			.tab_item{
-				margin-right: 80rem;
-				position: relative;
-				height: 64rem;
-				line-height: 64rem;
-				color: #333333;
-				font-size: 14rem;
-				font-weight: bold;
-				.active_line{
-					background: var(--color);
-					position: absolute;
-					bottom: 2rem;
-					width: 100%;
-					height: 2rem;
-				}
-			}
-			.active_item{
-				color: var(--color);
-			}
-		}
 		.list_content{
 			height: 200px;
 			overflow-y: scroll;

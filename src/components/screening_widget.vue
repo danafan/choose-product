@@ -5,7 +5,7 @@
 			<div class="selected_left">
 				<div>已选条件</div>
 				<img class="right_arrow" src="../static/down_arrow.png">
-				<div v-if="supplier_list.length > 0">{{supplier_list[supplier_index].supplier_name}}</div>
+				<div v-if="supplier_list.length > 0 && page_type == 'index'">{{supplier_list[supplier_index].supplier_name}}</div>
 				<img class="right_arrow" src="../static/down_arrow.png">
 				<div v-if="market_list.length > 0">{{market_list[market_index].market_name}}</div>
 				<img class="right_arrow" src="../static/down_arrow.png">
@@ -23,7 +23,7 @@
 			</div>
 		</div>
 		<div class="conditions_box" v-if="show_conditions_box">
-			<div class="conditions_row">
+			<div class="conditions_row" v-if="page_type == 'index'">
 				<div class="lable">供应商：</div>
 				<div class="list">
 					<div class="item" :class="{'active_item':supplier_index == index}" v-for="(item,index) in supplier_list" @click="checkIndex('supplier',index)">{{item.supplier_name}}</div>
@@ -159,6 +159,11 @@
 			}
 		},
 		props:{
+			//index:首页；supplier:供应商
+			page_type:{
+				type:String,
+				default:"index"
+			},
 			//商品总数量
 			total_num:{
 				type:Number,
@@ -175,12 +180,44 @@
 				commonResource.getScreenList().then(res => {
 					if(res.data.code == 1){
 						let data = res.data.data;
-						this.supplier_list = data.supplier;
-						this.market_list = data.market;
-						this.category_list = data.category;
-						this.class_list = data.classification;
-						this.style_list = data.shooting_style;
-						this.rating_list = data.grade;
+						let supplier_list = data.supplier;
+						supplier_list.unshift({
+							supplier_name:'全部',
+							supplier_id:''
+						})
+						this.supplier_list = supplier_list;
+						let market_list = data.market;
+						market_list.unshift({
+							market_name:'全部',
+							market_id:''
+						})
+						this.market_list = market_list;
+						let category_list = data.category;
+						category_list.unshift({
+							category_name:'全部',
+							category_id:''
+						})
+						this.category_list = category_list;
+						let class_list = data.classification;
+						class_list.unshift({
+							classification_name:'全部',
+							classification_id:''
+						})
+						this.class_list = class_list;
+						let style_list = data.shooting_style;
+						style_list.unshift({
+							shooting_style_name:'全部',
+							shooting_style_id:''
+						})
+						this.style_list = style_list;
+						let rating_list = data.grade;
+						rating_list.unshift({
+							grade_name:'全部',
+							grade_id:''
+						})
+						this.rating_list = rating_list;
+						//获取当前条件并传递
+						// this.callbackFn();
 					}else{
 						this.$message.warning(res.data.msg);
 					}
@@ -250,19 +287,14 @@
 			},
 			//获取当前条件并传递
 			callbackFn(){	
+				console.log(this.supplier_index)
 				var arg = {
-					supplier_id:this.supplier_list[this.supplier_index].supplier_id,
-					market_id:this.market_list[this.market_index].market_id,
-					category_id:this.category_list[this.category_index].category_id,
-					classification_id:this.class_list[this.class_index].classification_id,
-					shooting_style_id:this.style_list[this.style_index].shooting_style_id,
-					grade_id:this.rating_list[this.rating_index].grade_id,
+					start_time:this.date && this.date.length > 0?this.date[0]:"",
+					end_time:this.date && this.date.length > 0?this.date[1]:"",
 					hot_style:this.cate_style_list[0].is_selected,
 					data_style:this.cate_style_list[1].is_selected,
 					sole_style:this.cate_style_list[2].is_selected,
-					again_style:this.cate_style_list[3].is_selected,
-					start_time:this.date && this.date.length > 0?this.date[0]:"",
-					end_time:this.date && this.date.length > 0?this.date[1]:"",
+					again_style:this.cate_style_list[3].is_selected
 				}
 				//处理排序
 				let sort_arr = this.sort_list.filter(item => {
@@ -270,6 +302,30 @@
 				})
 				if(sort_arr.length > 0){
 					arg[sort_arr[0].key] = sort_arr[0].val + '-' + sort_arr[0].sort;
+				}
+				//处理供应商
+				if(this.page_type == 'index' && this.supplier_index > 0){
+					arg.supplier_id = this.supplier_list[this.supplier_index].supplier_id;
+				}
+				//处理市场
+				if(this.page_type == 'index' && this.market_index > 0){
+					arg.market_id = this.market_list[this.market_index].market_id;
+				}
+				//处理类目
+				if(this.category_index > 0){
+					arg.category_id = this.category_list[this.category_index].category_id;
+				}
+				//处理分类
+				if(this.class_index > 0){
+					arg.classification_id = this.class_list[this.class_index].classification_id;
+				}
+				//处理风格
+				if(this.style_index > 0){
+					arg.shooting_style_id = this.style_list[this.style_index].shooting_style_id;
+				}
+				//处理评级
+				if(this.rating_index > 0){
+					arg.grade_id = this.rating_list[this.rating_index].grade_id;
 				}
 				this.$emit('callback',arg);
 			}
