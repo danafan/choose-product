@@ -168,6 +168,7 @@
 			getList(arg){
 				arg.search = this.search;
 				arg.supplier_id = this.supplier_id;
+				this.loading = true;
 				resource.supplierGoods(arg).then(res => {
 					if(res.data.code == 1){
 						let data = res.data.data;

@@ -1,5 +1,7 @@
 import http from "./request.js";
 let path = {
+  getMymenu:'access/mymenu',                          //获取用户信息和公告
+  noticeInfo:'notice/info',                           //公告详情
   getGoodsList: "home/getgoodslist",                  //首页商品列表
   moreImgStyle:'home/moreimgstyle',                   //获取更多风格图
   moreImgCommodity:'home/moreimgcommodity',           //获取封面图
@@ -19,6 +21,14 @@ let path = {
   supplierGoods:'supplier/goods',                     //供应商商品列表
 } 
 export default {
+  //获取用户信息和公告
+  getMymenu(params) {
+    return http.get(path.getMymenu, params);
+  },
+  //公告详情
+  noticeInfo(params) {
+    return http.get(path.noticeInfo, params);
+  },
   //首页商品列表
   getGoodsList(params) {
     return http.get(path.getGoodsList, params);

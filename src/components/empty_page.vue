@@ -1,7 +1,7 @@
 <template>
 	<div class="empty_container" v-loading="is_loading">
-		<img class="empty_icon" src="../static/empty_icon.png">
-		<div class="toast">{{toast}}</div>
+		<img class="empty_icon" src="../static/empty_icon.png" v-if="!is_loading">
+		<div class="toast" v-if="!is_loading">{{toast}}</div>
 	</div>
 </template>
 <script>
