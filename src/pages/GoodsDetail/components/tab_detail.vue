@@ -106,6 +106,7 @@
 		padding-right: 24rem;
 		height: 32rem;
 		line-height: 32rem;
+		cursor:pointer;
 	}
 	.active_style_item{
 		border:1px solid var(--color);

@@ -4,7 +4,7 @@
 			<TableTitle title="数据列表" id="table_title">
 				<el-button size="mini" type="primary" @click="addFn('1')" v-if="button_list.add == 1">添加</el-button>
 			</TableTitle>
-			<el-table size="mini" :data="data.data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height">
+			<el-table size="mini" :data="data.data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" v-loading="loading">
 				<el-table-column label="序号" width="55" type="index" :index="0">
 				</el-table-column>
 				<el-table-column prop="menu_role_name" label="角色名称" show-overflow-tooltip align="center"></el-table-column>
@@ -70,6 +70,7 @@
 	export default{
 		data(){
 			return{
+				loading:false,
 				data:{},					//返回数据
 				button_list:{},				//按钮权限
 				page:1,						//当前页码
@@ -121,8 +122,10 @@
 					pagesize:10,
 					page:this.page
 				}
+				this.loading = true;
 				resource.menuroleList(arg).then(res => {
 					if(res.data.code == 1){
+						this.loading = false;
 						this.data = res.data.data;
 						this.button_list = this.data.button_list;
 					}else{

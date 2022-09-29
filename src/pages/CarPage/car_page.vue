@@ -4,7 +4,7 @@
 			<PageTitle title="待选记录"/>
 			<el-card class="card_box" id="card_box">
 				<div class="all_title" id="all_title">待选（全部{{car_goods.length}}）</div>
-				<el-table ref="multipleTable" size="mini" :data="car_goods" tooltip-effect="dark" style="width: 100%" @selection-change="changeSelected" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height">
+				<el-table ref="multipleTable" size="mini" :data="car_goods" tooltip-effect="dark" style="width: 100%" @selection-change="changeSelected" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" v-loading="loading">
 					<el-table-column type="selection" width="55" fixed="left" :selectable="setStatus"></el-table-column>
 					<el-table-column label="图片" width="160">
 						<template slot-scope="scope">
@@ -33,7 +33,7 @@
 					<el-button size='mini' type="text" :disabled="selected_list.length == 0" @click="deleteFn('2')">移除</el-button>
 					<div class="all_selected">
 						<div class="selcted_num">已选 {{selected_list.length}} 件</div>
-						<el-button size='mini' type="primary" @click="selectFn">去选中</el-button>
+						<el-button size='mini' type="primary" :disabled="selected_list.length == 0" @click="selectFn">去选中</el-button>
 					</div>
 				</div>
 			</el-card>
@@ -108,6 +108,7 @@
 	export default{
 		data(){
 			return{
+				loading:false,
 				car_goods:[],				//购物车列表
 				selected_list: [],			//已选中的列表
 				max_height:0,
@@ -159,9 +160,11 @@
     		},
     		//获取购物车列表数量
     		getCarList(){
+    			this.loading = true;
     			resource.getCarList().then(res => {
     				if(res.data.code == 1){
-    					let car_goods = res.data.data;
+    					this.loading = false;
+    					let car_goods = res.data.data.data;
     					car_goods.map(item => {
     						let arr = [];
     						arr.push(this.domain + item.img);
@@ -185,15 +188,11 @@
 			},
 			//点击去选中
 			selectFn(){
-				if(this.selected_list.length == 0){
-					this.$message.warning('你还没有选中记录哦~')
-				}else{
-					//获取店铺列表
-					this.ajaxViewShop();
-					//获取所有需求/发货类型
-					this.getAllDemandSendType();
-					this.show_select = true;
-				}
+				//获取店铺列表
+				this.ajaxViewShop();
+				//获取所有需求/发货类型
+				this.getAllDemandSendType();
+				this.show_select = true;
 			},
 			//提交选款
 			confirmSelect(){
@@ -214,25 +213,28 @@
 					})
 					//商品ID
 					let style_id_arr = [];
+					let select_id_arr = [];
 					this.selected_list.map(item => {
 						style_id_arr.push(item.style_id);
+						select_id_arr.push(item.select_cart_id);
 					})
 					let arg = {
-						style_id:style_id_arr.join(','),
+						select_id:select_id_arr.join(','),
+						style_id_arr:style_id_arr.join(','),
 						shop_code:this.shop_code,
 						shop_name:shop_arr[0].shop_name,
 						demand_type:this.demand_type.join(','),
-						send_type:this.send_type,
 						demand_date:this.demand_date,
+						send_type:this.send_type,
 						selling_price:this.selling_price,
 						remark:this.remark
 					}
-					resource.chooseGoods(arg).then(res => {
+					resource.addSelected(arg).then(res => {
 						if(res.data.code == 1){
 							this.$message.success(res.data.msg);
 							this.show_select = false;
 							//获取购物车列表数量
-    						this.getCarList();
+							this.getCarList();
 						}else{
 							this.$message.warning(res.data.msg);
 						}

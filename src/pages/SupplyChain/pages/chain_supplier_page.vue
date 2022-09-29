@@ -17,7 +17,7 @@
 			<TableTitle title="数据列表" id="table_title">
 				<el-button size="mini" type="primary" @click="addFn('1')">添加</el-button>
 			</TableTitle>
-			<el-table size="mini" :data="data.data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height">
+			<el-table size="mini" :data="data.data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" v-loading="loading">
 				<el-table-column label="供应商名称" prop="supplier_name" show-overflow-tooltip></el-table-column>
 				<el-table-column label="供应商地址" prop="address" show-overflow-tooltip></el-table-column>
 				<el-table-column label="供应商联系方式" width="120" prop="contact_information" show-overflow-tooltip></el-table-column>
@@ -95,6 +95,7 @@
 	export default{
 		data(){
 			return{
+				loading:false,
 				supplier_name:"",			//供应商名称
 				main_business:"",			//主营业务
 				max_height:0,	
@@ -137,8 +138,10 @@
     				pagesize:10,
     				page:this.page
     			}
+    			this.loading = true;
     			resource.supplierManagerList(arg).then(res => {
     				if(res.data.code == 1){
+    					this.loading = false;
     					this.data = res.data.data;
     				}else{
     					this.$message.warning(res.data.msg);

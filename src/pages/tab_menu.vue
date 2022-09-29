@@ -2,7 +2,7 @@
   <div class="container">
     <div class="page_header">
       <!-- logo -->
-      <img class="logo_icon" src="../static/logo_icon.png" v-if="path == '/supply_chain' || notice_list.length == 0">
+      <img class="logo_icon" src="../static/logo_icon.png" v-if="active_path == '/supply_chain' || notice_list.length == 0">
       <!-- 公告 -->
       <el-popover placement="bottom-end" width="420" trigger="hover" v-else>
         <el-table :data="notice_list" size="mini" :show-header="false" @row-click="noticeDetail">
@@ -26,22 +26,28 @@
         </div>
       </el-popover>
       <div class="header_right">
-        <div class="tab_item" :class="{'active_tab':active_index == index}" v-for="(item,index) in menu_list" @click="active_index = index">{{item.name}}</div>
+        <div class="tab_item" :class="{'active_tab':active_index == index}" v-for="(item,index) in menu_list" @click="checkIndex(index)">{{item.menu_name}}</div>
         <img class="user_img" src="../static/user_img.png">
         <div class="user_name">{{username}}</div>
         <div class="line"></div>
-        <div class="login_out">退出</div>
-      </div>
+        <el-popconfirm
+        title="确认退出？"
+        @confirm="loginOut"
+        >
+        <div slot="reference" class="login_out">退出</div>
+        <!-- <el-button slot="reference">删除</el-button> -->
+      </el-popconfirm>
     </div>
-    <div class="content">
-      <keep-alive>
-        <router-view v-if="$route.meta.keepAlive">
-        </router-view>
-      </keep-alive>
-      <router-view v-if="!$route.meta.keepAlive"></router-view>
-    </div>
-    <div class="page_foot"></div>
   </div>
+  <div class="content">
+    <keep-alive>
+      <router-view v-if="$route.meta.keepAlive">
+      </router-view>
+    </keep-alive>
+    <router-view v-if="!$route.meta.keepAlive"></router-view>
+  </div>
+  <div class="page_foot"></div>
+</div>
 </template>
 
 <style lang="less" scoped>
@@ -119,6 +125,7 @@
       color: #333333;
       .tab_item{
         margin-right: 30rem;
+        cursor:pointer;
       }
       .active_tab{
         color: var(--color);
@@ -135,6 +142,9 @@
         width: 1px;
         height: 14rem;
         background: var(--color);
+      }
+      .login_out{
+        cursor:pointer;
       }
     }
   }
@@ -171,58 +181,64 @@
   export default {
     data() {
       return {
-        notice_list:[],       //公告列表
-        username: "彪子", //用户名
-        menu_list:[{
-          name:'首页',
-          path:'/index'
-        },{
-          name:'已选',
-          path:'/selected'
-        },{
-          name:'供应商',
-          path:'/supplier'
-        },{
-          name:'供应链中心',
-          path:'/supply_chain'
-        }],     //导航列表
-        active_index:0,
-        path:"",
+        username: "", //用户名
       };
     },
-    watch:{
-      active_index:function(n,o){
-        this.$router.push(this.menu_list[n].path);
-      },
-      $route:function(to,from){
-        this.path = this.$route.path;
-      }
-    },
     created() {
-      if(this.$route.path == '/'){
-        this.$router.push('/index');
-      }else{
-        this.$router.push(this.$route.fullPath)
-      }
-      //获取用户信息和公告
-      this.getMymenu();
+      this.username = localStorage.getItem("ding_user_name");
+      this.$router.push(this.active_path)
+    },
+    computed: {
+      //导航列表
+      menu_list() {
+        return this.$store.state.menu_list;
+      },
+      //公告列表
+      notice_list() {
+        return this.$store.state.notice_list;
+      },
+      //当前路由
+      active_path() {
+        return this.$store.state.active_path;
+      },
+      //当前高亮下标
+      active_index() {
+        return this.$store.state.active_index;
+      },
     },
     methods: {
-      //获取用户信息和公告
-      getMymenu(){
-        resource.getMymenu().then(res => {
+      //点击切换导航
+      checkIndex(index){
+        this.$store.commit("setIndex", index);
+        localStorage.setItem("active_index",index);
+        let active_path = this.menu_list[index].web_url;
+        localStorage.setItem("active_path",active_path);
+        this.$store.commit("setPath", active_path);
+        this.$router.push(active_path);
+      },
+      //查看公告
+      noticeDetail(row, column, event){
+        let active_path = `/notice_page?notice_id=${row.notice_id}`;
+        localStorage.setItem("active_path",active_path);
+        this.$store.commit("setPath", active_path);
+        const routeData = this.$router.resolve(active_path);
+        window.open(routeData.href);
+      },
+      loginOut(){
+        let user_id = localStorage.getItem("ding_user_id");
+        let arg = {
+          user_id:user_id
+        }
+        resource.loginOut(arg).then(res => {
           if(res.data.code == 1){
-            let data = res.data.data;
-            this.notice_list = data.notice_list;
+            this.$message.success(res.data.msg);
+            localStorage.clear();
+            this.$router.replace('/login');
           }else{
             this.$message.warning(res.data.msg);
           }
         })
-      },
-      //查看公告
-      noticeDetail(row, column, event){
-        const routeData = this.$router.resolve(`/notice_page?notice_id=${row.notice_id}`);
-        window.open(routeData.href);
+        console.log("asd")
       }
     }
   };

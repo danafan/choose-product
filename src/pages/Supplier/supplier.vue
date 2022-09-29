@@ -2,7 +2,7 @@
 	<div class="padding_page">
 		<div class="padding_page_content">
 			<SearchWidget @callback="searchFn" placeholder="供应商搜索"/>
-			<el-card class="card_box" id="card_box">
+			<el-card class="card_box" id="card_box" v-loading="loading">
 				<div class="list_content" :style="{height: scroll_height}">
 					<div class="supplier_item" v-for="item in supplier_list">
 						<div class="text_info">
@@ -33,6 +33,7 @@
 	export default{
 		data(){
 			return{
+				loading:false,
 				supplier_list:[],		//供应商列表
 				total:0,				//总数
 				page:1,
@@ -57,7 +58,7 @@
 				return this.$store.state.domain;
 			}
 		},
-    	methods: {
+		methods: {
     		//监听屏幕大小变化
     		onResize() {
     			this.$nextTick(() => {
@@ -84,8 +85,10 @@
 					page:this.page,
 					pagesize:10
 				}
+				this.loading = true;
 				resource.supplierList(arg).then(res => {
 					if(res.data.code == 1){
+						this.loading = false;
 						let data = res.data.data;
 						this.supplier_list = data.data;
 						this.total = data.total;
@@ -101,13 +104,19 @@
 				this.supplierList();
 			},
 			//点击跳转商品详情
-    		getDetail(style_id){
-    			const routeData = this.$router.resolve(`/goods_detail?style_id=${style_id}`);
-    			window.open(routeData.href);
-    		},
+			getDetail(style_id){
+				let active_path = `/goods_detail?style_id=${style_id}`;
+				localStorage.setItem("active_path",active_path);
+				this.$store.commit("setPath", active_path);
+				const routeData = this.$router.resolve(active_path);
+				window.open(routeData.href);
+			},
 			//点击跳转供应商详情
 			supplierDetail(supplier_id){
-				const routeData = this.$router.resolve(`/supplier_detail?supplier_id=${supplier_id}`);
+				let active_path = `/supplier_detail?supplier_id=${supplier_id}`;
+				localStorage.setItem("active_path",active_path);
+				this.$store.commit("setPath", active_path);
+				const routeData = this.$router.resolve(active_path);
 				window.open(routeData.href);
 			}
 		},
@@ -169,12 +178,13 @@
 						border:1px solid var(--color);
 						border-radius:4rem;
 						background: #FEEDDD;
-						width: 64rem;
+						width: 72rem;
 						text-align: center;
 						height: 32rem;
 						line-height: 32rem;
 						font-size:12rem;
 						color: var(--color);
+						cursor:pointer;
 					}
 				}
 			}

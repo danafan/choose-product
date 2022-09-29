@@ -364,6 +364,7 @@
 	.selected_right{
 		display: flex;
 		align-items: center;
+		cursor:pointer;
 		.down_arrow{
 			margin-left: 5rem;
 			transform: rotate(-90deg);
@@ -397,6 +398,7 @@
 			display: flex;
 			flex-wrap: wrap;
 			.item{
+				cursor:pointer;
 				margin-bottom: 8rem;
 				margin-right: 40rem;
 				color: #333333;
@@ -431,6 +433,7 @@
 			margin-right: 45rem;
 			display: flex;
 			align-items: center;
+			cursor:pointer;
 			.sort_icon{
 				margin-left: 2rem;
 				width: 9rem;
@@ -443,6 +446,7 @@
 		align-items: center;
 		.style_item{
 			margin-right: 58rem;
+			cursor:pointer;
 		}
 	}
 	.active_color{

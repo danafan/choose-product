@@ -2,7 +2,7 @@
 	<div class="chain_page_content">
 		<el-card class="card_box" id="card_box">
 			<TableTitle title="数据列表" id="table_title"></TableTitle>
-			<el-table size="mini" :data="data.data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height">
+			<el-table size="mini" :data="data.data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" v-loading="loading">
 				<el-table-column label="序号" width="55" type="index" :index="0">
 				</el-table-column>
 				<el-table-column prop="style_id" label="款号" show-overflow-tooltip align="center"></el-table-column>
@@ -36,6 +36,7 @@
 	export default{
 		data(){
 			return{
+				loading:false,
 				data:{},				//返回数据
 				max_height:0,			//表格最大高度
 				page:1,					//当前页码
@@ -74,8 +75,10 @@
 					pagesize:10,
 					page:this.page
 				}
+				this.loading = true;
 				resource.feedBackList(arg).then(res => {
 					if(res.data.code == 1){
+						this.loading = false;
 						this.data = res.data.data;
 					}else{
 						this.$message.warning(res.data.msg);

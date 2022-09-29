@@ -350,6 +350,7 @@
 			align-items: center;
 			justify-content: center;
 			font-size:12rem;
+			cursor:pointer;
 			.add_car{
 				margin-right: 8rem;
 				width: 14rem;
@@ -367,7 +368,7 @@
 		}
 	}
 	.select_content{
-		padding-top: 18rem;
+		padding: 18rem;
 		.content_top{
 			display: flex;
 			.top_form{

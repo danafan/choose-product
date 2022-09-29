@@ -2,9 +2,9 @@
 	<div class="setting_content">
 		<el-card class="card_box" id="card_box">
 			<TableTitle title="数据列表" id="table_title">
-				<el-button size="mini" type="primary" @click="addFn('1')">添加</el-button>
+				<el-button size="mini" type="primary" @click="addFn('1')" v-if="data.button_list.add == 1">添加</el-button>
 			</TableTitle>
-			<el-table size="mini" :data="data.data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height">
+			<el-table size="mini" :data="data.data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" v-loading="loading">
 				<el-table-column label="序号" width="55" type="index" :index="0">
 				</el-table-column>
 				<el-table-column label="分类" prop="classification_name" show-overflow-tooltip></el-table-column>
@@ -12,8 +12,8 @@
 				<el-table-column label="创建时间" prop="add_time" show-overflow-tooltip></el-table-column>
 				<el-table-column label="操作" width="180" fixed="right">
 					<template slot-scope="scope">
-						<el-button type="text" size="small" @click="addFn('2',scope.row.classification_id)">编辑</el-button>
-						<el-button type="text" size="small" @click="deleteFn(scope.row.classification_id)">删除</el-button>
+						<el-button type="text" size="small" @click="addFn('2',scope.row.classification_id)" v-if="data.button_list.edit == 1">编辑</el-button>
+						<el-button type="text" size="small" @click="deleteFn(scope.row.classification_id)" v-if="data.button_list.del == 1">删除</el-button>
 					</template>
 				</el-table-column>
 			</el-table>
@@ -55,6 +55,7 @@
 	export default{
 		data(){
 			return{
+				loading:false,
 				data:{},					//返回数据
 				page:1,						//当前页码
 				max_height:0,				//表格最大高度
@@ -100,8 +101,10 @@
 					pagesize:10,
 					page:this.page
 				}
+				this.loading = true;
 				resource.getClassList(arg).then(res => {
 					if(res.data.code == 1){
+						this.loading = false;
 						this.data = res.data.data;
 					}else{
 						this.$message.warning(res.data.msg);

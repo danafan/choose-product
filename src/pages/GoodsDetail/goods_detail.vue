@@ -21,7 +21,7 @@
 				</div>
 			</div>
 			<CarWidget/>
-			<FeekbackWidget/>
+			<FeekbackWidget :style_id="style_id"/>
 		</div>
 	</div>
 </template>
@@ -44,19 +44,6 @@
 				goods_info:{},		//商品详情
 				banner_list:[],		//所有图片列表
 				active_index:0,		//详情或选中记录下标
-				selected_record:[{
-					store_name:'胖胖哥旗舰店：张三',
-					num:'56' ,
-					time:"2022-09-09 15:00"
-				},{
-					store_name:'胖胖哥旗舰店：张三',
-					num:'56' ,
-					time:"2022-09-09 15:00"
-				},{
-					store_name:'胖胖哥旗舰店：张三',
-					num:'56' ,
-					time:"2022-09-09 15:00"
-				}],						//选中记录
 			}
 		},
 		created(){
@@ -148,6 +135,7 @@
 					padding-right: 60rem;
 					font-size: 12rem;
 					color: #333333;
+					cursor:pointer;
 				}
 				.active_content_top_tab_item{
 					border:1px solid var(--color);

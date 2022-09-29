@@ -1,6 +1,9 @@
 import http from "./request.js";
 let path = {
-  getMymenu:'access/mymenu',                          //获取用户信息和公告
+  loginOut:'loginquit',                               //退出登录
+  getAppKey:'scancodes/getappkey',                    //获取appkey
+  getUserInfo:'scancodes/getuserinfo',                //获取用户信息
+  getMenuNotice:'access/mymenu',                      //获取导航列表和公告
   noticeInfo:'notice/info',                           //公告详情
   getGoodsList: "home/getgoodslist",                  //首页商品列表
   moreImgStyle:'home/moreimgstyle',                   //获取更多风格图
@@ -12,6 +15,7 @@ let path = {
   addSelectCart:'home/addselectcart',                 //加入购物车
   getCarList:'selectcart/getwaitselect',              //获取购物车列表
   removeCarGoods:'selectcart/removewaitselect',       //删除购物车
+  addSelected:'selectcart/addselected',
   getSelected:'selected/getselected',                 //获取已选列表
   selectedInfo:'selected/selectedinfo',               //已选详情
   undoSelected:'selected/revocationselected',         //撤销已选
@@ -21,9 +25,21 @@ let path = {
   supplierGoods:'supplier/goods',                     //供应商商品列表
 } 
 export default {
-  //获取用户信息和公告
-  getMymenu(params) {
-    return http.get(path.getMymenu, params);
+  //退出登录
+  loginOut(params) {
+    return http.get(path.loginOut, params);
+  },
+  //获取appkey
+  getAppKey(params) {
+    return http.get(path.getAppKey, params);
+  },
+  //获取用户信息
+  getUserInfo(params) {
+    return http.post(path.getUserInfo, params);
+  },
+  //获取导航列表和公告
+  getMenuNotice(params) {
+    return http.get(path.getMenuNotice, params);
   },
   //公告详情
   noticeInfo(params) {
@@ -68,6 +84,10 @@ export default {
   //删除购物车
   removeCarGoods(params) {
     return http.post(path.removeCarGoods, params);
+  },
+  //购物车批量选中
+  addSelected(params) {
+    return http.post(path.addSelected, params);
   },
   //获取已选列表
   getSelected(params) {

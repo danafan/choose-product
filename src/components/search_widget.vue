@@ -64,6 +64,7 @@
 			font-size: 18rem;
 			font-weight: bold;
 			color: #ffffff;
+			cursor:pointer;
 		}
 		.history_list{
 			padding: 6rem 12rem 0 18rem;

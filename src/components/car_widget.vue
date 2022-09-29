@@ -27,7 +27,7 @@
 					if(res.data.code == 1){
 						let arg = {
 							type:'set',
-							num:res.data.data.length
+							num:res.data.data.data.length
 						}
 						this.$store.commit('setCarGoods',arg);
 					}else{
@@ -36,7 +36,10 @@
 				})
 			},
 			goCarPage(){
-				const routeData = this.$router.resolve(`/car_page`);
+				let active_path = `/car_page`;
+				    			localStorage.setItem("active_path",active_path);
+				    			this.$store.commit("setPath", active_path);
+				const routeData = this.$router.resolve(active_path);
 				window.open(routeData.href);
 			}
 		}
@@ -57,6 +60,7 @@
 	align-items: center;
 	justify-content: center;
 	z-index: 9;
+	cursor:pointer;
 	.icon{
 		margin-bottom: 2rem;
 		position: relative;

@@ -14,7 +14,7 @@
 			<TableTitle title="数据列表" id="table_title">
 				<el-button size="mini" type="primary" @click="addFn('1')">添加公告</el-button>
 			</TableTitle>
-			<el-table size="mini" :data="data.data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height">
+			<el-table size="mini" :data="data.data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" v-loading="loading">
 				<el-table-column label="公告标题" prop="notice_title" show-overflow-tooltip></el-table-column>
 				<el-table-column label="公告内容" prop="notice_content" show-overflow-tooltip></el-table-column>
 				<el-table-column label="发布日期" prop="add_time" show-overflow-tooltip></el-table-column>
@@ -93,6 +93,7 @@
 	export default{
 		data(){
 			return{
+				loading:false,
 				keyword:"",			//关键字
 				max_height:0,	
 				page:1,
@@ -145,8 +146,10 @@
     				pagesize:10,
     				title:this.keyword
     			}
+    			this.loading = true;
     			resource.noticeList(arg).then(res => {
     				if(res.data.code == 1){
+    					this.loading = false;
     					let data = res.data.data;
     					data.data.map(item => {
     						var start_day = new Date(item.start_day).getTime();

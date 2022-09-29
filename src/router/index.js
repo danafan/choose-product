@@ -2,6 +2,7 @@ import Vue from "vue";
 import Router from "vue-router";
 
 const tab_menu = (resolve) => require(["@/pages/tab_menu"], resolve);
+const login = (resolve) => require(["@/pages/login"], resolve);
 const index = (resolve) => require(["@/pages/Index/index"], resolve);
 const notice_page = (resolve) => require(["@/pages/NoticePage/notice_page"], resolve);
 const goods_detail = (resolve) => require(["@/pages/GoodsDetail/goods_detail"], resolve);
@@ -26,7 +27,12 @@ Vue.use(Router);
 const router = new Router({
   routes: [
   {
-    path: "/",
+    path: "/login",
+    name: "登录",
+    component: login
+  },
+  {
+    path: "/tab_menu",
     component: tab_menu,
     name: "导航页",
     children: [

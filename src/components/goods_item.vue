@@ -56,7 +56,7 @@
 		</div>
 	</div>
 	<!-- 选款弹窗 -->
-	<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" destroy-on-close :visible.sync="show_select">
+	<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" @close="closeSelectDialog" destroy-on-close :visible.sync="show_select">
 		<div slot="title" class="dialog_title">
 			<div>选款</div>
 			<img class="close_icon" src="../static/close_icon.png" @click="show_select = false">
@@ -140,7 +140,7 @@
 		</div>
 	</el-dialog>
 	<!-- 反馈弹窗 -->
-	<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" destroy-on-close :visible.sync="feekback_dialog">
+	<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" @close="closeFeekDialog" destroy-on-close :visible.sync="feekback_dialog">
 		<div slot="title" class="dialog_title">
 			<div>意见反馈</div>
 			<img class="close_icon" src="../static/close_icon.png" @click="feekback_dialog = false">
@@ -206,6 +206,7 @@
 	border:1px solid #EDEDED;
 	width: 265rem;
 	height: 436rem;
+	cursor:pointer;
 	.image_box{
 		width: 263rem;
 		height: 263rem;
@@ -362,7 +363,7 @@
 	}
 }
 .select_content{
-	padding-top: 18rem;
+	padding: 18rem;
 	.content_top{
 		display: flex;
 		.top_form{
@@ -698,6 +699,17 @@
 			getEditor(v){
 				this.remark = v;
 			},
+			//关闭选款弹窗
+			closeSelectDialog(){
+				this.shop_code = "";			//选中的店铺
+				this.demand_type = [];			//选中的需求类型
+				this.send_type = "";			//选中的发货类型
+				this.demand_date = "";			//需求日期
+				this.selling_price = "";		//售卖价格
+				this.remark = "";				//备注
+				this.banner_list = [];			//选款弹窗的轮播图
+				this.active_index = 0;			//当前显示的图片下标
+			},
 			//上传图片回调
 			uploadFn(v) {
 				this.feedback_img = v;
@@ -725,9 +737,17 @@
 					})
 				}
 			},
+			//关闭反馈弹窗
+			closeFeekDialog(){
+				this.feedback_content = "";		//反馈文字
+				this.feedback_img = [];	//上传的图片列表
+			},
     		//点击跳转详情
     		getDetail(){
-    			const routeData = this.$router.resolve(`/goods_detail?style_id=${this.info.style_id}`);
+    			let active_path = `/goods_detail?style_id=${this.info.style_id}`;
+    			localStorage.setItem("active_path",active_path);
+    			this.$store.commit("setPath", active_path);
+    			const routeData = this.$router.resolve(active_path);
     			window.open(routeData.href);
     		}
     	},
