@@ -5,6 +5,12 @@
 		<input type="file" ref="imgUpload" class="upload_files" @change="uploadFn">
 	</div>
 </template>
+<style type="text/css">
+.ql-container {
+    height: 260px;
+}
+
+</style>
 <style lang="less" scoped>
 .upload_files {
 	display: none;
@@ -79,8 +85,8 @@ export default{
     //         			this.$message.error(res.data.msg);
     //         		};
     //         	});
-			}
-		}
-	}
+}
+}
+}
 }
 </script>

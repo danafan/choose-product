@@ -22,6 +22,7 @@
 				</div>
 				<PaginationWidget id="pagination" :total="total" :page="page" @checkPage="checkPage"/>
 			</el-card>
+			<CarWidget/>
 		</div>
 	</div>
 </template>
@@ -29,6 +30,7 @@
 	import resource from '../../api/resource.js'
 
 	import SearchWidget from '../../components/search_widget.vue'
+	import CarWidget from '../../components/car_widget.vue'
 	import PaginationWidget from '../../components/pagination_widget.vue'
 	export default{
 		data(){
@@ -122,6 +124,7 @@
 		},
 		components:{
 			SearchWidget,
+			CarWidget,
 			PaginationWidget
 		}
 	}
@@ -129,8 +132,10 @@
 <style lang="less" scoped>
 .padding_page_content{
 	width: 1440rem;
-	height: 100%;display: flex;
+	height: 100%;
+	display: flex;
 	flex-direction: column;
+	position: relative;
 	.card_box{
 		flex:1;
 		.list_content{

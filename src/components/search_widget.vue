@@ -168,8 +168,13 @@
 			searchFn(){
 				let storage_data = localStorage.getItem(this.page_path);
 				let history_list = storage_data?JSON.parse(storage_data):[];
-				history_list.unshift(this.search_value);
-				localStorage.setItem(this.page_path,JSON.stringify(history_list));
+				let arr = history_list.filter(item => {
+					return this.search_value == item;
+				})
+				if(this.search_value != '' && arr.length == 0){
+					history_list.unshift(this.search_value);
+					localStorage.setItem(this.page_path,JSON.stringify(history_list));
+				}
 				this.show_history = false;
 				this.$refs.input.blur();
 				this.$emit('callback',this.search_value)

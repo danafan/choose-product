@@ -4,7 +4,7 @@ let path = {
   getAppKey:'scancodes/getappkey',                    //获取appkey
   getUserInfo:'scancodes/getuserinfo',                //获取用户信息
   getMenuNotice:'access/mymenu',                      //获取导航列表和公告
-  noticeInfo:'notice/info',                           //公告详情
+  noticeInfo:'index/notice_info',                     //公告详情
   getGoodsList: "home/getgoodslist",                  //首页商品列表
   moreImgStyle:'home/moreimgstyle',                   //获取更多风格图
   moreImgCommodity:'home/moreimgcommodity',           //获取封面图

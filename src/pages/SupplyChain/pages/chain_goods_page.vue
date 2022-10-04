@@ -59,10 +59,10 @@
 		</el-card>
 		<el-card class="card_box" id="card_box">
 			<TableTitle title="数据列表" id="table_title">
-				<el-button size="mini" type="primary" @click="$router.push('/edit_goods?page_type=goods&goods_type=1')" v-if="data.button_list.add == 1">添加</el-button>
+				<el-button size="mini" type="primary" @click="$router.push('/edit_goods?page_type=goods&goods_type=1')" v-if="button_list.add == 1">添加</el-button>
 				<el-button size="mini" type="primary">导入</el-button>
 			</TableTitle>
-			<el-table size="mini" :data="data.data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" v-loading="loading">
+			<el-table size="mini" :data="data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" v-loading="loading">
 				<el-table-column label="款号" prop="style_id" show-overflow-tooltip></el-table-column>
 				<el-table-column label="款式编码" prop="i_id" show-overflow-tooltip></el-table-column>
 				<el-table-column label="图片" width="120">
@@ -98,18 +98,18 @@
 				</el-table-column>
 				<el-table-column label="操作" width="160" fixed="right">
 					<template slot-scope="scope">
-						<el-button type="text" size="small" v-if="scope.row.check_status == 1 && data.button_list.agree_refuse == 1" @click="auditFn('1',scope.row.style_id)">同意</el-button>
-						<el-button type="text" size="small" v-if="scope.row.check_status == 1 && data.button_list.agree_refuse == 1" @click="auditFn('2',scope.row.style_id)">拒绝</el-button>
+						<el-button type="text" size="small" v-if="scope.row.check_status == 1 && button_list.agree_refuse == 1" @click="auditFn('1',scope.row.style_id)">同意</el-button>
+						<el-button type="text" size="small" v-if="scope.row.check_status == 1 && button_list.agree_refuse == 1" @click="auditFn('2',scope.row.style_id)">拒绝</el-button>
 						<el-button style="margin-right: 10px" type="text" size="small" v-if="scope.row.check_status == 2" @click="$router.push('/image_setting?style_id=' + scope.row.style_id)">图片管理</el-button>
 						<el-dropdown size="small" split-button type="text" @command="handleCommand($event,scope.row.style_id)" v-if="scope.row.check_status == 2">
 							<span class="el-dropdown-link">更多</span>
 							<el-dropdown-menu slot="dropdown">
-								<el-dropdown-item command="1" v-if="data.button_list.info == 1">查看</el-dropdown-item>
-								<el-dropdown-item command="2" v-if="data.button_list.edit == 1">编辑</el-dropdown-item>
-								<el-dropdown-item command="3" v-if="data.button_list.del == 1">删除</el-dropdown-item>
+								<el-dropdown-item command="1" v-if="button_list.info == 1">查看</el-dropdown-item>
+								<el-dropdown-item command="2" v-if="button_list.edit == 1">编辑</el-dropdown-item>
+								<el-dropdown-item command="3" v-if="button_list.del == 1">删除</el-dropdown-item>
 							</el-dropdown-menu>
 						</el-dropdown>
-						<el-button type="text" size="small" v-if="scope.row.check_status == 2 && data.button_list.in_out == 1" @click="checkStatus(scope.row.style_id,scope.row.status)">{{scope.row.status == 1?'下架':'上架'}}</el-button>
+						<el-button type="text" size="small" v-if="scope.row.check_status == 2 && button_list.in_out == 1" @click="checkStatus(scope.row.style_id,scope.row.status)">{{scope.row.status == 1?'下架':'上架'}}</el-button>
 						<el-button type="text" size="small" v-if="scope.row.check_status == 3" @click="$router.push('/edit_goods?page_type=goods&goods_type=2&style_id=' + scope.row.style_id)">重新提交</el-button>
 					</template>
 				</el-table-column>
@@ -215,7 +215,9 @@
 				search:"",				//款式编码
 				max_height:0,	
 				page:1,
-				data:{},				//获取的数据
+				data:[],				//获取的数据
+				total:0,
+				button_list:{}
 			}
 		},
 		created(){
@@ -331,8 +333,10 @@
 				resource.getGoodsList(arg).then(res => {
 					if(res.data.code == 1){
 						this.loading = false;
-						let data = res.data.data;
-						data.data.map(item => {
+						this.button_list = res.data.data.button_list;
+						this.total = res.data.data.total;
+						let data = res.data.data.data;
+						data.map(item => {
 							let images = [];
 							item.img.map(i => {
 								images.push(this.domain + i);

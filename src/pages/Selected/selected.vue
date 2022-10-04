@@ -1,7 +1,7 @@
 <template>
 	<div class="padding_page">
 		<div class="padding_page_content">
-			<SearchWidget page_path="index_history" @callback="searchFn" placeholder="已选搜索"/>
+			<SearchWidget page_path="index_history" @callback="searchFn" placeholder="款号 款式编码"/>
 			<el-card class="card_box" id="card_box">
 				<div class="tab_row" id="tab_row">
 					<div class="tab_item" :class="{'active_item':active_index == index}" v-for="(item,index) in tab_list" @click="active_index = index">
@@ -228,6 +228,7 @@
 		},
 		watch:{
 			active_index:function(n,o){
+				this.page = 1;
 				//获取列表
 				this.getSelected();
 			}
@@ -276,6 +277,7 @@
     		},
 			//搜索
 			searchFn(value){
+				this.page = 1;
 				this.search = value;
 				//获取列表
 				this.getSelected();

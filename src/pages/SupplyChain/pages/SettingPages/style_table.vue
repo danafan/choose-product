@@ -2,9 +2,9 @@
 	<div class="setting_content">
 		<el-card class="card_box" id="card_box">
 			<TableTitle title="数据列表" id="table_title">
-				<el-button size="mini" type="primary" @click="addFn('1')" v-if="data.button_list.add == 1">添加</el-button>
+				<el-button size="mini" type="primary" @click="addFn('1')" v-if="button_list.add == 1">添加</el-button>
 			</TableTitle>
-			<el-table size="mini" :data="data.data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" v-loading="loading">
+			<el-table size="mini" :data="data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" v-loading="loading">
 				<el-table-column label="序号" width="55" type="index" :index="0">
 				</el-table-column>
 				<el-table-column label="风格" prop="shooting_style_name" show-overflow-tooltip></el-table-column>
@@ -12,12 +12,12 @@
 				<el-table-column label="创建时间" prop="add_time" show-overflow-tooltip></el-table-column>
 				<el-table-column label="操作" width="180" fixed="right">
 					<template slot-scope="scope">
-						<el-button type="text" size="small" @click="addFn('2',scope.row)" v-if="data.button_list.edit == 1">编辑</el-button>
-						<el-button type="text" size="small" @click="deleteFn(scope.row.shooting_style_id)" v-if="data.button_list.del == 1">删除</el-button>
+						<el-button type="text" size="small" @click="addFn('2',scope.row)" v-if="button_list.edit == 1">编辑</el-button>
+						<el-button type="text" size="small" @click="deleteFn(scope.row.shooting_style_id)" v-if="button_list.del == 1">删除</el-button>
 					</template>
 				</el-table-column>
 			</el-table>
-			<PaginationWidget id="bottom_row" :total="data.total" :page="page" @checkPage="checkPage"/>
+			<PaginationWidget id="bottom_row" :total="total" :page="page" @checkPage="checkPage"/>
 		</el-card>
 		<!-- 添加或编辑 -->
 		<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" @close="name = ''" :visible.sync="show_dialog">
@@ -49,7 +49,9 @@
 		data(){
 			return{
 				loading:false,
-				data:{},					//返回数据
+				data:[],					//返回数据
+				button_list:{},
+				total:0,
 				page:1,						//当前页码
 				max_height:0,				//表格最大高度
 				id:"",						//点击的ID
@@ -96,7 +98,9 @@
 				resource.getStyleList(arg).then(res => {
 					if(res.data.code == 1){
 						this.loading = false;
-						this.data = res.data.data;
+						this.data = res.data.data.data;
+						this.button_list = res.data.data.button_list;
+						this.total = res.data.data.total;
 					}else{
 						this.$message.warning(res.data.msg);
 					}

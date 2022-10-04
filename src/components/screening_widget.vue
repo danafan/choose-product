@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div class="screen_container">
 		<div class="total_num">共有{{total_num}}件相关商品</div>
 		<div class="selected_box">
 			<div class="selected_left">
@@ -22,7 +22,7 @@
 				<img class="down_arrow" :class="{'rotate':show_conditions_box == true}" src="../static/down_arrow.png">
 			</div>
 		</div>
-		<div class="conditions_box" v-if="show_conditions_box">
+		<el-card class="conditions_box" v-if="show_conditions_box">
 			<div class="conditions_row" v-if="page_type == 'index'">
 				<div class="lable">供应商：</div>
 				<div class="list">
@@ -59,7 +59,7 @@
 					<div class="item" :class="{'active_item':rating_index == index}" v-for="(item,index) in rating_list" @click="checkIndex('rating',index)">{{item.grade_name}}</div>
 				</div>
 			</div>
-		</div>
+		</el-card>
 		<div class="cate_box">
 			<div class="sort_row">
 				<div class="sort_item" :class="{'active_color':item.sort != 'default'}" v-for="(item,index) in sort_list" @click="sortFn(index)">
@@ -333,6 +333,9 @@
 	}
 </script>
 <style lang="less" scoped>
+.screen_container{
+	position: relative;
+}
 .total_num{
 	margin-bottom: 10rem;
 	text-align: end;
@@ -377,20 +380,17 @@
 	}
 }
 .conditions_box{
-	border: 1px solid #DEDEDE;
+	position: absolute;
 	background: #ffffff;
-	width: 100%;
-	padding-left:10rem;
-	padding-right:10rem;
 	font-size: 12rem;
+	z-index: 9;
 	.conditions_row{
 		border-bottom: 1px dashed #DEDEDE;
 		display: flex;
-		padding-left: 16rem;
 		padding-top: 8rem;
 		.lable{
 			white-space:normal;
-			width: 100rem;
+			width: 110rem;
 			color: #999999;
 		}
 		.list{

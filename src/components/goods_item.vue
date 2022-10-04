@@ -196,9 +196,9 @@
 	width: 240rem !important;
 	height: 240rem !important; 
 }
-.el-popover,.el-popper{
+/*.el-popover,.el-popper{
 	max-width: 450px!important;
-}
+}*/
 </style>
 <style lang="less" scoped>
 .goods_item{
@@ -683,15 +683,13 @@
 					style_id:this.info.style_id
 				}
 				resource.addSelectCart(arg).then(res => {
-					if(res.data.code == 1){
+					if(res){
 						this.$message.success(res.data.msg);
 						let arg = {
 							type:'add',
 							num:1
 						}
 						this.$store.commit('setCarGoods',arg);
-					}else{
-						this.$message.warning(res.data.msg);
 					}
 				})
 			},
