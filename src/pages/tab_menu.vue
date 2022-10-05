@@ -35,7 +35,6 @@
         @confirm="loginOut"
         >
         <div slot="reference" class="login_out">退出</div>
-        <!-- <el-button slot="reference">删除</el-button> -->
       </el-popconfirm>
     </div>
   </div>

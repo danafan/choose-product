@@ -53,7 +53,7 @@
 					<el-form-item label="供应商微信：">
 						<el-input clearable v-model="weixin" placeholder="供应商微信"></el-input>
 					</el-form-item>
-					<el-form-item label="结算方式：">
+					<el-form-item label="结算方式："required>
 						<el-select v-model="supply_monthly_settlement" clearable placeholder="请选择结算方式">
 							<el-option v-for="item in payment_method" :key="item.id" :label="item.name" :value="item.id">
 							</el-option>
@@ -159,7 +159,7 @@
 						this.supply_monthly_settlement = data.supply_monthly_settlement;
 						this.supply_monthly_settlement = data.supply_monthly_settlement;
 						this.weixin = data.weixin;
-						this.grade_id = data.grade_id;
+						this.grade_id = data.grade_id?data.grade_id:'';
 						this.business_license = data.business_license;
 						let img_obj = {
 							urls:data.business_license,
@@ -179,6 +179,8 @@
 					this.$message.warning('请输入供应商地址');
 				}else if(this.contact_information == ''){
 					this.$message.warning('请输入供应商联系方式');
+				}else if(this.supply_monthly_settlement == ''){
+					this.$message.warning('请选择结算方式');
 				}else if(this.main_business == ''){
 					this.$message.warning('请输入主营业务');
 				}else{

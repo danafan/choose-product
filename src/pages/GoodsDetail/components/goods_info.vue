@@ -72,7 +72,7 @@
 							<div class="value">{{goods_info.select_time}}</div>
 						</div>
 						<div class="form_item">
-							<div class="lable">店铺：</div>
+							<div class="lable"><span>*</span>店铺：</div>
 							<div class="value">
 								<el-select v-model="shop_code" size="mini" clearable placeholder="选择店铺">
 									<el-option v-for="item in store_list" :key="item.shop_code" :label="item.shop_name" :value="item.shop_code">
@@ -81,7 +81,7 @@
 							</div>
 						</div>
 						<div class="form_item">
-							<div class="lable">需求类型：</div>
+							<div class="lable"><span>*</span>需求类型：</div>
 							<div class="value">
 								<el-checkbox-group size="mini" v-model="demand_type">
 									<el-checkbox :label="item.name" v-for="item in need_type">{{item.name}}</el-checkbox>
@@ -89,7 +89,7 @@
 							</div>
 						</div>
 						<div class="form_item">
-							<div class="lable">发货类型：</div>
+							<div class="lable"><span>*</span>发货类型：</div>
 							<div class="value">
 								<el-select v-model="send_type" size="mini" clearable placeholder="选择发货类型">
 									<el-option v-for="item in delivery_type_list" :key="item.name" :label="item.name" :value="item.name">
@@ -98,14 +98,14 @@
 							</div>
 						</div>
 						<div class="form_item">
-							<div class="lable">需求日期：</div>
+							<div class="lable"><span>*</span>需求日期：</div>
 							<div class="value">
 								<el-date-picker size="mini" v-model="demand_date" type="date" value-format="yyyy-MM-dd" placeholder="选择日期">
 								</el-date-picker>
 							</div>
 						</div>
 						<div class="form_item">
-							<div class="lable">售卖价格：</div>
+							<div class="lable"><span>*</span>售卖价格：</div>
 							<div class="value">
 								<el-input size="mini" type="number" clearable v-model="selling_price" placeholder="请输入售卖价格"></el-input>
 							</div>
@@ -380,6 +380,9 @@
 					font-size:14rem;
 					.lable{
 						color: #666666;
+						span{
+							color: red;
+						}
 					}
 					.value{
 						color: #333333;

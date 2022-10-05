@@ -14,6 +14,13 @@
         this.$router.replace('/tab_menu');
       }
     },
+    watch:{
+      $route:function(n,o){
+        if(n.path == '/notice_page' || n.path == '/goods_detail' || n.path == '/car_page' || n.path == '/supplier_detail'){
+          document.title = n.name;
+        }
+      }
+    },
     methods: {
         //获取用户信息
         getUserInfo() {
