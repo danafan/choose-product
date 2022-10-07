@@ -59,6 +59,7 @@
 			font-size: 16rem;
 			color: #333333;
 			font-weight: bold;
+			cursor:pointer;
 			.active_line{
 				background: var(--color);
 				position: absolute;

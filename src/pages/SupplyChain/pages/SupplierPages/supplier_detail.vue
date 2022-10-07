@@ -29,6 +29,9 @@
 					</el-form-item>
 				</el-form>
 				<el-form size="small" label-width="140px">
+					<el-form-item label="供应商编码：">
+						{{data_info.supplier_code}}
+					</el-form-item>
 					<el-form-item label="供应商联系方式：">
 						{{data_info.contact_information}}
 					</el-form-item>

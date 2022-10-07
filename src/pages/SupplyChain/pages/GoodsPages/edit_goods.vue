@@ -103,7 +103,7 @@
 					</el-form-item>
 				</el-form>
 			</div>
-			<div class="bottom_row">
+			<div class="bottom_row" v-if="!is_detail">
 				<el-button size="small" type="primary" @click="commitEditGoods">提交</el-button>
 			</div>
 		</el-card>
@@ -117,7 +117,7 @@
 	export default{
 		data(){
 			return{
-				is_detail:false,		//是否是详情详情
+				is_detail:false,		//是否是详情
 				page_type:'',			//页面来源（goods:商品；feekback:反馈）
 				goods_type:"",			//类型（1:添加；2:编辑）
 				supplier_list:[],		//供应商列表

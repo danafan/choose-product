@@ -117,6 +117,7 @@
 			font-size: 14rem;
 			color: #333333;
 			position: relative;
+			cursor:pointer;
 			.chain_icon{
 				margin-right: 5rem;
 				width: 14rem;

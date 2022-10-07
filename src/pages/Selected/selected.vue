@@ -447,21 +447,18 @@
 	.detail_row{
 		border-bottom:1px solid #F0F0F0;
 		display: flex;
-		height: 48rem;
 		font-size:14rem;
 		color: #333333;
 		.lable{
 			border-right:1px solid #F0F0F0;
-			padding-left: 20rem;
 			width: 120rem;
-			height: 48rem;
-			line-height: 48rem;
+			padding:12rem 20rem;
+			display: flex;
+			align-items: center;
 		}
 		.value{
 			flex:1;
-			padding-left: 20rem;
-			height: 48rem;
-			line-height: 48rem;
+			padding: 12rem 20rem;
 		}
 	}
 }

@@ -60,7 +60,7 @@
 		<el-card class="card_box" id="card_box">
 			<TableTitle title="数据列表" id="table_title">
 				<el-button size="mini" type="primary" @click="$router.push('/edit_goods?page_type=goods&goods_type=1')" v-if="button_list.add == 1">添加</el-button>
-				<el-button size="mini" type="primary">导入</el-button>
+				<el-button size="mini" type="primary" @click="import_dialog = true">导入</el-button>
 			</TableTitle>
 			<el-table size="mini" :data="data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" v-loading="loading">
 				<el-table-column label="款号" prop="style_id" show-overflow-tooltip></el-table-column>
@@ -101,8 +101,10 @@
 						<el-button type="text" size="small" v-if="scope.row.check_status == 1 && button_list.agree_refuse == 1" @click="auditFn('1',scope.row.style_id)">同意</el-button>
 						<el-button type="text" size="small" v-if="scope.row.check_status == 1 && button_list.agree_refuse == 1" @click="auditFn('2',scope.row.style_id)">拒绝</el-button>
 						<el-button style="margin-right: 10px" type="text" size="small" v-if="scope.row.check_status == 2" @click="$router.push('/image_setting?style_id=' + scope.row.style_id)">图片管理</el-button>
-						<el-dropdown size="small" split-button type="text" @command="handleCommand($event,scope.row.style_id)" v-if="scope.row.check_status == 2">
-							<span class="el-dropdown-link">更多</span>
+						<el-dropdown size="small" @command="handleCommand($event,scope.row.style_id)" v-if="scope.row.check_status == 2">
+							<el-button type="text" size="small">
+								更多<i class="el-icon-arrow-down el-icon--right"></i>
+							</el-button>
 							<el-dropdown-menu slot="dropdown">
 								<el-dropdown-item command="1" v-if="button_list.info == 1">查看</el-dropdown-item>
 								<el-dropdown-item command="2" v-if="button_list.edit == 1">编辑</el-dropdown-item>
@@ -116,6 +118,25 @@
 			</el-table>
 			<PaginationWidget id="bottom_row" :total="data.total" :page="page" @checkPage="checkPage"/>
 		</el-card>
+		<el-dialog :visible.sync="import_dialog" width="30%">
+			<div slot="title" class="dialog_title">
+				<div>导入</div>
+				<img class="close_icon" src="../../../static/close_icon.png" @click="import_dialog = false">
+			</div>
+			<div class="down_box">
+				<el-button type="primary" plain size="small" @click="downTemplate">下载模版<i class="el-icon-download el-icon--right"></i></el-button>
+				<div class="upload_box">
+					<el-button type="primary" size="small">
+						导入
+						<i class="el-icon-upload el-icon--right"></i>
+					</el-button>
+					<input type="file" ref="csvUpload" class="upload_file" accept=".csv, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" @change="uploadCsv">
+				</div>
+			</div>
+			<div slot="footer" class="dialog_footer">
+				<el-button size="small" @click="import_dialog = false">取消</el-button>
+			</div>
+		</el-dialog>
 	</div>
 </template>
 <style lang="less" scoped>
@@ -139,6 +160,24 @@
 		.image{
 			width: 58rem;
 			height: 58rem;
+		}
+	}
+	.down_box{
+		display:flex;
+		padding:30rem 0;
+		.upload_box{
+			margin-left: 10px;
+			position: relative;
+			.upload_file{
+				position: absolute;
+				top: 0;
+				bottom: 0;
+				left: 0;
+				right: 0;
+				width: 100%;
+				height: 100%;
+				opacity: 0;
+			}
 		}
 	}
 }
@@ -217,7 +256,8 @@
 				page:1,
 				data:[],				//获取的数据
 				total:0,
-				button_list:{}
+				button_list:{},
+				import_dialog:false,	//导入弹窗
 			}
 		},
 		created(){
@@ -312,6 +352,28 @@
 						this.$message.warning(res.data.msg);
 					}
 				})
+			},
+			//下载模版
+			downTemplate(){
+				window.open(`${this.downLoadUrl}/file/商品批量导入模板.xlsx`);
+			},
+			//导入
+			uploadCsv(){
+				if (this.$refs.csvUpload.files.length > 0) {
+					let files = this.$refs.csvUpload.files;
+					resource.addAllProductStyle({file:files[0]}).then(res => {
+						this.$refs.csvUpload.value = null;
+						this.import_dialog = false;
+						if(res.data.code == 1){
+							this.$message.success(res.data.msg);
+							this.page = 1;
+							//获取列表
+							this.getGoodsList();
+						}else{
+							this.$message.warning(res.data.msg);
+						}
+					})
+				}
 			},
 			//获取列表
 			getGoodsList(){

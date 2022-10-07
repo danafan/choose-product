@@ -29,7 +29,7 @@
 			<div class="dialog_content">
 				<el-form size="small" label-width="120px">
 					<el-form-item label="员工：" required>
-						<el-select v-model="user_id" clearable placeholder="请选择员工" v-if="type == '1'">
+						<el-select v-model="user_id" filterable clearable placeholder="请选择员工" v-if="type == '1'">
 							<el-option v-for="item in user_list" :key="item.user_id" :label="item.real_name" :value="item.user_id">
 							</el-option>
 						</el-select>

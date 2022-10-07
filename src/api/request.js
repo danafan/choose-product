@@ -51,7 +51,7 @@ export function middleWare(params, type) {
       key != "image" &&
       key != "file" &&
       key.indexOf("remark") == -1 &&
-      key != "introduction"
+      key != "notice_content"
     ) {
       sign_arr.push(`${key}=${sort_obj[key]}`);
     }

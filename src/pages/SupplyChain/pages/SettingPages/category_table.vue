@@ -4,8 +4,8 @@
 			<TableTitle title="数据列表" id="table_title">
 				<el-button size="mini" type="primary" @click="addFn('1')" v-if="button_list.add == 1">添加</el-button>
 			</TableTitle>
-			<el-table size="mini" :data="data.data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" v-loading="loading">
-				<el-table-column label="序号" width="55" type="index" :index="0">
+			<el-table size="mini" :data="data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" v-loading="loading">
+				<el-table-column label="序号" width="55" type="index" :index="1">
 				</el-table-column>
 				<el-table-column label="类目" prop="category_name" show-overflow-tooltip></el-table-column>
 				<el-table-column label="创建人" prop="add_user_name" show-overflow-tooltip></el-table-column>
@@ -20,13 +20,13 @@
 			<PaginationWidget id="bottom_row" :total="total" :page="page" @checkPage="checkPage"/>
 		</el-card>
 		<!-- 添加或编辑 -->
-		<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" @close="name = ''" :visible.sync="show_dialog">
+		<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" @close="name = ''" :visible.sync="show_dialog" width="30%">
 			<div slot="title" class="dialog_title">
 				<div>{{dialog_title}}</div>
 				<img class="close_icon" src="../../../../static/close_icon.png" @click="show_dialog = false">
 			</div>
 			<div class="dialog_content">
-				<el-form size="small" label-width="120px">
+				<el-form size="small" label-width="100px">
 					<el-form-item label="类目名称：" required>
 						<el-input type="textarea" autosize placeholder="请输入类目名称（多个请换行）" v-model="name">
 						</el-input>

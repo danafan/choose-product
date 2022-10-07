@@ -5,7 +5,7 @@
 				<el-button size="mini" type="primary" @click="addFn('1')" v-if="button_list.add == 1">添加</el-button>
 			</TableTitle>
 			<el-table size="mini" :data="data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" v-loading="loading">
-				<el-table-column label="序号" width="55" type="index" :index="0">
+				<el-table-column label="序号" width="55" type="index" :index="1">
 				</el-table-column>
 				<el-table-column label="分类" prop="classification_name" show-overflow-tooltip></el-table-column>
 				<el-table-column label="创建人" prop="add_user_name" show-overflow-tooltip></el-table-column>
@@ -20,13 +20,13 @@
 			<PaginationWidget id="bottom_row" :total="total" :page="page" @checkPage="checkPage"/>
 		</el-card>
 		<!-- 添加或编辑 -->
-		<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" @close="closeDialog" :visible.sync="show_dialog">
+		<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" @close="closeDialog" :visible.sync="show_dialog" width="30%">
 			<div slot="title" class="dialog_title">
 				<div>{{dialog_title}}</div>
 				<img class="close_icon" src="../../../../static/close_icon.png" @click="show_dialog = false">
 			</div>
 			<div class="dialog_content">
-				<el-form size="small" label-width="120px">
+				<el-form size="small" label-width="100px">
 					<el-form-item label="所属类目：" required>
 						<el-select v-model="category_id" clearable placeholder="请选择所属类目">
 							<el-option v-for="item in cate_list" :key="item.category_id" :label="item.category_name" :value="item.category_id">
@@ -146,13 +146,13 @@
 				this.type = type;
 				if(type == '1'){
 					this.dialog_title = '添加分类';
-					this.show_dialog = true;
 				}else{
 					this.dialog_title = '编辑分类';
 					this.id = id;
-					//获取所有类目列表
-					this.ajaxCateList();
 				}
+				this.show_dialog = true;
+				//获取所有类目列表
+				this.ajaxCateList();
 			},
 			//关闭弹窗
 			closeDialog(){
@@ -164,8 +164,11 @@
 				commonResource.ajaxCateList().then(res => {
 					if(res.data.code == 1){
 						this.cate_list = res.data.data;
-						//获取分类详情
-						this.getClassInfo();
+						if(type == '2'){
+							//获取分类详情
+							this.getClassInfo();
+						}
+
 					}else{
 						this.$message.warning(res.data.msg);
 					}
@@ -180,7 +183,6 @@
 					if(res.data.code == 1){
 						this.category_id = res.data.data.category_id;
 						this.name = res.data.data.classification_name;
-						this.show_dialog = true;
 					}else{
 						this.$message.warning(res.data.msg);
 					}

@@ -15,6 +15,8 @@ import 'quill/dist/quill.bubble.css'
 Vue.use(ElementUI);
 Vue.use(VueQuillEditor);
 
+Vue.prototype.downLoadUrl = 'http://selectiontest.92nu.com';				//下载模版前缀
+
 new Vue({
   render: h => h(App),
   router,

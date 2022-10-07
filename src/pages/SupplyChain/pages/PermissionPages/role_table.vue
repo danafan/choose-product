@@ -16,8 +16,8 @@
 				<el-table-column label="操作" align="center" width="120" fixed="right">
 					<template slot-scope="scope">
 						<el-button type="text" size="small" @click="addFn('2',scope.row.menu_role_id)" v-if="button_list.view == 1">查看</el-button>
-						<el-button type="text" size="small" @click="addFn('3',scope.row.menu_role_id)" v-if="button_list.edit == 1">编辑</el-button>
-						<el-button type="text" size="small" @click="deleteFn(scope.row.menu_role_id)" v-if="button_list.del == 1">删除</el-button>
+						<el-button type="text" size="small" @click="addFn('3',scope.row.menu_role_id)" v-if="button_list.edit == 1 && scope.row.is_disable != 1">编辑</el-button>
+						<el-button type="text" size="small" @click="deleteFn(scope.row.menu_role_id)" v-if="button_list.del == 1 && scope.row.is_disable != 1">删除</el-button>
 					</template>
 				</el-table-column>
 			</el-table>

@@ -39,7 +39,8 @@
 				supplier_list:[],		//供应商列表
 				total:0,				//总数
 				page:1,
-				scroll_height:0
+				scroll_height:0,
+				search:""
 			}
 		},
 		destroyed() {

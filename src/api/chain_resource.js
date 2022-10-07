@@ -37,6 +37,7 @@ let path = {
   feedBackList:'feedback/list',						//反馈列表
   feedBackHandle:'feedback/handle',					//确认处理
   feedBackEditGoods:'feedback/edit_goods',			//编辑商品
+  addAllProductStyle:'productstyle/addallproductstyle', //批量添加商品
   getGoodsList:'productstyle/getallproductstyle',	//获取商品列表
   addGoods:'productstyle/addproductstyle',			//添加商品
   editGoods:'productstyle/editproductstyle',		//编辑商品
@@ -231,6 +232,10 @@ export default {
   //反馈-编辑商品(post)
   feedBackEditGoodsPost(params) {
     return http.post(path.feedBackEditGoods, params);
+  },
+  //批量上传商品
+  addAllProductStyle(params) {
+    return http.post(path.addAllProductStyle, params);
   },
   //获取商品列表
   getGoodsList(params) {
