@@ -89,11 +89,17 @@ const router = new Router({
       {
         path: "/edit_goods",
         name: "上传/编辑商品",
+        meta:{
+          is_back:true
+        },
         component: edit_goods
       },
       {
         path: "/image_setting",
         name: "图片管理",
+        meta:{
+          is_back:true
+        },
         component: image_setting
       },
       {
@@ -104,11 +110,17 @@ const router = new Router({
       {
         path: "/add_edit_supplier",
         name: "添加/编辑供应商",
+        meta:{
+          is_back:true
+        },
         component: add_edit_supplier
       },
       {
         path: "/chain_supplier_detail",
         name: "供应商详情",
+        meta:{
+          is_back:true
+        },
         component: chain_supplier_detail
       },
       {

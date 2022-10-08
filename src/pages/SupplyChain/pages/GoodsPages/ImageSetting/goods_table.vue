@@ -2,9 +2,9 @@
 	<div class="setting_content">
 		<el-card class="card_box" id="card_box">
 			<TableTitle :title="`商品编号：${style_id}`" id="table_title">
-				<el-button size="mini" type="primary" @click="addFn('1')" v-if="data.button_list.add == 1">上传商品图</el-button>
+				<el-button size="mini" type="primary" @click="addFn('1')" v-if="button_list.add == 1">上传商品图</el-button>
 			</TableTitle>
-			<el-table size="mini" :data="data.data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" v-loading="loading">
+			<el-table size="mini" :data="data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" v-loading="loading">
 				<el-table-column label="序号" width="55" type="index" :index="0">
 				</el-table-column>
 				<el-table-column label="图片">
@@ -19,13 +19,13 @@
 				</el-table-column>
 				<el-table-column label="操作" width="180" fixed="right">
 					<template slot-scope="scope">
-						<el-button type="text" size="small" @click="addFn('2',scope.row.commodity_id)" v-if="data.button_list.edit == 1">编辑</el-button>
-						<el-button type="text" size="small" @click="deleteFn(scope.row.commodity_id)" v-if="data.button_list.del == 1">删除</el-button>
-						<el-button type="text" size="small" @click="changeMainImg(scope.row.commodity_id)" v-if="scope.row.is_main == 0 && data.button_list.is_main == 1">设为主图</el-button>
+						<el-button type="text" size="small" @click="addFn('2',scope.row.commodity_id)" v-if="button_list.edit == 1">编辑</el-button>
+						<el-button type="text" size="small" @click="deleteFn(scope.row.commodity_id)" v-if="button_list.del == 1">删除</el-button>
+						<el-button type="text" size="small" @click="changeMainImg(scope.row.commodity_id)" v-if="scope.row.is_main == 0 && button_list.is_main == 1">设为主图</el-button>
 					</template>
 				</el-table-column>
 			</el-table>
-			<PaginationWidget id="bottom_row" :total="data.total" :page="page" @checkPage="checkPage"/>
+			<PaginationWidget id="bottom_row" :total="total" :page="page" @checkPage="checkPage"/>
 		</el-card>
 		<!-- 添加或编辑 -->
 		<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" destroy-on-close @close="closeDialog" :visible.sync="show_dialog">
@@ -62,7 +62,9 @@
 				loading:false,
 				max_height:0,	
 				page:1,						//页码
-				data:{},					//获取的数据
+				data:[],					//获取的数据
+				button_list:{},
+				total:0,
 				commodity_id:"",
 				show_dialog:false,			//弹窗
 				type:"",
@@ -122,13 +124,15 @@
 				resource.upLoadImgList(arg).then(res => {
 					if(res.data.code == 1){
 						this.loading = false;
-						let data = res.data.data;
-						data.data.map(item => {
+						let data = res.data.data.data;
+						data.map(item => {
 							let image_list = [];
 							image_list.push(this.domain + item.img);
 							item.image_list = image_list;
 						});
 						this.data = data;
+						this.button_list = res.data.data.button_list;
+						this.total = res.data.data.total;
 					}else{
 						this.$message.warning(res.data.msg);
 					}

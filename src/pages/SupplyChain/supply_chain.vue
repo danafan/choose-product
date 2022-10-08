@@ -9,7 +9,13 @@
 			</div>
 		</div>
 		<div class="right_content">
-			<div class="right_content_title">{{title}}</div>
+			<div class="right_content_title">
+				<div class="page_title">{{title}}</div>
+				<div class="back_row" @click="$router.go(-1)" v-if="is_back">
+					<img class="page_back_icon" src="../../static/page_back_icon.png">
+					返回
+				</div>
+			</div>
 			<div class="right_content_box">
 				<keep-alive>
 					<router-view v-if="$route.meta.keepAlive">
@@ -57,6 +63,7 @@
 				}],					//导航列表
 				active_index:0,		//当前选中的导航下标
 				title:"",			//标题
+				is_back:false,
 			}
 		},
 		watch:{
@@ -66,21 +73,22 @@
 				this.$router.push(path);
 			},
 			$route:function(to,from){
+				this.is_back = to.meta.is_back;
 				if(to.query.supplier_type){	//供应链中心（供应商）
 					this.title = to.query.supplier_type == '1'?"添加供应商":"编辑供应商";
 				}else if(to.query.goods_type){	//供应链中心（商品）
 					switch(to.query.goods_type){
 						case '1':
-							this.title = "添加商品";
-							break;
+						this.title = "添加商品";
+						break;
 						case '2':
-							this.title = "编辑商品";
-							break;
+						this.title = "编辑商品";
+						break;
 						case '3':
-							this.title = "商品详情";
-							break;
+						this.title = "商品详情";
+						break;
 						default: 
-							return;
+						return;
 					}
 				}else{
 					this.title = to.name;
@@ -145,11 +153,28 @@
 		.right_content_title{
 			background: #ffffff;
 			height: 64rem;
-			line-height: 64rem;
 			padding-left: 24rem;
-			font-size:18rem;
-			color: #333333;
-			font-weight: 500;
+			padding-right: 24rem;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			.page_title{
+				font-size:18rem;
+				color: #333333;
+				font-weight: 500;
+			}
+			.back_row{
+				display: flex;
+				align-items: center;
+				font-size:14rem;
+				color: var(--color);
+				cursor:pointer;
+				.page_back_icon{
+					margin-right: 4rem;
+					width: 16rem;
+					height: 16rem;
+				}
+			}
 		}
 		.right_content_box{
 			position: relative;
