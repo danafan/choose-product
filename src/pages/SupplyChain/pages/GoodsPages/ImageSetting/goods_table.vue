@@ -5,8 +5,6 @@
 				<el-button size="mini" type="primary" @click="addFn('1')" v-if="button_list.add == 1">上传商品图</el-button>
 			</TableTitle>
 			<el-table size="mini" :data="data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" v-loading="loading">
-				<el-table-column label="序号" width="55" type="index" :index="0">
-				</el-table-column>
 				<el-table-column label="图片">
 					<template slot-scope="scope">
 						<el-image :z-index="2006" class="image" :src="scope.row.image_list[0]" fit="scale-down" :preview-src-list="scope.row.image_list"></el-image>

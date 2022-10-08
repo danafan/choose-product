@@ -63,6 +63,7 @@ let path = {
   supplierManagerInfo:'supplier_manager/info',		//获取供应商详情
   supplierManagerEdit:'supplier_manager/edit',		//编辑供应商
   supplierManagerDel:'supplier_manager/del',		//删除供应商
+  examineList:'productstyle/examinelist',       //商品审核列表
 };
 export default {
   //类目列表接口
@@ -348,5 +349,9 @@ export default {
   //删除供应商
   supplierManagerDel(params) {
     return http.post(path.supplierManagerDel, params);
+  },
+  //商品审核列表
+  examineList(params) {
+    return http.get(path.examineList, params);
   },
 };

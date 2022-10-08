@@ -5,8 +5,6 @@
 				<el-button size="mini" type="primary" @click="addFn('1')" v-if="button_list.add == 1">添加</el-button>
 			</TableTitle>
 			<el-table size="mini" :data="data.data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" v-loading="loading">
-				<el-table-column label="序号" width="55" type="index" :index="0">
-				</el-table-column>
 				<el-table-column label="姓名" prop="ding_user_name" show-overflow-tooltip></el-table-column>
 				<el-table-column label="主部门" prop="main_dept_name" show-overflow-tooltip></el-table-column>
 				<el-table-column label="职位" prop="position" show-overflow-tooltip></el-table-column>

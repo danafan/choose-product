@@ -30,6 +30,7 @@
 	export default{
 		data(){
 			return{
+				// menu_list:[],
 				menu_list:[{
 					icon:require('../../static/chain_message.png'),
 					icon_active:require('../../static/chain_message_active.png'),
@@ -39,7 +40,12 @@
 					icon:require('../../static/chain_goods.png'),
 					icon_active:require('../../static/chain_goods_active.png'),
 					path:'/chain_goods_page',
-					name:'商品'
+					name:'商品管理'
+				},{
+					icon:require('../../static/chain_audit.png'),
+					icon_active:require('../../static/chain_audit_active.png'),
+					path:'/chain_audit_page',
+					name:'商品审核'
 				},{
 					icon:require('../../static/chain_supplier.png'),
 					icon_active:require('../../static/chain_supplier_active.png'),
@@ -95,7 +101,28 @@
 				}
 			}
 		},
+		computed: {
+			menu_arr() {
+				return this.$store.state.menu_list;
+			}
+		},
 		created(){
+			// let menu_arr = [];
+			// let arr = this.menu_arr[this.menu_arr.length - 1].list;
+			// console.log(arr)
+			// arr.map(item => {
+			// 	let icon_path = item.web_url.split('_page')[0];
+			// 	let o = {
+			// 		icon:require(`../../static/${icon_path}.png`),
+			// 		icon_active:require(`../../static/${icon_path}_active.png`),
+			// 		list:item.list,
+			// 		path:`/${item.web_url}`,
+			// 		name:item.menu_name
+			// 	}
+			// 	menu_arr.push(o);
+			// })
+			// this.menu_list = menu_arr;
+			// console.log(this.menu_list)
 			this.title = this.menu_list[this.active_index].name;
 			let path = this.menu_list[this.active_index].path;
 			this.$router.push(path);

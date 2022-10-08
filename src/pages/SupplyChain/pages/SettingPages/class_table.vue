@@ -5,8 +5,6 @@
 				<el-button size="mini" type="primary" @click="addFn('1')" v-if="button_list.add == 1">添加</el-button>
 			</TableTitle>
 			<el-table size="mini" :data="data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" v-loading="loading">
-				<el-table-column label="序号" width="55" type="index" :index="1">
-				</el-table-column>
 				<el-table-column label="分类" prop="classification_name" show-overflow-tooltip></el-table-column>
 				<el-table-column label="创建人" prop="add_user_name" show-overflow-tooltip></el-table-column>
 				<el-table-column label="创建时间" prop="add_time" show-overflow-tooltip></el-table-column>
@@ -34,7 +32,7 @@
 						</el-select>
 					</el-form-item>
 					<el-form-item label="分类名称：" required>
-						<el-input type="textarea" autosize placeholder="请输入分类名称（多个请换行）" v-model="name">
+						<el-input type="textarea" style="width: 220px" autosize placeholder="请输入分类名称（多个请换行）" v-model="name">
 						</el-input>
 					</el-form-item>
 				</el-form>

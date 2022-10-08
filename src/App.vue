@@ -47,19 +47,20 @@
           resource.getMenuNotice().then(res => {
             if(res.data.code == 1){
               let data = res.data.data;
-              let menu_list = [{
-                menu_name:'首页',
-                web_url:'/index'
-              },{
-                menu_name:'已选',
-                web_url:'/selected'
-              },{
-                menu_name:'供应商',
-                web_url:'/supplier'
-              },{
-                menu_name:'供应链中心',
-                web_url:'/supply_chain'
-              }]
+              let menu_list = data.menu_list;
+              // let menu_list = [{
+              //   menu_name:'首页',
+              //   web_url:'/index'
+              // },{
+              //   menu_name:'已选',
+              //   web_url:'/selected'
+              // },{
+              //   menu_name:'供应商',
+              //   web_url:'/supplier'
+              // },{
+              //   menu_name:'供应链中心',
+              //   web_url:'/supply_chain'
+              // }]
               this.$store.commit("setMenuList", menu_list);
               localStorage.setItem("menu_list",JSON.stringify(menu_list))
 

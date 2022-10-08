@@ -5,8 +5,6 @@
 				<el-button size="mini" type="primary" @click="addFn('1')" v-if="button_list.add == 1">添加</el-button>
 			</TableTitle>
 			<el-table size="mini" :data="data.data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" v-loading="loading">
-				<el-table-column label="序号" width="55" type="index" :index="0">
-				</el-table-column>
 				<el-table-column prop="menu_role_name" label="角色名称" show-overflow-tooltip align="center"></el-table-column>
 				<el-table-column prop="num" label="角色数量" show-overflow-tooltip align="center">
 				</el-table-column>
@@ -57,7 +55,7 @@
 		</div>
 		<div slot="footer" class="dialog_footer">
 			<el-button size="small" @click="show_dialog = false">取消</el-button>
-			<el-button type="primary" size="small" @click="commitFn">提交</el-button>
+			<el-button type="primary" size="small" @click="commitFn" v-if="type != 2">提交</el-button>
 		</div>
 	</el-dialog>
 </div>
