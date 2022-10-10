@@ -66,6 +66,9 @@ let path = {
   examineList:'productstyle/examinelist',       //商品审核列表
   examineSelectedInfo:'selected/examineselectedinfo', //商品审核详情
   affirmSelected:'selected/affirmselected',           //确认需求
+  refuseSelected:'selected/refuseselected',           //拒绝需求
+  addSelectRemark:'selected/addselectremark',         //添加备注
+  deriveSelected:'selected/deriveselected',           //导出
 };
 export default {
   //类目列表接口
@@ -363,5 +366,17 @@ export default {
   //确认需求
   affirmSelected(params) {
     return http.post(path.affirmSelected, params);
+  },
+  //拒绝需求
+  refuseSelected(params) {
+    return http.post(path.refuseSelected, params);
+  },
+  //添加备注
+  addSelectRemark(params) {
+    return http.post(path.addSelectRemark, params);
+  },
+  //导出
+  deriveSelected(params) {
+    return http.get(path.deriveSelected, params);
   },
 };

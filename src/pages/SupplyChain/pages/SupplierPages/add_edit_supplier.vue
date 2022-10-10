@@ -179,7 +179,7 @@
 					this.$message.warning('请输入供应商地址');
 				}else if(this.contact_information == ''){
 					this.$message.warning('请输入供应商联系方式');
-				}else if(this.supply_monthly_settlement == ''){
+				}else if(this.supply_monthly_settlement === ''){
 					this.$message.warning('请选择结算方式');
 				}else if(this.main_business == ''){
 					this.$message.warning('请输入主营业务');

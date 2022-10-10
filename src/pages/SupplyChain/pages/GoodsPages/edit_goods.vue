@@ -103,7 +103,7 @@
 					</el-form-item>
 				</el-form>
 			</div>
-			<div class="bottom_row" v-if="goods_type == '1' || goods_type == '2'">
+			<div class="bottom_row" v-if="goods_type == '1' || goods_type == '2' || goods_type == '5'">
 				<el-button size="small" type="primary" @click="commitEditGoods">提交</el-button>
 			</div>
 			<div class="bottom_row" v-if="goods_type == '4'">
@@ -123,7 +123,7 @@
 			return{
 				is_detail:false,		//是否是详情
 				page_type:'',			//页面来源（goods:商品；feekback:反馈）
-				goods_type:"",			//类型（1:添加；2:编辑；3:查看；4:审核）
+				goods_type:"",			//类型（1:添加；2:编辑；3:查看；4:审核；5：重新提交）
 				supplier_list:[],		//供应商列表
 				cate_list:[],			//类目列表
 				market_list:[],			//市场列表
@@ -185,7 +185,7 @@
 				await this.ajaxStyleList();
 				//分类列表
 				await this.ajaxClassList();
-				if(this.goods_type == '2' || this.goods_type == '3' || this.goods_type == '4'){	//2:编辑;3:详情；4:审核
+				if(this.goods_type == '2' || this.goods_type == '3' || this.goods_type == '4' || this.goods_type == '5'){	//2:编辑;3:详情；4:审核；5:重新提交
 					//获取商品详情
 					this.getGoodsDetail();
 				}
@@ -367,8 +367,11 @@
 								this.$message.warning(res.data.msg);
 							}
 						})
-					}else{			//编辑
+					}else{			//编辑或重新提交
 						if(this.page_type == 'goods'){	//商品管理
+							if(this.goods_type == '5'){
+								arg.type = 1;
+							}
 							resource.editGoodsPost(arg).then(res => {
 								if(res.data.code == 1){
 									this.$message.success(res.data.msg);

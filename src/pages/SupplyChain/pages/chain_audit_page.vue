@@ -69,7 +69,7 @@
 		</el-card>
 		<el-card class="card_box" id="card_box">
 			<TableTitle title="数据列表" id="table_title">
-				<el-button size="mini" type="primary" v-if="button_list.der == 1">导出</el-button>
+				<el-button size="mini" type="primary" v-if="button_list.der == 1" @click="exportFn">导出</el-button>
 			</TableTitle>
 			<el-table size="mini" :data="data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" v-loading="loading">
 				<el-table-column label="款号" prop="style_id" show-overflow-tooltip></el-table-column>
@@ -96,7 +96,7 @@
 						<div v-if="scope.row.audit_status == 0">已撤销</div>
 						<div v-if="scope.row.audit_status == 1">待审核</div>
 						<div v-if="scope.row.audit_status == 2">已确认</div>
-						<div v-if="scope.row.audit_status == 3">已取消</div>
+						<div v-if="scope.row.audit_status == 4">已拒绝</div>
 					</template>
 				</el-table-column>
 				<el-table-column label="备注" prop="select_remark" show-overflow-tooltip></el-table-column>
@@ -105,6 +105,7 @@
 						<el-button type="text" size="small" v-if="scope.row.audit_status != 1 && button_list.info == 1" @click="selectedInfo(scope.row.select_id)">查看</el-button>
 						<el-button type="text" size="small" v-if="scope.row.audit_status == 1 && button_list.aff == 1" @click="auditFn('1',scope.row.select_id)">确认需求</el-button>
 						<el-button type="text" size="small" v-if="(scope.row.audit_status == 1 || scope.row.audit_status == 2) && button_list.ref == 1" @click="auditFn('2',scope.row.select_id)">拒绝需求</el-button>
+						<el-button type="text" size="small" v-if="!scope.row.select_remark && button_list.addre == 1" @click="addRemark(scope.row.select_id)">备注</el-button>
 					</template>
 				</el-table-column>
 			</el-table>
@@ -226,6 +227,21 @@
 				<el-button type="primary" size="small" @click="detail_dialog = false">关闭</el-button>
 			</div>
 		</el-dialog>
+		<!-- 备注弹窗 -->
+		<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" destroy-on-close :visible.sync="remark_dialog" width="30%">
+			<div slot="title" class="dialog_title">
+				<div>备注</div>
+				<img class="close_icon" src="../../../static/close_icon.png" @click="remark_dialog = false">
+			</div>
+			<div class="remark_content">
+				<el-input type="textarea" :rows="3" placeholder="请输入备注" v-model="remark">
+				</el-input>
+			</div>
+			<div slot="footer" class="dialog_footer">
+				<el-button size="mini" @click="remark_dialog = false">关闭</el-button>
+				<el-button size="mini" type="primary" @click="confirmRemark">提交</el-button>
+			</div>
+		</el-dialog>
 	</div>
 </template>
 <style lang="less" scoped>
@@ -290,13 +306,18 @@
 			}
 		}
 	}
+	.remark_content{
+		padding:20rem;
+	}
 }
 </style>
 <script>
 	import commonResource from '../../../api/common_resource.js'
 	import resource from '../../../api/chain_resource.js'
 	import { getNowDate,getCurrentDate } from "../../../api/date.js";
+	import { exportPost } from "../../../api/export.js";
 
+	import { MessageBox, Message } from "element-ui";
 	import TableTitle from '../components/table_title.vue'
 	import PaginationWidget from '../../../components/pagination_widget.vue'
 	export default{
@@ -343,6 +364,10 @@
 				import_dialog:false,	//导入弹窗
 				detail_dialog:false,	//详情弹窗
 				goods_info:{},			//详情
+				remark_dialog:false,
+				select_id:"",			//当前点击的记录ID
+				remark:"",				//备注内容
+
 			}
 		},
 		created(){
@@ -577,7 +602,23 @@
 						confirmButtonText: '确定',
 						cancelButtonText: '取消',
 					}).then(({ value }) => {
-						console.log(value)
+						if(!value){
+							this.$message.warning('请输入拒绝原因');
+						}else{
+							let arg = {
+								select_id:id,
+								err_msg:value
+							}
+							resource.refuseSelected(arg).then(res => {
+								if(res.data.code == 1){
+									this.$message.success(res.data.msg);
+									//获取列表
+									this.getGoodsList();
+								}else{
+									this.$message.warning(res.data.msg);
+								}
+							})
+						}
 					}).catch(() => {
 						this.$message({
 							type: 'info',
@@ -586,65 +627,61 @@
 					});
 				}
 			},
-			//监听更多操作按钮
-			handleCommand(e,id){
-				if(e == '1'){	//查看
-					this.$router.push('/edit_goods?page_type=goods&goods_type=3&style_id=' + id);
-				}else if(e == '2'){	//编辑
-					this.$router.push('/edit_goods?page_type=goods&goods_type=2&style_id=' + id);
-				}else if(e == '3'){	//删除
-					this.$confirm(`确认删除?`, '提示', {
-						confirmButtonText: '确定',
-						cancelButtonText: '取消',
-						type: 'warning'
-					}).then(() => {
-						let arg = {
-							style_id:id
-						}
-						resource.delGoods(arg).then(res => {
-							if(res.data.code == 1){
-								this.$message.success(res.data.msg);
-								//获取列表
-								this.getGoodsList();
-							}else{
-								this.$message.warning(res.data.msg);
-							}
-						})
-					}).catch(() => {
-						this.$message({
-							type: 'info',
-							message: '已取消'
-						});          
-					});
-				}
+			//点击添加备注
+			addRemark(select_id){
+				this.select_id = select_id;
+				this.remark_dialog = true;
 			},
-			//切换上架或下架
-			checkStatus(style_id,type){
-				this.$confirm(`确认${type == 0?'上架':'下架'}?`, '提示', {
-					confirmButtonText: '确定',
-					cancelButtonText: '取消',
-					type: 'warning'
-				}).then(() => {
+			//提交备注
+			confirmRemark(){
+				let arg = {
+					select_id:this.select_id,
+					remark:this.remark
+				}
+				resource.addSelectRemark(arg).then(res => {
+					if(res.data.code == 1){
+						this.$message.success(res.data.msg);
+						this.remark_dialog = false;
+							//获取列表
+							this.getGoodsList();
+						}else{
+							this.$message.warning(res.data.msg);
+						}
+					})
+			},
+			//导出
+			exportFn() {
+				MessageBox.confirm("确认导出?", "提示", {
+					confirmButtonText: "确定",
+					cancelButtonText: "取消",
+					type: "warning",
+				})
+				.then(() => {
 					let arg = {
-						style_id:style_id,
-						type:type == 0?1:0
-					}
-					resource.checkStatus(arg).then(res => {
-						if(res.data.code == 1){
-							this.$message.success(res.data.msg);
-								//获取列表
-								this.getGoodsList();
-							}else{
-								this.$message.warning(res.data.msg);
-							}
-						})
-				}).catch(() => {
-					this.$message({
-						type: 'info',
-						message: '已取消'
-					});          
+						demand_type:this.demand_type.join(','),
+						status:this.status_id,
+						select_userid:this.select_userid.join(','),
+						select_main_dept_id:this.select_main_dept_id.join(','),
+						shop_code:this.shop_code.join(','),
+						supplier_id:this.supplier_ids.join(','),
+						category_id:this.category_ids.join(','),
+						market_id:this.market_ids.join(','),
+						classification_id:this.classification_ids.join(','),
+						shooting_id:this.shooting_style_ids.join(','),
+					};
+					resource.deriveSelected(arg).then((res) => {
+						if (res) {
+							exportPost("\ufeff" + res.data, "已选商品");
+						}
+					});
+				})
+				.catch(() => {
+					Message({
+						type: "info",
+						message: "取消导出",
+					});
 				});
-			}
+			},
 		},
 		components:{
 			TableTitle,

@@ -1,13 +1,15 @@
 <template>
 	<div class="goods_item">
-		<div class="image_box">
+		<div class="image_box"v-if="info.img != ''">
 			<el-popover
 			placement="right-start"
-			trigger="hover">
+			trigger="hover"
+			>
 			<el-image fit="scale-down" :src="domain + info.img"></el-image>
 			<el-image :src="domain + info.img" slot="reference" @click="getMoreImage" fit="scale-down"></el-image>
 		</el-popover>
 	</div>
+	<div class="image_box" @click="getMoreImage" v-else>暂无图片</div>
 	<div class="goods_info" @click="getDetail">
 		<div class="price_cate">
 			<div class="price">
@@ -125,7 +127,7 @@
 				<div class="banner">
 					<el-carousel indicator-position="none" arrow="never" @change="changeImage" ref="cardShow">
 						<el-carousel-item v-for="item in banner_list" :key="item">
-							<el-image :z-index="2009" class="image" :src="item" fit="scale-down" :preview-src-list="banner_list"></el-image>
+							<el-image :z-index="2010" class="image" :src="item" fit="scale-down" :preview-src-list="banner_list"></el-image>
 						</el-carousel-item>
 					</el-carousel>
 					<div class="indicator_box">
@@ -146,9 +148,10 @@
 			<img class="close_icon" src="../static/close_icon.png" @click="feekback_dialog = false">
 		</div>
 		<div class="feekback_content">
+			<div class="upload_title"><span>*</span>反馈内容</div>
 			<el-input type="textarea" :rows="5" placeholder="请描述哪条描述数据不对，或者缺失，我们尽快调整" v-model="feedback_content">
 			</el-input>
-			<div class="upload_title">上传截图</div>
+			<div class="upload_title"><span>*</span>上传截图</div>
 			<UploadFile :img_list="feedback_img" :is_multiple="true" :current_num="feedback_img.length" :max_num="5" @callbackFn="uploadFn"/>
 			<div class="upload_toast">上传“有效截图”，可以让问题优先被发现哦！最多可以上传5张截图</div>
 		</div>
@@ -198,7 +201,7 @@
 }
 /*.el-popover,.el-popper{
 	max-width: 450px!important;
-}*/
+	}*/
 </style>
 <style lang="less" scoped>
 .goods_item{
@@ -423,6 +426,9 @@
 		margin-bottom:10rem;
 		font-size:14rem;
 		color: #333333;
+		span{
+			color: red;
+		}
 	}
 	.upload_toast{
 		margin-top: 10rem;

@@ -1,7 +1,7 @@
 <template>
 	<div class="screen_container">
 		<div class="total_num">共有{{total_num}}件相关商品</div>
-		<div class="selected_box">
+		<div class="selected_box" @click="checkFn">
 			<div class="selected_left">
 				<div>已选条件</div>
 				<img class="right_arrow" src="../static/down_arrow.png">
@@ -17,7 +17,7 @@
 				<img class="right_arrow" src="../static/down_arrow.png">
 				<div v-if="rating_list.length > 0">{{rating_list[rating_index].grade_name}}</div>
 			</div>
-			<div class="selected_right" @click="checkFn">
+			<div class="selected_right">
 				<div>{{title}}</div>
 				<img class="down_arrow" :class="{'rotate':show_conditions_box == true}" src="../static/down_arrow.png">
 			</div>

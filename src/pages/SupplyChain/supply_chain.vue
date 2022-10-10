@@ -1,7 +1,7 @@
 <template>
 	<div class="chain_page">
 		<div class="left_menu">
-			<div class="menu_item" :class="{'menu_item_active':active_index == index}" v-for="(item,index) in menu_list" @click="active_index = index">
+			<div class="menu_item" :class="{'menu_item_active':active_index == index}" v-for="(item,index) in menu_list" @click="checkMenu(index)">
 				<img class="chain_icon" :src="item.icon_active" v-if="active_index == index">
 				<img class="chain_icon" :src="item.icon" v-else>
 				<div class="chain_text">{{item.name}}</div>
@@ -17,11 +17,12 @@
 				</div>
 			</div>
 			<div class="right_content_box">
-				<keep-alive>
+				<router-view></router-view>
+				<!-- <keep-alive>
 					<router-view v-if="$route.meta.keepAlive">
 					</router-view>
 				</keep-alive>
-				<router-view v-if="!$route.meta.keepAlive"></router-view>
+				<router-view v-if="!$route.meta.keepAlive"></router-view> -->
 			</div>
 		</div>
 	</div>
@@ -73,11 +74,6 @@
 			}
 		},
 		watch:{
-			//切换导航
-			active_index:function(n,o){
-				let path = this.menu_list[n].path;
-				this.$router.push(path);
-			},
 			$route:function(to,from){
 				this.is_back = to.meta.is_back;
 				if(to.query.supplier_type){	//供应链中心（供应商）
@@ -126,6 +122,14 @@
 			this.title = this.menu_list[this.active_index].name;
 			let path = this.menu_list[this.active_index].path;
 			this.$router.push(path);
+		},
+		methods:{
+			checkMenu(index){
+				this.active_index = index;
+				let path = this.menu_list[index].path;
+				console.log(path)
+				this.$router.push(path);
+			},
 		}
 	}
 </script>

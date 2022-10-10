@@ -34,7 +34,7 @@
 			<div class="dialog_content">
 				<el-form size="small" label-width="120px">
 					<el-form-item label="款式编码：">
-						{{data.i_id}}
+						{{i_id}}
 					</el-form-item>
 					<el-form-item label="图片：" required>
 						<UploadFile :img_list="img_list" :is_multiple="true" :current_num="img.length" :max_num="type == '1'?99:1" @callbackFn="callbackFn"/>
@@ -61,6 +61,7 @@
 				max_height:0,	
 				page:1,						//页码
 				data:[],					//获取的数据
+				i_id:"",
 				button_list:{},
 				total:0,
 				commodity_id:"",
@@ -131,6 +132,7 @@
 						this.data = data;
 						this.button_list = res.data.data.button_list;
 						this.total = res.data.data.total;
+						this.i_id = res.data.data.i_id;
 					}else{
 						this.$message.warning(res.data.msg);
 					}

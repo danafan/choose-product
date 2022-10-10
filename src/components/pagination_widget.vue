@@ -6,12 +6,14 @@
 		<el-pagination small background @current-change="handleCurrentChange" :current-page="page" :page-size="10" layout="slot,jumper" :total="total">
 			<div class="page_toast">{{page}}/{{Math.floor(total/10) + (total%10>0?1:0)}}</div>
 		</el-pagination>
+		<div class="page_toast">共{{total}}条</div>
 	</div>
 </template>
 <style lang="less" scoped>
 .page{
 	margin-top: 10px;
 	display:flex;
+	align-items: center;
 	justify-content: flex-end;
 }
 .el-pagination{

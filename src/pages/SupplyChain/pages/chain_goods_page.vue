@@ -111,11 +111,11 @@
 							</el-dropdown-menu>
 						</el-dropdown>
 						<el-button type="text" size="small" v-if="scope.row.check_status == 2 && button_list.in_out == 1" @click="checkStatus(scope.row.style_id,scope.row.status)">{{scope.row.status == 1?'下架':'上架'}}</el-button>
-						<el-button type="text" size="small" v-if="scope.row.check_status == 3" @click="$router.push('/edit_goods?page_type=goods&goods_type=2&style_id=' + scope.row.style_id)">重新提交</el-button>
+						<el-button type="text" size="small" v-if="scope.row.check_status == 3" @click="$router.push('/edit_goods?page_type=goods&goods_type=5&style_id=' + scope.row.style_id)">重新提交</el-button>
 					</template>
 				</el-table-column>
 			</el-table>
-			<PaginationWidget id="bottom_row" :total="data.total" :page="page" @checkPage="checkPage"/>
+			<PaginationWidget id="bottom_row" :total="total" :page="page" @checkPage="checkPage"/>
 		</el-card>
 		<el-dialog :visible.sync="import_dialog" width="30%">
 			<div slot="title" class="dialog_title">
@@ -261,22 +261,60 @@
 		},
 		created(){
 			//获取供应商列表
-			this.ajaxSupplierList();
-    		//获取类目列表
-    		this.ajaxCateList();
-    		//市场列表
-    		this.ajaxMarketList();
-    		//拍摄风格列表
-    		this.ajaxStyleList();
-    		//分类列表
-    		this.ajaxClassList();
-    		//获取列表
-    		this.getGoodsList();
-    	},
-    	destroyed() {
-    		window.removeEventListener("resize", () => {});
-    	},
-    	mounted() {
+		      	this.ajaxSupplierList();
+    			//获取类目列表
+    			this.ajaxCateList();
+    			//市场列表
+    			this.ajaxMarketList();
+    			//拍摄风格列表
+    			this.ajaxStyleList();
+    			//分类列表
+    			this.ajaxClassList();
+    			//获取列表
+    			this.getGoodsList();
+		},
+		// beforeRouteLeave(to, from, next) {
+		// 	if (to.path == "/image_setting") {
+		// 		from.meta.isBack = true;
+		// 	} else {
+		// 		from.meta.isBack = false;
+		// 	}
+		// 	next();
+		// },
+		// activated() {
+		// 	if (!this.$route.meta.isBack) {
+		// 		this.supplier_ids = [];
+		// 		this.category_ids = [];
+		// 		this.market_ids = [];
+		// 		this.classification_ids = [];
+		// 		this.shooting_style_ids = [];
+		// 		this.date = [];
+		// 		this.check_status_id = "";
+		// 		this.status_id = "";
+		// 		this.search = "";
+		// 		this.page = 1;
+		//       	//获取供应商列表
+		//       	this.ajaxSupplierList();
+  //   			//获取类目列表
+  //   			this.ajaxCateList();
+  //   			//市场列表
+  //   			this.ajaxMarketList();
+  //   			//拍摄风格列表
+  //   			this.ajaxStyleList();
+  //   			//分类列表
+  //   			this.ajaxClassList();
+  //   			//获取列表
+  //   			this.getGoodsList();
+  //   		} else {
+		//       	//返回之后重新调接口
+		//       	this.getGoodsList();
+		//       }
+		//       this.$route.meta.isBack = false;
+		//   },
+		  destroyed() {
+		  	window.removeEventListener("resize", () => {});
+		  },
+		  mounted() {
     		//获取表格最大高度
     		this.onResize();
     		window.addEventListener("resize", this.onResize());

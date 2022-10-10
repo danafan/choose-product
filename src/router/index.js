@@ -85,7 +85,11 @@ const router = new Router({
       {
         path: "/chain_goods_page",
         name: "商品管理",
-        component: chain_goods_page
+        component: chain_goods_page,
+        // meta: {
+        //   keepAlive: true,
+        //   isBack: false,
+        // },
       },
       {
         path: "/chain_audit_page",

@@ -31,7 +31,7 @@
 			<div class="dialog_content">
 				<el-form size="small" label-width="120px">
 					<el-form-item label="款式编码：">
-						{{data.i_id}}
+						{{i_id}}
 					</el-form-item>
 					<el-form-item label="风格：" required>
 						<el-input v-model="shooting_style_name" placeholder="风格"></el-input>
@@ -69,6 +69,7 @@
 				data:[],					//获取的数据
 				button_list:{},
 				total:0,
+				i_id:"",
 				show_dialog:false,			//弹窗
 				dialog_title:"",			//弹窗标题
 				shooting_style_name:"",		//风格
@@ -140,6 +141,7 @@
 						this.data = data;
 						this.button_list = res.data.data.button_list;
 						this.total = res.data.data.total;
+						this.i_id = res.data.data.i_id;
 					}else{
 						this.$message.warning(res.data.msg);
 					}

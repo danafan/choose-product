@@ -135,7 +135,8 @@
 			show_history:function(n,o){
 				if(n){
 					let storage_data = localStorage.getItem(this.page_path);
-					this.history_list = storage_data?JSON.parse(storage_data):[];
+					let history_list = storage_data?JSON.parse(storage_data):[];
+					this.history_list = history_list.slice(0,10);
 				}
 			}
 		},
