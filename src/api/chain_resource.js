@@ -64,6 +64,8 @@ let path = {
   supplierManagerEdit:'supplier_manager/edit',		//编辑供应商
   supplierManagerDel:'supplier_manager/del',		//删除供应商
   examineList:'productstyle/examinelist',       //商品审核列表
+  examineSelectedInfo:'selected/examineselectedinfo', //商品审核详情
+  affirmSelected:'selected/affirmselected',           //确认需求
 };
 export default {
   //类目列表接口
@@ -353,5 +355,13 @@ export default {
   //商品审核列表
   examineList(params) {
     return http.get(path.examineList, params);
+  },
+  //商品审核详情
+  examineSelectedInfo(params) {
+    return http.post(path.examineSelectedInfo, params);
+  },
+  //确认需求
+  affirmSelected(params) {
+    return http.post(path.affirmSelected, params);
   },
 };

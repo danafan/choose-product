@@ -103,8 +103,12 @@
 					</el-form-item>
 				</el-form>
 			</div>
-			<div class="bottom_row" v-if="!is_detail">
+			<div class="bottom_row" v-if="goods_type == '1' || goods_type == '2'">
 				<el-button size="small" type="primary" @click="commitEditGoods">提交</el-button>
+			</div>
+			<div class="bottom_row" v-if="goods_type == '4'">
+				<el-button size="small" type="primary" @click="auditFn('1')">同意</el-button>
+				<el-button size="small" type="primary" @click="auditFn('2')">拒绝</el-button>
 			</div>
 		</el-card>
 	</div>
@@ -119,7 +123,7 @@
 			return{
 				is_detail:false,		//是否是详情
 				page_type:'',			//页面来源（goods:商品；feekback:反馈）
-				goods_type:"",			//类型（1:添加；2:编辑）
+				goods_type:"",			//类型（1:添加；2:编辑；3:查看；4:审核）
 				supplier_list:[],		//供应商列表
 				cate_list:[],			//类目列表
 				market_list:[],			//市场列表
@@ -154,7 +158,7 @@
 			}
 		},
 		created(){
-			this.is_detail = this.$route.query.goods_type == '3'?true:false;
+			this.is_detail = this.$route.query.goods_type == '3' || this.$route.query.goods_type == '4'?true:false;
 			//页面来源
 			this.page_type = this.$route.query.page_type;
 			//类型
@@ -181,7 +185,7 @@
 				await this.ajaxStyleList();
 				//分类列表
 				await this.ajaxClassList();
-				if(this.goods_type == '2' || this.goods_type == '3'){	//2:编辑;3:详情
+				if(this.goods_type == '2' || this.goods_type == '3' || this.goods_type == '4'){	//2:编辑;3:详情；4:审核
 					//获取商品详情
 					this.getGoodsDetail();
 				}
@@ -385,7 +389,33 @@
 						}
 					}
 				}
-			}
+			},
+			//审批
+			auditFn(type){
+				this.$confirm(`确认${type == '1'?'同意':'拒绝'}?`, '提示', {
+					confirmButtonText: '确定',
+					cancelButtonText: '取消',
+					type: 'warning'
+				}).then(() => {
+					let arg = {
+						type:type,
+						id:this.style_id
+					}
+					resource.auditGoods(arg).then(res => {
+						if(res.data.code == 1){
+							this.$message.success(res.data.msg);
+							this.$router.go(-1);
+						}else{
+							this.$message.warning(res.data.msg);
+						}
+					})
+				}).catch(() => {
+					this.$message({
+						type: 'info',
+						message: '已取消'
+					});          
+				});
+			},
 		},
 		components:{
 			UploadFile

@@ -42,7 +42,7 @@
 						<template slot-scope="scope">
 							<div v-if="scope.row.audit_status == 1">待审核</div>
 							<div v-if="scope.row.audit_status == 2">已确认</div>
-							<div v-if="scope.row.audit_status == 3">已取消</div>
+							<div v-if="scope.row.audit_status == 4">已拒绝</div>
 							<div v-if="scope.row.audit_status == 0">已撤销</div>
 						</template>
 					</el-table-column>
@@ -206,8 +206,8 @@
 					name:'已确认',
 					id:'2'
 				},{
-					name:'已取消',
-					id:'3'
+					name:'已拒绝',
+					id:'4'
 				},{
 					name:'已撤销',
 					id:'0'

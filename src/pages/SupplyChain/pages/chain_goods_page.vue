@@ -98,8 +98,7 @@
 				</el-table-column>
 				<el-table-column label="操作" width="160" fixed="right">
 					<template slot-scope="scope">
-						<el-button type="text" size="small" v-if="scope.row.check_status == 1 && button_list.agree_refuse == 1" @click="auditFn('1',scope.row.style_id)">同意</el-button>
-						<el-button type="text" size="small" v-if="scope.row.check_status == 1 && button_list.agree_refuse == 1" @click="auditFn('2',scope.row.style_id)">拒绝</el-button>
+						<el-button type="text" size="small" v-if="scope.row.check_status == 1 && button_list.agree_refuse == 1" @click="$router.push('/edit_goods?page_type=goods&goods_type=4&style_id=' + scope.row.style_id)">审核</el-button>
 						<el-button style="margin-right: 10px" type="text" size="small" v-if="scope.row.check_status == 2" @click="$router.push('/image_setting?style_id=' + scope.row.style_id)">图片管理</el-button>
 						<el-dropdown size="small" @command="handleCommand($event,scope.row.style_id)" v-if="scope.row.check_status == 2">
 							<el-button type="text" size="small">
@@ -416,33 +415,6 @@
 				this.page = v;
 				//获取列表
 				this.getGoodsList();
-			},
-			//审批
-			auditFn(type,id){
-				this.$confirm(`确认${type == '1'?'同意':'拒绝'}?`, '提示', {
-					confirmButtonText: '确定',
-					cancelButtonText: '取消',
-					type: 'warning'
-				}).then(() => {
-					let arg = {
-						type:type,
-						id:id
-					}
-					resource.auditGoods(arg).then(res => {
-						if(res.data.code == 1){
-							this.$message.success(res.data.msg);
-							//获取列表
-							this.getGoodsList();
-						}else{
-							this.$message.warning(res.data.msg);
-						}
-					})
-				}).catch(() => {
-					this.$message({
-						type: 'info',
-						message: '已取消'
-					});          
-				});
 			},
 			//监听更多操作按钮
 			handleCommand(e,id){

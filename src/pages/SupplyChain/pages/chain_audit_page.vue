@@ -69,7 +69,7 @@
 		</el-card>
 		<el-card class="card_box" id="card_box">
 			<TableTitle title="数据列表" id="table_title">
-				<el-button size="mini" type="primary">导出</el-button>
+				<el-button size="mini" type="primary" v-if="button_list.der == 1">导出</el-button>
 			</TableTitle>
 			<el-table size="mini" :data="data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" v-loading="loading">
 				<el-table-column label="款号" prop="style_id" show-overflow-tooltip></el-table-column>
@@ -97,32 +97,135 @@
 						<div v-if="scope.row.audit_status == 1">待审核</div>
 						<div v-if="scope.row.audit_status == 2">已确认</div>
 						<div v-if="scope.row.audit_status == 3">已取消</div>
-						<div v-if="scope.row.audit_status == 4">已拒绝</div>
 					</template>
 				</el-table-column>
 				<el-table-column label="备注" prop="select_remark" show-overflow-tooltip></el-table-column>
 				<el-table-column label="操作" width="160" fixed="right">
 					<template slot-scope="scope">
-						<el-button type="text" size="small" v-if="scope.row.check_status == 1 && button_list.agree_refuse == 1" @click="auditFn('1',scope.row.style_id)">同意</el-button>
-						<el-button type="text" size="small" v-if="scope.row.check_status == 1 && button_list.agree_refuse == 1" @click="auditFn('2',scope.row.style_id)">拒绝</el-button>
-						<el-button style="margin-right: 10px" type="text" size="small" v-if="scope.row.check_status == 2" @click="$router.push('/image_setting?style_id=' + scope.row.style_id)">图片管理</el-button>
-						<el-dropdown size="small" @command="handleCommand($event,scope.row.style_id)" v-if="scope.row.check_status == 2">
-							<el-button type="text" size="small">
-								更多<i class="el-icon-arrow-down el-icon--right"></i>
-							</el-button>
-							<el-dropdown-menu slot="dropdown">
-								<el-dropdown-item command="1" v-if="button_list.info == 1">查看</el-dropdown-item>
-								<el-dropdown-item command="2" v-if="button_list.edit == 1">编辑</el-dropdown-item>
-								<el-dropdown-item command="3" v-if="button_list.del == 1">删除</el-dropdown-item>
-							</el-dropdown-menu>
-						</el-dropdown>
-						<el-button type="text" size="small" v-if="scope.row.check_status == 2 && button_list.in_out == 1" @click="checkStatus(scope.row.style_id,scope.row.status)">{{scope.row.status == 1?'下架':'上架'}}</el-button>
-						<el-button type="text" size="small" v-if="scope.row.check_status == 3" @click="$router.push('/edit_goods?page_type=goods&goods_type=2&style_id=' + scope.row.style_id)">重新提交</el-button>
+						<el-button type="text" size="small" v-if="scope.row.audit_status != 1 && button_list.info == 1" @click="selectedInfo(scope.row.select_id)">查看</el-button>
+						<el-button type="text" size="small" v-if="scope.row.audit_status == 1 && button_list.aff == 1" @click="auditFn('1',scope.row.select_id)">确认需求</el-button>
+						<el-button type="text" size="small" v-if="(scope.row.audit_status == 1 || scope.row.audit_status == 2) && button_list.ref == 1" @click="auditFn('2',scope.row.select_id)">拒绝需求</el-button>
 					</template>
 				</el-table-column>
 			</el-table>
 			<PaginationWidget id="bottom_row" :total="data.total" :page="page" @checkPage="checkPage"/>
 		</el-card>
+		<!-- 详情弹窗 -->
+		<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" destroy-on-close :visible.sync="detail_dialog">
+			<div slot="title" class="dialog_title">
+				<div>商品详情</div>
+				<img class="close_icon" src="../../../static/close_icon.png" @click="detail_dialog = false">
+			</div>
+			<div class="dialog_content">
+				<div class="detail_row">
+					<div class="lable">标题</div>
+					<div class="value">{{goods_info.title}}</div>
+				</div>
+				<div class="detail_row">
+					<div class="lable">款号</div>
+					<div class="value">{{goods_info.style_name}}</div>
+				</div>
+				<div class="detail_row">
+					<div class="lable">款式编码</div>
+					<div class="value">{{goods_info.i_id}}</div>
+				</div>
+				<div class="detail_row">
+					<div class="lable">供应商</div>
+					<div class="value">{{goods_info.supplier_name}}</div>
+				</div>
+				<div class="detail_row">
+					<div class="lable">市场</div>
+					<div class="value">{{goods_info.market_name}}</div>
+				</div>
+				<div class="detail_row">
+					<div class="lable">提供拍照</div>
+					<div class="value">{{goods_info.supply_photograph == 1?'是':'否'}}</div>
+				</div>
+				<div class="detail_row">
+					<div class="lable">提供退货</div>
+					<div class="value">{{goods_info.supply_return_goods == 1?'是':'否'}}</div>
+				</div>
+				<div class="detail_row">
+					<div class="lable">提供换货</div>
+					<div class="value">{{goods_info.supply_exchange_goods == 1?'是':'否'}}</div>
+				</div>
+				<div class="detail_row">
+					<div class="lable">提供代发</div>
+					<div class="value">{{goods_info.supply_replace_send == 1?'是':'否'}}</div>
+				</div>
+				<div class="detail_row">
+					<div class="lable">结算方式</div>
+					<div class="value">{{goods_info.supply_monthly_settlement == 1?'月结':'现结'}}</div>
+				</div>
+				<div class="detail_row">
+					<div class="lable">类目</div>
+					<div class="value">{{goods_info.category_name}}</div>
+				</div>
+				<div class="detail_row">
+					<div class="lable">分类</div>
+					<div class="value">{{goods_info.classification_name}}</div>
+				</div>
+				<div class="detail_row">
+					<div class="lable">拍摄风格</div>
+					<div class="value">{{goods_info.shooting_style_name}}</div>
+				</div>
+				<div class="detail_row">
+					<div class="lable">合作模式</div>
+					<div class="value">{{goods_info.mode}}</div>
+				</div>
+				<div class="detail_row">
+					<div class="lable">备注</div>
+					<div class="value">{{goods_info.remark}}</div>
+				</div>
+				<div class="detail_row">
+					<div class="lable">面料</div>
+					<div class="value">{{goods_info.fabric}}</div>
+				</div>
+				<div class="detail_row">
+					<div class="lable">尺码</div>
+					<div class="value">{{goods_info.size}}</div>
+				</div>
+				<div class="detail_row">
+					<div class="lable">成本价</div>
+					<div class="value">{{goods_info.cost_price}}</div>
+				</div>
+				<div class="detail_row">
+					<div class="lable">共享盘地址</div>
+					<div class="value">{{goods_info.shared_disk_address}}</div>
+				</div>
+				<div class="detail_row">
+					<div class="lable">百度网盘</div>
+					<div class="value">{{goods_info.net_disk_address}}</div>
+				</div>
+				<div class="detail_row">
+					<div class="lable">店铺</div>
+					<div class="value">{{goods_info.shop_name}}</div>
+				</div>
+				<div class="detail_row">
+					<div class="lable">需求类型</div>
+					<div class="value">{{goods_info.demand_type}}</div>
+				</div>
+				<div class="detail_row">
+					<div class="lable">发货类型</div>
+					<div class="value">{{goods_info.send_type}}</div>
+				</div>
+				<div class="detail_row">
+					<div class="lable">需求日期</div>
+					<div class="value">{{goods_info.demand_date}}</div>
+				</div>
+				<div class="detail_row">
+					<div class="lable">售卖价格</div>
+					<div class="value">{{goods_info.selling_price}}</div>
+				</div>
+				<div class="detail_row">
+					<div class="lable">备注</div>
+					<div class="value">{{goods_info.demand_remark}}</div>
+				</div>
+			</div>
+			<div slot="footer" class="dialog_footer">
+				<el-button type="primary" size="small" @click="detail_dialog = false">关闭</el-button>
+			</div>
+		</el-dialog>
 	</div>
 </template>
 <style lang="less" scoped>
@@ -166,6 +269,27 @@
 			}
 		}
 	}
+	.dialog_content{
+		max-height: 450px;
+		overflow-y: scroll;
+		.detail_row{
+			border-bottom:1px solid #F0F0F0;
+			display: flex;
+			font-size:14rem;
+			color: #333333;
+			.lable{
+				border-right:1px solid #F0F0F0;
+				width: 120rem;
+				padding:12rem 20rem;
+				display: flex;
+				align-items: center;
+			}
+			.value{
+				flex:1;
+				padding: 12rem 20rem;
+			}
+		}
+	}
 }
 </style>
 <script>
@@ -193,9 +317,6 @@
 				},{
 					name:'已取消',
 					id:3
-				},{
-					name:'已拒绝',
-					id:4
 				}],						//需求状态
 				status_id:"",			//选中的需求状态
 				dept_list:[],			//所有部门列表
@@ -220,15 +341,17 @@
 				total:0,
 				button_list:{},
 				import_dialog:false,	//导入弹窗
+				detail_dialog:false,	//详情弹窗
+				goods_info:{},			//详情
 			}
 		},
 		created(){
 			//获取需求类型列表
-    		this.getAllDemandSendType();
+			this.getAllDemandSendType();
 			//获取部门列表
-    		this.getDeptList();
+			this.getDeptList();
 			//获取用户列表
-    		this.getUserList();
+			this.getUserList();
 			//获取所有店铺列表
 			this.ajaxViewShop();
 			//获取供应商列表
@@ -408,32 +531,60 @@
 				//获取列表
 				this.getGoodsList();
 			},
+			//获取详情
+			selectedInfo(select_id){
+				let arg = {
+					select_id:select_id,
+					select_type:0
+				}
+				resource.examineSelectedInfo(arg).then(res => {
+					if(res.data.code == 1){
+						this.goods_info = res.data.data;
+						this.detail_dialog = true;
+					}else{
+						this.$message.warning(res.data.msg);
+					}
+				})
+			},
 			//审批
 			auditFn(type,id){
-				this.$confirm(`确认${type == '1'?'同意':'拒绝'}?`, '提示', {
-					confirmButtonText: '确定',
-					cancelButtonText: '取消',
-					type: 'warning'
-				}).then(() => {
-					let arg = {
-						type:type,
-						id:id
-					}
-					resource.auditGoods(arg).then(res => {
-						if(res.data.code == 1){
-							this.$message.success(res.data.msg);
-							//获取列表
-							this.getGoodsList();
-						}else{
-							this.$message.warning(res.data.msg);
+				if(type == '1'){	//确认
+					this.$confirm(`确认该需求?`, '提示', {
+						confirmButtonText: '确定',
+						cancelButtonText: '取消',
+						type: 'warning'
+					}).then(() => {
+						let arg = {
+							id:id
 						}
-					})
-				}).catch(() => {
-					this.$message({
-						type: 'info',
-						message: '已取消'
-					});          
-				});
+						resource.affirmSelected(arg).then(res => {
+							if(res.data.code == 1){
+								this.$message.success(res.data.msg);
+								//获取列表
+								this.getGoodsList();
+							}else{
+								this.$message.warning(res.data.msg);
+							}
+						})
+					}).catch(() => {
+						this.$message({
+							type: 'info',
+							message: '已取消'
+						});          
+					});
+				}else{		//拒绝
+					this.$prompt('请输入拒绝原因', '确认拒绝？', {
+						confirmButtonText: '确定',
+						cancelButtonText: '取消',
+					}).then(({ value }) => {
+						console.log(value)
+					}).catch(() => {
+						this.$message({
+							type: 'info',
+							message: '取消'
+						});       
+					});
+				}
 			},
 			//监听更多操作按钮
 			handleCommand(e,id){
