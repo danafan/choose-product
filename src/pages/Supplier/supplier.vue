@@ -13,7 +13,11 @@
 							<div class="info_item">评级：<span>{{item.grade_name}}</span></div>
 						</div>
 						<div class="image_list">
-							<el-image :z-index="2006" class="image_item" :src="domain + i.img" fit="scale-down" v-for="i in item.goods_list" @click="getDetail(i.style_id)"></el-image>
+							<div v-for="i in item.goods_list">
+								<el-image :z-index="2006" class="image_item" :src="domain + i.img" fit="scale-down" @click="getDetail(i.style_id)" v-if='i.img'></el-image>
+								<img class="image_item" src="../../static/load_failure.png" v-else @click="getDetail(i.style_id)">
+							</div>
+							
 						</div>
 						<div class="detail_box">
 							<div class="detail_button" @click="supplierDetail(item.supplier_id)">查看更多</div>
@@ -173,6 +177,7 @@
 						margin-right: 20rem;
 						width: 202rem;
 						height: 202rem;
+						cursor: pointer;
 					}
 				}
 				.detail_box{

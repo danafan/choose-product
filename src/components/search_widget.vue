@@ -151,6 +151,8 @@
 			checkValue(search_value){
 				this.search_value = search_value;
 				this.show_history = false;
+				//点击搜索或回车
+				this.searchFn();
 			},
 			//点击删除
 			deleteHistory(index){
@@ -169,12 +171,21 @@
 			searchFn(){
 				let storage_data = localStorage.getItem(this.page_path);
 				let history_list = storage_data?JSON.parse(storage_data):[];
-				let arr = history_list.filter(item => {
-					return this.search_value == item;
+				let current_index = null;
+				history_list.map((item,index) => {
+					if(this.search_value == item){
+						current_index = index;
+					}
 				})
-				if(this.search_value != '' && arr.length == 0){
+				if(current_index){
+					history_list.splice(current_index,1);
 					history_list.unshift(this.search_value);
 					localStorage.setItem(this.page_path,JSON.stringify(history_list));
+				}else{
+					if(this.search_value != ''){
+						history_list.unshift(this.search_value);
+						localStorage.setItem(this.page_path,JSON.stringify(history_list));
+					}
 				}
 				this.show_history = false;
 				this.$refs.input.blur();

@@ -72,7 +72,7 @@
 				<el-button size="mini" type="primary" v-if="button_list.der == 1" @click="exportFn">导出</el-button>
 			</TableTitle>
 			<el-table size="mini" :data="data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" v-loading="loading">
-				<el-table-column label="款号" prop="style_id" show-overflow-tooltip></el-table-column>
+				<el-table-column label="款号" prop="style_name" show-overflow-tooltip></el-table-column>
 				<el-table-column label="款式编码" prop="i_id" show-overflow-tooltip></el-table-column>
 				<el-table-column label="图片" width="120">
 					<template slot-scope="scope">
@@ -102,14 +102,14 @@
 				<el-table-column label="备注" prop="select_remark" show-overflow-tooltip></el-table-column>
 				<el-table-column label="操作" width="160" fixed="right">
 					<template slot-scope="scope">
-						<el-button type="text" size="small" v-if="scope.row.audit_status != 1 && button_list.info == 1" @click="selectedInfo(scope.row.select_id)">查看</el-button>
+						<el-button type="text" size="small" v-if="button_list.info == 1" @click="selectedInfo(scope.row.select_id)">查看</el-button>
 						<el-button type="text" size="small" v-if="scope.row.audit_status == 1 && button_list.aff == 1" @click="auditFn('1',scope.row.select_id)">确认需求</el-button>
 						<el-button type="text" size="small" v-if="(scope.row.audit_status == 1 || scope.row.audit_status == 2) && button_list.ref == 1" @click="auditFn('2',scope.row.select_id)">拒绝需求</el-button>
-						<el-button type="text" size="small" v-if="!scope.row.select_remark && button_list.addre == 1" @click="addRemark(scope.row.select_id)">备注</el-button>
+						<el-button type="text" size="small" v-if="button_list.addre == 1" @click="addRemark(scope.row.select_id,scope.row.select_remark)">备注</el-button>
 					</template>
 				</el-table-column>
 			</el-table>
-			<PaginationWidget id="bottom_row" :total="data.total" :page="page" @checkPage="checkPage"/>
+			<PaginationWidget id="bottom_row" :total="total" :page="page" @checkPage="checkPage"/>
 		</el-card>
 		<!-- 详情弹窗 -->
 		<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" destroy-on-close :visible.sync="detail_dialog">
@@ -228,7 +228,7 @@
 			</div>
 		</el-dialog>
 		<!-- 备注弹窗 -->
-		<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" destroy-on-close :visible.sync="remark_dialog" width="30%">
+		<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" destroy-on-close @close="remark = ''" :visible.sync="remark_dialog" width="30%">
 			<div slot="title" class="dialog_title">
 				<div>备注</div>
 				<img class="close_icon" src="../../../static/close_icon.png" @click="remark_dialog = false">
@@ -580,7 +580,7 @@
 						type: 'warning'
 					}).then(() => {
 						let arg = {
-							id:id
+							select_id:id
 						}
 						resource.affirmSelected(arg).then(res => {
 							if(res.data.code == 1){
@@ -598,7 +598,7 @@
 						});          
 					});
 				}else{		//拒绝
-					this.$prompt('请输入拒绝原因', '确认拒绝？', {
+					this.$prompt('请输入拒绝原因（必填）', '确认拒绝？', {
 						confirmButtonText: '确定',
 						cancelButtonText: '取消',
 					}).then(({ value }) => {
@@ -628,8 +628,9 @@
 				}
 			},
 			//点击添加备注
-			addRemark(select_id){
+			addRemark(select_id,remark){
 				this.select_id = select_id;
+				this.remark = remark?remark:'';
 				this.remark_dialog = true;
 			},
 			//提交备注

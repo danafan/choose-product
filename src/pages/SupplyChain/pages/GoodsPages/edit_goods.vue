@@ -3,7 +3,7 @@
 		<el-card class="card_box">
 			<div class="form_row">
 				<el-form size="small" label-width="100px">
-					<el-form-item label="款式编码：" required>
+					<el-form-item label="款式编码：">
 						<el-input type="textarea" autosize placeholder="多个请用分号间隔" v-model="arg.i_id" :disabled="is_detail">
 						</el-input>
 					</el-form-item>
@@ -59,7 +59,7 @@
 							</el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item label="合作模式：" required>
+					<el-form-item label="合作模式：">
 						<el-input placeholder="合作模式" v-model="arg.mode" :disabled="is_detail">
 						</el-input>
 					</el-form-item>
@@ -77,13 +77,13 @@
 			</div>
 			<div class="form_row">
 				<el-form size="small" label-width="100px">
-					<el-form-item label="网盘地址：" required>
+					<el-form-item label="网盘地址：">
 						<el-input placeholder="网盘地址" v-model="arg.net_disk_address" :disabled="is_detail">
 						</el-input>
 					</el-form-item>
 				</el-form>
 				<el-form size="small" label-width="150px">
-					<el-form-item label="共享盘地址：" required>
+					<el-form-item label="共享盘地址：">
 						<el-input placeholder="共享盘地址" v-model="arg.shared_disk_address" :disabled="is_detail">
 						</el-input>
 					</el-form-item>
@@ -323,9 +323,7 @@
 			},
 			//底部提交
 			commitEditGoods(){
-				if(!this.arg.i_id){
-					this.$message.warning('请输入款式编码!');
-				}else if(!this.arg.style_name){
+				if(!this.arg.style_name){
 					this.$message.warning('请输入商品款号!');
 				}else if(!this.arg.supplier_id){
 					this.$message.warning('请选择供应商!');
@@ -341,18 +339,12 @@
 					this.$message.warning('请选择分类!');
 				}else if(!this.arg.fabric){
 					this.$message.warning('请输入面料!');
-				}else if(!this.arg.mode){
-					this.$message.warning('请输入合作模式!');
 				}else if(!this.arg.cost_price){
 					this.$message.warning('请输入成本价!');
 				}else if(!this.arg.size){
 					this.$message.warning('请输入尺码!');
 				}else if(!this.arg.color){
 					this.$message.warning('请输入颜色!');
-				}else if(!this.arg.net_disk_address){
-					this.$message.warning('请输入网盘地址!');
-				}else if(!this.arg.shared_disk_address){
-					this.$message.warning('请输入共享盘地址!');
 				}else{
 					var arg = this.goods_type == '1'?this.arg:{...this.arg,...{style_id:this.style_id}};
 					if (arg.i_id.indexOf(";") > -1) {

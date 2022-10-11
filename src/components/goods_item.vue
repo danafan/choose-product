@@ -1,15 +1,15 @@
 <template>
 	<div class="goods_item">
-		<div class="image_box"v-if="info.img != ''">
+		<div class="image_box" v-if="info.img != ''">
 			<el-popover
 			placement="right-start"
 			trigger="hover"
 			>
 			<el-image fit="scale-down" :src="domain + info.img"></el-image>
-			<el-image :src="domain + info.img" slot="reference" @click="getMoreImage" fit="scale-down"></el-image>
+			<el-image class="goods_img" :src="domain + info.img" slot="reference" @click="getMoreImage" fit="scale-down"></el-image>
 		</el-popover>
 	</div>
-	<div class="image_box" @click="getMoreImage" v-else>暂无图片</div>
+	<img class="image_box" src="../static/load_failure.png" @click="getMoreImage" v-else>
 	<div class="goods_info" @click="getDetail">
 		<div class="price_cate">
 			<div class="price">
@@ -127,7 +127,7 @@
 				<div class="banner">
 					<el-carousel indicator-position="none" arrow="never" @change="changeImage" ref="cardShow">
 						<el-carousel-item v-for="item in banner_list" :key="item">
-							<el-image :z-index="2010" class="image" :src="item" fit="scale-down" :preview-src-list="banner_list"></el-image>
+							<el-image :z-index="2018" class="image" :src="item" fit="scale-down" :preview-src-list="banner_list"></el-image>
 						</el-carousel-item>
 					</el-carousel>
 					<div class="indicator_box">
@@ -211,11 +211,19 @@
 	height: 436rem;
 	cursor:pointer;
 	.image_box{
+		position: relative;
 		width: 263rem;
 		height: 263rem;
 		display: flex;
 		align-items: center;
 		justify-content: center;
+		.goods_img{
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+		}
 	}
 	.goods_info{
 		padding: 8rem 10rem;

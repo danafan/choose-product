@@ -52,7 +52,6 @@
 					</el-form-item>
 				</el-form>
 			</div>
-			<el-button class="commit_but" size="small" type="primary" @click="backFn">返回</el-button>
 		</el-card>
 	</div>
 </template>
@@ -109,15 +108,7 @@
 	flex-direction: column;
 	.card_box{
 		flex:1;
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		position: relative;
 		.form_row{
-			position: absolute;
-			top: 0;
-			left: 0;
-			width: 100%;
 			display: flex;
 			justify-content: space-evenly;
 			padding-top: 40rem;
@@ -125,10 +116,6 @@
 				width: 160rem;
 				height: 160rem;
 			}
-		}
-		.commit_but{
-			position: absolute;
-			bottom: 40rem;
 		}
 	}
 }
