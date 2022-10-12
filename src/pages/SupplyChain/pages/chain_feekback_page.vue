@@ -1,28 +1,41 @@
 <template>
 	<div class="chain_page_content">
+		<el-card class="form_card">
+			<el-form :inline="true" size="mini">
+				<el-form-item label="处理状态：">
+					<el-select v-model="status" clearable placeholder="全部">
+						<el-option label="待处理" value="1"></el-option>
+						<el-option label="已处理" value="2"></el-option>
+					</el-select>
+				</el-form-item>
+				<el-form-item class="form_item">
+					<el-button type="primary" @click="checkPage(1)">查询</el-button>
+				</el-form-item>
+			</el-form>
+		</el-card>
 		<el-card class="card_box" id="card_box">
 			<TableTitle title="数据列表" id="table_title"></TableTitle>
-			<el-table size="mini" :data="data.data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" v-loading="loading">
+			<el-table size="mini" :data="data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" v-loading="loading">
 				<el-table-column prop="style_name" label="款号" show-overflow-tooltip align="center"></el-table-column>
 				<el-table-column prop="i_id" label="款式编码" show-overflow-tooltip align="center">
 				</el-table-column>
 				<el-table-column prop="feedback_content" label="反馈内容" show-overflow-tooltip align="center"></el-table-column>
 				<el-table-column label="反馈截图" width="180">
 					<template slot-scope="scope">
-						<el-image :z-index="2006" class="image" :src="scope.row.feedback_img[0]" fit="scale-down" :preview-src-list="scope.row.feedback_img"></el-image>
+						<el-image :z-index="2006" class="image" :src="scope.row.images[0]" fit="scale-down" :preview-src-list="scope.row.images"></el-image>
 					</template>
 				</el-table-column>
 				<el-table-column prop="feedback_real_name" width="160" label="反馈人" show-overflow-tooltip align="center"></el-table-column>
 				<el-table-column prop="feedback_time" width="160" label="反馈时间" show-overflow-tooltip align="center"></el-table-column>
-				<el-table-column label="操作" align="center" width="120" fixed="right">
+				<el-table-column label="操作" align="center" width="160" fixed="right">
 					<template slot-scope="scope">
-						<el-button type="text" size="small" v-if="scope.row.feedback_status == '1'" @click="confirmFn(scope.row.feedback_id)">确认处理</el-button>
+						<el-button type="text" size="small" v-if="scope.row.feedback_status == '1' && button_list.confirm == 1" @click="confirmFn(scope.row.feedback_id)">确认处理</el-button>
 						<el-button type="text" size="small" disabled v-if="scope.row.feedback_status == '2'">已处理</el-button>
-						<el-button type="text" size="small" @click="editGoods(scope.row.style_id)">编辑</el-button>
+						<el-button type="text" size="small" @click="editGoods(scope.row.style_id)" v-if="button_list.edit == 1">编辑商品</el-button>
 					</template>
 				</el-table-column>
 			</el-table>
-			<PaginationWidget id="bottom_row" :total="data.total" :page="page" @checkPage="checkPage"/>
+			<PaginationWidget id="bottom_row" :total="total" :page="page" @checkPage="checkPage"/>
 		</el-card>
 	</div>
 </template>
@@ -35,8 +48,11 @@
 		data(){
 			return{
 				loading:false,
-				data:{},				//返回数据
+				button_list:{},
+				data:[],				//返回数据
+				total:0,
 				max_height:0,			//表格最大高度
+				status:"",				//处理状态
 				page:1,					//当前页码
 			}
 		},
@@ -46,6 +62,12 @@
 		},
 		destroyed() {
 			window.removeEventListener("resize", () => {});
+		},
+		computed:{
+			//图片前缀
+			domain(){
+				return this.$store.state.domain;
+			}
 		},
 		mounted() {
     		//获取表格最大高度
@@ -70,6 +92,7 @@
 			//获取列表
 			getData(){
 				let arg = {
+					status:this.status,
 					pagesize:10,
 					page:this.page
 				}
@@ -77,7 +100,17 @@
 				resource.feedBackList(arg).then(res => {
 					if(res.data.code == 1){
 						this.loading = false;
-						this.data = res.data.data;
+						let data = res.data.data.data;
+						data.map(item => {
+							let images = [];
+							item.feedback_img.map(i => {
+								images.push(this.domain + i);
+							})
+							item.images = images;
+						})
+						this.data = data;
+						this.total = res.data.data.total;
+						this.button_list = res.data.data.button_list;
 					}else{
 						this.$message.warning(res.data.msg);
 					}

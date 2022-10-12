@@ -99,7 +99,7 @@
 						<div v-if="scope.row.audit_status == 4">已拒绝</div>
 					</template>
 				</el-table-column>
-				<el-table-column label="备注" prop="select_remark" show-overflow-tooltip></el-table-column>
+				<el-table-column label="审核备注" prop="select_remark" show-overflow-tooltip></el-table-column>
 				<el-table-column label="操作" width="160" fixed="right">
 					<template slot-scope="scope">
 						<el-button type="text" size="small" v-if="button_list.info == 1" @click="selectedInfo(scope.row.select_id)">查看</el-button>
