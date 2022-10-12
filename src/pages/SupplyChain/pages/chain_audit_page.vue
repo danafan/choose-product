@@ -219,8 +219,8 @@
 					<div class="value">{{goods_info.selling_price}}</div>
 				</div>
 				<div class="detail_row">
-					<div class="lable">备注</div>
-					<div class="value">{{goods_info.demand_remark}}</div>
+					<div class="lable">需求备注</div>
+					<div class="value" v-html="goods_info.demand_remark"></div>
 				</div>
 			</div>
 			<div slot="footer" class="dialog_footer">

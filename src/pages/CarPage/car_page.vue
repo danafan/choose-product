@@ -25,15 +25,15 @@
 					<el-table-column label="价格" prop="cost_price"></el-table-column>
 					<el-table-column label="操作" width="80" fixed="right">
 						<template slot-scope="scope">
-							<el-button type="text" size="small" @click="deleteFn('1',scope.row.select_cart_id)">移除</el-button>
+							<el-button type="text" size="small" @click="deleteFn('1',scope.row.select_cart_id)" v-if="button_list.del == 1">移除</el-button>
 						</template>
 					</el-table-column>
 				</el-table>
 				<div class="bottom_row" id="bottom_row">
-					<el-button size='mini' type="text" :disabled="selected_list.length == 0" @click="deleteFn('2')">移除</el-button>
+					<el-button size='mini' type="text" :disabled="selected_list.length == 0" @click="deleteFn('2')" v-if="button_list.del == 1">移除</el-button>
 					<div class="all_selected">
 						<div class="selcted_num">已选 {{selected_list.length}} 件</div>
-						<el-button size='mini' type="primary" :disabled="selected_list.length == 0" @click="selectFn">去选中</el-button>
+						<el-button size='mini' type="primary" :disabled="selected_list.length == 0" @click="selectFn" v-if="button_list.selecteed == 1">去选中</el-button>
 					</div>
 				</div>
 			</el-card>
@@ -110,6 +110,7 @@
 			return{
 				loading:false,
 				car_goods:[],				//购物车列表
+				button_list:{},
 				selected_list: [],			//已选中的列表
 				max_height:0,
 				show_select:false,			//选款弹窗
@@ -165,6 +166,7 @@
     				if(res.data.code == 1){
     					this.loading = false;
     					let car_goods = res.data.data.data;
+    					let button_list = res.data.data.button_list;
     					car_goods.map(item => {
     						let arr = [];
     						arr.push(this.domain + item.img);
@@ -178,8 +180,10 @@
     		},
     		//判断是否可以选中
     		setStatus(row){
-    			if (row.status == 1) {  
+    			if (row.status == '0') { 
     				return true;  
+    			}else{
+    				return false;
     			}
     		},
 			//切换选中

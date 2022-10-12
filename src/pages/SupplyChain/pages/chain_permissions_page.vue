@@ -2,13 +2,13 @@
 	<div class="chain_page_content">
 		<div class="permission_tab">
 			<div class="tab_item" :class="{'active_tab_item':active_index == index}" v-for="(item,index) in tab_list" @click="active_index = index">
-				<div>{{item}}</div>
+				<div>{{item.menu_name}}</div>
 				<div class="active_line" v-if="active_index == index"></div>
 			</div>
 		</div>
-		<UserTable v-if="active_index == 0"/>
-		<RoleTable v-if="active_index == 1"/>
-		<EntryTable v-if="active_index == 2"/>
+		<UserTable v-if="web_url == 'user_table'"/>
+		<RoleTable v-if="web_url == 'role_table'"/>
+		<EntryTable v-if="web_url == 'entry_table'"/>
 	</div>
 </template>
 <script>
@@ -21,9 +21,32 @@
 	export default{
 		data(){
 			return{
-				tab_list:['权限配置','访问权限','权限录入'],	//顶部导航列表
+				tab_list:[],	//顶部导航列表
 				active_index:0,			//当前选中的导航下标
+				web_url:"",
 			}
+		},
+		watch:{
+			active_index:function(n,o){
+				this.web_url = this.tab_list[n].web_url;
+			}
+		},
+		computed: {
+			menu_arr() {
+				return this.$store.state.menu_list;
+			}
+		},
+		created(){
+			let new_menu_list = [];
+			let arr = this.menu_arr.filter(item => {
+				return item.web_url == 'supply_chain';
+			});
+			let child_list = arr[0].list;
+			let child_arr = child_list.filter(item => {
+				return item.web_url == 'chain_permissions_page';
+			});
+			this.tab_list = child_arr[0].list;
+			this.web_url = this.tab_list[0].web_url;
 		},
 		components:{
 			TableTitle,

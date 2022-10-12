@@ -17,12 +17,20 @@
 				</div>
 			</div>
 			<div class="right_content_box">
-				<router-view></router-view>
-				<!-- <keep-alive>
+				<!-- <router-view v-slot="{ Component }">
+					<keep-alive>
+						<component :is="Component" :key="$route.name"  v-if="$route.meta.keepAlive"/>
+					</keep-alive>
+					<component :is="Component" :key="$route.name" v-if="!$route.meta.keepAlive"/>
+				</router-view>  -->
+
+				<!-- <router-view></router-view> -->
+
+				<keep-alive>
 					<router-view v-if="$route.meta.keepAlive">
 					</router-view>
 				</keep-alive>
-				<router-view v-if="!$route.meta.keepAlive"></router-view> -->
+				<router-view v-if="!$route.meta.keepAlive"></router-view>
 			</div>
 		</div>
 	</div>
@@ -31,43 +39,7 @@
 	export default{
 		data(){
 			return{
-				// menu_list:[],
-				menu_list:[{
-					icon:require('../../static/chain_message.png'),
-					icon_active:require('../../static/chain_message_active.png'),
-					path:'/chain_message_page',
-					name:'公告'
-				},{
-					icon:require('../../static/chain_goods.png'),
-					icon_active:require('../../static/chain_goods_active.png'),
-					path:'/chain_goods_page',
-					name:'商品管理'
-				},{
-					icon:require('../../static/chain_audit.png'),
-					icon_active:require('../../static/chain_audit_active.png'),
-					path:'/chain_audit_page',
-					name:'商品审核'
-				},{
-					icon:require('../../static/chain_supplier.png'),
-					icon_active:require('../../static/chain_supplier_active.png'),
-					path:'/chain_supplier_page',
-					name:'供应商'
-				},{
-					icon:require('../../static/chain_setting.png'),
-					icon_active:require('../../static/chain_setting_active.png'),
-					path:'/chain_setting_page',
-					name:'配置'
-				},{
-					icon:require('../../static/chain_permissions.png'),
-					icon_active:require('../../static/chain_permissions_active.png'),
-					path:'/chain_permissions_page',
-					name:'权限'
-				},{
-					icon:require('../../static/chain_feekback.png'),
-					icon_active:require('../../static/chain_feekback_active.png'),
-					path:'/chain_feekback_page',
-					name:'反馈'
-				}],					//导航列表
+				menu_list:[],
 				active_index:0,		//当前选中的导航下标
 				title:"",			//标题
 				is_back:false,
@@ -103,22 +75,22 @@
 			}
 		},
 		created(){
-			// let menu_arr = [];
-			// let arr = this.menu_arr[this.menu_arr.length - 1].list;
-			// console.log(arr)
-			// arr.map(item => {
-			// 	let icon_path = item.web_url.split('_page')[0];
-			// 	let o = {
-			// 		icon:require(`../../static/${icon_path}.png`),
-			// 		icon_active:require(`../../static/${icon_path}_active.png`),
-			// 		list:item.list,
-			// 		path:`/${item.web_url}`,
-			// 		name:item.menu_name
-			// 	}
-			// 	menu_arr.push(o);
-			// })
-			// this.menu_list = menu_arr;
-			// console.log(this.menu_list)
+			let new_menu_list = [];
+			let arr = this.menu_arr.filter(item => {
+				return item.web_url == 'supply_chain';
+			});
+			arr[0].list.map(item => {
+				let icon_path = item.web_url.split('_page')[0];
+				let o = {
+					icon:require(`../../static/${icon_path}.png`),
+					icon_active:require(`../../static/${icon_path}_active.png`),
+					list:item.list,
+					path:`/${item.web_url}`,
+					name:item.menu_name
+				}
+				new_menu_list.push(o);
+			})
+			this.menu_list = new_menu_list;
 			this.title = this.menu_list[this.active_index].name;
 			let path = this.menu_list[this.active_index].path;
 			this.$router.push(path);
@@ -127,7 +99,6 @@
 			checkMenu(index){
 				this.active_index = index;
 				let path = this.menu_list[index].path;
-				console.log(path)
 				this.$router.push(path);
 			},
 		}
@@ -185,7 +156,7 @@
 			background: #ffffff;
 			height: 64rem;
 			padding-left: 24rem;
-			padding-right: 24rem;
+			padding-right: 60rem;
 			display: flex;
 			align-items: center;
 			justify-content: space-between;
@@ -195,10 +166,15 @@
 				font-weight: 500;
 			}
 			.back_row{
+				border-radius: 2rem;
+				background: var(--color);
+				width: 80rem;
+				height: 32rem;
 				display: flex;
 				align-items: center;
+				justify-content: center;
 				font-size:14rem;
-				color: var(--color);
+				color: #ffffff;
 				cursor:pointer;
 				.page_back_icon{
 					margin-right: 4rem;

@@ -2,14 +2,14 @@
 	<div class="chain_page_content">
 		<div class="setting_tab">
 			<div class="tab_item" :class="{'active_tab_item':active_index == index}" v-for="(item,index) in tab_list" @click="active_index = index">
-				<div>{{item}}</div>
+				<div>{{item.menu_name}}</div>
 				<div class="active_line" v-if="active_index == index"></div>
 			</div>
 		</div>
-		<CategoryTable v-if="active_index == 0"/>
-		<ClassTable v-if="active_index == 1"/>
-		<StyleTable v-if="active_index == 2"/>
-		<SeasonTable v-if="active_index == 3"/>
+		<CategoryTable v-if="web_url == 'category_table'"/>
+		<ClassTable v-if="web_url == 'class_table'"/>
+		<StyleTable v-if="web_url == 'style_table'"/>
+		<SeasonTable v-if="web_url == 'season_table'"/>
 	</div>
 </template>
 <script>
@@ -20,9 +20,32 @@
 	export default{
 		data(){
 			return{
-				tab_list:['类目','分类','风格','季节'],	//顶部导航列表
+				tab_list:[],	//顶部导航列表
 				active_index:0,			//当前选中的导航下标
+				web_url:""
 			}
+		},
+		watch:{
+			active_index:function(n,o){
+				this.web_url = this.tab_list[n].web_url;
+			}
+		},
+		computed: {
+			menu_arr() {
+				return this.$store.state.menu_list;
+			}
+		},
+		created(){
+			let new_menu_list = [];
+			let arr = this.menu_arr.filter(item => {
+				return item.web_url == 'supply_chain';
+			});
+			let child_list = arr[0].list;
+			let child_arr = child_list.filter(item => {
+				return item.web_url == 'chain_setting_page';
+			});
+			this.tab_list = child_arr[0].list;
+			this.web_url = this.tab_list[0].web_url;
 		},
 		components:{
 			CategoryTable,

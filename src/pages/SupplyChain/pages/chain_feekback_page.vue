@@ -3,7 +3,7 @@
 		<el-card class="card_box" id="card_box">
 			<TableTitle title="数据列表" id="table_title"></TableTitle>
 			<el-table size="mini" :data="data.data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" v-loading="loading">
-				<el-table-column prop="style_id" label="款号" show-overflow-tooltip align="center"></el-table-column>
+				<el-table-column prop="style_name" label="款号" show-overflow-tooltip align="center"></el-table-column>
 				<el-table-column prop="i_id" label="款式编码" show-overflow-tooltip align="center">
 				</el-table-column>
 				<el-table-column prop="feedback_content" label="反馈内容" show-overflow-tooltip align="center"></el-table-column>
