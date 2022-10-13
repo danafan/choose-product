@@ -5,7 +5,7 @@
 			<el-card class="card_box">
 				<div class="title">{{notice_info.notice_title}}</div>
 				<div class="time">{{notice_info.add_time}}</div>
-				<div class="content">{{notice_info.notice_content}}</div>
+				<div class="content" v-html="notice_info.notice_content"></div>
 			</el-card>
 		</div>
 	</div>

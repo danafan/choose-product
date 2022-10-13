@@ -73,7 +73,11 @@
 			</TableTitle>
 			<el-table size="mini" :data="data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" v-loading="loading">
 				<el-table-column label="款号" prop="style_name" show-overflow-tooltip></el-table-column>
-				<el-table-column label="款式编码" prop="i_id" show-overflow-tooltip></el-table-column>
+				<el-table-column label="款式编码" show-overflow-tooltip>
+					<template slot-scope="scope">
+						<div v-for="item in scope.row.ksbm">{{item}}</div>
+					</template>
+				</el-table-column>
 				<el-table-column label="图片" width="120">
 					<template slot-scope="scope">
 						<div v-if="scope.row.images.length == 0">暂无</div>
@@ -543,6 +547,15 @@
 								images.push(this.domain + i);
 							})
 							item.images = images;
+							let ksbm = [];
+							if(item.i_id){
+								item.i_id.split(',').map(i => {
+									ksbm.push(i);
+								})
+								item.ksbm = ksbm;
+							}else{
+								item.ksbm = [];
+							}
 						})
 						this.data = data;
 					}else{
