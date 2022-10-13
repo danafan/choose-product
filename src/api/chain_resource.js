@@ -17,6 +17,7 @@ let path = {
   addSeason:'setting/add_season',					//创建季节
   editSeason:'setting/edit_season',					//编辑季节
   deleteSeason:'setting/del_season',				//删除季节
+  logList:'setting/log_list',             //修改记录列表
   getUserList:'user/list',							//（权限配置）用户列表
   addUser:'user/add',								//创建用户
   editUser:'user/edit',								//编辑用户
@@ -138,6 +139,10 @@ export default {
   //删除季节
   deleteSeason(params) {
     return http.post(path.deleteSeason, params);
+  },
+  //修改记录列表
+  logList(params) {
+    return http.get(path.logList, params);
   },
   //用户列表
   getUserList(params) {

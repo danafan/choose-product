@@ -71,9 +71,9 @@ export function middleWare(params, type) {
   var token = Base64.encode(JSON.stringify(token_obj));
   //组织参数
   // var req = { ...params, ...{ sign: sign, token: token } };
-  var req = { ...params, ...{ admin_id: "8318" } };
+  // var req = { ...params, ...{ admin_id: "8318" } };
   // var req = { ...params, ...{ admin_id: "014017496357903146" } }; //测试
-  // var req = { ...params, ...{ admin_id: "16161349938228000" } }; //陈鑫杰
+  var req = { ...params, ...{ admin_id: "16161349938228000" } }; //陈鑫杰
   var get_arr = [];
   //post请求参数
   var form = new FormData();

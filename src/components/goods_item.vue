@@ -1,12 +1,12 @@
 <template>
 	<div class="goods_item">
-		<div class="image_box" v-if="info.img != ''">
+		<div class="image_box" @click="getMoreImage" v-if="info.img != ''">
 			<el-popover
 			placement="right-start"
 			trigger="hover"
 			>
 			<el-image fit="scale-down" :src="domain + info.img"></el-image>
-			<el-image class="goods_img" :src="domain + info.img" slot="reference" @click="getMoreImage" fit="scale-down"></el-image>
+			<el-image class="goods_img" :src="domain + info.img" slot="reference" fit="scale-down"></el-image>
 		</el-popover>
 	</div>
 	<img class="image_box" src="../static/load_failure.png" @click="getMoreImage" v-else>
@@ -127,7 +127,7 @@
 				<div class="banner">
 					<el-carousel indicator-position="none" arrow="never" @change="changeImage" ref="cardShow">
 						<el-carousel-item v-for="item in banner_list" :key="item">
-							<el-image :z-index="2018" class="image" :src="item" fit="scale-down" :preview-src-list="banner_list"></el-image>
+							<el-image :z-index="9999" class="image" :src="item" fit="scale-down" :preview-src-list="banner_list"></el-image>
 						</el-carousel-item>
 					</el-carousel>
 					<div class="indicator_box">

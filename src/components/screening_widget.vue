@@ -4,7 +4,7 @@
 		<div class="selected_box" @click="checkFn">
 			<div class="selected_left">
 				<div>已选条件</div>
-				<img class="right_arrow" src="../static/down_arrow.png">
+				<img class="right_arrow" src="../static/down_arrow.png" v-if="page_type == 'index'">
 				<div v-if="supplier_list.length > 0 && page_type == 'index'">{{supplier_list[supplier_index].supplier_name}}</div>
 				<img class="right_arrow" src="../static/down_arrow.png">
 				<div v-if="market_list.length > 0">{{market_list[market_index].market_name}}</div>

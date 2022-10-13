@@ -63,7 +63,7 @@
 				<el-button size="mini" type="primary" @click="import_dialog = true">导入</el-button>
 			</TableTitle>
 			<el-table size="mini" :data="data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" v-loading="loading">
-				<el-table-column label="款号" prop="style_id" show-overflow-tooltip></el-table-column>
+				<el-table-column label="款号" prop="style_name" show-overflow-tooltip></el-table-column>
 				<el-table-column label="款式编码" prop="i_id" show-overflow-tooltip></el-table-column>
 				<el-table-column label="图片" width="120">
 					<template slot-scope="scope">

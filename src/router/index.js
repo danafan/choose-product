@@ -20,6 +20,7 @@ const chain_supplier_page = (resolve) => require(["@/pages/SupplyChain/pages/cha
 const add_edit_supplier = (resolve) => require(["@/pages/SupplyChain/pages/SupplierPages/add_edit_supplier"], resolve);
 const chain_supplier_detail = (resolve) => require(["@/pages/SupplyChain/pages/SupplierPages/supplier_detail"], resolve);
 const chain_setting_page = (resolve) => require(["@/pages/SupplyChain/pages/chain_setting_page"], resolve);
+const edit_record = (resolve) => require(["@/pages/SupplyChain/pages/SettingPages/edit_record"], resolve);
 const chain_permissions_page = (resolve) => require(["@/pages/SupplyChain/pages/chain_permissions_page"], resolve);
 const chain_feekback_page = (resolve) => require(["@/pages/SupplyChain/pages/chain_feekback_page"], resolve);
 
@@ -133,6 +134,14 @@ const router = new Router({
         path: "/chain_setting_page",
         name: "配置",
         component: chain_setting_page
+      },
+      {
+        path: "/edit_record",
+        name: "修改记录",
+        meta:{
+          is_back:true
+        },
+        component: edit_record
       },
       {
         path: "/chain_permissions_page",

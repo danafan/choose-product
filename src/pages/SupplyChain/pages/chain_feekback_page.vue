@@ -20,7 +20,7 @@
 				<el-table-column prop="i_id" label="款式编码" show-overflow-tooltip align="center">
 				</el-table-column>
 				<el-table-column prop="feedback_content" label="反馈内容" show-overflow-tooltip align="center"></el-table-column>
-				<el-table-column label="反馈截图" width="180">
+				<el-table-column label="反馈截图" width="200">
 					<template slot-scope="scope">
 						<el-image :z-index="2006" class="image" :src="scope.row.images[0]" fit="scale-down" :preview-src-list="scope.row.images"></el-image>
 					</template>
@@ -109,6 +109,7 @@
 							item.images = images;
 						})
 						this.data = data;
+						console.log(this.data)
 						this.total = res.data.data.total;
 						this.button_list = res.data.data.button_list;
 					}else{

@@ -48,9 +48,9 @@
 					</el-table-column>
 					<el-table-column label="操作" width="120" fixed="right">
 						<template slot-scope="scope">
-							<el-button type="text" size="small" @click="cancelSelected(scope.row.select_id)" v-if="scope.row.audit_status == 2 && button_list.cancel == 1">取消</el-button>
-							<el-button type="text" size="small" @click="undoSelected(scope.row.select_id)" v-if="scope.row.audit_status == 1 && button_list.rev == 1">撤销</el-button>
-							<el-button type="text" size="small" @click="selectedInfo(scope.row.select_id)" v-if="button_list.info == 1">详情</el-button>
+							<el-button type="text" size="small" @click="cancelSelected(scope.row.select_id)" v-if="scope.row.audit_status == 2">取消</el-button>
+							<el-button type="text" size="small" @click="undoSelected(scope.row.select_id)" v-if="scope.row.audit_status == 1">撤销</el-button>
+							<el-button type="text" size="small" @click="selectedInfo(scope.row.select_id)">详情</el-button>
 						</template>
 					</el-table-column>
 				</el-table>
@@ -216,7 +216,6 @@
 				search:"",					//搜索框的内容
 				page:1,
 				data:[],
-				button_list:{},
 				total:0,
 				max_height:0,	
 				detail_dialog:false,		//详情弹窗
@@ -302,7 +301,6 @@
 							item.images = images;
 						})
 						this.data = data_list;
-						this.button_list = data.button_list;
 						this.total = data.total;
 					}else{
 						this.$message.warning(res.data.msg);

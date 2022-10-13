@@ -4,7 +4,7 @@
 			<div class="form_row">
 				<el-form size="small" label-width="100px">
 					<el-form-item label="款式编码：">
-						<el-input type="textarea" autosize placeholder="多个请用分号间隔" v-model="arg.i_id" :disabled="is_detail">
+						<el-input type="textarea" autosize :placeholder="is_detail?'':'多个请用分号间隔'" v-model="arg.i_id" :disabled="is_detail">
 						</el-input>
 					</el-form-item>
 					<el-form-item label="供应商：" required>
@@ -60,7 +60,7 @@
 						</el-select>
 					</el-form-item>
 					<el-form-item label="合作模式：">
-						<el-input placeholder="合作模式" v-model="arg.mode" :disabled="is_detail">
+						<el-input :placeholder="is_detail?'':'合作模式'" v-model="arg.mode" :disabled="is_detail">
 						</el-input>
 					</el-form-item>
 					<el-form-item label="尺码：" required>
@@ -78,13 +78,13 @@
 			<div class="form_row">
 				<el-form size="small" label-width="100px">
 					<el-form-item label="网盘地址：">
-						<el-input placeholder="网盘地址" v-model="arg.net_disk_address" :disabled="is_detail">
+						<el-input :placeholder="is_detail?'':'网盘地址'" v-model="arg.net_disk_address" :disabled="is_detail">
 						</el-input>
 					</el-form-item>
 				</el-form>
 				<el-form size="small" label-width="150px">
 					<el-form-item label="共享盘地址：">
-						<el-input placeholder="共享盘地址" v-model="arg.shared_disk_address" :disabled="is_detail">
+						<el-input :placeholder="is_detail?'':'共享盘地址'" v-model="arg.shared_disk_address" :disabled="is_detail">
 						</el-input>
 					</el-form-item>
 				</el-form>
@@ -98,7 +98,7 @@
 						<UploadFile :img_list="img_list" :is_multiple="true" :current_num="arg.img.length" :max_num="99" @callbackFn="callbackFn" v-else/>
 					</el-form-item>
 					<el-form-item label="备注：">
-						<el-input type="textarea" :rows="5" placeholder="请输入备注" v-model="arg.remark" :disabled="is_detail">
+						<el-input type="textarea" :rows="5" :placeholder="is_detail?'':'请输入备注'" v-model="arg.remark" :disabled="is_detail">
 						</el-input>
 					</el-form-item>
 				</el-form>

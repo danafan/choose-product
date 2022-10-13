@@ -44,7 +44,14 @@
 			let child_arr = child_list.filter(item => {
 				return item.web_url == 'chain_setting_page';
 			});
-			this.tab_list = child_arr[0].list;
+			let tab_list = child_arr[0].list;
+			tab_list.some((item, i) => {
+				if (item.web_url == 'edit_record') {
+					tab_list.splice(i, 1)
+    				return true //当内部return true时跳出整个循环
+    			}
+    		})
+    		this.tab_list = tab_list;
 			this.web_url = this.tab_list[0].web_url;
 		},
 		components:{

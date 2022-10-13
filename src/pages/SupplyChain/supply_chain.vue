@@ -15,6 +15,7 @@
 					<img class="page_back_icon" src="../../static/page_back_icon.png">
 					返回
 				</div>
+				<div class="edit_record" v-if="show_record" @click="$router.push('/edit_record')">修改记录</div>
 			</div>
 			<div class="right_content_box">
 				<!-- <router-view v-slot="{ Component }">
@@ -43,6 +44,8 @@
 				active_index:0,		//当前选中的导航下标
 				title:"",			//标题
 				is_back:false,
+				is_record:false,
+				show_record:false
 			}
 		},
 		watch:{
@@ -64,8 +67,11 @@
 						default: 
 						return;
 					}
+				}else if(to.path == '/chain_setting_page'){	//判断是否显示修改记录
+					this.show_record = this.is_record?true:false;
 				}else{
 					this.title = to.name;
+					this.show_record = false;
 				}
 			}
 		},
@@ -75,6 +81,8 @@
 			}
 		},
 		created(){
+			var chain_setting_arr = [];
+
 			let new_menu_list = [];
 			let arr = this.menu_arr.filter(item => {
 				return item.web_url == 'supply_chain';
@@ -89,11 +97,21 @@
 					name:item.menu_name
 				}
 				new_menu_list.push(o);
+				// 判断是否显示修改记录
+				if(item.web_url == 'chain_setting_page'){
+					chain_setting_arr = item.list;
+				}
 			})
 			this.menu_list = new_menu_list;
 			this.title = this.menu_list[this.active_index].name;
 			let path = this.menu_list[this.active_index].path;
 			this.$router.push(path);
+
+			//处理修改记录按钮是否显示
+			let ff = chain_setting_arr.filter(item => {
+				return item.web_url == 'edit_record';
+			})
+			this.is_record = ff.length > 0;
 		},
 		methods:{
 			checkMenu(index){
@@ -181,6 +199,11 @@
 					width: 16rem;
 					height: 16rem;
 				}
+			}
+			.edit_record{
+				font-size:14rem;
+				color: var(--color);
+				cursor:pointer;
 			}
 		}
 		.right_content_box{

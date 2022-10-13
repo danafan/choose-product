@@ -11,11 +11,11 @@
 						</div>
 						<div class="info_item">
 							<div class="info_lable">供应商编码：</div>
-							<div class="info_value">{{supplier_info.supplier_id}}</div>
+							<div class="info_value">{{supplier_info.supplier_code}}</div>
 						</div>
 						<div class="info_item">
 							<div class="info_lable">核心供应商：</div>
-							<div class="info_value">{{supplier_info.supplier_name}}</div>
+							<div class="info_value">{{supplier_info.is_core==1?'是':'否'}}</div>
 						</div>
 						<div class="info_item">
 							<div class="info_lable">主营：</div>
