@@ -263,9 +263,18 @@
 				import_dialog:false,	//导入弹窗
 			}
 		},
-		created(){
-			//获取供应商列表
-			this.ajaxSupplierList();
+		beforeRouteLeave(to,from,next){
+			if(to.path == '/image_setting' || to.path == '/edit_goods'){	
+				from.meta.use_cache = true;
+			}else{
+				from.meta.use_cache = false;
+			}
+			next();
+		},
+		activated(){
+			if(!this.$route.meta.use_cache){
+				//获取供应商列表
+				this.ajaxSupplierList();
     			//获取类目列表
     			this.ajaxCateList();
     			//市场列表
@@ -274,47 +283,21 @@
     			this.ajaxStyleList();
     			//分类列表
     			this.ajaxClassList();
-    			//获取列表
-    			this.getGoodsList();
-    		},
-		// beforeRouteLeave(to, from, next) {
-		// 	if (to.path == "/image_setting") {
-		// 		from.meta.isBack = true;
-		// 	} else {
-		// 		from.meta.isBack = false;
-		// 	}
-		// 	next();
-		// },
-		// activated() {
-		// 	if (!this.$route.meta.isBack) {
-		// 		this.supplier_ids = [];
-		// 		this.category_ids = [];
-		// 		this.market_ids = [];
-		// 		this.classification_ids = [];
-		// 		this.shooting_style_ids = [];
-		// 		this.date = [];
-		// 		this.check_status_id = "";
-		// 		this.status_id = "";
-		// 		this.search = "";
-		// 		this.page = 1;
-		//       	//获取供应商列表
-		//       	this.ajaxSupplierList();
-  //   			//获取类目列表
-  //   			this.ajaxCateList();
-  //   			//市场列表
-  //   			this.ajaxMarketList();
-  //   			//拍摄风格列表
-  //   			this.ajaxStyleList();
-  //   			//分类列表
-  //   			this.ajaxClassList();
-  //   			//获取列表
-  //   			this.getGoodsList();
-  //   		} else {
-		//       	//返回之后重新调接口
-		//       	this.getGoodsList();
-		//       }
-		//       this.$route.meta.isBack = false;
-		//   },
+				this.supplier_ids = [];
+				this.category_ids = [];
+				this.market_ids = [];
+				this.classification_ids = [];
+				this.shooting_style_ids = [];
+				this.date = [];
+				this.check_status_id = "";
+				this.status_id = "";
+				this.search = "";
+				this.page = 1;
+			}
+			//获取列表
+			this.getGoodsList();
+			this.$route.meta.use_cache = false;
+		},
 		destroyed() {
 			window.removeEventListener("resize", () => {});
 		},

@@ -86,6 +86,10 @@ const router = new Router({
       {
         path: "/chain_goods_page",
         name: "商品管理",
+        meta:{
+         keep_alive:true,
+         use_cache:false
+        },
         component: chain_goods_page,
       },
       {
@@ -112,52 +116,56 @@ const router = new Router({
       {
         path: "/chain_supplier_page",
         name: "供应商",
-        component: chain_supplier_page
-      },
-      {
-        path: "/add_edit_supplier",
-        name: "添加/编辑供应商",
         meta:{
-          is_back:true
+         keep_alive:true,
+         use_cache:false
         },
-        component: add_edit_supplier
+       component: chain_supplier_page
+     },
+     {
+      path: "/add_edit_supplier",
+      name: "添加/编辑供应商",
+      meta:{
+        is_back:true
       },
-      {
-        path: "/chain_supplier_detail",
-        name: "供应商详情",
-        meta:{
-          is_back:true
-        },
-        component: chain_supplier_detail
-      },
-      {
-        path: "/chain_setting_page",
-        name: "配置",
-        component: chain_setting_page
-      },
-      {
-        path: "/edit_record",
-        name: "修改记录",
-        meta:{
-          is_back:true
-        },
-        component: edit_record
-      },
-      {
-        path: "/chain_permissions_page",
-        name: "权限",
-        component: chain_permissions_page
-      },
-      {
-        path: "/chain_feekback_page",
-        name: "反馈",
-        component: chain_feekback_page
-      },
-      ]
+      component: add_edit_supplier
     },
-    ],
+    {
+      path: "/chain_supplier_detail",
+      name: "供应商详情",
+      meta:{
+        is_back:true
+      },
+      component: chain_supplier_detail
+    },
+    {
+      path: "/chain_setting_page",
+      name: "配置",
+      component: chain_setting_page
+    },
+    {
+      path: "/edit_record",
+      name: "修改记录",
+      meta:{
+        is_back:true
+      },
+      component: edit_record
+    },
+    {
+      path: "/chain_permissions_page",
+      name: "权限",
+      component: chain_permissions_page
+    },
+    {
+      path: "/chain_feekback_page",
+      name: "反馈",
+      component: chain_feekback_page
+    },
+    ]
   },
   ],
+},
+],
 });
 
 // router.beforeEach((to, from, next) => {

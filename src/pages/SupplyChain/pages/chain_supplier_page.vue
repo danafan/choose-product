@@ -103,9 +103,23 @@
 				data:{},				//获取的数据
 			}
 		},
-		created(){
+		beforeRouteLeave(to,from,next){
+			if(to.path == '/chain_supplier_detail' || to.path == '/add_edit_supplier'){	
+				from.meta.use_cache = true;
+			}else{
+				from.meta.use_cache = false;
+			}
+			next();
+		},
+		activated(){
+			if(!this.$route.meta.use_cache){
+				this.supplier_name = "";
+				this.main_business = "";
+				this.page = 1;
+			}
 			//获取供应商列表
 			this.supplierManagerList();
+			this.$route.meta.use_cache = false;
 		},
 		destroyed() {
 			window.removeEventListener("resize", () => {});
@@ -180,7 +194,7 @@
 						if(res.data.code == 1){
 							this.$message.success(res.data.msg);
 							//获取供应商列表
-    						this.supplierManagerList();
+							this.supplierManagerList();
 						}else{
 							this.$message.warning(res.data.msg);
 						}

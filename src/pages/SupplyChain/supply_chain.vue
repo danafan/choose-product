@@ -28,10 +28,10 @@
 				<!-- <router-view></router-view> -->
 
 				<keep-alive>
-					<router-view v-if="$route.meta.keepAlive">
+					<router-view v-if="$route.meta.keep_alive">
 					</router-view>
 				</keep-alive>
-				<router-view v-if="!$route.meta.keepAlive"></router-view>
+				<router-view v-if="!$route.meta.keep_alive"></router-view>
 			</div>
 		</div>
 	</div>
@@ -45,11 +45,12 @@
 				title:"",			//标题
 				is_back:false,
 				is_record:false,
-				show_record:false
+				show_record:false,
 			}
 		},
 		watch:{
 			$route:function(to,from){
+				//设置返回按钮
 				this.is_back = to.meta.is_back;
 				if(to.query.supplier_type){	//供应链中心（供应商）
 					this.title = to.query.supplier_type == '1'?"添加供应商":"编辑供应商";
@@ -78,6 +79,9 @@
 		computed: {
 			menu_arr() {
 				return this.$store.state.menu_list;
+			},
+			is_cache() {
+				return this.$store.state.is_cache;
 			}
 		},
 		created(){

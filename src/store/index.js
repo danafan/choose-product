@@ -42,7 +42,7 @@ const store = new Vuex.Store({
     //设置当前亮下标
     setIndex(state, active_index){
       state.active_index = active_index;
-    }
+    },
   },
   actions: {},
 });
