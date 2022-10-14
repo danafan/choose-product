@@ -246,6 +246,22 @@
 				<el-button size="mini" type="primary" @click="confirmRemark">提交</el-button>
 			</div>
 		</el-dialog>
+		<!-- 拒绝弹窗 -->
+		<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" destroy-on-close @close="err_msg = ''" :visible.sync="refused_dialog" width="30%">
+			<div slot="title" class="dialog_title">
+				<div>确认拒绝？</div>
+				<img class="close_icon" src="../../../static/close_icon.png" @click="refused_dialog = false">
+			</div>
+			<div class="remark_content">
+				<div style="color: red;margin-bottom: 5px">（*必填）</div>
+				<el-input type="textarea" :rows="3" placeholder="请输入拒绝原因" v-model="err_msg">
+				</el-input>
+			</div>
+			<div slot="footer" class="dialog_footer">
+				<el-button size="mini" @click="refused_dialog = false">关闭</el-button>
+				<el-button size="mini" type="primary" @click="confirmRefused">提交</el-button>
+			</div>
+		</el-dialog>
 	</div>
 </template>
 <style lang="less" scoped>
@@ -371,6 +387,8 @@
 				remark_dialog:false,
 				select_id:"",			//当前点击的记录ID
 				remark:"",				//备注内容
+				refused_dialog:false,	//拒绝弹窗
+				err_msg:"",				//拒绝备注
 
 			}
 		},
@@ -611,33 +629,8 @@
 						});          
 					});
 				}else{		//拒绝
-					this.$prompt('请输入拒绝原因（必填）', '确认拒绝？', {
-						confirmButtonText: '确定',
-						cancelButtonText: '取消',
-					}).then(({ value }) => {
-						if(!value){
-							this.$message.warning('请输入拒绝原因');
-						}else{
-							let arg = {
-								select_id:id,
-								err_msg:value
-							}
-							resource.refuseSelected(arg).then(res => {
-								if(res.data.code == 1){
-									this.$message.success(res.data.msg);
-									//获取列表
-									this.getGoodsList();
-								}else{
-									this.$message.warning(res.data.msg);
-								}
-							})
-						}
-					}).catch(() => {
-						this.$message({
-							type: 'info',
-							message: '取消'
-						});       
-					});
+					this.select_id = id;
+					this.refused_dialog = true;
 				}
 			},
 			//点击添加备注
@@ -696,6 +689,27 @@
 					});
 				});
 			},
+			//提交拒绝
+			confirmRefused(){
+				if(this.err_msg == ''){
+					this.$message.warning('请输入拒绝原因');
+				}else{
+					let arg = {
+						select_id:this.select_id,
+						err_msg:this.err_msg
+					}
+					resource.refuseSelected(arg).then(res => {
+						if(res.data.code == 1){
+							this.refused_dialog = false
+							this.$message.success(res.data.msg);
+							//获取列表
+							this.getGoodsList();
+						}else{
+							this.$message.warning(res.data.msg);
+						}
+					})
+				}
+			}
 		},
 		components:{
 			TableTitle,

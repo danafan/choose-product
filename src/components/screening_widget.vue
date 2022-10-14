@@ -1,62 +1,69 @@
 <template>
 	<div class="screen_container">
 		<div class="total_num">共有{{total_num}}件相关商品</div>
-		<div class="selected_box" @click="checkFn">
+		<div class="selected_box" @click.stop="checkFn">
 			<div class="selected_left">
 				<div>已选条件</div>
-				<img class="right_arrow" src="../static/down_arrow.png" v-if="page_type == 'index'">
-				<div v-if="supplier_list.length > 0 && page_type == 'index'">{{supplier_list[supplier_index].supplier_name}}</div>
-				<img class="right_arrow" src="../static/down_arrow.png">
-				<div v-if="market_list.length > 0">{{market_list[market_index].market_name}}</div>
-				<img class="right_arrow" src="../static/down_arrow.png">
-				<div v-if="category_list.length > 0">{{category_list[category_index].category_name}}</div>
-				<img class="right_arrow" src="../static/down_arrow.png">
-				<div v-if="class_list.length > 0">{{class_list[class_index].classification_name}}</div>
-				<img class="right_arrow" src="../static/down_arrow.png">
-				<div v-if="style_list.length > 0">{{style_list[style_index].shooting_style_name}}</div>
-				<img class="right_arrow" src="../static/down_arrow.png">
-				<div v-if="rating_list.length > 0">{{rating_list[rating_index].grade_name}}</div>
+				<div class="tj_row" v-if="supplier_index == 0 && market_index == 0 && category_index == 0 && class_index == 0 && style_index == 0 && rating_index == 0">
+					<img class="right_arrow" src="../static/down_arrow.png">
+					<div>全部</div>
+				</div>
+				<div class="tj_row" v-else>
+					<img class="right_arrow" src="../static/down_arrow.png" v-if="page_type == 'index'">
+					<div v-if="supplier_list.length > 0 && page_type == 'index'">{{supplier_list[supplier_index].supplier_name}}</div>
+					<img class="right_arrow" src="../static/down_arrow.png">
+					<div v-if="market_list.length > 0">{{market_list[market_index].market_name}}</div>
+					<img class="right_arrow" src="../static/down_arrow.png">
+					<div v-if="category_list.length > 0">{{category_list[category_index].category_name}}</div>
+					<img class="right_arrow" src="../static/down_arrow.png">
+					<div v-if="class_list.length > 0">{{class_list[class_index].classification_name}}</div>
+					<img class="right_arrow" src="../static/down_arrow.png">
+					<div v-if="style_list.length > 0">{{style_list[style_index].shooting_style_name}}</div>
+					<img class="right_arrow" src="../static/down_arrow.png">
+					<div v-if="rating_list.length > 0">{{rating_list[rating_index].grade_name}}</div>
+				</div>
+				
 			</div>
 			<div class="selected_right">
-				<div>{{title}}</div>
-				<img class="down_arrow" :class="{'rotate':show_conditions_box == true}" src="../static/down_arrow.png">
+				<div>{{screen_open?'收起':'展开'}}</div>
+				<img class="down_arrow" :class="{'rotate':screen_open == true}" src="../static/down_arrow.png">
 			</div>
 		</div>
-		<el-card class="conditions_box" v-if="show_conditions_box">
+		<el-card class="conditions_box" v-if="screen_open">
 			<div class="conditions_row" v-if="page_type == 'index'">
 				<div class="lable">供应商：</div>
 				<div class="list">
-					<div class="item" :class="{'active_item':supplier_index == index}" v-for="(item,index) in supplier_list" @click="checkIndex('supplier',index)">{{item.supplier_name}}</div>
+					<div class="item" :class="{'active_item':supplier_index == index}" v-for="(item,index) in supplier_list" @click.stop="checkIndex('supplier',index)">{{item.supplier_name}}</div>
 				</div>
 			</div>
 			<div class="conditions_row">
 				<div class="lable">市场：</div>
 				<div class="list">
-					<div class="item" :class="{'active_item':market_index == index}" v-for="(item,index) in market_list" @click="checkIndex('market',index)">{{item.market_name}}</div>
+					<div class="item" :class="{'active_item':market_index == index}" v-for="(item,index) in market_list" @click.stop="checkIndex('market',index)">{{item.market_name}}</div>
 				</div>
 			</div>
 			<div class="conditions_row">
 				<div class="lable">类目：</div>
 				<div class="list">
-					<div class="item" :class="{'active_item':category_index == index}" v-for="(item,index) in category_list" @click="checkIndex('category',index)">{{item.category_name}}</div>
+					<div class="item" :class="{'active_item':category_index == index}" v-for="(item,index) in category_list" @click.stop="checkIndex('category',index)">{{item.category_name}}</div>
 				</div>
 			</div>
 			<div class="conditions_row">
 				<div class="lable">分类：</div>
 				<div class="list">
-					<div class="item" :class="{'active_item':class_index == index}" v-for="(item,index) in class_list" @click="checkIndex('class',index)">{{item.classification_name}}</div>
+					<div class="item" :class="{'active_item':class_index == index}" v-for="(item,index) in class_list" @click.stop="checkIndex('class',index)">{{item.classification_name}}</div>
 				</div>
 			</div>
 			<div class="conditions_row">
 				<div class="lable">拍摄风格：</div>
 				<div class="list">
-					<div class="item" :class="{'active_item':style_index == index}" v-for="(item,index) in style_list" @click="checkIndex('style',index)">{{item.shooting_style_name}}</div>
+					<div class="item" :class="{'active_item':style_index == index}" v-for="(item,index) in style_list" @click.stop="checkIndex('style',index)">{{item.shooting_style_name}}</div>
 				</div>
 			</div>
 			<div class="conditions_row none_border">
 				<div class="lable">供应商评级：</div>
 				<div class="list">
-					<div class="item" :class="{'active_item':rating_index == index}" v-for="(item,index) in rating_list" @click="checkIndex('rating',index)">{{item.grade_name}}</div>
+					<div class="item" :class="{'active_item':rating_index == index}" v-for="(item,index) in rating_list" @click.stop="checkIndex('rating',index)">{{item.grade_name}}</div>
 				</div>
 			</div>
 		</el-card>
@@ -96,8 +103,6 @@
 				style_list:[],			//拍摄风格列表
 				rating_index:0,			//选中的供应商评级下标
 				rating_list:[],			//供应商评级列表
-				show_conditions_box:false,		//默认下拉条件不显示
-				title:"展开",					//下拉条件按钮名称
 				sort_list:[{
 					name:'销量',
 					key:'sales',
@@ -174,6 +179,11 @@
 			//获取筛选条件列表
 			this.getScreenList();
 		},
+		computed: {
+			screen_open() {
+				return this.$store.state.screen_open;
+			},
+		},
 		methods:{
 			//获取筛选条件列表
 			getScreenList(){
@@ -225,8 +235,7 @@
 			},
 			//点击展开或收起
 			checkFn(){
-				this.show_conditions_box = !this.show_conditions_box;
-				this.title = this.show_conditions_box?'收起':'展开';
+				this.$store.commit("setScreen", true);
 			},
 			// 切换下拉框筛选条件
 			checkIndex(type,index){
@@ -287,7 +296,6 @@
 			},
 			//获取当前条件并传递
 			callbackFn(){	
-				console.log(this.supplier_index)
 				var arg = {
 					start_time:this.date && this.date.length > 0?this.date[0]:"",
 					end_time:this.date && this.date.length > 0?this.date[1]:"",
@@ -356,6 +364,10 @@
 	.selected_left{
 		display: flex;
 		align-items: center;
+		.tj_row{
+			display: flex;
+			align-items: center;
+		}
 		.right_arrow{
 			margin-left: 5rem;
 			margin-right: 5rem;

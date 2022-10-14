@@ -18,15 +18,6 @@
 				<div class="edit_record" v-if="show_record" @click="$router.push('/edit_record')">修改记录</div>
 			</div>
 			<div class="right_content_box">
-				<!-- <router-view v-slot="{ Component }">
-					<keep-alive>
-						<component :is="Component" :key="$route.name"  v-if="$route.meta.keepAlive"/>
-					</keep-alive>
-					<component :is="Component" :key="$route.name" v-if="!$route.meta.keepAlive"/>
-				</router-view>  -->
-
-				<!-- <router-view></router-view> -->
-
 				<keep-alive>
 					<router-view v-if="$route.meta.keep_alive">
 					</router-view>
@@ -80,9 +71,6 @@
 			menu_arr() {
 				return this.$store.state.menu_list;
 			},
-			is_cache() {
-				return this.$store.state.is_cache;
-			}
 		},
 		created(){
 			var chain_setting_arr = [];

@@ -167,7 +167,7 @@
 	}
 	.down_box{
 		display:flex;
-		padding:30rem 0;
+		padding:30rem;
 		.upload_box{
 			margin-left: 10px;
 			position: relative;

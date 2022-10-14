@@ -48,7 +48,6 @@
 					</el-table-column>
 					<el-table-column label="操作" width="120" fixed="right">
 						<template slot-scope="scope">
-							<el-button type="text" size="small" @click="cancelSelected(scope.row.select_id)" v-if="scope.row.audit_status == 2">取消</el-button>
 							<el-button type="text" size="small" @click="undoSelected(scope.row.select_id)" v-if="scope.row.audit_status == 1">撤销</el-button>
 							<el-button type="text" size="small" @click="selectedInfo(scope.row.select_id)">详情</el-button>
 						</template>
@@ -172,7 +171,7 @@
 					<div class="value" v-if="goods_info.audit_status == 2">已确认</div>
 					<div class="value" v-if="goods_info.audit_status == 3">已取消</div>
 				</div>
-				<div class="detail_row">
+				<div class="detail_row" v-if="goods_info.audit_status == 4">
 					<div class="lable">拒绝原因</div>
 					<div class="value">{{goods_info.refund_reason}}</div>
 				</div>

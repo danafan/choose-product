@@ -350,21 +350,14 @@
 					if (arg.i_id.indexOf(";") > -1) {
 						arg.i_id = arg.i_id.replaceAll(";", ",");
 					}
-					if(this.goods_type == '1'){	//添加
-						resource.addGoods(arg).then(res => {
-							if(res.data.code == 1){
-								this.$message.success(res.data.msg);
-								this.$router.go(-1);
-							}else{
-								this.$message.warning(res.data.msg);
-							}
-						})
-					}else{			//编辑或重新提交
-						if(this.page_type == 'goods'){	//商品管理
-							if(this.goods_type == '5'){
-								arg.type = 1;
-							}
-							resource.editGoodsPost(arg).then(res => {
+
+					this.$confirm(`确认${this.goods_type == '1'?'添加':'编辑'}此商品吗?`, '提示', {
+						confirmButtonText: '确定',
+						cancelButtonText: '取消',
+						type: 'warning'
+					}).then(() => {
+						if(this.goods_type == '1'){	//添加
+							resource.addGoods(arg).then(res => {
 								if(res.data.code == 1){
 									this.$message.success(res.data.msg);
 									this.$router.go(-1);
@@ -372,17 +365,36 @@
 									this.$message.warning(res.data.msg);
 								}
 							})
-						}else{		//反馈管理
-							resource.feedBackEditGoodsPost(arg).then(res => {
-								if(res.data.code == 1){
-									this.$message.success(res.data.msg);
-									this.$router.go(-1);
-								}else{
-									this.$message.warning(res.data.msg);
+						}else{			//编辑或重新提交
+							if(this.page_type == 'goods'){	//商品管理
+								if(this.goods_type == '5'){
+									arg.type = 1;
 								}
-							})
+								resource.editGoodsPost(arg).then(res => {
+									if(res.data.code == 1){
+										this.$message.success(res.data.msg);
+										this.$router.go(-1);
+									}else{
+										this.$message.warning(res.data.msg);
+									}
+								})
+							}else{		//反馈管理
+								resource.feedBackEditGoodsPost(arg).then(res => {
+									if(res.data.code == 1){
+										this.$message.success(res.data.msg);
+										this.$router.go(-1);
+									}else{
+										this.$message.warning(res.data.msg);
+									}
+								})
+							}
 						}
-					}
+					}).catch(() => {
+						this.$message({
+							type: 'info',
+							message: '已取消'
+						});          
+					});
 				}
 			},
 			//审批

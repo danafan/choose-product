@@ -1,5 +1,6 @@
 import http from "./request.js";
 let path = {
+  showNotice:'index/show_notice',                     //页面顶部公告列表
   loginOut:'loginquit',                               //退出登录
   getAppKey:'scancodes/getappkey',                    //获取appkey
   getUserInfo:'scancodes/getuserinfo',                //获取用户信息
@@ -25,6 +26,10 @@ let path = {
   supplierGoods:'supplier/goods',                     //供应商商品列表
 } 
 export default {
+  //页面顶部公告列表
+  showNotice(params) {
+    return http.get(path.showNotice, params);
+  },
   //退出登录
   loginOut(params) {
     return http.get(path.loginOut, params);

@@ -5,7 +5,7 @@
 			placement="right-start"
 			trigger="hover"
 			>
-			<el-image fit="scale-down" :src="domain + info.img"></el-image>
+			<el-image class="popover_image" fit="scale-down" :src="domain + info.img"></el-image>
 			<el-image class="goods_img" :src="domain + info.img" slot="reference" fit="scale-down"></el-image>
 		</el-popover>
 	</div>
@@ -151,7 +151,7 @@
 			<div class="upload_title"><span>*</span>反馈内容</div>
 			<el-input type="textarea" :rows="5" placeholder="请描述哪条描述数据不对，或者缺失，我们尽快调整" v-model="feedback_content">
 			</el-input>
-			<div class="upload_title"><span>*</span>上传截图</div>
+			<div class="upload_title">上传截图</div>
 			<UploadFile :img_list="feedback_img" :is_multiple="true" :current_num="feedback_img.length" :max_num="5" @callbackFn="uploadFn"/>
 			<div class="upload_toast">上传“有效截图”，可以让问题优先被发现哦！最多可以上传5张截图</div>
 		</div>
@@ -199,11 +199,13 @@
 	width: 240rem !important;
 	height: 240rem !important; 
 }
-/*.el-popover,.el-popper{
-	max-width: 450px!important;
-	}*/
+.popover_image{
+	height: 400px!important;
+	width: 400px!important;
+}
 </style>
 <style lang="less" scoped>
+
 .goods_item{
 	margin-bottom: 20rem;
 	border:1px solid #EDEDED;
@@ -733,8 +735,6 @@
 			confirmFeekBack(){
 				if(this.feedback_content == ''){
 					this.$message.warning('请输入反馈内容!');
-				}else if(this.feedback_img.length == 0){
-					this.$message.warning('请上传反馈截图!');
 				}else{
 					let arg = {
 						style_id:this.info.style_id,

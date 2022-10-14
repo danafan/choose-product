@@ -242,6 +242,8 @@
 							}
 						})
 					}
+					//获取公告列表
+					this.$store.dispatch('getNotice')
 				}
 			},
 			//点击删除

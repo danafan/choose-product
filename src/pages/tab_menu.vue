@@ -1,11 +1,11 @@
 <template>
-  <div class="container">
+  <div class="container" @click="closeFn">
     <div class="page_header">
       <!-- logo -->
       <img class="logo_icon" src="../static/logo_icon.png" v-if="active_path == '/supply_chain' || notice_list.length == 0">
       <!-- 公告 -->
       <el-popover placement="bottom-end" width="420" trigger="hover" v-else>
-        <el-table :data="notice_list" size="mini" :show-header="false" @row-click="noticeDetail">
+        <el-table :data="notice_list" max-height="180px" size="mini" :show-header="false" @row-click="noticeDetail">
           <el-table-column width="248" property="notice_content" label="内容">
             <template slot-scope="scope">
               <div class="table_notice content">{{scope.row.notice_title}}</div>
@@ -184,6 +184,8 @@
       };
     },
     created() {
+      //获取公告列表
+      this.getNotice();
       this.username = localStorage.getItem("ding_user_name");
       this.$router.push(this.active_path)
     },
@@ -206,14 +208,24 @@
       },
     },
     methods: {
+      //全局关闭筛选项下拉
+      closeFn(){
+        this.$store.commit("setScreen", false);
+      },
+      //获取公告列表
+      getNotice(){
+        this.$store.dispatch('getNotice')
+      },
       //点击切换导航
       checkIndex(index){
         this.$store.commit("setIndex", index);
         localStorage.setItem("active_index",index);
         let active_path = this.menu_list[index].web_url;
-        localStorage.setItem("active_path",active_path);
-        this.$store.commit("setPath", active_path);
-        this.$router.push(active_path);
+        if(this.active_path != active_path){
+          localStorage.setItem("active_path",active_path);
+          this.$store.commit("setPath", active_path);
+          this.$router.push(active_path);
+        }
       },
       //查看公告
       noticeDetail(row, column, event){
