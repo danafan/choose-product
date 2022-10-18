@@ -356,8 +356,8 @@
 					name:'已确认',
 					id:2
 				},{
-					name:'已取消',
-					id:3
+					name:'已拒绝',
+					id:4
 				}],						//需求状态
 				status_id:"",			//选中的需求状态
 				dept_list:[],			//所有部门列表
@@ -548,7 +548,7 @@
 					category_id:this.category_ids.join(','),
 					market_id:this.market_ids.join(','),
 					classification_id:this.classification_ids.join(','),
-					shooting_id:this.shooting_style_ids.join(','),
+					shooting_style_id:this.shooting_style_ids.join(','),
 					page:this.page,
 					pagesize:10
 				}

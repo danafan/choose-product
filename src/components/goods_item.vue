@@ -10,7 +10,7 @@
 		</el-popover>
 	</div>
 	<img class="image_box" src="../static/load_failure.png" @click="getMoreImage" v-else>
-	<div class="goods_info" @click="getDetail">
+	<div class="goods_info" @click="getDetail" @mousedown="mouseDownFn" @mouseup="mouseUpFn">
 		<div class="price_cate">
 			<div class="price">
 				<div class="p_icon">¥</div>
@@ -524,6 +524,9 @@
 				active_tab_index:0,		//选中的下标
 				style_data:[],			//风格图数据
 				commodity_data:[],		//封面图数据
+				firstTime: '', 			// mousedown的时间戳
+				lastTime: '', 			// mouseup的时间戳
+				isClick: false, 		// false--禁止点击，true--可点击
 			}
 		},
 		props:{
@@ -551,6 +554,17 @@
 			}
 		},
 		methods:{
+			mouseDownFn () {
+				this.firstTime = new Date().getTime();
+			},
+			mouseUpFn () {
+				this.lastTime = new Date().getTime();
+				if((this.lastTime - this.firstTime) < 200){
+					this.isClick = true
+				} else {
+					this.isClick = false
+				}
+			},
 			//点击选款
 			selectStyle(style_id){
 				//获取选款轮播图
@@ -759,6 +773,7 @@
 			},
     		//点击跳转详情
     		getDetail(){
+    			if(!this.isClick) return;
     			let active_path = `/goods_detail?style_id=${this.info.style_id}`;
     			localStorage.setItem("active_path",active_path);
     			this.$store.commit("setPath", active_path);

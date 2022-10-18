@@ -61,6 +61,7 @@
 					}
 				}else if(to.path == '/chain_setting_page'){	//判断是否显示修改记录
 					this.show_record = this.is_record?true:false;
+					this.title = to.name;
 				}else{
 					this.title = to.name;
 					this.show_record = false;
