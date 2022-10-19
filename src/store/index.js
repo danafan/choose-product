@@ -13,7 +13,8 @@ const store = new Vuex.Store({
     active_path:localStorage.getItem("active_path")?localStorage.getItem("active_path"):"",       //当前的导航地址
     active_index:localStorage.getItem("active_index")?localStorage.getItem("active_index"):"",       //当前的导航地址
     screen_open:false,    //查询条件下拉框是否展开
-    notice_list:[],     //公告列表
+    notice_list:[],       //公告列表
+    nuread_num:0,         //未读公告数量
   },
   mutations: {
     //设置导航列表
@@ -21,8 +22,9 @@ const store = new Vuex.Store({
       state.menu_list = menu_list;
     },
     //设置公告列表
-    setNoticeList(state, notice_list){
-      state.notice_list = notice_list;
+    setNoticeList(state, notice_data){
+      state.notice_list = notice_data.list;
+      state.nuread_num = notice_data.nuread_num;
     },
     //设置购物车
     setCarGoods(state, arg) {
@@ -55,7 +57,7 @@ const store = new Vuex.Store({
     getNotice (context) {
       resource.showNotice().then(res => {
        if(res.data.code == 1){
-         context.commit('setNoticeList', res.data.data.list)
+         context.commit('setNoticeList', res.data.data)
        }else{
         Message.warning(res.data.msg);
        }

@@ -36,7 +36,7 @@ const router = new Router({
   {
     path: "/tab_menu",
     component: tab_menu,
-    name: "导航页",
+    name: "",
     children: [
     {
       path: "/notice_page",
@@ -55,7 +55,7 @@ const router = new Router({
     },
     {
       path: "/selected",
-      name: "选中",
+      name: "已选",
       component: selected
     },
     {

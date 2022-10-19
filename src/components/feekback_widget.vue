@@ -51,8 +51,6 @@
 			confirmFeekBack(){
 				if(this.feedback_content == ''){
 					this.$message.warning('请输入反馈内容!');
-				}else if(this.feedback_img.length == 0){
-					this.$message.warning('请上传反馈截图!');
 				}else{
 					let arg = {
 						style_id:this.style_id,

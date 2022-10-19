@@ -20,7 +20,7 @@
         <div class="message_box" slot="reference">
           <div class="message_icon_box">
             <img class="message_icon" src="../static/message_icon.png">
-            <div class="num">{{notice_list.length}}</div>
+            <div class="num">{{nuread_num}}</div>
           </div>
           <div class="message_content">{{notice_list[0].notice_title}}</div>
         </div>
@@ -198,6 +198,10 @@
       notice_list() {
         return this.$store.state.notice_list;
       },
+      //未读公告数
+      nuread_num() {
+        return this.$store.state.nuread_num;
+      },
       //当前路由
       active_path() {
         return this.$store.state.active_path;
@@ -249,7 +253,6 @@
             this.$message.warning(res.data.msg);
           }
         })
-        console.log("asd")
       }
     }
   };

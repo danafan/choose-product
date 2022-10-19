@@ -119,6 +119,7 @@
 			justify-content: space-between;
 		}
 		.bottom_content{
+			min-height: 500px;
 			margin-top: 20rem;
 			border:1px solid #E5E5E5;
 			.content_top_tab{

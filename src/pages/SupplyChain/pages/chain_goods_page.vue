@@ -49,7 +49,7 @@
 					</el-date-picker>
 				</el-form-item>
 				<el-form-item label="款式编码：">
-					<el-input placeholder="款式编码" v-model="search">
+					<el-input placeholder="款式编码" clearable v-model="search">
 					</el-input>
 				</el-form-item>
 				<el-form-item class="form_item">
