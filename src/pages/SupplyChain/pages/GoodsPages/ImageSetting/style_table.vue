@@ -1,7 +1,7 @@
 <template>
 	<div class="setting_content">
 		<el-card class="card_box" id="card_box">
-			<TableTitle :title="`商品编号：${style_id}`" id="table_title">
+			<TableTitle :title="`商品编号：${style_name}`" id="table_title">
 				<el-button size="mini" type="primary" @click="addFn('1')" v-if="button_list.add == 1">上传风格图</el-button>
 			</TableTitle>
 			<el-table size="mini" :data="data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" v-loading="loading">
@@ -84,7 +84,12 @@
 			style_id:{
 				type:String,
 				default:""
-			}
+			},
+			//商品编号
+			style_name:{
+				type:String,
+				default:""
+			},
 		},
 		created(){
 			//获取风格图列表

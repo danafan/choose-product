@@ -117,6 +117,7 @@
 			uploadFn(){
 				if (this.$refs.imgUpload.files.length > 0) {
 					let files = this.$refs.imgUpload.files;
+					console.log(files[0])
 					//判断是否多选
 					if(this.is_multiple == true){
 						if(this.current_num + this.$refs.imgUpload.files.length > this.max_num){

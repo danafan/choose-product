@@ -6,8 +6,8 @@
 				<div class="active_line" v-if="active_index == index"></div>
 			</div>
 		</div>
-		<StyleTable :style_id="style_id" v-if="active_index == 0"/>
-		<GoodsTable :style_id="style_id" v-if="active_index == 1"/>
+		<StyleTable :style_id="style_id" :style_name="style_name" v-if="active_index == 0"/>
+		<GoodsTable :style_id="style_id" :style_name="style_name" v-if="active_index == 1"/>
 	</div>
 </template>
 <script>
@@ -17,12 +17,14 @@
 		data(){
 			return{
 				style_id:"",					//商品ID
+				style_name:"",
 				tab_list:['风格图','商品图'],		//顶部导航列表
 				active_index:0,					//当前选中的导航下标
 			}
 		},
 		created(){
 			this.style_id = this.$route.query.style_id;
+			this.style_name = this.$route.query.style_name;
 		},
 		components:{
 			StyleTable,

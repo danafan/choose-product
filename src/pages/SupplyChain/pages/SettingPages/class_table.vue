@@ -162,7 +162,7 @@
 				commonResource.ajaxCateList().then(res => {
 					if(res.data.code == 1){
 						this.cate_list = res.data.data;
-						if(type == '2'){
+						if(this.type == '2'){
 							//获取分类详情
 							this.getClassInfo();
 						}

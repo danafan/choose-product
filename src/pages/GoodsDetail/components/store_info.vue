@@ -6,10 +6,10 @@
 				<div class="store_info_lable">供应商</div>
 				<div class="store_info_value">{{goods_info.supplier_name}}</div>
 			</div>
-			<div class="store_info_row">
+			<!-- <div class="store_info_row">
 				<div class="store_info_lable">编码</div>
 				<div class="store_info_value">{{goods_info.supplier_id}}</div>
-			</div>
+			</div> -->
 			<div class="store_info_row">
 				<div class="store_info_lable">主营</div>
 				<div class="store_info_value">{{goods_info.main_business}}</div>
