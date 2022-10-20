@@ -20,7 +20,7 @@
         <div class="message_box" slot="reference">
           <div class="message_icon_box">
             <img class="message_icon" src="../static/message_icon.png">
-            <div class="num">{{nuread_num}}</div>
+            <div class="num" v-if="nuread_num > 0">{{nuread_num}}</div>
           </div>
           <div class="message_content">{{notice_list[0].notice_title}}</div>
         </div>

@@ -22,7 +22,8 @@
 				<el-table-column prop="feedback_content" label="反馈内容" show-overflow-tooltip align="center"></el-table-column>
 				<el-table-column label="反馈截图" width="200">
 					<template slot-scope="scope">
-						<el-image :z-index="2006" class="image" :src="scope.row.images[0]" fit="scale-down" :preview-src-list="scope.row.images"></el-image>
+						<el-image :z-index="2006" class="image" :src="scope.row.images[0]" fit="scale-down" :preview-src-list="scope.row.images" v-if="scope.row.images.length > 0"></el-image>
+						<div class="ddd" v-else>暂无图片</div>
 					</template>
 				</el-table-column>
 				<el-table-column prop="feedback_real_name" width="160" label="反馈人" show-overflow-tooltip align="center"></el-table-column>
@@ -109,7 +110,6 @@
 							item.images = images;
 						})
 						this.data = data;
-						console.log(this.data)
 						this.total = res.data.data.total;
 						this.button_list = res.data.data.button_list;
 					}else{

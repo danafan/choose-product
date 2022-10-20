@@ -12,7 +12,7 @@
 		</el-card>
 		<el-card class="card_box" id="card_box">
 			<TableTitle title="数据列表" id="table_title">
-				<el-button size="mini" type="primary" @click="addFn('1')">添加公告</el-button>
+				<el-button size="mini" type="primary" @click="addFn('1')" v-if="button_list.add == 1">添加公告</el-button>
 			</TableTitle>
 			<el-table size="mini" :data="data.data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" v-loading="loading">
 				<el-table-column label="公告标题" prop="notice_title" show-overflow-tooltip></el-table-column>
@@ -24,8 +24,8 @@
 				<el-table-column label="操作" width="140" fixed="right">
 					<template slot-scope="scope">
 						<el-button type="text" size="small" disabled v-if="scope.row.is_online">已发布</el-button>
-						<el-button type="text" size="small" @click="addFn('2',scope.row.notice_id)" v-if="!scope.row.is_online">编辑</el-button>
-						<el-button type="text" size="small" @click="deleteFn(scope.row.notice_id)">删除</el-button>
+						<el-button type="text" size="small" @click="addFn('2',scope.row.notice_id)" v-if="!scope.row.is_online || button_list.edit == 1">编辑</el-button>
+						<el-button type="text" size="small" @click="deleteFn(scope.row.notice_id)" v-if="button_list.del == 1">删除</el-button>
 					</template>
 				</el-table-column>
 			</el-table>
@@ -98,6 +98,7 @@
 				max_height:0,	
 				page:1,
 				data:{},				//获取的数据
+				button_list:{},
 				show_dialog:false,		//添加或编辑弹窗
 				dialog_title:"",		//弹窗标题
 				type:"",				//弹窗类型（1:添加；2:编辑）
@@ -162,6 +163,7 @@
     						item.is_online = is_online;
     					})
     					this.data = data;
+    					this.button_list = data.button_list;
     				}else{
     					this.$message.warning(res.data.msg);
     				}

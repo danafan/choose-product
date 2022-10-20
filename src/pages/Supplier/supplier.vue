@@ -3,7 +3,7 @@
 		<div class="padding_page_content">
 			<SearchWidget @callback="searchFn" placeholder="供应商搜索"/>
 			<el-card class="card_box" id="card_box" v-loading="loading">
-				<div class="list_content" :style="{height: scroll_height}">
+				<div class="list_content" :style="{height: scroll_height}" v-if="supplier_list.length > 0">
 					<div class="supplier_item" v-for="item in supplier_list">
 						<div class="text_info">
 							<div class="info_item">供应商：{{item.supplier_name}}</div>
@@ -23,6 +23,7 @@
 						</div>
 					</div>
 				</div>
+				<EmptyPage :style="{height:scroll_height}" toast="暂无数据～" :is_loading="loading" v-else/>
 				<PaginationWidget id="pagination" :total="total" :page="page" @checkPage="checkPage"/>
 			</el-card>
 			<CarWidget/>
@@ -33,12 +34,13 @@
 	import resource from '../../api/resource.js'
 
 	import SearchWidget from '../../components/search_widget.vue'
+	import EmptyPage from '../../components/empty_page.vue'
 	import CarWidget from '../../components/car_widget.vue'
 	import PaginationWidget from '../../components/pagination_widget.vue'
 	export default{
 		data(){
 			return{
-				loading:false,
+				loading:true,
 				supplier_list:[],		//供应商列表
 				total:0,				//总数
 				page:1,
@@ -128,6 +130,7 @@
 		},
 		components:{
 			SearchWidget,
+			EmptyPage,
 			CarWidget,
 			PaginationWidget
 		}

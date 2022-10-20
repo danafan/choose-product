@@ -15,7 +15,7 @@
 		</el-card>
 		<el-card class="card_box" id="card_box">
 			<TableTitle title="数据列表" id="table_title">
-				<el-button size="mini" type="primary" @click="addFn('1')">添加</el-button>
+				<el-button size="mini" type="primary" @click="addFn('1')" v-if="button_list.add == 1">添加</el-button>
 			</TableTitle>
 			<el-table size="mini" :data="data.data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" v-loading="loading">
 				<el-table-column label="供应商名称" prop="supplier_name" show-overflow-tooltip></el-table-column>
@@ -56,9 +56,9 @@
 				<el-table-column label="评级" prop="grade_name" show-overflow-tooltip></el-table-column>
 				<el-table-column label="操作" width="180" fixed="right">
 					<template slot-scope="scope">
-						<el-button type="text" size="small" @click="getDetail(scope.row.supplier_id)">查看</el-button>
-						<el-button type="text" size="small" @click="addFn('2',scope.row.supplier_id)">编辑</el-button>
-						<el-button type="text" size="small" @click="deleteFn(scope.row.supplier_id)">删除</el-button>
+						<el-button type="text" size="small" @click="getDetail(scope.row.supplier_id)" v-if="button_list.view == 1">查看</el-button>
+						<el-button type="text" size="small" @click="addFn('2',scope.row.supplier_id)" v-if="button_list.edit == 1">编辑</el-button>
+						<el-button type="text" size="small" @click="deleteFn(scope.row.supplier_id)" v-if="button_list.del == 1">删除</el-button>
 					</template>
 				</el-table-column>
 			</el-table>
@@ -101,6 +101,7 @@
 				max_height:0,	
 				page:1,
 				data:{},				//获取的数据
+				button_list:{}
 			}
 		},
 		beforeRouteLeave(to,from,next){
@@ -157,6 +158,7 @@
     				if(res.data.code == 1){
     					this.loading = false;
     					this.data = res.data.data;
+    					this.button_list =  res.data.data.button_list;
     				}else{
     					this.$message.warning(res.data.msg);
     				}

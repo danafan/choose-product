@@ -65,9 +65,12 @@
 		methods:{
 			//设置默认元素
 			setInfoFn(n){
-				this.shared_disk_address = this.goods_info.style_img[n].shared_disk_address;
-				this.net_disk_address = this.goods_info.style_img[n].net_disk_address;
+				this.shared_disk_address = this.goods_info.style_img.length > 0?this.goods_info.style_img[n].shared_disk_address:'';
+				this.net_disk_address = this.goods_info.style_img.length > 0?this.goods_info.style_img[n].net_disk_address:'';
 				let images = [];
+				if( this.goods_info.style_img.length == 0){
+					return;
+				}
 				this.goods_info.style_img[n].img.map(item => {
 					images.push(this.domain + item);
 				})
