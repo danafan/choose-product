@@ -79,8 +79,12 @@
 			<div class="style_row">
 				<div class="style_item" :class="{'active_color':item.is_selected === 1}" v-for="(item,index) in cate_style_list" @click="checkStyle(index)">{{item.name}}</div>
 			</div>
-			<el-date-picker v-model="date" size="mini" type="daterange" unlink-panels value-format="yyyy-MM-dd" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions" @change="callbackFn">
-			</el-date-picker>
+			<div class="date_row">
+				<div class="date_lable">上新时间：</div>
+				<el-date-picker v-model="date" size="mini" type="daterange" unlink-panels value-format="yyyy-MM-dd" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions" @change="callbackFn">
+				</el-date-picker>
+			</div>
+			
 		</div>
 	</div>
 </template>
@@ -235,7 +239,7 @@
 			},
 			//点击展开或收起
 			checkFn(){
-				this.$store.commit("setScreen", true);
+				this.$store.commit("setScreen", !this.screen_open);
 			},
 			// 切换下拉框筛选条件
 			checkIndex(type,index){
@@ -460,6 +464,10 @@
 			margin-right: 58rem;
 			cursor:pointer;
 		}
+	}
+	.date_row{
+		display: flex;
+		align-items: center;
 	}
 	.active_color{
 		color: var(--color);

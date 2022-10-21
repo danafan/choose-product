@@ -17,9 +17,6 @@
     watch:{
       $route:function(n,o){
         document.title = n.name;
-        // if(n.path == '/notice_page' || n.path == '/goods_detail' || n.path == '/car_page' || n.path == '/supplier_detail'){
-        //   document.title = n.name;
-        // }
       }
     },
     methods: {
