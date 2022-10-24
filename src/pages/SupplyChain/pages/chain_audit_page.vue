@@ -14,6 +14,12 @@
 						</el-option>
 					</el-select>
 				</el-form-item>
+				<el-form-item label="发货类型：">
+					<el-select v-model="send_type" clearable multiple filterable collapse-tags placeholder="全部">
+						<el-option v-for="item in send_type_list" :key="item.name" :label="item.name" :value="item.name">
+						</el-option>
+					</el-select>
+				</el-form-item>
 				<el-form-item label="需求部门：">
 					<el-select v-model="select_main_dept_id" clearable multiple filterable collapse-tags placeholder="全部">
 						<el-option v-for="item in dept_list" :key="item.main_dept_id" :label="item.main_dept_name" :value="item.main_dept_id">
@@ -62,6 +68,14 @@
 						</el-option>
 					</el-select>
 				</el-form-item>
+				<el-form-item label="款式编码：">
+					<el-input placeholder="款式编码" clearable v-model="i_id">
+					</el-input>
+				</el-form-item>
+				<el-form-item label="选款日期：">
+					<el-date-picker v-model="date" size="mini" type="daterange" unlink-panels value-format="yyyy-MM-dd" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions">
+					</el-date-picker>
+				</el-form-item>
 				<el-form-item class="form_item">
 					<el-button type="primary" @click="checkPage(1)">查询</el-button>
 				</el-form-item>
@@ -69,13 +83,22 @@
 		</el-card>
 		<el-card class="card_box" id="card_box">
 			<TableTitle title="数据列表" id="table_title">
+				<el-button size="mini" type="primary" v-if="button_list.aff == 1" @click="allCommitFn">批量确认</el-button>
 				<el-button size="mini" type="primary" v-if="button_list.der == 1" @click="exportFn">导出</el-button>
 			</TableTitle>
-			<el-table size="mini" :data="data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" v-loading="loading">
+			<el-table size="mini" :data="data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" @selection-change="handleSelectionChange" v-loading="loading">
+				<el-table-column type="selection" width="55" :selectable="checkboxInit">
+				</el-table-column>
 				<el-table-column label="款号" prop="style_name" show-overflow-tooltip></el-table-column>
 				<el-table-column label="款式编码" show-overflow-tooltip>
 					<template slot-scope="scope">
 						<div v-for="item in scope.row.ksbm">{{item}}</div>
+					</template>
+				</el-table-column>
+				<el-table-column label="对接推单" prop="common_text" show-overflow-tooltip>
+					<template slot-scope="scope">
+						<div v-if="scope.row.abutment_type == 0">否</div>
+						<div v-if="scope.row.abutment_type == 1">是</div>
 					</template>
 				</el-table-column>
 				<el-table-column label="图片" width="120">
@@ -95,6 +118,11 @@
 				<el-table-column label="提交时间" prop="select_time" show-overflow-tooltip></el-table-column>
 				<el-table-column label="共享盘地址" prop="shared_disk_address" show-overflow-tooltip></el-table-column>
 				<el-table-column label="供应商" prop="supplier_name" show-overflow-tooltip></el-table-column>
+				<el-table-column label="选款要求" show-overflow-tooltip>
+					<template slot-scope="scope">
+						<div v-html="scope.row.demand_remark"></div>
+					</template>
+				</el-table-column>
 				<el-table-column label="需求状态" prop="common_text" show-overflow-tooltip>
 					<template slot-scope="scope">
 						<div v-if="scope.row.audit_status == 0">已撤销</div>
@@ -376,6 +404,38 @@
 				shooting_style_ids:[],	//选中的拍摄风格
 				class_list:[],			//分类列表
 				classification_ids:[],	//选中的分类
+				send_type_list:[],		//发货类型列表
+				send_type:[],			//选中的发货类型
+				i_id:"",				//款式编码
+				pickerOptions: {
+					shortcuts: [
+					{
+						text: "今日",
+						onClick(picker) {
+							const start = getNowDate();
+							const end = getNowDate();
+							picker.$emit("pick", [start, end]);
+						},
+					},
+					{
+						text: "近三日",
+						onClick(picker) {
+							const start = getCurrentDate(3);
+							const end = getNowDate();
+							picker.$emit("pick", [start, end]);
+						},
+					},
+					{
+						text: "近七日",
+						onClick(picker) {
+							const start = getCurrentDate(7);
+							const end = getNowDate();
+							picker.$emit("pick", [start, end]);
+						},
+					},
+					],
+				}, 
+				date:[],				//选款日期
 				max_height:0,	
 				page:1,
 				data:[],				//获取的数据
@@ -389,6 +449,7 @@
 				remark:"",				//备注内容
 				refused_dialog:false,	//拒绝弹窗
 				err_msg:"",				//拒绝备注
+				multiple_selection:[]
 
 			}
 		},
@@ -411,6 +472,8 @@
     		this.ajaxStyleList();
     		//分类列表
     		this.ajaxClassList();
+    		//获取所有发货类型
+    		this.getAllDemandSendType();
     		//获取列表
     		this.getGoodsList();
     	},
@@ -536,6 +599,45 @@
 					}
 				})
 			},
+			//切换多选
+			handleSelectionChange(val) {
+				this.multiple_selection = val;
+			},
+			//获取所有发货类型
+			getAllDemandSendType(){
+				commonResource.getAllDemandSendType().then(res => {
+					if(res.data.code == 1){
+						let data = res.data.data;
+						let send_type_list = data.filter(item => {
+							return item.type == 2
+						});
+						this.send_type_list = send_type_list;
+					}else{
+						this.$message.warning(res.data.msg);
+					}
+				})
+			},
+			//设置不可勾选
+			checkboxInit(row) {
+				if(row.audit_status != 1) { 
+					return 0 
+				} else { 
+					return 1
+				}
+			},
+		    //批量确认
+		    allCommitFn(){
+		    	if(this.multiple_selection.length == 0){
+		    		this.$message.warning('至少选择一条!');
+		    		return;
+		    	}
+		    	let ids = [];
+		    	this.multiple_selection.map(item => {
+		    		ids.push(item.select_id);
+		    	})
+		    	//审批
+		    	this.auditFn(1,ids.join(','));
+		    },
 			//获取列表
 			getGoodsList(){
 				let arg = {
@@ -549,6 +651,10 @@
 					market_id:this.market_ids.join(','),
 					classification_id:this.classification_ids.join(','),
 					shooting_style_id:this.shooting_style_ids.join(','),
+					send_type:this.send_type.join(','),
+					start_time:this.date && this.date.length > 0?this.date[0]:"",
+					end_time:this.date && this.date.length > 0?this.date[1]:"",
+					i_id:this.i_id,
 					page:this.page,
 					pagesize:10
 				}
@@ -675,6 +781,10 @@
 						market_id:this.market_ids.join(','),
 						classification_id:this.classification_ids.join(','),
 						shooting_id:this.shooting_style_ids.join(','),
+						send_type:this.send_type.join(','),
+						start_time:this.date && this.date.length > 0?this.date[0]:"",
+						end_time:this.date && this.date.length > 0?this.date[1]:"",
+						i_id:this.i_id,
 					};
 					resource.deriveSelected(arg).then((res) => {
 						if (res) {

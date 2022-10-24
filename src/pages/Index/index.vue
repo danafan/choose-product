@@ -1,18 +1,20 @@
 <template>
 	<div class="padding_page">
-		<div class="padding_page_content">
-			<SearchWidget page_path="index_history" @callback="searchFn" placeholder="搜索款式编码、标题"/>
-			<el-card class="card_box" id="card_box">
-				<ScreeningWidget id="screen_widget" v-if="show_screen" :total_num="total" @callback="screenFn"/>
-				<div class="scroll_view" :style="{height:max_height}" v-if="goods_list.length > 0">
-					<div class="goods_list">
-						<GoodsItem :info="item" v-for="item in goods_list" @callback="getList"/>
-						<div class="padding_item" v-for="i in 5-(goods_list.length%5) == 5?0:5-(goods_list.length%5)"></div>
+		<div class="index_container">
+			<div class="padding_page_content">
+				<SearchWidget page_path="index_history" @callback="searchFn" placeholder="搜索款式编码、标题"/>
+				<el-card class="card_box" id="card_box">
+					<ScreeningWidget id="screen_widget" v-if="show_screen" :total_num="total" @callback="screenFn"/>
+					<div class="scroll_view" v-if="goods_list.length > 0">
+						<div class="goods_list">
+							<GoodsItem :info="item" v-for="item in goods_list" @callback="getList"/>
+							<div class="padding_item" v-for="i in 6-(goods_list.length%6) == 6?0:6-(goods_list.length%6)"></div>
+						</div>
+						<PaginationWidget :total="total" :page="page" :pagesize="pagesize" @checkPage="checkPage"/>
 					</div>
-					<PaginationWidget :total="total" :page="page" @checkPage="checkPage"/>
-				</div>
-				<EmptyPage :style="{height:max_height}" :is_loading="loading" v-else/>
-			</el-card>
+					<EmptyPage :is_loading="loading" v-else/>
+				</el-card>
+			</div>
 			<CarWidget/>
 		</div>
 	</div>
@@ -32,42 +34,23 @@
 				loading:true,
 				show_screen:true,
 				goods_list:[],	//商品列表
-				max_height:0,
 				total:0,		//总数量
 				page:1,			//页码
+				pagesize:30,			//页码
 				search:"",
 				arg:{}
 				
 			}
 		},
-		destroyed() {
-			window.removeEventListener("resize", () => {});
-		},
 		created(){
 			let arg = {
-				page:this.page
+				page:this.page,
+				pagesize:this.pagesize
 			} 
 			//获取列表
 			this.getList(arg);
 		},
-		mounted() {
-    		//获取表格最大高度
-    		this.onResize();
-    		window.addEventListener("resize", this.onResize());
-    	},
-    	methods:{
-			//监听屏幕大小变化
-			onResize() {
-				this.$nextTick(() => {
-					let card_box_height = document.getElementById("card_box").offsetHeight;
-					let screen_widget_height = document.getElementById("screen_widget").offsetHeight;
-					this.max_height =
-					card_box_height -
-					screen_widget_height -
-					50 +
-					"px";
-				});
-			},
+		methods:{
 			//搜索
 			searchFn(value){
 				this.page = 1;
@@ -125,18 +108,20 @@
 	}
 </script>
 <style lang="less" scoped>
-.padding_page_content{
-	width: 1440rem;
-	height: 100%;
-	display: flex;
-	flex-direction: column;
+.index_container{
 	position: relative;
+	width: 1725rem;
+	height: 100%;
+}
+.padding_page_content{
+	position: absolute;
+	top:0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	overflow-y: scroll;
 	.card_box{
-		flex:1;
-		display: flex;
-		flex-direction: column;
 		.scroll_view{
-			overflow-y: scroll;
 			.goods_list{
 				display: flex;
 				flex-wrap: wrap;

@@ -184,7 +184,6 @@
       };
     },
     created() {
-      //获取公告列表
       this.getNotice();
       this.username = localStorage.getItem("ding_user_name");
       this.$router.push(this.active_path)
@@ -233,11 +232,24 @@
       },
       //查看公告
       noticeDetail(row, column, event){
-        let active_path = `/notice_page?notice_id=${row.notice_id}`;
-        localStorage.setItem("active_path",active_path);
-        this.$store.commit("setPath", active_path);
-        const routeData = this.$router.resolve(active_path);
-        window.open(routeData.href);
+        //获取公告详情
+        let arg = {
+          notice_id:row.notice_id
+        }
+        resource.noticeInfo(arg).then(res => {
+          if(res.data.code == 1){
+            let active_path = `/notice_page?notice_id=${row.notice_id}`;
+            localStorage.setItem("active_path",active_path);
+            this.$store.commit("setPath", active_path);
+            const routeData = this.$router.resolve(active_path);
+            if(row.read_status === 0){
+              this.$store.commit("setNureadNum", this.nuread_num - 1);
+            }
+            window.open(routeData.href);
+          }else{
+            this.$message.warning(res.data.msg);
+          }
+        })
       },
       loginOut(){
         let user_id = localStorage.getItem("ding_user_id");

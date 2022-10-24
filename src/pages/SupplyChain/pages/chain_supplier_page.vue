@@ -3,10 +3,7 @@
 		<el-card class="form_card">
 			<el-form :inline="true" size="mini">
 				<el-form-item class="form_item">
-					<el-input clearable v-model="supplier_name" placeholder="供应商"></el-input>
-				</el-form-item>
-				<el-form-item class="form_item">
-					<el-input clearable v-model="main_business" placeholder="主营业务"></el-input>
+					<el-input clearable v-model="search" placeholder="搜索供应商、主营"></el-input>
 				</el-form-item>
 				<el-form-item class="form_item">
 					<el-button type="primary" @click="checkPage(1)">查询</el-button>
@@ -96,8 +93,7 @@
 		data(){
 			return{
 				loading:false,
-				supplier_name:"",			//供应商名称
-				main_business:"",			//主营业务
+				search:"",				//供应商、主营
 				max_height:0,	
 				page:1,
 				data:{},				//获取的数据
@@ -114,8 +110,7 @@
 		},
 		activated(){
 			if(!this.$route.meta.use_cache){
-				this.supplier_name = "";
-				this.main_business = "";
+				this.search = "";
 				this.page = 1;
 			}
 			//获取供应商列表
@@ -148,8 +143,7 @@
     		//获取供应商列表
     		supplierManagerList(){
     			let arg = {
-    				supplier_name:this.supplier_name,
-    				main_business:this.main_business,
+    				search:this.search,
     				pagesize:10,
     				page:this.page
     			}

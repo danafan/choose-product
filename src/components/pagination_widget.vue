@@ -1,10 +1,10 @@
 <template>
 	<div class="page">
-		<el-pagination small background @current-change="handleCurrentChange" :current-page="page" :page-size="10" layout="slot, prev, pager, next" :total="total">
+		<el-pagination small background @current-change="handleCurrentChange" :current-page="page" :page-size="pagesize" layout="slot, prev, pager, next" :total="total">
 			<div class="index_button" @click="handleCurrentChange(1)">首页</div>
 		</el-pagination>
-		<el-pagination small background @current-change="handleCurrentChange" :current-page="page" :page-size="10" layout="slot,jumper" :total="total">
-			<div class="page_toast">{{page}}/{{Math.floor(total/10) + (total%10>0?1:0)}}</div>
+		<el-pagination small background @current-change="handleCurrentChange" :current-page="page" :page-size="pagesize" layout="slot,jumper" :total="total">
+			<div class="page_toast">{{page}}/{{Math.floor(total/pagesize) + (total%pagesize>0?1:0)}}</div>
 		</el-pagination>
 		<div class="page_toast">共{{total}}条</div>
 	</div>
@@ -42,6 +42,10 @@
 			page:{
 				type:Number,
 				default:1
+			},
+			pagesize:{
+				type:Number,
+				default:10
 			},
 			total:{
 				type:Number,

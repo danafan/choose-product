@@ -70,6 +70,7 @@ let path = {
   refuseSelected:'selected/refuseselected',           //拒绝需求
   addSelectRemark:'selected/addselectremark',         //添加备注
   deriveSelected:'selected/deriveselected',           //导出
+  setAbutmentType:'productstyle/setabutmenttype',     //设置对接推单
 };
 export default {
   //类目列表接口
@@ -383,5 +384,9 @@ export default {
   //导出
   deriveSelected(params) {
     return http.get(path.deriveSelected, params);
+  },
+  //设置对接推单
+  setAbutmentType(params) {
+    return http.post(path.setAbutmentType, params);
   },
 };

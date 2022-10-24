@@ -22,9 +22,12 @@ const store = new Vuex.Store({
       state.menu_list = menu_list;
     },
     //设置公告列表
-    setNoticeList(state, notice_data){
-      state.notice_list = notice_data.list;
-      state.nuread_num = notice_data.nuread_num;
+    setNoticeList(state, notice_list){
+      state.notice_list = notice_list;
+    },
+    //设置公告未读数量
+    setNureadNum(state, nuread_num){
+      state.nuread_num = nuread_num;
     },
     //设置购物车
     setCarGoods(state, arg) {
@@ -57,7 +60,8 @@ const store = new Vuex.Store({
     getNotice (context) {
       resource.showNotice().then(res => {
        if(res.data.code == 1){
-         context.commit('setNoticeList', res.data.data)
+         context.commit('setNoticeList', res.data.data.list);
+         context.commit('setNureadNum', res.data.data.nuread_num);
        }else{
         Message.warning(res.data.msg);
        }

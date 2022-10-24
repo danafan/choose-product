@@ -1,5 +1,5 @@
 <template>
-	<div class="screen_container">
+	<div>
 		<div class="total_num">共有{{total_num}}件相关商品</div>
 		<div class="selected_box" @click.stop="checkFn">
 			<div class="selected_left">
@@ -345,9 +345,6 @@
 	}
 </script>
 <style lang="less" scoped>
-.screen_container{
-	position: relative;
-}
 .total_num{
 	margin-bottom: 10rem;
 	text-align: end;
@@ -396,10 +393,8 @@
 	}
 }
 .conditions_box{
-	position: absolute;
 	background: #ffffff;
 	font-size: 12rem;
-	z-index: 9;
 	.conditions_row{
 		border-bottom: 1px dashed #DEDEDE;
 		display: flex;
@@ -446,9 +441,17 @@
 		display: flex;
 		align-items: center;
 		.sort_item{
+			border-left:1px solid #F5F5F5;
+			border-right:1px solid #F5F5F5;
+			height: 40rem;
+			display: flex;
+			align-items: center;
+			justify-content: center;
 			margin-right: 45rem;
 			display: flex;
 			align-items: center;
+			padding-left: 8rem;
+			padding-right: 8rem;
 			cursor:pointer;
 			.sort_icon{
 				margin-left: 2rem;
@@ -456,13 +459,31 @@
 				height: 12rem;
 			}
 		}
+		.sort_item:hover{
+			border:1px solid #e8e8e8;
+			background: #ffffff;
+			color:var(--color);
+		}
 	}
 	.style_row{
 		display: flex;
 		align-items: center;
 		.style_item{
+			border-left:1px solid #F5F5F5;
+			border-right:1px solid #F5F5F5;
+			height: 40rem;
+			display: flex;
+			align-items: center;
+			justify-content: center;
 			margin-right: 58rem;
+			padding-left: 8rem;
+			padding-right: 8rem;
 			cursor:pointer;
+		}
+		.style_item:hover{
+			border:1px solid #e8e8e8;
+			background: #ffffff;
+			color:var(--color);
 		}
 	}
 	.date_row{
@@ -470,7 +491,9 @@
 		align-items: center;
 	}
 	.active_color{
-		color: var(--color);
+		border:1px solid #e8e8e8;
+		background: #ffffff;
+		color:var(--color);
 	}
 }
 </style>

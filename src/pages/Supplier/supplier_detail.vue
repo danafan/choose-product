@@ -1,65 +1,67 @@
 <template>
 	<div class="padding_page">
-		<div class="padding_page_content">
-			<SearchWidget page_path="supplier_detai" @callback="searchFn" placeholder="供应商详情搜索"/>
-			<el-card class="card_box" id="card_box">
-				<div class="top_content" id="top_content">
-					<div class="info_row">
-						<div class="info_item">
-							<div class="info_lable">供应商：</div>
-							<div class="info_value">{{supplier_info.supplier_name}}</div>
+		<div class="supplier_detail_container">
+			<div class="padding_page_content">
+				<SearchWidget page_path="supplier_detai" @callback="searchFn" placeholder="供应商详情搜索"/>
+				<el-card class="card_box" id="card_box">
+					<div class="top_content" id="top_content">
+						<div class="info_row">
+							<div class="info_item">
+								<div class="info_lable">供应商：</div>
+								<div class="info_value">{{supplier_info.supplier_name}}</div>
+							</div>
+							<div class="info_item">
+								<div class="info_lable">供应商编码：</div>
+								<div class="info_value">{{supplier_info.supplier_code}}</div>
+							</div>
+							<div class="info_item">
+								<div class="info_lable">核心供应商：</div>
+								<div class="info_value">{{supplier_info.is_core==1?'是':'否'}}</div>
+							</div>
+							<div class="info_item">
+								<div class="info_lable">主营：</div>
+								<div class="info_value">{{supplier_info.main_business}}</div>
+							</div>
+							<div class="info_item">
+								<div class="info_lable">结算方式：</div>
+								<div class="info_value">{{supplier_info.supply_monthly_settlement == 1?'月结':'现结'}}</div>
+							</div>
 						</div>
-						<div class="info_item">
-							<div class="info_lable">供应商编码：</div>
-							<div class="info_value">{{supplier_info.supplier_code}}</div>
-						</div>
-						<div class="info_item">
-							<div class="info_lable">核心供应商：</div>
-							<div class="info_value">{{supplier_info.is_core==1?'是':'否'}}</div>
-						</div>
-						<div class="info_item">
-							<div class="info_lable">主营：</div>
-							<div class="info_value">{{supplier_info.main_business}}</div>
-						</div>
-						<div class="info_item">
-							<div class="info_lable">结算方式：</div>
-							<div class="info_value">{{supplier_info.supply_monthly_settlement == 1?'月结':'现结'}}</div>
+						<div class="info_line"></div>
+						<div class="info_row">
+							<div class="info_item">
+								<div class="info_lable">代发：</div>
+								<div class="info_value">{{supplier_info.supply_replace_send == 1?'是':'否'}}</div>
+							</div>
+							<div class="info_item">
+								<div class="info_lable">入仓：</div>
+								<div class="info_value">{{supplier_info.supply_warehousing == 1?'是':'否'}}</div>
+							</div>
+							<div class="info_item">
+								<div class="info_lable">退货：</div>
+								<div class="info_value">{{supplier_info.supply_return_goods == 1?'是':'否'}}</div>
+							</div>
+							<div class="info_item">
+								<div class="info_lable">拍照：</div>
+								<div class="info_value">{{supplier_info.supply_photograph == 1?'是':'否'}}</div>
+							</div>
+							<div class="info_item">
+								<div class="info_lable">评级：</div>
+								<div class="info_value">{{supplier_info.grade_name}}</div>
+							</div>
 						</div>
 					</div>
-					<div class="info_line"></div>
-					<div class="info_row">
-						<div class="info_item">
-							<div class="info_lable">代发：</div>
-							<div class="info_value">{{supplier_info.supply_replace_send == 1?'是':'否'}}</div>
+					<ScreeningWidget id="screen_widget" v-if="show_screen" :total_num="total" page_type="supplier" @callback="screenFn"/>
+					<div class="scroll_view" v-if="goods_list.length > 0">
+						<div class="goods_list">
+							<GoodsItem :info="item" v-for="item in goods_list"/>
+							<div class="padding_item" v-for="i in 6-(goods_list.length%6) == 6?0:6-(goods_list.length%6)"></div>
 						</div>
-						<div class="info_item">
-							<div class="info_lable">入仓：</div>
-							<div class="info_value">{{supplier_info.supply_warehousing == 1?'是':'否'}}</div>
-						</div>
-						<div class="info_item">
-							<div class="info_lable">退货：</div>
-							<div class="info_value">{{supplier_info.supply_return_goods == 1?'是':'否'}}</div>
-						</div>
-						<div class="info_item">
-							<div class="info_lable">拍照：</div>
-							<div class="info_value">{{supplier_info.supply_photograph == 1?'是':'否'}}</div>
-						</div>
-						<div class="info_item">
-							<div class="info_lable">评级：</div>
-							<div class="info_value">{{supplier_info.grade_name}}</div>
-						</div>
+						<PaginationWidget :total="total" :page="arg.page" :pagesize="pagesize" @checkPage="checkPage"/>
 					</div>
-				</div>
-				<ScreeningWidget id="screen_widget" v-if="show_screen" :total_num="total" page_type="supplier" @callback="screenFn"/>
-				<div class="scroll_view" :style="{height:max_height}" v-if="goods_list.length > 0">
-					<div class="goods_list">
-						<GoodsItem :info="item" v-for="item in goods_list"/>
-						<div class="padding_item" v-for="i in 5-(goods_list.length%5) == 5?0:5-(goods_list.length%5)"></div>
-					</div>
-					<PaginationWidget :total="total" :page="arg.page" @checkPage="checkPage"/>
-				</div>
-				<EmptyPage :style="{height:max_height}" :is_loading="loading" v-else/>
-			</el-card>
+					<EmptyPage :is_loading="loading" v-else/>
+				</el-card>
+			</div>
 			<CarWidget/>
 		</div>
 	</div>
@@ -78,11 +80,11 @@
 			return{
 				supplier_id:"",				//供应商ID
 				supplier_info:{},			//基本信息
-				max_height:0,
 				loading:true,
 				goods_list:[],	//商品列表
 				total:0,		//总数量
 				page:1,			//页码
+				pagesize:30,
 				search:"",
 				show_screen:true,
 				arg:{}
@@ -93,34 +95,13 @@
 			//供应商基本信息
 			this.supplierInfo();
 			let arg = {
-				page:this.page
+				page:this.page,
+				pagesize:this.pagesize
 			} 
 			//获取列表
 			this.getList(arg);
 		},
-		destroyed() {
-			window.removeEventListener("resize", () => {});
-		},
-		mounted() {
-    		//获取表格最大高度
-    		this.onResize();
-    		window.addEventListener("resize", this.onResize());
-    	},
     	methods:{
-			//监听屏幕大小变化
-			onResize() {
-				this.$nextTick(() => {
-					let card_box_height = document.getElementById("card_box").offsetHeight;
-					let top_content = document.getElementById("top_content").offsetHeight;
-					let screen_widget_height = document.getElementById("screen_widget").offsetHeight;
-					this.max_height =
-					card_box_height -
-					top_content -
-					screen_widget_height -
-					75 +
-					"px";
-				});
-			},
 			//供应商基本信息
 			supplierInfo(){
 				let arg = {
@@ -192,15 +173,19 @@
 	}
 </script>
 <style lang="less" scoped>
-.padding_page_content{
-	width: 1440rem;
-	height: 100%;
-	display: flex;
-	flex-direction: column;
+.supplier_detail_container{
 	position: relative;
+	width: 1725rem;
+	height: 100%;
+}
+.padding_page_content{
+	position: absolute;
+	top:0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	overflow-y: scroll;
 	.card_box{
-		flex:1;
-		overflow-y: scroll;
 		.top_content{
 			margin-bottom: 20rem;
 			border: 1px solid #DEDEDE;
@@ -230,7 +215,6 @@
 			}
 		}
 		.scroll_view{
-			overflow-y: scroll;
 			.goods_list{
 				display: flex;
 				flex-wrap: wrap;

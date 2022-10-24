@@ -59,10 +59,18 @@
 		</el-card>
 		<el-card class="card_box" id="card_box">
 			<TableTitle title="数据列表" id="table_title">
+				<el-button size="mini" type="primary" v-if="is_check == 1" @click="allSetting('audit_1')">批量同意</el-button>
+				<el-button size="mini" type="primary" v-if="is_check == 1" @click="allSetting('audit_2')">批量拒绝</el-button>
+				<el-button size="mini" type="primary" @click="allSetting('1')">批量上架</el-button>
+				<el-button size="mini" type="primary" @click="allSetting('0')">批量下架</el-button>
+				<el-button size="mini" type="primary" @click="allSetting('3')">批量删除</el-button>
+				<el-button size="mini" type="primary" @click="allSetting('2')">批量对接推单</el-button>
 				<el-button size="mini" type="primary" @click="$router.push('/edit_goods?page_type=goods&goods_type=1')" v-if="button_list.add == 1">添加</el-button>
 				<el-button size="mini" type="primary" @click="import_dialog = true">导入</el-button>
 			</TableTitle>
-			<el-table size="mini" :data="data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" v-loading="loading">
+			<el-table size="mini" :data="data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" @selection-change="handleSelectionChange" v-loading="loading">
+				<el-table-column type="selection" width="55" fixed>
+				</el-table-column>
 				<el-table-column label="款号" prop="style_name" show-overflow-tooltip></el-table-column>
 				<el-table-column label="款式编码" show-overflow-tooltip>
 					<template slot-scope="scope">
@@ -261,6 +269,8 @@
 				total:0,
 				button_list:{},
 				import_dialog:false,	//导入弹窗
+				multiple_selection:[],
+				is_check:0,				//1:展示批量审核；0：不展示
 			}
 		},
 		beforeRouteLeave(to,from,next){
@@ -283,17 +293,17 @@
     			this.ajaxStyleList();
     			//分类列表
     			this.ajaxClassList();
-				this.supplier_ids = [];
-				this.category_ids = [];
-				this.market_ids = [];
-				this.classification_ids = [];
-				this.shooting_style_ids = [];
-				this.date = [];
-				this.check_status_id = "";
-				this.status_id = "";
-				this.search = "";
-				this.page = 1;
-			}
+    			this.supplier_ids = [];
+    			this.category_ids = [];
+    			this.market_ids = [];
+    			this.classification_ids = [];
+    			this.shooting_style_ids = [];
+    			this.date = [];
+    			this.check_status_id = "";
+    			this.status_id = "";
+    			this.search = "";
+    			this.page = 1;
+    		}
 			//获取列表
 			this.getGoodsList();
 			this.$route.meta.use_cache = false;
@@ -422,6 +432,7 @@
 						this.button_list = res.data.data.button_list;
 						this.total = res.data.data.total;
 						let data = res.data.data.data;
+						this.is_check = res.data.data.check;
 						data.map(item => {
 							let images = [];
 							item.img.map(i => {
@@ -449,6 +460,144 @@
 				this.page = v;
 				//获取列表
 				this.getGoodsList();
+			},
+			//切换多选
+			handleSelectionChange(val) {
+				this.multiple_selection = val;
+			},
+			//批量操作
+			allSetting(type){
+				let title = "";			//提示标题
+				let total_num = this.multiple_selection.length;	//选中的总数
+				let unset_num = 0;	//不能操作的数量
+				let style_id = [];
+				if(total_num == 0){
+					this.$message.warning('至少选择一条！');
+					return;
+				}
+
+				if(type == '0'){	//下架
+					title = '确认下架？'
+					let unset_list = this.multiple_selection.filter(item => {
+						return item.check_status == 2 && item.status == 1;
+					})
+					unset_list.map(item => {
+						style_id.push(item.style_id)
+					})
+					unset_num = total_num - unset_list.length;
+				}else if(type == '1'){	//上架
+					title = '确认上架？'
+					let unset_list = this.multiple_selection.filter(item => {
+						return item.check_status == 2 && item.status == 0;
+					})
+					unset_list.map(item => {
+						style_id.push(item.style_id)
+					})
+					unset_num = total_num - unset_list.length;
+				}else if(type == '2'){	//对接推单
+					title = '确认对接推单？'
+					this.multiple_selection.map(item => {
+						style_id.push(item.style_id)
+					})
+					unset_num = 0;
+				}else if(type == '3'){	//删除
+					title = '确认批量删除？'
+					let unset_list = this.multiple_selection.filter(item => {
+						return item.check_status == 2;
+					})
+					unset_list.map(item => {
+						style_id.push(item.style_id)
+					})
+					unset_num = total_num - unset_list.length;
+				}else if(type.indexOf('audit') > -1){	//批量审批
+					let ids = [];
+					this.multiple_selection.map(item => {
+						ids.push(item.style_id)
+					})
+					this.$confirm(`确认批量${type.split('_')[1] == 1?'同意':'拒绝'}？`, '提示', {
+						confirmButtonText: '确定',
+						cancelButtonText: '取消',
+						type: 'warning'
+					}).then(() => {
+						let arg = {
+							id:ids.join(','),
+							type:type.split('_')[1]
+						}
+						resource.auditGoods(arg).then(res => {
+							if(res.data.code == 1){
+								this.$message.success(res.data.msg);
+								//获取列表
+								this.getGoodsList();
+							}else{
+								this.$message.warning(res.data.msg);
+							}
+						})
+					}).catch(() => {
+						this.$message({
+							type: 'info',
+							message: '已取消'
+						});          
+					});
+					return;
+				}
+				if(total_num == unset_num){
+					this.$message.warning('没有符合操作条件的记录！');
+					return;
+				}
+				this.$confirm(`您选择了${total_num}项，其中不可操作${unset_num}项，${title}`, '提示', {
+					confirmButtonText: '确定',
+					cancelButtonText: '取消',
+					type: 'warning'
+				}).then(() => {
+					if(type == '0' || type == '1'){	//上架或下架
+						let arg = {
+							style_id:style_id.join(','),
+							type:type
+						}
+						resource.checkStatus(arg).then(res => {
+							if(res.data.code == 1){
+								this.$message.success(res.data.msg);
+								//获取列表
+								this.getGoodsList();
+							}else{
+								this.$message.warning(res.data.msg);
+							}
+						})
+					}else if(type == '2'){	//对接推单
+						let arg = {
+							style_id:style_id.join(','),
+							type:1
+						}
+						resource.setAbutmentType(arg).then(res => {
+							if(res.data.code == 1){
+								this.$message.success(res.data.msg);
+								//获取列表
+								this.getGoodsList();
+							}else{
+								this.$message.warning(res.data.msg);
+							}
+						})
+					}else if(type == '3'){	//删除
+						let arg = {
+							style_id:style_id.join(',')
+						}
+						resource.delGoods(arg).then(res => {
+							if(res.data.code == 1){
+								this.$message.success(res.data.msg);
+								//获取列表
+								this.getGoodsList();
+							}else{
+								this.$message.warning(res.data.msg);
+							}
+						})
+					}
+					
+				}).catch(() => {
+					this.$message({
+						type: 'info',
+						message: '已取消'
+					});          
+				});
 			},
 			//监听更多操作按钮
 			handleCommand(e,id){

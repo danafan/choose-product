@@ -24,7 +24,7 @@
 	width: 100%;
 	display: flex;
 	align-items: center;
-	padding-left: 110rem;
+	padding-left: 250rem;
 	.logo_icon{
 		margin-right: 110rem;
 		width: 148rem;
