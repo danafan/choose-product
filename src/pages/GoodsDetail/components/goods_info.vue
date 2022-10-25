@@ -69,7 +69,7 @@
 							<div class="value">{{goods_info.cost_price}}</div>
 						</div>
 						<div class="form_item">
-							<div class="value">{{goods_info.select_time}}</div>
+							<div class="value">{{goods_info.new_time_name}}</div>
 						</div>
 						<div class="form_item">
 							<div class="lable"><span>*</span>店铺：</div>

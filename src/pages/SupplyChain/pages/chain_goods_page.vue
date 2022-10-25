@@ -59,12 +59,12 @@
 		</el-card>
 		<el-card class="card_box" id="card_box">
 			<TableTitle title="数据列表" id="table_title">
-				<el-button size="mini" type="primary" v-if="is_check == 1" @click="allSetting('audit_1')">批量同意</el-button>
-				<el-button size="mini" type="primary" v-if="is_check == 1" @click="allSetting('audit_2')">批量拒绝</el-button>
-				<el-button size="mini" type="primary" @click="allSetting('1')">批量上架</el-button>
-				<el-button size="mini" type="primary" @click="allSetting('0')">批量下架</el-button>
-				<el-button size="mini" type="primary" @click="allSetting('3')">批量删除</el-button>
-				<el-button size="mini" type="primary" @click="allSetting('2')">批量对接推单</el-button>
+				<el-button size="mini" type="primary" v-if="is_check == 1 && button_list.agree_refuse == 1" @click="allSetting('audit_1')">批量同意</el-button>
+				<el-button size="mini" type="primary" v-if="is_check == 1 && button_list.agree_refuse == 1" @click="allSetting('audit_2')">批量拒绝</el-button>
+				<el-button size="mini" type="primary" @click="allSetting('1')" v-if="button_list.in_out == 1">批量上架</el-button>
+				<el-button size="mini" type="primary" @click="allSetting('0')" v-if="button_list.in_out == 1">批量下架</el-button>
+				<el-button size="mini" type="primary" @click="allSetting('3')" v-if="button_list.del == 1">批量删除</el-button>
+				<el-button size="mini" type="primary" @click="allSetting('2')" v-if="button_list.abu == 1">批量对接推单</el-button>
 				<el-button size="mini" type="primary" @click="$router.push('/edit_goods?page_type=goods&goods_type=1')" v-if="button_list.add == 1">添加</el-button>
 				<el-button size="mini" type="primary" @click="import_dialog = true">导入</el-button>
 			</TableTitle>

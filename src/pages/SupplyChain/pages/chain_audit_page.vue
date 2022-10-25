@@ -83,11 +83,11 @@
 		</el-card>
 		<el-card class="card_box" id="card_box">
 			<TableTitle title="数据列表" id="table_title">
-				<el-button size="mini" type="primary" v-if="button_list.aff == 1" @click="allCommitFn">批量确认</el-button>
+				<el-button size="mini" type="primary" v-if="button_list.aff == 1" @click="allCommitFn">批量审核</el-button>
 				<el-button size="mini" type="primary" v-if="button_list.der == 1" @click="exportFn">导出</el-button>
 			</TableTitle>
 			<el-table size="mini" :data="data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" @selection-change="handleSelectionChange" v-loading="loading">
-				<el-table-column type="selection" width="55" :selectable="checkboxInit">
+				<el-table-column type="selection" width="55" fixed :selectable="checkboxInit">
 				</el-table-column>
 				<el-table-column label="款号" prop="style_name" show-overflow-tooltip></el-table-column>
 				<el-table-column label="款式编码" show-overflow-tooltip>
@@ -290,7 +290,52 @@
 				<el-button size="mini" type="primary" @click="confirmRefused">提交</el-button>
 			</div>
 		</el-dialog>
-	</div>
+		<!-- 批量审批 -->
+		<el-dialog :visible.sync="allAuditDialog" @close="allClose" width="30%">
+			<div slot="title" class="dialog_title">
+				<div>批量审批</div>
+				<img class="close_icon" src="../../../static/close_icon.png" @click="allAuditDialog = false">
+			</div>
+			<div class="down_box">
+				<el-form :inline="true" size="mini">
+					<el-form-item label="类型：">
+						<el-radio-group v-model="audit_type">
+							<el-radio :label="1">同意</el-radio>
+							<el-radio :label="2">拒绝</el-radio>
+						</el-radio-group>
+					</el-form-item>
+					<el-form-item label="拒绝原因：" required v-if="audit_type == 2">
+						<el-input type="textarea" :rows="3" placeholder="请输入拒绝原因"
+						v-model="refuse_remark">
+					</el-input>
+				</el-form-item>
+			</el-form>
+		</div>
+		<div slot="footer" class="dialog_footer">
+			<el-button size="mini" @click="allAuditDialog = false">取消</el-button>
+			<el-button size="mini" type="primary" @click="commitAllAudit">确认</el-button>
+		</div>
+	</el-dialog>
+	<!-- <el-dialog title="批量审批" width="30%" @close="allClose" center :visible.sync="allAuditDialog">
+		<el-form :inline="true" size="mini">
+			<el-form-item label="类型：">
+				<el-radio-group v-model="audit_type">
+					<el-radio :label="1">同意</el-radio>
+					<el-radio :label="2">拒绝</el-radio>
+				</el-radio-group>
+			</el-form-item>
+			<el-form-item label="拒绝原因：" required v-if="audit_type == 2">
+				<el-input type="textarea" :rows="3" placeholder="请输入拒绝原因"
+				v-model="refuse_remark">
+			</el-input>
+		</el-form-item>
+	</el-form>
+	<span slot="footer" class="dialog-footer">
+		<el-button size="mini" @click="allAuditDialog = false">取消</el-button>
+		<el-button size="mini" type="primary" @click="commitAllAudit">确认</el-button>
+	</span>
+</el-dialog> -->
+</div>
 </template>
 <style lang="less" scoped>
 .chain_page_content{
@@ -449,7 +494,10 @@
 				remark:"",				//备注内容
 				refused_dialog:false,	//拒绝弹窗
 				err_msg:"",				//拒绝备注
-				multiple_selection:[]
+				multiple_selection:[],
+				allAuditDialog:false,
+				audit_type:1,			//批量审批的类型（1:同意；2:拒绝）
+				refuse_remark:"",		//批量拒绝原因
 
 			}
 		},
@@ -502,7 +550,7 @@
     				card_box_height -
     				table_title_height -
     				bottom_row_height -
-    				50 +
+    				60 +
     				"px";
     			});
     		},
@@ -625,19 +673,44 @@
 					return 1
 				}
 			},
-		    //批量确认
+		    //批量审批
 		    allCommitFn(){
 		    	if(this.multiple_selection.length == 0){
 		    		this.$message.warning('至少选择一条!');
 		    		return;
 		    	}
+		    	this.allAuditDialog = true;
+		    },
+		    //关闭批量审批
+		    allClose(){
+		    	this.audit_type = 1;
+		    	this.refuse_remark = "";
+		    },
+		    //提价批量审批
+		    commitAllAudit(){
 		    	let ids = [];
 		    	this.multiple_selection.map(item => {
 		    		ids.push(item.select_id);
 		    	})
-		    	//审批
-		    	this.auditFn(1,ids.join(','));
-		    },
+		    	if(this.audit_type == 1){	//同意
+		    		let arg = {
+		    			select_id:ids.join(',')
+		    		}
+					//同意
+					this.agreeAudit(arg)
+				}else{	//拒绝
+					if(this.refuse_remark == ''){
+						this.$message.warning('请输入拒绝原因!');
+						return;
+					}
+					let arg = {
+						select_id:ids.join(','),
+						err_msg:this.refuse_remark
+					}
+					//拒绝
+					this.refuseAudit(arg)
+				}
+			},
 			//获取列表
 			getGoodsList(){
 				let arg = {
@@ -719,15 +792,8 @@
 						let arg = {
 							select_id:id
 						}
-						resource.affirmSelected(arg).then(res => {
-							if(res.data.code == 1){
-								this.$message.success(res.data.msg);
-								//获取列表
-								this.getGoodsList();
-							}else{
-								this.$message.warning(res.data.msg);
-							}
-						})
+						//同意
+						this.agreeAudit(arg)
 					}).catch(() => {
 						this.$message({
 							type: 'info',
@@ -738,6 +804,33 @@
 					this.select_id = id;
 					this.refused_dialog = true;
 				}
+			},
+			//同意
+			agreeAudit(arg){
+				resource.affirmSelected(arg).then(res => {
+					if(res.data.code == 1){
+						this.$message.success(res.data.msg);
+						this.allAuditDialog = false;
+						//获取列表
+						this.getGoodsList();
+					}else{
+						this.$message.warning(res.data.msg);
+					}
+				})
+			},
+			//拒绝
+			refuseAudit(arg){
+				resource.refuseSelected(arg).then(res => {
+					if(res.data.code == 1){
+						this.refused_dialog = false;
+						this.allAuditDialog = false;
+						this.$message.success(res.data.msg);
+						//获取列表
+						this.getGoodsList();
+					}else{
+						this.$message.warning(res.data.msg);
+					}
+				})
 			},
 			//点击添加备注
 			addRemark(select_id,remark){
@@ -808,16 +901,8 @@
 						select_id:this.select_id,
 						err_msg:this.err_msg
 					}
-					resource.refuseSelected(arg).then(res => {
-						if(res.data.code == 1){
-							this.refused_dialog = false
-							this.$message.success(res.data.msg);
-							//获取列表
-							this.getGoodsList();
-						}else{
-							this.$message.warning(res.data.msg);
-						}
-					})
+					//拒绝
+					this.refuseAudit(arg)
 				}
 			}
 		},

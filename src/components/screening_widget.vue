@@ -10,17 +10,17 @@
 				</div>
 				<div class="tj_row" v-else>
 					<img class="right_arrow" src="../static/down_arrow.png" v-if="page_type == 'index'">
-					<div v-if="supplier_list.length > 0 && page_type == 'index'">{{supplier_list[supplier_index].supplier_name}}</div>
+					<div v-if="supplier_list.length > 0 && page_type == 'index'">供应商（{{supplier_list[supplier_index].supplier_name}}）</div>
 					<img class="right_arrow" src="../static/down_arrow.png">
-					<div v-if="market_list.length > 0">{{market_list[market_index].market_name}}</div>
+					<div v-if="market_list.length > 0">市场（{{market_list[market_index].market_name}}）</div>
 					<img class="right_arrow" src="../static/down_arrow.png">
-					<div v-if="category_list.length > 0">{{category_list[category_index].category_name}}</div>
+					<div v-if="category_list.length > 0">类目（{{category_list[category_index].category_name}}）</div>
 					<img class="right_arrow" src="../static/down_arrow.png">
-					<div v-if="class_list.length > 0">{{class_list[class_index].classification_name}}</div>
+					<div v-if="class_list.length > 0">分类（{{class_list[class_index].classification_name}}）</div>
 					<img class="right_arrow" src="../static/down_arrow.png">
-					<div v-if="style_list.length > 0">{{style_list[style_index].shooting_style_name}}</div>
+					<div v-if="style_list.length > 0">拍摄风格（{{style_list[style_index].shooting_style_name}}）</div>
 					<img class="right_arrow" src="../static/down_arrow.png">
-					<div v-if="rating_list.length > 0">{{rating_list[rating_index].grade_name}}</div>
+					<div v-if="rating_list.length > 0">等级（{{rating_list[rating_index].grade_name}}）</div>
 				</div>
 				
 			</div>
