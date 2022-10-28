@@ -147,6 +147,7 @@
 			},
 			//获取列表
 			getList(arg){
+				arg.pagesize = 30;
 				arg.search = this.search;
 				arg.supplier_id = this.supplier_id;
 				this.loading = true;

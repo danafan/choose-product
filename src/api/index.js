@@ -18,6 +18,13 @@ instance.interceptors.request.use(
 instance.interceptors.response.use(
   (response) => {
     switch (response.data.code) {
+      case -1:
+      Message({
+        type: "warning",
+        message: response.data.msg,
+      });
+      router.go(-1);
+      return;
       case 0:
       Message({
         type: "warning",

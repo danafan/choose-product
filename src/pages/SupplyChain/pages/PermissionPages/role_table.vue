@@ -304,8 +304,7 @@
 	}
 }
 .dialog_content{
-	padding-top: 50rem;
-	padding-bottom: 20rem;
+	padding: 30rem;
 	.menu_list_box {
 		display: flex;
 		flex-wrap: wrap;

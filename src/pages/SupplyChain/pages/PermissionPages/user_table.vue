@@ -195,6 +195,7 @@
 						this.menu_role_ids = data.info.menu_role_ids;
 						this.dept_list = data.dept_list;
 						this.dept_names = data.selected_depts;
+						this.view_type = data.view_type;
 						//获取店铺列表
 						this.ajaxViewShop(this.dept_names,data.selected_shops);
 						this.show_dialog = true;

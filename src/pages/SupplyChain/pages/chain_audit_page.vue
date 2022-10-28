@@ -316,25 +316,6 @@
 			<el-button size="mini" type="primary" @click="commitAllAudit">确认</el-button>
 		</div>
 	</el-dialog>
-	<!-- <el-dialog title="批量审批" width="30%" @close="allClose" center :visible.sync="allAuditDialog">
-		<el-form :inline="true" size="mini">
-			<el-form-item label="类型：">
-				<el-radio-group v-model="audit_type">
-					<el-radio :label="1">同意</el-radio>
-					<el-radio :label="2">拒绝</el-radio>
-				</el-radio-group>
-			</el-form-item>
-			<el-form-item label="拒绝原因：" required v-if="audit_type == 2">
-				<el-input type="textarea" :rows="3" placeholder="请输入拒绝原因"
-				v-model="refuse_remark">
-			</el-input>
-		</el-form-item>
-	</el-form>
-	<span slot="footer" class="dialog-footer">
-		<el-button size="mini" @click="allAuditDialog = false">取消</el-button>
-		<el-button size="mini" type="primary" @click="commitAllAudit">确认</el-button>
-	</span>
-</el-dialog> -->
 </div>
 </template>
 <style lang="less" scoped>
@@ -502,7 +483,7 @@
 			}
 		},
 		created(){
-			//获取需求类型列表
+			//获取需求类型和发货类型列表
 			this.getAllDemandSendType();
 			//获取部门列表
 			this.getDeptList();
@@ -520,8 +501,6 @@
     		this.ajaxStyleList();
     		//分类列表
     		this.ajaxClassList();
-    		//获取所有发货类型
-    		this.getAllDemandSendType();
     		//获取列表
     		this.getGoodsList();
     	},
@@ -562,6 +541,9 @@
     					this.demand_list = data.filter(item => {
     						return item.type == 1;
     					})
+    					this.send_type_list = data.filter(item => {
+							return item.type == 2
+						});
     				}else{
     					this.$message.warning(res.data.msg);
     				}
@@ -650,20 +632,6 @@
 			//切换多选
 			handleSelectionChange(val) {
 				this.multiple_selection = val;
-			},
-			//获取所有发货类型
-			getAllDemandSendType(){
-				commonResource.getAllDemandSendType().then(res => {
-					if(res.data.code == 1){
-						let data = res.data.data;
-						let send_type_list = data.filter(item => {
-							return item.type == 2
-						});
-						this.send_type_list = send_type_list;
-					}else{
-						this.$message.warning(res.data.msg);
-					}
-				})
 			},
 			//设置不可勾选
 			checkboxInit(row) {
