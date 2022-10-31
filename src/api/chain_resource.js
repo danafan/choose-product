@@ -42,6 +42,7 @@ let path = {
   getGoodsList:'productstyle/getallproductstyle',	//获取商品列表
   addGoods:'productstyle/addproductstyle',			//添加商品
   editGoods:'productstyle/editproductstyle',		//编辑商品
+  examEditGoods:'productstyle/exameditgoods',   //审核前获取商品信息
   auditGoods:'productstyle/examine',				//审批商品
   delGoods:'productstyle/delproductstyle',			//删除商品
   styleImageList:'productstyle/styleimagelist',		//风格图列表
@@ -264,6 +265,10 @@ export default {
   //编辑商品
   editGoodsPost(params) {
     return http.post(path.editGoods, params);
+  },
+  //审核前获取商品信息
+  examEditGoods(params) {
+    return http.get(path.examEditGoods, params);
   },
   //审批商品
   auditGoods(params) {

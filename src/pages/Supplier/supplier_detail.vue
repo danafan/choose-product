@@ -227,6 +227,7 @@
 		}
 	}
 }
+.padding_page_content::-webkit-scrollbar{display:none}
 </style>
 
 

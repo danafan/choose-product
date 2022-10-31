@@ -169,7 +169,7 @@
 					<div class="value" v-if="goods_info.audit_status == 0">已撤销</div>
 					<div class="value" v-if="goods_info.audit_status == 1">待审核</div>
 					<div class="value" v-if="goods_info.audit_status == 2">已确认</div>
-					<div class="value" v-if="goods_info.audit_status == 3">已取消</div>
+					<div class="value" v-if="goods_info.audit_status == 4">已拒绝</div>
 				</div>
 				<div class="detail_row" v-if="goods_info.audit_status == 4">
 					<div class="lable">拒绝原因</div>

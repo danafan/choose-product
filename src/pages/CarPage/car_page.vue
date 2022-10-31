@@ -39,7 +39,7 @@
 			</el-card>
 		</div>
 		<!-- 选款弹窗 -->
-		<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" destroy-on-close :visible.sync="show_select">
+		<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" @close="closeSelectDialog" destroy-on-close :visible.sync="show_select">
 			<div slot="title" class="dialog_title">
 				<div>选款</div>
 				<img class="close_icon" src="../../static/close_icon.png" @click="show_select = false">
@@ -196,6 +196,15 @@
 				//获取所有需求/发货类型
 				this.getAllDemandSendType();
 				this.show_select = true;
+			},
+			//关闭选款弹窗
+			closeSelectDialog(){
+				this.shop_code = "";			//选中的店铺
+				this.demand_type = [];			//选中的需求类型
+				this.send_type = "";			//选中的发货类型
+				this.demand_date = "";			//需求日期
+				this.selling_price = "";		//售卖价格
+				this.remark = "";				//备注
 			},
 			//提交选款
 			confirmSelect(){
