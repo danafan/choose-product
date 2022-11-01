@@ -210,7 +210,7 @@
 	margin-bottom: 20rem;
 	border:1px solid #EDEDED;
 	width: 265rem;
-	height: 436rem;
+	// height: 436rem;
 	cursor:pointer;
 	.image_box{
 		position: relative;
@@ -310,7 +310,7 @@
 				.add{
 					border:1px solid var(--color);
 					border-radius: 2rem;
-					width: 52rem;
+					padding: 0 3rem;
 					height: 20rem;
 					display: flex;
 					align-items: center;
@@ -327,8 +327,7 @@
 					margin-left: 10rem;
 					border-radius: 2rem;
 					background: var(--color);
-					width: 36rem;
-					text-align: center;
+					padding: 0 3rem;
 					height: 20rem;
 					line-height: 20rem;
 					font-size: 12rem;
@@ -482,6 +481,7 @@
 		margin-bottom: 10rem;
 		font-size:14rem;
 		color: #333333;
+		cursor: initial;
 	}
 	.more_image{
 		display: flex;

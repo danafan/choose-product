@@ -40,6 +40,7 @@ let path = {
   feedBackEditGoods:'feedback/edit_goods',			//编辑商品
   addAllProductStyle:'productstyle/addallproductstyle', //批量添加商品
   getGoodsList:'productstyle/getallproductstyle',	//获取商品列表
+  getOnepro:'productstyle/getonepro',           //商品信息查看
   addGoods:'productstyle/addproductstyle',			//添加商品
   editGoods:'productstyle/editproductstyle',		//编辑商品
   examEditGoods:'productstyle/exameditgoods',   //审核前获取商品信息
@@ -253,6 +254,10 @@ export default {
   //获取商品列表
   getGoodsList(params) {
     return http.get(path.getGoodsList, params);
+  },
+  //查看商品详情
+  getOnepro(params) {
+    return http.get(path.getOnepro, params);
   },
   //添加商品
   addGoods(params) {

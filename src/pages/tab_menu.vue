@@ -160,6 +160,7 @@
   }
 }
 .table_notice{
+  cursor: pointer;
   font-size: 12rem;
   word-break: break-all;
   text-overflow: ellipsis;
@@ -167,6 +168,7 @@
   display: -webkit-box;
   -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
+
 }
 .content{
   color: #666666;

@@ -198,7 +198,17 @@
 					style_id:this.style_id
 				}
 				if(this.page_type == 'goods'){	//商品管理
-					if(this.goods_type == '4'){
+					if(this.goods_type == '3'){
+						resource.getOnepro(arg).then(res => {
+							if(res.data.code == 1){
+								let data_info = res.data.data;
+								//处理详情
+								this.setInfo(data_info);
+							}else{
+								this.$message.warning(res.data.msg);
+							}
+						})
+					}else if(this.goods_type == '4'){
 						resource.examEditGoods(arg).then(res => {
 							if(res.data.code == 1){
 								let data_info = res.data.data;

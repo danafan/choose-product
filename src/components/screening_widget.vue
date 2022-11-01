@@ -398,7 +398,7 @@
 	.conditions_row{
 		border-bottom: 1px dashed #DEDEDE;
 		display: flex;
-		padding-top: 8rem;
+		padding-top: 5rem;
 		.lable{
 			white-space:normal;
 			width: 110rem;
@@ -410,9 +410,13 @@
 			flex-wrap: wrap;
 			.item{
 				cursor:pointer;
-				margin-bottom: 8rem;
-				margin-right: 40rem;
+				padding: 3px 12px;
+				margin-bottom: 5rem;
+				margin-right: 3rem;
 				color: #333333;
+			}
+			.item:hover{
+				color:var(--color);
 			}
 			.active_item{
 				color: var(--color);

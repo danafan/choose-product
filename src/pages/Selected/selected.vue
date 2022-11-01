@@ -12,7 +12,7 @@
 				<div class="form_row">
 					<el-form :inline="true" size="mini">
 						<el-form-item label="店铺：">
-							<el-select v-model="shop_code" clearable placeholder="全部">
+							<el-select v-model="shop_code" filterable clearable placeholder="全部">
 								<el-option v-for="item in store_list" :key="item.shop_code" :label="item.shop_name" :value="item.shop_code">
 								</el-option>
 							</el-select>

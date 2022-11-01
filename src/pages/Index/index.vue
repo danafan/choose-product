@@ -55,11 +55,11 @@
 			searchFn(value){
 				this.page = 1;
 				this.search = value;
-				let arg = {
+				this.arg = {
 					page:this.page
 				} 
 				//获取列表
-				this.getList(arg);
+				this.getList(this.arg);
 				//重新加载筛选条件
 				this.show_screen = false;
 				this.$nextTick(() => {
@@ -113,6 +113,7 @@
 	width: 1725rem;
 	height: 100%;
 }
+.index_container::-webkit-scrollbar{display:none}
 .padding_page_content{
 	position: absolute;
 	top:0;

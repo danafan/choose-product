@@ -1,5 +1,5 @@
 <template>
-	<div class="chain_page_content">
+	<div class="chain_page_content" v-loading.fullscreen.lock="fullscreenLoading">
 		<el-card class="form_card">
 			<el-form :inline="true" size="mini">
 				<el-form-item label="供应商：">
@@ -271,6 +271,7 @@
 				import_dialog:false,	//导入弹窗
 				multiple_selection:[],
 				is_check:0,				//1:展示批量审核；0：不展示
+				fullscreenLoading:false,
 			}
 		},
 		beforeRouteLeave(to,from,next){
@@ -333,7 +334,7 @@
     				card_box_height -
     				table_title_height -
     				bottom_row_height -
-    				50 +
+    				60 +
     				"px";
     			});
     		},
@@ -395,10 +396,12 @@
 			uploadCsv(){
 				if (this.$refs.csvUpload.files.length > 0) {
 					let files = this.$refs.csvUpload.files;
+					this.fullscreenLoading = true;
 					resource.addAllProductStyle({file:files[0]}).then(res => {
 						this.$refs.csvUpload.value = null;
 						this.import_dialog = false;
 						if(res.data.code == 1){
+							this.fullscreenLoading = false;
 							this.$message.success(res.data.msg);
 							this.page = 1;
 							//获取列表

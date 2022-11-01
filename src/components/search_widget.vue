@@ -8,9 +8,9 @@
 			<div class="history_list" v-if="show_history">
 				<div class="history_item history_title">
 					<div class="title">最近搜索</div>
-					<div class="delete" @mousedown="$refs.input.focus()" @mouseup="deleteHistory(-1)">全部删除</div>
+					<div class="delete pointer" @mousedown="$refs.input.focus()" @mouseup="deleteHistory(-1)">全部删除</div>
 				</div>
-				<div class="history_item" :class="{'border_none':index == history_list.length - 1}" v-for="(item,index) in history_list">
+				<div class="history_item pointer" :class="{'border_none':index == history_list.length - 1}" v-for="(item,index) in history_list">
 					<div class="title" @mousedown="$refs.input.focus()" @mouseup="checkValue(item)">{{item}}</div>
 					<div class="delete" @mousedown="$refs.input.focus()" @mouseup="deleteHistory(index)">删除</div>
 				</div>
@@ -105,6 +105,9 @@
 			.border_none{
 				border:none;
 			}
+			.pointer{
+				cursor: pointer;
+			}
 		}
 	}
 }
@@ -177,7 +180,7 @@
 						current_index = index;
 					}
 				})
-				if(current_index){
+				if(current_index !== null){
 					history_list.splice(current_index,1);
 					history_list.unshift(this.search_value);
 					localStorage.setItem(this.page_path,JSON.stringify(history_list));
