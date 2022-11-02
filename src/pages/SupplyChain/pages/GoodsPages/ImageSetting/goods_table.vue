@@ -160,7 +160,7 @@
 								show_icon:false
 							}
 							this.img_list.push(img_obj);
-							this.img = data.img;				
+							this.img.push(data.img);				
 						}else{
 							this.$message.warning(res.data.msg);
 						}

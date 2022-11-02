@@ -119,11 +119,11 @@
 			searchFn(value){
 				this.page = 1;
 				this.search = value;
-				let arg = {
+				this.arg = {
 					page:this.page
 				} 
 				//获取列表
-				this.getList(arg);
+				this.getList(this.arg);
 				//重新加载筛选条件
 				this.show_screen = false;
 				this.$nextTick(() => {

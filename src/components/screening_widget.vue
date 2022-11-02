@@ -320,7 +320,7 @@
 					arg.supplier_id = this.supplier_list[this.supplier_index].supplier_id;
 				}
 				//处理市场
-				if(this.page_type == 'index' && this.market_index > 0){
+				if(this.market_index > 0){
 					arg.market_id = this.market_list[this.market_index].market_id;
 				}
 				//处理类目
