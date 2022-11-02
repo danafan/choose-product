@@ -198,7 +198,7 @@
 					style_id:this.style_id
 				}
 				if(this.page_type == 'goods'){	//商品管理
-					if(this.goods_type == '3'){
+					if(this.goods_type == '3'){	//查看
 						resource.getOnepro(arg).then(res => {
 							if(res.data.code == 1){
 								let data_info = res.data.data;
@@ -208,7 +208,7 @@
 								this.$message.warning(res.data.msg);
 							}
 						})
-					}else if(this.goods_type == '4'){
+					}else if(this.goods_type == '4'){//审核
 						resource.examEditGoods(arg).then(res => {
 							if(res.data.code == 1){
 								let data_info = res.data.data;
@@ -394,17 +394,26 @@
 							})
 						}else{			//编辑或重新提交
 							if(this.page_type == 'goods'){	//商品管理
-								if(this.goods_type == '5'){
+								if(this.goods_type == '5'){	//重新提交
 									arg.type = 1;
+									resource.returnEditGoods(arg).then(res => {
+										if(res.data.code == 1){
+											this.$message.success(res.data.msg);
+											this.$router.go(-1);
+										}else{
+											this.$message.warning(res.data.msg);
+										}
+									})
+								}else if(this.goods_type == '2'){	//编辑
+									resource.editGoodsPost(arg).then(res => {
+										if(res.data.code == 1){
+											this.$message.success(res.data.msg);
+											this.$router.go(-1);
+										}else{
+											this.$message.warning(res.data.msg);
+										}
+									})
 								}
-								resource.editGoodsPost(arg).then(res => {
-									if(res.data.code == 1){
-										this.$message.success(res.data.msg);
-										this.$router.go(-1);
-									}else{
-										this.$message.warning(res.data.msg);
-									}
-								})
 							}else{		//反馈管理
 								resource.feedBackEditGoodsPost(arg).then(res => {
 									if(res.data.code == 1){

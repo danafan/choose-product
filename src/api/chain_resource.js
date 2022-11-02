@@ -43,6 +43,7 @@ let path = {
   getOnepro:'productstyle/getonepro',           //商品信息查看
   addGoods:'productstyle/addproductstyle',			//添加商品
   editGoods:'productstyle/editproductstyle',		//编辑商品
+  returnEditGoods:'productstyle/returneditgoods', //重新提交
   examEditGoods:'productstyle/exameditgoods',   //审核前获取商品信息
   auditGoods:'productstyle/examine',				//审批商品
   delGoods:'productstyle/delproductstyle',			//删除商品
@@ -270,6 +271,10 @@ export default {
   //编辑商品
   editGoodsPost(params) {
     return http.post(path.editGoods, params);
+  },
+  //重新提交
+  returnEditGoods(params) {
+    return http.post(path.returnEditGoods, params);
   },
   //审核前获取商品信息
   examEditGoods(params) {

@@ -87,7 +87,7 @@
 					<div class="form_item">
 						<div class="lable"><span>*</span>店铺：</div>
 						<div class="value">
-							<el-select v-model="shop_code" size="mini" clearable placeholder="选择店铺">
+							<el-select v-model="shop_code" size="mini" filterable clearable placeholder="选择店铺">
 								<el-option v-for="item in store_list" :key="item.shop_code" :label="item.shop_name" :value="item.shop_code">
 								</el-option>
 							</el-select>

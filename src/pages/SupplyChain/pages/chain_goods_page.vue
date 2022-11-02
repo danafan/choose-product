@@ -123,7 +123,7 @@
 							</el-dropdown-menu>
 						</el-dropdown>
 						<el-button type="text" size="small" v-if="scope.row.check_status == 2 && button_list.in_out == 1" @click="checkStatus(scope.row.style_id,scope.row.status)">{{scope.row.status == 1?'下架':'上架'}}</el-button>
-						<el-button type="text" size="small" v-if="scope.row.check_status == 3" @click="$router.push('/edit_goods?page_type=goods&goods_type=5&style_id=' + scope.row.style_id)">重新提交</el-button>
+						<el-button type="text" size="small" v-if="scope.row.check_status == 3 && button_list.reset == 1" @click="$router.push('/edit_goods?page_type=goods&goods_type=5&style_id=' + scope.row.style_id)">重新提交</el-button>
 					</template>
 				</el-table-column>
 			</el-table>
