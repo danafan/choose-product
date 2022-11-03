@@ -1,5 +1,5 @@
 <template>
-	<div class="padding_page">
+	<div class="padding_page ddd">
 		<div class="index_container">
 			<div class="padding_page_content">
 				<SearchWidget page_path="index_history" @callback="searchFn" placeholder="搜索款式编码、标题"/>
@@ -15,7 +15,7 @@
 					<EmptyPage :is_loading="loading" v-else/>
 				</el-card>
 			</div>
-			<CarWidget/>
+			<CarWidget :is_fixed="true"/>
 		</div>
 	</div>
 </template>
@@ -108,6 +108,9 @@
 	}
 </script>
 <style lang="less" scoped>
+.ddd{
+	overflow-y: scroll;
+}
 .index_container{
 	position: relative;
 	width: 1725rem;
@@ -120,7 +123,7 @@
 	left: 0;
 	width: 100%;
 	height: 100%;
-	overflow-y: scroll;
+	
 	.card_box{
 		.scroll_view{
 			.goods_list{

@@ -1,5 +1,5 @@
 <template>
-	<div class="car_button" @click="goCarPage">
+	<div class="car_button" :class="{'fixed_style':is_fixed == true}" @click="goCarPage">
 		<div class="icon">
 			<img class="add_car" src="../static/add_car.png">
 			<div class="num">{{car_goods_num}}</div>
@@ -10,6 +10,13 @@
 <script>
 	import resource from '../api/resource.js'
 	export default{
+		props:{
+			//是否相对整个页面定位
+			is_fixed:{
+				type:Boolean,
+				default:false
+			}
+		},
 		computed:{
 			//购物车商品数量
 			car_goods_num(){
@@ -91,5 +98,9 @@
 		color: var(--color);
 		font-size: 12rem;
 	}
+}
+.fixed_style{
+	position: fixed;
+	right: 20rem;
 }
 </style>
