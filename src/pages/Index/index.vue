@@ -123,7 +123,6 @@
 	left: 0;
 	width: 100%;
 	height: 100%;
-	
 	.card_box{
 		.scroll_view{
 			.goods_list{

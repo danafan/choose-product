@@ -274,14 +274,6 @@
 				fullscreenLoading:false,
 			}
 		},
-		beforeRouteLeave(to,from,next){
-			if(to.path == '/image_setting' || to.path == '/edit_goods'){	
-				from.meta.use_cache = true;
-			}else{
-				from.meta.use_cache = false;
-			}
-			next();
-		},
 		activated(){
 			if(!this.$route.meta.use_cache){
 				//获取供应商列表
@@ -307,7 +299,6 @@
     		}
 			//获取列表
 			this.getGoodsList();
-			this.$route.meta.use_cache = false;
 		},
 		destroyed() {
 			window.removeEventListener("resize", () => {});
@@ -400,8 +391,8 @@
 					resource.addAllProductStyle({file:files[0]}).then(res => {
 						this.$refs.csvUpload.value = null;
 						this.import_dialog = false;
+						this.fullscreenLoading = false;
 						if(res.data.code == 1){
-							this.fullscreenLoading = false;
 							this.$message.success(res.data.msg);
 							this.page = 1;
 							//获取列表

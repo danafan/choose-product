@@ -1,5 +1,5 @@
 <template>
-	<div class="padding_page white_back">
+	<div class="padding_page white_back" id="white_back">
 		<div class="padding_page_content">
 			<PageTitle title="选品详情"/>
 			<div class="detail_content">
@@ -20,8 +20,8 @@
 					<TabRecord :selected_record="goods_info.info_log" v-if="active_index == 1"/>
 				</div>
 			</div>
-			<CarWidget/>
-			<FeekbackWidget :style_id="style_id"/>
+			<CarWidget :is_fixed="true"/>
+			<FeekbackWidget :style_id="style_id" :is_fixed="true"/>
 		</div>
 	</div>
 </template>
@@ -51,6 +51,7 @@
 			//获取商品详情
 			this.getGoodsInfo();
 		},
+		
 		computed:{
 			//图片前缀
 			domain(){
@@ -103,6 +104,7 @@
 <style lang="less" scoped>
 .white_back{
 	background: #ffffff;
+	overflow-y: scroll;
 }
 .padding_page_content{
 	width: 1440rem;
@@ -112,14 +114,12 @@
 	position: relative;
 	.detail_content{
 		flex:1;
-		overflow-y: scroll;
 		padding-left: 100rem;
 		.detail_top_row{
 			display: flex;
 			justify-content: space-between;
 		}
 		.bottom_content{
-			min-height: 500px;
 			margin-top: 20rem;
 			border:1px solid #E5E5E5;
 			.content_top_tab{
@@ -147,4 +147,5 @@
 		}
 	}
 }
+.white_back::-webkit-scrollbar{display:none}
 </style>

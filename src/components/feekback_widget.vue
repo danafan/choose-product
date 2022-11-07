@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<div class="back_widget" @click="feekback_dialog = true">
+		<div class="back_widget" :class="{'fixed_style':is_fixed == true}" @click="feekback_dialog = true">
 			<img class="back_icon" src="../static/feekback_icon.png">
 			<div class="back_text">反馈</div>
 		</div>
@@ -40,6 +40,11 @@
 			style_id:{
 				type:String,
 				default:""
+			},
+			//是否相对整个页面定位
+			is_fixed:{
+				type:Boolean,
+				default:false
 			}
 		},
 		methods:{
@@ -102,6 +107,10 @@
 		color: #333333;
 		font-size: 12rem;
 	}
+}
+.fixed_style{
+	position: fixed;
+	right: 20rem;
 }
 .feekback_content{
 	padding: 10rem 20rem;

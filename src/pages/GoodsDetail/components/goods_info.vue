@@ -74,10 +74,14 @@
 						<div class="form_item">
 							<div class="lable"><span>*</span>店铺：</div>
 							<div class="value">
-								<el-select v-model="shop_code" size="mini" clearable placeholder="选择店铺">
+								<!-- <el-select v-model="shop_code" size="mini" clearable placeholder="选择店铺">
 									<el-option v-for="item in store_list" :key="item.shop_code" :label="item.shop_name" :value="item.shop_code">
 									</el-option>
-								</el-select>
+								</el-select> -->
+								<el-select v-model="shop_code" size="mini" multiple collapse-tags filterable clearable placeholder="选择店铺">
+								<el-option v-for="item in store_list" :key="item.shop_code" :label="item.shop_name" :value="item.shop_code">
+								</el-option>
+							</el-select>
 							</div>
 						</div>
 						<div class="form_item">
@@ -140,7 +144,7 @@
 			return{
 				show_select:false,		//选款弹窗
 				store_list:[],			//店铺列表
-				shop_code:"",			//选中的店铺
+				shop_code:[],			//选中的店铺
 				need_type:[],			//需求类型列表
 				demand_type:[],			//选中的需求类型
 				delivery_type_list:[],	//发货类型列表
@@ -168,7 +172,7 @@
 		methods:{
 			//监听选款弹窗关闭
 			closeDialog(){
-				this.shop_code = "";
+				this.shop_code = [];
 				this.demand_type = [];
 				this.send_type = "";
 				this.demand_date = "";
@@ -187,7 +191,7 @@
 			},
 			//提交选款
 			confirmSelect(){
-				if(this.shop_code == ''){
+				if(this.shop_code.length == 0){
 					this.$message.warning('请选择店铺!');
 				}else if(this.demand_type.length == 0){
 					this.$message.warning('请选择需求类型!');
@@ -198,13 +202,23 @@
 				}else if(this.selling_price == ''){
 					this.$message.warning('请输入售卖价格!');
 				}else{
-					let shop_arr = this.store_list.filter(item => {
-						return item.shop_code == this.shop_code;
+					// let shop_arr = this.store_list.filter(item => {
+					// 	return item.shop_code == this.shop_code;
+					// })
+					var shop_code_arr = [];
+					var shop_name_arr = [];
+					this.shop_code.map(item => {
+						this.store_list.map(i => {
+							if(item == i.shop_code){
+								shop_code_arr.push(i.shop_code);
+								shop_name_arr.push(i.shop_name);
+							}
+						})
 					})
 					let arg = {
 						style_id:this.goods_info.style_id,
-						shop_code:this.shop_code,
-						shop_name:shop_arr[0].shop_name,
+						shop_code:shop_code_arr.join(','),
+						shop_name:shop_name_arr.join(','),
 						demand_type:this.demand_type.join(','),
 						send_type:this.send_type,
 						demand_date:this.demand_date,

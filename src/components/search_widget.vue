@@ -11,8 +11,8 @@
 					<div class="delete pointer" @mousedown="$refs.input.focus()" @mouseup="deleteHistory(-1)">全部删除</div>
 				</div>
 				<div class="history_item pointer" :class="{'border_none':index == history_list.length - 1}" v-for="(item,index) in history_list">
-					<div class="title" @mousedown="$refs.input.focus()" @mouseup="checkValue(item)">{{item}}</div>
-					<div class="delete" @mousedown="$refs.input.focus()" @mouseup="deleteHistory(index)">删除</div>
+					<div class="title" @mouseup="checkValue(item)">{{item}}</div>
+					<div class="delete" @mouseup="deleteHistory(index)">删除</div>
 				</div>
 			</div>
 		</div>

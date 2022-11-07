@@ -8,7 +8,7 @@
         <el-table :data="notice_list" max-height="180px" size="mini" :show-header="false" @row-click="noticeDetail">
           <el-table-column width="248" property="notice_content" label="内容">
             <template slot-scope="scope">
-              <div class="table_notice content">{{scope.row.notice_title}}</div>
+              <div class="table_notice content" :class="{'time':scope.row.read_status == 1}">{{scope.row.notice_title}}</div>
             </template>
           </el-table-column>
           <el-table-column property="add_time" label="时间">
@@ -240,13 +240,12 @@
         }
         resource.noticeInfo(arg).then(res => {
           if(res.data.code == 1){
+            //获取公告列表
+            this.getNotice();
             let active_path = `/notice_page?notice_id=${row.notice_id}`;
             localStorage.setItem("active_path",active_path);
             this.$store.commit("setPath", active_path);
             const routeData = this.$router.resolve(active_path);
-            if(row.read_status === 0){
-              this.$store.commit("setNureadNum", this.nuread_num - 1);
-            }
             window.open(routeData.href);
           }else{
             this.$message.warning(res.data.msg);

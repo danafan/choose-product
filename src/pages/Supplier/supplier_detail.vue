@@ -1,5 +1,5 @@
 <template>
-	<div class="padding_page">
+	<div class="padding_page ddd">
 		<div class="supplier_detail_container">
 			<div class="padding_page_content">
 				<SearchWidget page_path="supplier_detai" @callback="searchFn" placeholder="供应商详情搜索"/>
@@ -62,7 +62,7 @@
 					<EmptyPage :is_loading="loading" v-else/>
 				</el-card>
 			</div>
-			<CarWidget/>
+			<CarWidget :is_fixed="true"/>
 		</div>
 	</div>
 </template>
@@ -174,18 +174,22 @@
 	}
 </script>
 <style lang="less" scoped>
+.ddd{
+	overflow-y: scroll;
+}
 .supplier_detail_container{
 	position: relative;
 	width: 1725rem;
 	height: 100%;
 }
+.supplier_detail_container::-webkit-scrollbar{display:none}
 .padding_page_content{
 	position: absolute;
 	top:0;
 	left: 0;
 	width: 100%;
 	height: 100%;
-	overflow-y: scroll;
+	// overflow-y: scroll;
 	.card_box{
 		.top_content{
 			margin-bottom: 20rem;

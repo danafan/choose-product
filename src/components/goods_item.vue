@@ -612,7 +612,6 @@
 						if(res.data.code == 1){
 							this.$message.success(res.data.msg);
 							this.show_select = false;
-							this.$emit('callback',{});
 						}else{
 							this.$message.warning(res.data.msg);
 						}

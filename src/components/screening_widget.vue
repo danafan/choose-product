@@ -21,6 +21,7 @@
 					<div v-if="style_list.length > 0">拍摄风格（{{style_list[style_index].shooting_style_name}}）</div>
 					<img class="right_arrow" src="../static/down_arrow.png">
 					<div v-if="rating_list.length > 0">等级（{{rating_list[rating_index].grade_name}}）</div>
+					<div class="reset_button" @click.stop="resetFn">重置选择</div>
 				</div>
 				
 			</div>
@@ -237,6 +238,16 @@
 					}
 				})
 			},
+			resetFn(){
+				this.supplier_index = 0;
+				this.market_index = 0;
+				this.category_index = 0;
+				this.class_index = 0;
+				this.style_index = 0;
+				this.rating_index = 0;
+				//获取当前条件并传递
+				this.callbackFn();
+			},
 			//点击展开或收起
 			checkFn(){
 				this.$store.commit("setScreen", !this.screen_open);
@@ -368,6 +379,18 @@
 		.tj_row{
 			display: flex;
 			align-items: center;
+			.reset_button{
+				cursor: pointer;
+				margin-left: 30rem;
+				border-radius: 10rem;
+				border: 1px solid #F37605;
+				width: 74rem;
+				text-align: center;
+				height: 22rem;
+				line-height: 21rem;
+				color: #F37605;
+				font-size: 14rem;
+			}
 		}
 		.right_arrow{
 			margin-left: 5rem;

@@ -158,6 +158,8 @@
 			}
 		},
 		created(){
+			//商品ID
+			this.style_id = this.$route.query.style_id;
 			this.is_detail = this.$route.query.goods_type == '3' || this.$route.query.goods_type == '4'?true:false;
 			//页面来源
 			this.page_type = this.$route.query.page_type;
@@ -192,8 +194,6 @@
 			},
 			//获取商品详情
 			getGoodsDetail(){
-				//商品ID
-				this.style_id = this.$route.query.style_id;
 				var arg = {
 					style_id:this.style_id
 				}
@@ -210,6 +210,16 @@
 						})
 					}else if(this.goods_type == '4'){//审核
 						resource.examEditGoods(arg).then(res => {
+							if(res.data.code == 1){
+								let data_info = res.data.data;
+								//处理详情
+								this.setInfo(data_info);
+							}else{
+								this.$message.warning(res.data.msg);
+							}
+						})
+					}else if(this.goods_type == '5'){	//重新提交
+						resource.returnEditGoodsGet(arg).then(res => {
 							if(res.data.code == 1){
 								let data_info = res.data.data;
 								//处理详情
@@ -396,7 +406,7 @@
 							if(this.page_type == 'goods'){	//商品管理
 								if(this.goods_type == '5'){	//重新提交
 									arg.type = 1;
-									resource.returnEditGoods(arg).then(res => {
+									resource.returnEditGoodsPost(arg).then(res => {
 										if(res.data.code == 1){
 											this.$message.success(res.data.msg);
 											this.$router.go(-1);

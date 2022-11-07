@@ -89,94 +89,94 @@ const router = new Router({
         meta:{
          keep_alive:true,
          use_cache:false
-        },
-        component: chain_goods_page,
-      },
-      {
-        path: "/chain_audit_page",
-        name: "商品审核",
-        component: chain_audit_page
-      },
-      {
-        path: "/edit_goods",
-        name: "上传/编辑商品",
-        meta:{
-          is_back:true
-        },
-        component: edit_goods
-      },
-      {
-        path: "/image_setting",
-        name: "图片管理",
-        meta:{
-          is_back:true
-        },
-        component: image_setting
-      },
-      {
-        path: "/chain_supplier_page",
-        name: "供应商",
-        meta:{
-         keep_alive:true,
-         use_cache:false
-        },
-       component: chain_supplier_page
+       },
+       component: chain_goods_page,
      },
      {
-      path: "/add_edit_supplier",
-      name: "添加/编辑供应商",
+      path: "/chain_audit_page",
+      name: "商品审核",
+      component: chain_audit_page
+    },
+    {
+      path: "/edit_goods",
+      name: "上传/编辑商品",
       meta:{
         is_back:true
       },
-      component: add_edit_supplier
+      component: edit_goods
     },
     {
-      path: "/chain_supplier_detail",
-      name: "供应商详情",
+      path: "/image_setting",
+      name: "图片管理",
       meta:{
         is_back:true
       },
-      component: chain_supplier_detail
+      component: image_setting
     },
     {
-      path: "/chain_setting_page",
-      name: "配置",
-      component: chain_setting_page
-    },
-    {
-      path: "/edit_record",
-      name: "修改记录",
+      path: "/chain_supplier_page",
+      name: "供应商",
       meta:{
-        is_back:true
-      },
-      component: edit_record
+       keep_alive:true,
+       use_cache:false
+     },
+     component: chain_supplier_page
+   },
+   {
+    path: "/add_edit_supplier",
+    name: "添加/编辑供应商",
+    meta:{
+      is_back:true
     },
-    {
-      path: "/chain_permissions_page",
-      name: "权限",
-      component: chain_permissions_page
-    },
-    {
-      path: "/chain_feekback_page",
-      name: "反馈",
-      component: chain_feekback_page
-    },
-    ]
+    component: add_edit_supplier
   },
-  ],
+  {
+    path: "/chain_supplier_detail",
+    name: "供应商详情",
+    meta:{
+      is_back:true
+    },
+    component: chain_supplier_detail
+  },
+  {
+    path: "/chain_setting_page",
+    name: "配置",
+    component: chain_setting_page
+  },
+  {
+    path: "/edit_record",
+    name: "修改记录",
+    meta:{
+      is_back:true
+    },
+    component: edit_record
+  },
+  {
+    path: "/chain_permissions_page",
+    name: "权限",
+    component: chain_permissions_page
+  },
+  {
+    path: "/chain_feekback_page",
+    name: "反馈",
+    component: chain_feekback_page
+  },
+  ]
+},
+],
 },
 ],
 });
 
-// router.beforeEach((to, from, next) => {
-//   if (to.path == "/") {
-//     let menulist = Store.state.menu_list;
-//     Store.commit('setActiveIndex',0);
-//     next(`/${menulist[0].web_url}`);
-//   }else{
-//     next();
-//   }
-// });
+router.beforeEach((to, from, next) => {
+  //处理商品管理缓存
+  if(to.path == '/chain_goods_page' && (from.path == '/edit_goods' || from.path == '/image_setting')){
+    to.meta.use_cache = true;
+  }else{
+    to.meta.use_cache = false;
+  }
+  next();
+});
 
 const originalPush = Router.prototype.push;
 Router.prototype.push = function push(location) {

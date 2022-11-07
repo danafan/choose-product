@@ -272,8 +272,12 @@ export default {
   editGoodsPost(params) {
     return http.post(path.editGoods, params);
   },
-  //重新提交
-  returnEditGoods(params) {
+  //重新提交(get)
+  returnEditGoodsGet(params) {
+    return http.get(path.returnEditGoods, params);
+  },
+  //重新提交(post)
+  returnEditGoodsPost(params) {
     return http.post(path.returnEditGoods, params);
   },
   //审核前获取商品信息

@@ -202,6 +202,7 @@
 				}
 			}
 		}
+		.list_content::-webkit-scrollbar{display:none}
 	}
 }
 </style>
