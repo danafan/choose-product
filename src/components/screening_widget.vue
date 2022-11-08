@@ -109,7 +109,7 @@
 				rating_index:0,			//选中的供应商评级下标
 				rating_list:[],			//供应商评级列表
 				sort_list:[{
-					name:'销量',
+					name:'30天销量',
 					key:'sales',
 					val:'sales_num_all',
 					sort:'default'
@@ -421,7 +421,6 @@
 	.conditions_row{
 		border-bottom: 1px dashed #DEDEDE;
 		display: flex;
-		padding-top: 5rem;
 		.lable{
 			white-space:normal;
 			width: 110rem;
@@ -433,9 +432,7 @@
 			flex-wrap: wrap;
 			.item{
 				cursor:pointer;
-				padding: 3px 12px;
-				margin-bottom: 5rem;
-				margin-right: 3rem;
+				padding: 4px 12px;
 				color: #333333;
 			}
 			.item:hover{

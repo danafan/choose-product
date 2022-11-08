@@ -10,7 +10,7 @@
 							<div class="info_item">供应商编码：{{item.supplier_code}}</div>
 							<div class="info_item">主营：{{item.main_business}}</div>
 							<div class="info_item">结算方式：{{item.supply_monthly_settlement == 1?'月结':'现结'}}</div>
-							<div class="info_item">评级：<span>{{item.grade_name}}</span></div>
+							<div class="info_item">供应商等级：<span>{{item.grade_name}}</span></div>
 						</div>
 						<div class="image_list">
 							<div v-for="i in item.goods_list" @click="getDetail(i.style_id)">

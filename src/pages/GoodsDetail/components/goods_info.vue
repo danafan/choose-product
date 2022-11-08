@@ -102,14 +102,14 @@
 							</div>
 						</div>
 						<div class="form_item">
-							<div class="lable"><span>*</span>需求日期：</div>
+							<div class="lable">需求日期：</div>
 							<div class="value">
 								<el-date-picker size="mini" v-model="demand_date" type="date" value-format="yyyy-MM-dd" placeholder="选择日期">
 								</el-date-picker>
 							</div>
 						</div>
 						<div class="form_item">
-							<div class="lable"><span>*</span>售卖价格：</div>
+							<div class="lable">售卖价格：</div>
 							<div class="value">
 								<el-input size="mini" type="number" clearable v-model="selling_price" placeholder="请输入售卖价格"></el-input>
 							</div>
@@ -197,14 +197,7 @@
 					this.$message.warning('请选择需求类型!');
 				}else if(this.send_type == ''){
 					this.$message.warning('请选择发货类型!');
-				}else if(this.demand_date == ''){
-					this.$message.warning('请选择需求时间!');
-				}else if(this.selling_price == ''){
-					this.$message.warning('请输入售卖价格!');
 				}else{
-					// let shop_arr = this.store_list.filter(item => {
-					// 	return item.shop_code == this.shop_code;
-					// })
 					var shop_code_arr = [];
 					var shop_name_arr = [];
 					this.shop_code.map(item => {
@@ -329,11 +322,10 @@
 	display: flex;
 	flex-direction: column;
 	.goods_name{
-		padding-top: 20rem;
 		padding-bottom: 20rem;
 		font-size: 16rem;
 		color: #333333;
-		font-weight: 500;
+		font-weight: bold;
 	}
 	.info_content{
 		flex:1;

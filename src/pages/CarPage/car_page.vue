@@ -5,9 +5,11 @@
 			<el-card class="card_box" id="card_box">
 				<div class="all_title" id="all_title">待选（全部{{car_goods.length}}）</div>
 				<el-table ref="multipleTable" size="mini" :data="car_goods" tooltip-effect="dark" style="width: 100%" @selection-change="changeSelected" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" v-loading="loading">
-					<el-table-column type="selection" width="55" fixed="left" :selectable="setStatus"></el-table-column>
+					<el-table-column type="selection" width="85" fixed="left" :selectable="setStatus">
+					</el-table-column>
 					<el-table-column label="图片" width="160">
 						<template slot-scope="scope">
+							<div class="sx" v-if="scope.row.status == 1">失效</div>
 							<el-image :z-index="2008" class="image" :src="scope.row.images[0]" fit="scale-down" :preview-src-list="scope.row.images"></el-image>
 						</template>
 					</el-table-column>
@@ -58,14 +60,14 @@
 							</div>
 						</div>
 						<div class="form_item">
-							<div class="lable"><span>*</span>需求日期：</div>
+							<div class="lable">需求日期：</div>
 							<div class="value">
 								<el-date-picker size="mini" v-model="demand_date" type="date" value-format="yyyy-MM-dd" placeholder="选择日期">
 								</el-date-picker>
 							</div>
 						</div>
 						<div class="form_item">
-							<div class="lable"><span>*</span>售卖价格：</div>
+							<div class="lable">售卖价格：</div>
 							<div class="value">
 								<el-input size="mini" type="number" clearable v-model="selling_price" placeholder="请输入售卖价格"></el-input>
 							</div>
@@ -133,6 +135,9 @@
 			//获取购物车列表数量
 			this.getCarList();
 		},
+		updated(){
+			this.addTableIndex();
+		},
 		computed:{
 			//图片前缀
 			domain(){
@@ -145,6 +150,25 @@
     		window.addEventListener("resize", this.onResize());
     	},
     	methods: {
+    		addTableIndex() {
+    			console.log('asd')
+    			let table = document.querySelector(".el-table__body-wrapper");
+    			let tableSelect = table.getElementsByClassName(
+    				"el-table-column--selection"
+    				);
+
+    			var arr = Array.from(tableSelect);
+    			arr.forEach((item, index) => {
+    				if (item.childNodes.length == 2) {
+    					item.removeChild(item.lastChild);
+    				}
+    				let span = document.createElement("span");
+    				span.innerText = index + 1;
+    				item.appendChild(span);
+    			});
+    		},
+
+
     		//监听屏幕大小变化
     		onResize() {
     			this.$nextTick(() => {
@@ -214,10 +238,6 @@
 					this.$message.warning('请选择需求类型!');
 				}else if(this.send_type == ''){
 					this.$message.warning('请选择发货类型!');
-				}else if(this.demand_date == ''){
-					this.$message.warning('请选择需求时间!');
-				}else if(this.selling_price == ''){
-					this.$message.warning('请输入售卖价格!');
 				}else{
 					var shop_code_arr = [];
 					var shop_name_arr = [];
@@ -345,10 +365,27 @@
 			font-size: 14rem;
 			color: #333333;
 		}
+		.sx{
+			background: #D8D8D8;
+			border:1px solid #979797;
+			width: 40px;
+			text-align: center;
+			height: 16px;
+			line-height: 16px;
+			border-radius: 8px;
+			position: absolute;
+			left: -12px;
+			top: 45%;
+			transform: translate(-50%,0);
+			z-index: 999;
+			font-size: 12px;
+			color: #333333;
+		}
 		.image{
 			width: 140rem;
 			height: 140rem;
 		}
+		
 		.record_title{
 			font-size:12rem;
 			color: var(--color);

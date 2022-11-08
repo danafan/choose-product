@@ -107,7 +107,7 @@
 	overflow-y: scroll;
 }
 .padding_page_content{
-	width: 1440rem;
+	width: 1330rem;
 	height: 100%;
 	display: flex;
 	flex-direction: column;

@@ -6,10 +6,6 @@
 				<div class="store_info_lable">供应商</div>
 				<div class="store_info_value">{{goods_info.supplier_name}}</div>
 			</div>
-			<!-- <div class="store_info_row">
-				<div class="store_info_lable">编码</div>
-				<div class="store_info_value">{{goods_info.supplier_id}}</div>
-			</div> -->
 			<div class="store_info_row">
 				<div class="store_info_lable">主营</div>
 				<div class="store_info_value">{{goods_info.main_business}}</div>
@@ -19,7 +15,7 @@
 				<div class="store_info_value">{{goods_info.supply_monthly_settlement}}</div>
 			</div>
 			<div class="store_info_row">
-				<div class="store_info_lable">评级</div>
+				<div class="store_info_lable">供应商等级</div>
 				<div class="store_info_pj">{{goods_info.grade_name}}</div>
 			</div>
 			<div class="get_detail" @click="supplierDetail">查看详情</div>
@@ -49,7 +45,7 @@
 <style lang="less" scoped>
 .store_info_container{
 	position: relative;
-	width: 214rem;
+	width: 198rem;
 	height: 308rem;
 	.store_info_back{
 		position: absolute;

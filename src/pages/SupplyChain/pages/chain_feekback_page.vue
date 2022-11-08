@@ -28,6 +28,11 @@
 				</el-table-column>
 				<el-table-column prop="feedback_real_name" width="160" label="反馈人" show-overflow-tooltip align="center"></el-table-column>
 				<el-table-column prop="feedback_time" width="160" label="反馈时间" show-overflow-tooltip align="center"></el-table-column>
+				<el-table-column prop="feedback_time" width="160" label="处理状态" show-overflow-tooltip align="center">
+					<template slot-scope="scope">
+						<div>{{scope.row.feedback_status == 1?'待处理':'已处理'}}</div>
+					</template>
+				</el-table-column>
 				<el-table-column label="操作" align="center" width="160" fixed="right">
 					<template slot-scope="scope">
 						<el-button type="text" size="small" v-if="scope.row.feedback_status == '1' && button_list.confirm == 1" @click="confirmFn(scope.row.feedback_id)">确认处理</el-button>

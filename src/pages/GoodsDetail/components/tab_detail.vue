@@ -3,7 +3,7 @@
 		<div class="detail_info">
 			<div class="info_box">
 				<div>浏览量：{{goods_info.views_num}}次</div>
-				<div>销量：{{goods_info.sales_num_all}}件</div>
+				<div>30天销量：{{goods_info.sales_num_all}}件</div>
 			</div>
 			<div class="info_box">
 				<div>选中量：{{goods_info.select_num}}</div>

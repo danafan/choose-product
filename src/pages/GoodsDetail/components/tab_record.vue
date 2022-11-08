@@ -8,7 +8,7 @@
 			</el-table-column>
 			<el-table-column width="140" label="销量" align="center">
 				<template slot-scope="scope">
-					<div class="num">销量 {{scope.row.sales_num}}</div>
+					<div class="num">30天销量 {{scope.row.sales_num}}</div>
 				</template>
 			</el-table-column>
 			<el-table-column width="180" prop="select_time" label="时间" align="center"></el-table-column>

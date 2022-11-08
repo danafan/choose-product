@@ -50,7 +50,7 @@
 						{{scope.row.supply_monthly_settlement == 1?'月结':'现结'}}
 					</template>
 				</el-table-column>
-				<el-table-column label="评级" prop="grade_name" show-overflow-tooltip></el-table-column>
+				<el-table-column label="供应商等级" prop="grade_name" show-overflow-tooltip></el-table-column>
 				<el-table-column label="操作" width="180" fixed="right">
 					<template slot-scope="scope">
 						<el-button type="text" size="small" @click="getDetail(scope.row.supplier_id)" v-if="button_list.view == 1">查看</el-button>

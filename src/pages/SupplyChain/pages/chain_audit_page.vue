@@ -32,7 +32,7 @@
 						</el-option>
 					</el-select>
 				</el-form-item>
-				<el-form-item label="店铺：">
+				<el-form-item label="需求店铺：">
 					<el-select v-model="shop_code" clearable multiple filterable collapse-tags placeholder="全部">
 						<el-option v-for="item in store_list" :key="item.shop_code" :label="item.shop_name" :value="item.shop_code">
 						</el-option>
