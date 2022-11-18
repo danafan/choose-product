@@ -20,7 +20,7 @@
 					<img class="right_arrow" src="../static/down_arrow.png">
 					<div v-if="style_list.length > 0">拍摄风格（{{style_list[style_index].shooting_style_name}}）</div>
 					<img class="right_arrow" src="../static/down_arrow.png">
-					<div v-if="rating_list.length > 0">等级（{{rating_list[rating_index].grade_name}}）</div>
+					<div v-if="rating_list.length > 0 && page_type != 'gys_supplier'">等级（{{rating_list[rating_index].grade_name}}）</div>
 					<div class="reset_button" @click.stop="resetFn">重置选择</div>
 				</div>
 				
@@ -61,7 +61,7 @@
 					<div class="item" :class="{'active_item':style_index == index}" v-for="(item,index) in style_list" @click.stop="checkIndex('style',index)">{{item.shooting_style_name}}</div>
 				</div>
 			</div>
-			<div class="conditions_row none_border">
+			<div class="conditions_row none_border" v-if="page_type != 'gys_supplier'">
 				<div class="lable">供应商评级：</div>
 				<div class="list">
 					<div class="item" :class="{'active_item':rating_index == index}" v-for="(item,index) in rating_list" @click.stop="checkIndex('rating',index)">{{item.grade_name}}</div>
@@ -77,7 +77,7 @@
 					<img class="sort_icon" src="../static/sort_desc.png" v-if="item.sort == 'desc'">
 				</div>
 			</div>
-			<div class="style_row">
+			<div class="style_row" v-if="page_type != 'gys_supplier'">
 				<div class="style_item" :class="{'active_color':item.is_selected === 1}" v-for="(item,index) in cate_style_list" @click="checkStyle(index)">{{item.name}}</div>
 			</div>
 			<div class="date_row">
@@ -169,7 +169,7 @@
 			}
 		},
 		props:{
-			//index:首页；supplier:供应商
+			//index:首页；supplier:供应商；gys_supplier:供应商来源
 			page_type:{
 				type:String,
 				default:"index"
@@ -231,8 +231,6 @@
 							grade_id:''
 						})
 						this.rating_list = rating_list;
-						//获取当前条件并传递
-						// this.callbackFn();
 					}else{
 						this.$message.warning(res.data.msg);
 					}
@@ -314,15 +312,21 @@
 				var arg = {
 					start_time:this.date && this.date.length > 0?this.date[0]:"",
 					end_time:this.date && this.date.length > 0?this.date[1]:"",
-					hot_style:this.cate_style_list[0].is_selected,
-					data_style:this.cate_style_list[1].is_selected,
-					sole_style:this.cate_style_list[2].is_selected,
-					again_style:this.cate_style_list[3].is_selected
 				}
+
 				//处理排序
 				let sort_arr = this.sort_list.filter(item => {
 					return item.sort != 'default';
 				})
+
+				//处理款式分类
+				if(this.page_type != 'gys_supplier'){
+					arg.hot_style = this.cate_style_list[0].is_selected;
+					arg.data_style = this.cate_style_list[1].is_selected;
+					arg.sole_style = this.cate_style_list[2].is_selected;
+					arg.again_style = this.cate_style_list[3].is_selected;
+				}
+
 				if(sort_arr.length > 0){
 					arg[sort_arr[0].key] = sort_arr[0].val + '-' + sort_arr[0].sort;
 				}
@@ -347,7 +351,7 @@
 					arg.shooting_style_id = this.style_list[this.style_index].shooting_style_id;
 				}
 				//处理评级
-				if(this.rating_index > 0){
+				if(this.page_type != 'gys_supplier' && this.rating_index > 0){
 					arg.grade_id = this.rating_list[this.rating_index].grade_id;
 				}
 				this.$emit('callback',arg);

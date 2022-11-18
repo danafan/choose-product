@@ -74,10 +74,6 @@
 						<div class="form_item">
 							<div class="lable"><span>*</span>店铺：</div>
 							<div class="value">
-								<!-- <el-select v-model="shop_code" size="mini" clearable placeholder="选择店铺">
-									<el-option v-for="item in store_list" :key="item.shop_code" :label="item.shop_name" :value="item.shop_code">
-									</el-option>
-								</el-select> -->
 								<el-select v-model="shop_code" size="mini" multiple collapse-tags filterable clearable placeholder="选择店铺">
 								<el-option v-for="item in store_list" :key="item.shop_code" :label="item.shop_name" :value="item.shop_code">
 								</el-option>
@@ -214,7 +210,7 @@
 						shop_name:shop_name_arr.join(','),
 						demand_type:this.demand_type.join(','),
 						send_type:this.send_type,
-						demand_date:this.demand_date,
+						demand_date:this.demand_date?this.demand_date:"",
 						selling_price:this.selling_price,
 						remark:this.remark
 					}

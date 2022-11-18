@@ -11,10 +11,7 @@
 		<div class="right_content">
 			<div class="right_content_title">
 				<div class="page_title">{{title}}</div>
-				<div class="back_row" @click="$router.go(-1)" v-if="is_back">
-					<img class="page_back_icon" src="../../static/page_back_icon.png">
-					返回
-				</div>
+				<GoBack v-if="is_back"/>
 				<div class="edit_record" v-if="show_record" @click="$router.push('/edit_record')">修改记录</div>
 			</div>
 			<div class="right_content_box">
@@ -28,6 +25,7 @@
 	</div>
 </template>
 <script>
+	import GoBack from '../../components/go_back.vue'
 	export default{
 		data(){
 			return{
@@ -112,6 +110,9 @@
 				let path = this.menu_list[index].path;
 				this.$router.push(path);
 			},
+		},
+		components:{
+			GoBack
 		}
 	}
 </script>
@@ -175,23 +176,6 @@
 				font-size:18rem;
 				color: #333333;
 				font-weight: 500;
-			}
-			.back_row{
-				border-radius: 2rem;
-				background: var(--color);
-				width: 80rem;
-				height: 32rem;
-				display: flex;
-				align-items: center;
-				justify-content: center;
-				font-size:14rem;
-				color: #ffffff;
-				cursor:pointer;
-				.page_back_icon{
-					margin-right: 4rem;
-					width: 16rem;
-					height: 16rem;
-				}
 			}
 			.edit_record{
 				font-size:14rem;

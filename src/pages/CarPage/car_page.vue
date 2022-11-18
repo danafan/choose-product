@@ -262,7 +262,7 @@
 						shop_code:shop_code_arr.join(','),
 						shop_name:shop_name_arr.join(','),
 						demand_type:this.demand_type.join(','),
-						demand_date:this.demand_date,
+						demand_date:this.demand_date?this.demand_date:"",
 						send_type:this.send_type,
 						selling_price:this.selling_price,
 						remark:this.remark

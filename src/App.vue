@@ -55,9 +55,6 @@
               this.$store.commit("setIndex", 0);
               localStorage.setItem("active_index",0);
 
-              this.$store.commit("setNoticeList", data.notice_list);
-              localStorage.setItem("notice_list",JSON.stringify(data.notice_list))
-
               this.$router.replace('tab_menu');
             }else{
               this.$message.warning(res.data.msg);
