@@ -74,7 +74,8 @@ let path = {
   addSelectRemark:'selected/addselectremark',         //添加备注
   deriveSelected:'selected/deriveselected',           //导出
   setAbutmentType:'productstyle/setabutmenttype',     //设置对接推单
-};
+  accountList:'supplier_manager/account_list',        //供应商账号列表
+};  
 export default {
   //类目列表接口
   getCateList(params) {
@@ -407,5 +408,9 @@ export default {
   //设置对接推单
   setAbutmentType(params) {
     return http.post(path.setAbutmentType, params);
+  },
+  //供应商账号列表
+  accountList(params) {
+    return http.get(path.accountList, params);
   },
 };
