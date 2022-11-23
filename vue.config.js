@@ -5,7 +5,7 @@ function resolve (dir) {
 module.exports = {	
 	devServer: {
 		proxy: {
-			'/api': {
+			'/': {
 				target: 'http://selectiontest.92nu.com',
 				ws: true,
 				changOlrigin: true,		

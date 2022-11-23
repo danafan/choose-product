@@ -66,7 +66,7 @@
 	</div>
 </template>
 <script>
-	import resource from '../../api/resource.js'
+	import resource from '../../api/supplier_resource.js'
 
 	import SearchWidget from '../../components/search_widget.vue'
 	import ScreeningWidget from '../../components/screening_widget.vue'
@@ -76,7 +76,6 @@
 	export default{
 		data(){
 			return{
-				supplier_id:"",				//供应商ID
 				supplier_info:{},			//基本信息
 				loading:true,
 				goods_list:[],	//商品列表
@@ -89,7 +88,6 @@
 			}
 		},
 		created(){
-			this.supplier_id = "123";
 			//供应商基本信息
 			this.supplierInfo();
 			let arg = {
@@ -102,10 +100,7 @@
     	methods:{
 			//供应商基本信息
 			supplierInfo(){
-				let arg = {
-					supplier_id:this.supplier_id
-				}
-				resource.supplierInfo(arg).then(res => {
+				resource.supplierInfo().then(res => {
 					if(res.data.code == 1){
 						this.supplier_info = res.data.data;
 					}else{
@@ -148,9 +143,8 @@
 			getList(arg){
 				arg.pagesize = 30;
 				arg.search = this.search;
-				arg.supplier_id = this.supplier_id;
 				this.loading = true;
-				resource.supplierGoods(arg).then(res => {
+				resource.supplierIndex(arg).then(res => {
 					if(res.data.code == 1){
 						let data = res.data.data;
 						this.goods_list = data.data;

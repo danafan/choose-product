@@ -186,7 +186,7 @@
       };
     },
     created() {
-      this.getNotice();
+      // this.getNotice();
       this.username = localStorage.getItem("ding_user_name");
       this.$router.push(this.active_path)
     },

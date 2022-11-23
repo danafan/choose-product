@@ -7,7 +7,8 @@
   import resource from './api/resource.js'
   export default {
     created() {
-      if(!localStorage.getItem("cache")){
+      let user_type = localStorage.getItem("user_type");
+      if(!localStorage.getItem("cache") && user_type == '1'){
         //获取用户信息
         this.getUserInfo();
       }else{
@@ -26,6 +27,7 @@
             if (res.data.code == 1) {
               localStorage.setItem("cache",true);
               let data = res.data.data;
+              localStorage.setItem("user_type", data.user_type);
               localStorage.setItem("ding_user_id", data.ding_user_id);
               localStorage.setItem("ding_user_name", data.ding_user_name);
               localStorage.setItem("secret_key", data.secret_key);
@@ -33,14 +35,14 @@
               let domain = data.img_domain;
               this.$store.commit('setDomain',domain);
               localStorage.setItem("domain",domain);
-              //获取导航和公告
+              //获取导航
               this.getMenuNotice();
             } else {
               this.$message.warning(res.data.msg);
             }
           });
         },
-        //获取导航和公告
+        //获取导航
         getMenuNotice(){
           resource.getMenuNotice().then(res => {
             if(res.data.code == 1){

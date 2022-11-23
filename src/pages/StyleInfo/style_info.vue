@@ -26,12 +26,6 @@
 						</el-option>
 					</el-select>
 				</el-form-item>
-				<el-form-item label="上架状态：">
-					<el-select v-model="status_id" clearable placeholder="全部">
-						<el-option v-for="item in status_list" :key="item.id" :label="item.name" :value="item.id">
-						</el-option>
-					</el-select>
-				</el-form-item>
 				<el-form-item label="审核状态：">
 					<el-select v-model="check_status_id" clearable placeholder="全部">
 						<el-option v-for="item in check_status_list" :key="item.id" :label="item.name" :value="item.id">
@@ -62,11 +56,6 @@
 				<el-table-column type="selection" width="55" fixed>
 				</el-table-column>
 				<el-table-column label="款号" prop="style_name" show-overflow-tooltip></el-table-column>
-				<el-table-column label="款式编码" show-overflow-tooltip>
-					<template slot-scope="scope">
-						<div v-for="item in scope.row.ksbm">{{item}}</div>
-					</template>
-				</el-table-column>
 				<el-table-column label="图片" width="120">
 					<template slot-scope="scope">
 						<div v-if="scope.row.images.length == 0">暂无</div>
@@ -98,17 +87,17 @@
 				<el-table-column label="操作" width="160" fixed="right">
 					<template slot-scope="scope">
 						<el-button style="margin-right: 10px" type="text" size="small" v-if="scope.row.check_status == 2" @click="$router.push('/gys_image_setting?style_id=' + scope.row.style_id + '&style_name=' + scope.row.style_name)">图片管理</el-button>
-						<el-dropdown size="small" @command="handleCommand($event,scope.row.style_id)" v-if="scope.row.check_status == 2 && (button_list.info == 1 || button_list.edit == 1 || button_list.del == 1)">
+						<el-dropdown size="small" v-if="scope.row.check_status == 2" @command="handleCommand($event,scope.row.style_id)">
 							<el-button type="text" size="small">
 								更多<i class="el-icon-arrow-down el-icon--right"></i>
 							</el-button>
 							<el-dropdown-menu slot="dropdown">
-								<el-dropdown-item command="1" v-if="button_list.info == 1">查看</el-dropdown-item>
-								<el-dropdown-item command="2" v-if="button_list.edit == 1">编辑</el-dropdown-item>
+								<el-dropdown-item command="1">查看</el-dropdown-item>
+								<el-dropdown-item command="2">编辑</el-dropdown-item>
 							</el-dropdown-menu>
 						</el-dropdown>
-						<el-button type="text" size="small" v-if="scope.row.check_status == 2 && button_list.in_out == 1" @click="checkStatus(scope.row.style_id,scope.row.status)">{{scope.row.status == 1?'下架':'上架'}}</el-button>
-						<el-button type="text" size="small" v-if="scope.row.check_status == 3 && button_list.reset == 1" @click="$router.push('/gys_edit_goods?goods_type=5&style_id=' + scope.row.style_id)">重新提交</el-button>
+						<el-button type="text" size="small" v-if="scope.row.check_status == 2" @click="checkStatus(scope.row.style_id,scope.row.status)">{{scope.row.status == 1?'下架':'上架'}}</el-button>
+						<el-button type="text" size="small" v-if="scope.row.check_status == 3" @click="$router.push('/gys_edit_goods?goods_type=5&style_id=' + scope.row.style_id)">重新提交</el-button>
 					</template>
 				</el-table-column>
 			</el-table>
@@ -180,7 +169,7 @@
 </style>
 <script>
 	import commonResource from '../../api/common_resource.js'
-	import resource from '../../api/chain_resource.js'
+	import resource from '../../api/supplier_resource.js'
 	import { getNowDate,getCurrentDate } from "../../api/date.js";
 
 	import TableTitle from '../SupplyChain/components/table_title.vue'
@@ -197,23 +186,24 @@
 				shooting_style_ids:[],	//选中的拍摄风格
 				class_list:[],			//分类列表
 				classification_ids:[],	//选中的分类
-				status_list:[{
-					name:'已上架',
-					id:1
-				},{
-					name:'已下架',
-					id:0
-				}],						//上架状态列表
-				status_id:"",			//选中的上架状态
 				check_status_list:[{
-					name:'待审核',
+					name:'上架待审核',
 					id:1
 				},{
-					name:'审核通过',
+					name:'审核通过(已上架)',
 					id:2
 				},{
-					name:'审核拒绝',
+					name:'上架审核拒绝',
 					id:3
+				},{
+					name:'下架待审核',
+					id:4
+				},{
+					name:'下架审核通过(已下架)',
+					id:5
+				},{
+					name:'下架审核拒绝',
+					id:6
 				}],						//审核状态列表
 				check_status_id:"",		//选中的审核状态
 				date:[],				//上新日期
@@ -389,7 +379,7 @@
 					pagesize:10
 				}
 				this.loading = true;
-				resource.getGoodsList(arg).then(res => {
+				resource.getSupplierGoods(arg).then(res => {
 					if(res.data.code == 1){
 						this.loading = false;
 						this.button_list = res.data.data.button_list;

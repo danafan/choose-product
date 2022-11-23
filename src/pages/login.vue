@@ -191,32 +191,61 @@
     },
     ddLoginInit(appKey) {
       let url = `${location.origin}/api/scancodes/ewmlogin`;
-				// let url = "http://selectiontest.92nu.com/api/scancodes/ewmlogin";
-				const goto = encodeURIComponent(
-					`https://oapi.dingtalk.com/connect/oauth2/sns_authorize?appid=${appKey}&response_type=code&scope=snsapi_login&state=STATE&redirect_uri=${url}`
-					);
-				window.DDLogin({
-					id: "container",
-					goto: goto,
-					style: "border:none;background-color:#FFFFFF;margin:0 auto;",
+			// let url = "http://selectiontest.92nu.com/api/scancodes/ewmlogin";
+      const goto = encodeURIComponent(
+       `https://oapi.dingtalk.com/connect/oauth2/sns_authorize?appid=${appKey}&response_type=code&scope=snsapi_login&state=STATE&redirect_uri=${url}`
+       );
+      window.DDLogin({
+       id: "container",
+       goto: goto,
+       style: "border:none;background-color:#FFFFFF;margin:0 auto;",
         		width: "100%", //官方参数 365
         		height: "300", //官方参数 400
           });
-				let handleMessage = (event) => {
-					let origin = event.origin;
-					if (origin == "https://login.dingtalk.com") {
-            const loginTmpCode = event.data;
-            window.location.href = `https://oapi.dingtalk.com/connect/oauth2/sns_authorize?appid=${appKey}&response_type=code&scope=snsapi_login&state=STATE&redirect_uri=${url}&loginTmpCode=${loginTmpCode}`;
-          }
-        };
-        if (typeof window.addEventListener != "undefined") {
-         window.addEventListener("message", handleMessage, false);
-       } else if (typeof window.attachEvent != "undefined") {
-         window.attachEvent("onmessage", handleMessage);
-       }
-     },
+      let handleMessage = (event) => {
+       let origin = event.origin;
+       if (origin == "https://login.dingtalk.com") {
+        const loginTmpCode = event.data;
+        window.location.href = `https://oapi.dingtalk.com/connect/oauth2/sns_authorize?appid=${appKey}&response_type=code&scope=snsapi_login&state=STATE&redirect_uri=${url}&loginTmpCode=${loginTmpCode}`;
+      }
+    };
+    if (typeof window.addEventListener != "undefined") {
+     window.addEventListener("message", handleMessage, false);
+   } else if (typeof window.attachEvent != "undefined") {
+     window.attachEvent("onmessage", handleMessage);
+   }
+ },
      //点击登录
      login(){
+      if(this.user_name == ''){
+        this.$message.warning('请输入用户名');
+        return;
+      }else if(this.password == ''){
+        this.$message.warning('请输入密码');
+        return;
+      }
+      let arg = {
+        username:this.user_name,
+        password:this.password
+      }
+      resource.supplierLogin(arg).then(res => {
+        if (res.data.code == "1") {
+          localStorage.setItem("cache",true);
+          let data = res.data.data;
+          localStorage.setItem("user_type", data.user_type);
+          localStorage.setItem("ding_user_id", data.ding_user_id);
+          localStorage.setItem("ding_user_name", data.ding_user_name);
+          localStorage.setItem("secret_key", data.secret_key);
+          localStorage.setItem("login_token", data.login_token);
+          let domain = data.img_domain;
+          this.$store.commit('setDomain',domain);
+          localStorage.setItem("domain",domain);
+        } else {
+          this.$message.warning(res.data.msg);
+        }
+      })
+
+
       let menu_list = [{
         menu_name:'首页',
         web_url:"gys_index"

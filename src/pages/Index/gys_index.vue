@@ -4,10 +4,10 @@
 			<div class="card_title">销量前五十</div>
 			<div class="goods_list" v-if="goods_list.length > 0">
 				<div class="goods_item" v-for="item in goods_list">
-					<div class="goods_img"></div>
+					<el-image class="goods_img" fit="scale-down" :src="domain + item.img"></el-image>
 					<div class="goods_info">
-						<div class="goods_name">情侣装秋装开衫连帽卫衣学生宽松简约优雅.</div>
-						<div class="sales">销量 12313</div>
+						<div class="goods_name">{{item.title}}</div>
+						<div class="sales">销量 {{item.sales_num_all}}</div>
 					</div>
 				</div>
 				<div class="padding_item" v-for="i in 6-(goods_list.length%6) == 6?0:6-(goods_list.length%6)"></div>
@@ -19,32 +19,35 @@
 <script>
 	import EmptyPage from '../../components/empty_page.vue'
 
+	import resource from '../../api/supplier_resource.js'
 	export default{
 		data(){
 			return{
 				loading:true,
-				goods_list:['','','','','','','','','','','','','','',''],	//商品列表
+				goods_list:[],	//商品列表
 			}
 		},
 		created(){
 			//获取列表
-			// this.getList();
+			this.getList();
+		},
+		computed:{
+			//图片前缀
+			domain(){
+				return this.$store.state.domain;
+			}
 		},
 		methods:{
 			//获取列表
-			getList(arg){
-				// arg.search = this.search;
-				// this.loading = true;
-				// resource.getGoodsList(arg).then(res => {
-				// 	if(res.data.code == 1){
-				// 		let data = res.data.data;
-				// 		this.goods_list = data.data;
-				// 		this.total = data.total;
-				// 		this.loading = false;
-				// 	}else{
-				// 		this.$message.warning(res.data.msg);
-				// 	}
-				// })
+			getList(){
+				resource.getSupplierIndex().then(res => {
+					if(res.data.code == 1){
+						this.goods_list = res.data.data;
+						this.loading = false;
+					}else{
+						this.$message.warning(res.data.msg);
+					}
+				})
 			},
 		},
 		components:{
@@ -76,16 +79,14 @@
 			.goods_item{
 				margin-bottom: 20px;
 				width: 264rem;
-				// height: 328rem;
 				background: #FFF3E5;
 				box-shadow: 0px 0px 10px 0px #FFEAD2;
 				border-radius: 12rem;
 				border: 1px solid #FFD2AA;
 				.goods_img{
-					border:1px solid red;
 					border-radius:12rem 12rem 0 0;
-					width: 264rem;
-					height: 264rem;
+					width: 262rem;
+					height: 262rem;
 				}
 				.goods_info{
 					padding: 10rem;

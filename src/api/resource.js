@@ -1,29 +1,30 @@
 import http from "./request.js";
 let path = {
-  showNotice:'index/show_notice',                     //页面顶部公告列表
-  loginOut:'loginquit',                               //退出登录
-  getAppKey:'scancodes/getappkey',                    //获取appkey
-  getUserInfo:'scancodes/getuserinfo',                //获取用户信息
-  getMenuNotice:'access/mymenu',                      //获取导航列表和公告
-  noticeInfo:'index/notice_info',                     //公告详情
-  getGoodsList: "home/getgoodslist",                  //首页商品列表
-  moreImgStyle:'home/moreimgstyle',                   //获取更多风格图
-  moreImgCommodity:'home/moreimgcommodity',           //获取封面图
-  chooseBeforGetImg:'home/choosebeforgetimg',         //选款前获取轮播图
-  chooseGoods:'home/choosegoods',                     //选款
-  confirmFeekBack:'feedback/add',                     //提交反馈
-  getGoodsInfo:'selectcart/selectedinfo',             //获取商品详情
-  addSelectCart:'home/addselectcart',                 //加入购物车
-  getCarList:'selectcart/getwaitselect',              //获取购物车列表
-  removeCarGoods:'selectcart/removewaitselect',       //删除购物车
-  addSelected:'selectcart/addselected',
-  getSelected:'selected/getselected',                 //获取已选列表
-  selectedInfo:'selected/selectedinfo',               //已选详情
-  undoSelected:'selected/revocationselected',         //撤销已选
-  cancelSelected:'selected/cancelselected',           //取消已选
-  supplierList:'supplier/index',                      //获取供应商列表
-  supplierInfo:'supplier/info',                       //供应商基本信息
-  supplierGoods:'supplier/goods',                     //供应商商品列表
+  showNotice:'api/index/show_notice',                     //页面顶部公告列表
+  loginOut:'api/loginquit',                               //退出登录
+  supplierLogin:'api/supplier_login',                     //供应商登录
+  getAppKey:'api/scancodes/getappkey',                    //获取appkey
+  getUserInfo:'api/scancodes/getuserinfo',                //获取用户信息
+  getMenuNotice:'api/access/mymenu',                      //获取导航列表和公告
+  noticeInfo:'api/index/notice_info',                     //公告详情
+  getGoodsList: "api/home/getgoodslist",                  //首页商品列表
+  moreImgStyle:'api/home/moreimgstyle',                   //获取更多风格图
+  moreImgCommodity:'api/home/moreimgcommodity',           //获取封面图
+  chooseBeforGetImg:'api/home/choosebeforgetimg',         //选款前获取轮播图
+  chooseGoods:'api/home/choosegoods',                     //选款
+  confirmFeekBack:'api/feedback/add',                     //提交反馈
+  getGoodsInfo:'api/selectcart/selectedinfo',             //获取商品详情
+  addSelectCart:'api/home/addselectcart',                 //加入购物车
+  getCarList:'api/selectcart/getwaitselect',              //获取购物车列表
+  removeCarGoods:'api/selectcart/removewaitselect',       //删除购物车
+  addSelected:'api/selectcart/addselected',
+  getSelected:'api/selected/getselected',                 //获取已选列表
+  selectedInfo:'api/selected/selectedinfo',               //已选详情
+  undoSelected:'api/selected/revocationselected',         //撤销已选
+  cancelSelected:'api/selected/cancelselected',           //取消已选
+  supplierList:'api/supplier/index',                      //获取供应商列表
+  supplierInfo:'api/supplier/info',                       //供应商基本信息
+  supplierGoods:'api/supplier/goods',                     //供应商商品列表
 } 
 export default {
   //页面顶部公告列表
@@ -33,6 +34,10 @@ export default {
   //退出登录
   loginOut(params) {
     return http.get(path.loginOut, params);
+  },
+  // 供应商登录
+  supplierLogin(params) {
+    return http.post(path.supplierLogin, params);
   },
   //获取appkey
   getAppKey(params) {

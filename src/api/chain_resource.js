@@ -1,80 +1,83 @@
 import http from "./request.js";
 let path = {
-  getCateList: "setting/cate_list",     //类目列表接口
-  addCate:'setting/add_cate',			//创建类目
-  editCate:'setting/edit_cate',			//编辑类目
-  deleteCate:'setting/del_cate',		//删除类目
-  getClassList:'setting/class_list',	//分类列表
-  getClassInfo:'setting/class_info',	//分类详情
-  addClass:'setting/add_class',			//创建分类
-  editClass:'setting/edit_class',		//编辑分类
-  deleteClass:'setting/del_class',		//删除分类
-  getStyleList:'setting/shooting_style_list',		//风格列表
-  addStyle:'setting/add_shooting_style',			//创建风格
-  editStyle:'setting/edit_shooting_style',			//编辑风格
-  deleteStyle:'setting/del_shooting_style',			//删除风格
-  getSeasonList:'setting/season_list',				//季节列表
-  addSeason:'setting/add_season',					//创建季节
-  editSeason:'setting/edit_season',					//编辑季节
-  deleteSeason:'setting/del_season',				//删除季节
-  logList:'setting/log_list',             //修改记录列表
-  getUserList:'user/list',							//（权限配置）用户列表
-  addUser:'user/add',								//创建用户
-  editUser:'user/edit',								//编辑用户
-  menuroleList:'menurole/list',						//角色列表
-  menuRoleAdd:'menurole/add',						//添加角色
-  menuRoleEdit:'menurole/edit',						//编辑角色
-  menuRoleInfo:'menurole/info',						//查看角色
-  delMenuRole:'menurole/del',						//删除角色
-  accessList:'access/accesslist',					//权限列表
-  getMainMenus:'access/getmainmenus',				//所有菜单列表
-  getControllers:'access/getcontrollers',			//所有控制器列表
-  getMethods:'access/getmethods',					//控制器下所有方法列表
-  ajaxAccess:'access/ajaxaccess',					//选择按钮的列表
-  accessAdd:'access/add',							//添加权限
-  accessEdit:'access/edit',							//编辑权限
-  accessDel:'access/del',							//删除权限
-  accessInfo:'access/getinfo',						//权限详情
-  feedBackList:'feedback/list',						//反馈列表
-  feedBackHandle:'feedback/handle',					//确认处理
-  feedBackEditGoods:'feedback/edit_goods',			//编辑商品
-  addAllProductStyle:'productstyle/addallproductstyle', //批量添加商品
-  getGoodsList:'productstyle/getallproductstyle',	//获取商品列表
-  getOnepro:'productstyle/getonepro',           //商品信息查看
-  addGoods:'productstyle/addproductstyle',			//添加商品
-  editGoods:'productstyle/editproductstyle',		//编辑商品
-  returnEditGoods:'productstyle/returneditgoods', //重新提交
-  examEditGoods:'productstyle/exameditgoods',   //审核前获取商品信息
-  auditGoods:'productstyle/examine',				//审批商品
-  delGoods:'productstyle/delproductstyle',			//删除商品
-  styleImageList:'productstyle/styleimagelist',		//风格图列表
-  addStyleImg:'productstyle/addstyleimg',			//添加风格图
-  editStyleImg:'productstyle/editstyleimg',			//编辑风格图
-  delStyleImg:'productstyle/delstyleimg',			//删除风格图
-  upLoadImgList:'productstyle/uploadimglist',		//商品图列表
-  addUploadImg:'productstyle/adduploadimg',			//添加商品图
-  editUploadImg:'productstyle/edituploadimg',		//编辑商品图
-  delUploadImg:'productstyle/deluploadimg',			//删除商品图
-  changeMainImg:'productstyle/changemainimg',		//设为主图
-  checkStatus:'productstyle/upanddown',				//商品上架或下架
-  noticeList:'notice/list',							//公告列表
-  addNotice:'notice/add',							//创建公告
-  noticeInfo:'notice/info',							//公告详情
-  editNotice:'notice/edit',							//编辑公告
-  noticeDel:'notice/del',							//删除公告
-  supplierManagerList:'supplier_manager/index',		//供应商列表
-  addSupplierManager:'supplier_manager/add',		//创建供应商
-  supplierManagerInfo:'supplier_manager/info',		//获取供应商详情
-  supplierManagerEdit:'supplier_manager/edit',		//编辑供应商
-  supplierManagerDel:'supplier_manager/del',		//删除供应商
-  examineList:'productstyle/examinelist',       //商品审核列表
-  examineSelectedInfo:'selected/examineselectedinfo', //商品审核详情
-  affirmSelected:'selected/affirmselected',           //确认需求
-  refuseSelected:'selected/refuseselected',           //拒绝需求
-  addSelectRemark:'selected/addselectremark',         //添加备注
-  deriveSelected:'selected/deriveselected',           //导出
-  setAbutmentType:'productstyle/setabutmenttype',     //设置对接推单
-  accountList:'supplier_manager/account_list',        //供应商账号列表
+  getCateList: "api/setting/cate_list",     //类目列表接口
+  addCate:'api/setting/add_cate',			//创建类目
+  editCate:'api/setting/edit_cate',			//编辑类目
+  deleteCate:'api/setting/del_cate',		//删除类目
+  getClassList:'api/setting/class_list',	//分类列表
+  getClassInfo:'api/setting/class_info',	//分类详情
+  addClass:'api/setting/add_class',			//创建分类
+  editClass:'api/setting/edit_class',		//编辑分类
+  deleteClass:'api/setting/del_class',		//删除分类
+  getStyleList:'api/setting/shooting_style_list',		//风格列表
+  addStyle:'api/setting/add_shooting_style',			//创建风格
+  editStyle:'api/setting/edit_shooting_style',			//编辑风格
+  deleteStyle:'api/setting/del_shooting_style',			//删除风格
+  getSeasonList:'api/setting/season_list',				//季节列表
+  addSeason:'api/setting/add_season',					//创建季节
+  editSeason:'api/setting/edit_season',					//编辑季节
+  deleteSeason:'api/setting/del_season',				//删除季节
+  logList:'api/setting/log_list',             //修改记录列表
+  getUserList:'api/user/list',							//（权限配置）用户列表
+  addUser:'api/user/add',								//创建用户
+  editUser:'api/user/edit',								//编辑用户
+  menuroleList:'api/menurole/list',						//角色列表
+  menuRoleAdd:'api/menurole/add',						//添加角色
+  menuRoleEdit:'api/menurole/edit',						//编辑角色
+  menuRoleInfo:'api/menurole/info',						//查看角色
+  delMenuRole:'api/menurole/del',						//删除角色
+  accessList:'api/access/accesslist',					//权限列表
+  getMainMenus:'api/access/getmainmenus',				//所有菜单列表
+  getControllers:'api/access/getcontrollers',			//所有控制器列表
+  getMethods:'api/access/getmethods',					//控制器下所有方法列表
+  ajaxAccess:'api/access/ajaxaccess',					//选择按钮的列表
+  accessAdd:'api/access/add',							//添加权限
+  accessEdit:'api/access/edit',							//编辑权限
+  accessDel:'api/access/del',							//删除权限
+  accessInfo:'api/access/getinfo',						//权限详情
+  feedBackList:'api/feedback/list',						//反馈列表
+  feedBackHandle:'api/feedback/handle',					//确认处理
+  feedBackEditGoods:'api/feedback/edit_goods',			//编辑商品
+  addAllProductStyle:'api/productstyle/addallproductstyle', //批量添加商品
+  getGoodsList:'api/productstyle/getallproductstyle',	//获取商品列表
+  getOnepro:'api/productstyle/getonepro',           //商品信息查看
+  addGoods:'api/productstyle/addproductstyle',			//添加商品
+  editGoods:'api/productstyle/editproductstyle',		//编辑商品
+  returnEditGoods:'api/productstyle/returneditgoods', //重新提交
+  examEditGoods:'api/productstyle/exameditgoods',   //审核前获取商品信息
+  auditGoods:'api/productstyle/examine',				//审批商品
+  delGoods:'api/productstyle/delproductstyle',			//删除商品
+  styleImageList:'api/productstyle/styleimagelist',		//风格图列表
+  addStyleImg:'api/productstyle/addstyleimg',			//添加风格图
+  editStyleImg:'api/productstyle/editstyleimg',			//编辑风格图
+  delStyleImg:'api/productstyle/delstyleimg',			//删除风格图
+  upLoadImgList:'api/productstyle/uploadimglist',		//商品图列表
+  addUploadImg:'api/productstyle/adduploadimg',			//添加商品图
+  editUploadImg:'api/productstyle/edituploadimg',		//编辑商品图
+  delUploadImg:'api/productstyle/deluploadimg',			//删除商品图
+  changeMainImg:'api/productstyle/changemainimg',		//设为主图
+  checkStatus:'api/productstyle/upanddown',				//商品上架或下架
+  noticeList:'api/notice/list',							//公告列表
+  addNotice:'api/notice/add',							//创建公告
+  noticeInfo:'api/notice/info',							//公告详情
+  editNotice:'api/notice/edit',							//编辑公告
+  noticeDel:'api/notice/del',							//删除公告
+  supplierManagerList:'api/supplier_manager/index',		//供应商列表
+  addSupplierManager:'api/supplier_manager/add',		//创建供应商
+  supplierManagerInfo:'api/supplier_manager/info',		//获取供应商详情
+  supplierManagerEdit:'api/supplier_manager/edit',		//编辑供应商
+  supplierManagerDel:'api/supplier_manager/del',		//删除供应商
+  examineList:'api/productstyle/examinelist',       //商品审核列表
+  examineSelectedInfo:'api/selected/examineselectedinfo', //商品审核详情
+  affirmSelected:'api/selected/affirmselected',           //确认需求
+  refuseSelected:'api/selected/refuseselected',           //拒绝需求
+  addSelectRemark:'api/selected/addselectremark',         //添加备注
+  deriveSelected:'api/selected/deriveselected',           //导出
+  setAbutmentType:'api/productstyle/setabutmenttype',     //设置对接推单
+  accountList:'api/supplier_manager/account_list',        //供应商账号列表
+  addAccount:'api/supplier_manager/add_account',          //创建账号
+  editAccount:'api/supplier_manager/edit_account',        //编辑账号
+  delAccount:'api/supplier_manager/del_account',          //删除账号
 };  
 export default {
   //类目列表接口
@@ -412,5 +415,17 @@ export default {
   //供应商账号列表
   accountList(params) {
     return http.get(path.accountList, params);
+  },
+  //创建账号
+  addAccount(params) {
+    return http.post(path.addAccount, params);
+  },
+  //编辑账号
+  editAccount(params) {
+    return http.post(path.editAccount, params);
+  },
+  //删除账号
+  delAccount(params) {
+    return http.post(path.delAccount, params);
   },
 };

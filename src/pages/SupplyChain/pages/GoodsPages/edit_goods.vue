@@ -3,6 +3,9 @@
 		<el-card class="card_box">
 			<div class="form_row">
 				<el-form size="small" label-width="100px">
+					<el-form-item label="提交人：" v-if="is_detail">
+						<div>{{add_admin_name}}</div>
+					</el-form-item>
 					<el-form-item label="款式编码：">
 						<el-input type="textarea" autosize :placeholder="is_detail?'':'多个请用分号间隔'" v-model="arg.i_id" :disabled="is_detail">
 						</el-input>
@@ -67,6 +70,9 @@
 						<el-input placeholder="尺码" v-model="arg.size" :disabled="is_detail">
 						</el-input>
 					</el-form-item>
+					<el-form-item label="审核状态：" v-if="is_detail">
+						{{check_status | checkStatus}}
+					</el-form-item>
 				</el-form>
 			</div>
 			<div class="form_row margin_bottom">
@@ -101,6 +107,12 @@
 						<el-input type="textarea" :rows="5" :placeholder="is_detail?'':'请输入备注'" v-model="arg.remark" :disabled="is_detail">
 						</el-input>
 					</el-form-item>
+					<el-form-item label="下架原因：" v-if="check_status == 5">
+						<div>{{off_reason}}</div>
+					</el-form-item>
+					<el-form-item label="拒绝原因：" v-if="check_status == 3 || check_status == 6">
+						<div>{{refuse_reason}}</div>
+					</el-form-item>
 				</el-form>
 			</div>
 			<div class="bottom_row" v-if="goods_type == '1' || goods_type == '2' || goods_type == '5'">
@@ -132,6 +144,10 @@
 				preview_image:[],		//查看详情的图片列表
 				img_list:[],			
 				style_id:"",			//商品ID
+				add_admin_name:"",		//提交人
+				check_status:"",		//审核状态
+				off_reason:"",			//下架原因
+				refuse_reason:"",		//拒绝原因
 				arg:{
 					i_id:"",				//款式编码
 					style_name:"",			//商品款号
@@ -250,6 +266,10 @@
 								}
 								this.img_list.push(img_obj);
 							})
+							this.add_admin_name = data_info.add_admin_name;
+							this.check_status = data_info.check_status;
+							this.off_reason = data_info.off_reason;
+							this.refuse_reason = data_info.refuse_reason;
 							for(let key in this.arg){
 								for(let k in data_info){
 									if(key == k){
@@ -277,6 +297,10 @@
 					this.img_list.push(img_obj);
 					this.preview_image.push(this.domain + item);
 				})
+				this.add_admin_name = data_info.add_admin_name;
+				this.check_status = data_info.check_status;
+				this.off_reason = data_info.off_reason;
+				this.refuse_reason = data_info.refuse_reason;
 				for(let key in this.arg){
 					for(let k in data_info){
 						if(key == k){
@@ -445,30 +469,83 @@
 			},
 			//审批
 			auditFn(type){
-				this.$confirm(`确认${type == '1'?'同意':'拒绝'}?`, '提示', {
-					confirmButtonText: '确定',
-					cancelButtonText: '取消',
-					type: 'warning'
-				}).then(() => {
-					let arg = {
-						type:type,
-						id:this.style_id
-					}
-					resource.auditGoods(arg).then(res => {
-						if(res.data.code == 1){
-							this.$message.success(res.data.msg);
-							this.$router.go(-1);
-						}else{
-							this.$message.warning(res.data.msg);
+				let arg = {
+					type:type,
+					id:this.style_id
+				}
+				if(type == '1'){
+					this.$confirm('确认同意?', '提示', {		//同意
+						confirmButtonText: '确定',
+						cancelButtonText: '取消',
+						type: 'warning'
+					}).then(() => {
+						resource.auditGoods(arg).then(res => {
+							if(res.data.code == 1){
+								this.$message.success(res.data.msg);
+								this.$router.go(-1);
+							}else{
+								this.$message.warning(res.data.msg);
+							}
+						})
+					}).catch(() => {
+						this.$message({
+							type: 'info',
+							message: '已取消'
+						});          
+					});
+				}else{						//拒绝
+					this.$prompt('请输入拒绝原因', '拒绝', {
+						confirmButtonText: '确定',
+						cancelButtonText: '取消',
+					}).then(({ value }) => {
+						if(!value){
+							this.$message.warning('请输入拒绝原因');
+							return;
 						}
-					})
-				}).catch(() => {
-					this.$message({
-						type: 'info',
-						message: '已取消'
-					});          
-				});
+						arg.refuse_reason = value;
+						resource.auditGoods(arg).then(res => {
+							if(res.data.code == 1){
+								this.$message.success(res.data.msg);
+								this.$router.go(-1);
+							}else{
+								this.$message.warning(res.data.msg);
+							}
+						})
+					}).catch(() => {
+						this.$message({
+							type: 'info',
+							message: '取消输入'
+						});       
+					});
+				}
 			},
+		},
+		filters:{
+			//审核状态
+			checkStatus:function(val){
+				let ss = "";
+				switch(val){
+					case 1:
+					ss =  '上架待审核';
+					break;
+					case 2:
+					ss =  '审核通过(已上架)';
+					break;
+					case 3:
+					ss =  '上架审核拒绝';
+					break;
+					case 4:
+					ss =  '下架待审核';
+					break;
+					case 5:
+					ss =  '下架审核通过(已下架)';
+					break;
+					case 6:
+					ss =  '下架审核拒绝';
+					break;
+				}
+				return ss;
+			}
 		},
 		components:{
 			UploadFile

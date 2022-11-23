@@ -1,16 +1,10 @@
 <template>
 	<div class="goods_item">
-		<div class="image_box" @click="getMoreImage" v-if="info.img != ''">
-			<el-popover
-			placement="right-start"
-			trigger="hover"
-			>
+		<div class="image_box" v-if="info.img != ''">
 			<el-image class="popover_image" fit="scale-down" :src="domain + info.img"></el-image>
-			<el-image class="goods_img" :src="domain + info.img" slot="reference" fit="scale-down"></el-image>
-		</el-popover>
 	</div>
-	<img class="image_box" src="../static/load_failure.png" @click="getMoreImage" v-else>
-	<div class="goods_info" @click="getDetail" @mousedown="mouseDownFn" @mouseup="mouseUpFn">
+	<img class="image_box" src="../static/load_failure.png" v-else>
+	<div class="goods_info">
 		<div class="desc">{{info.title}}</div>
 		<div class="price_cate">
 			<div class="time">{{info.new_time_name}}</div>
@@ -31,50 +25,9 @@
 			<img class="info_icon" src="../static/yue_icon.png" v-if="info.supply_monthly_settlement == 1">
 		</div>
 	</div>
-	<!-- 更多图片 -->
-	<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" :visible.sync="more_image_dialog">
-		<div slot="title" class="dialog_title">
-			<div>更多图片</div>
-			<img class="close_icon" src="../static/close_icon.png" @click="more_image_dialog = false">
-		</div>
-		<div class="image_content">
-			<div class="tab_row">
-				<div class="tab_item" :class="{'active_tab_item':active_tab_index == index}" v-for="(item,index) in image_title_list" @click="active_tab_index = index">
-					<div>{{item}}</div>
-					<div class="active_line" v-if="active_tab_index == index"></div>
-				</div>
-			</div>
-			<el-tabs size="small" v-if="active_tab_index == 0">
-				<el-tab-pane :label="item.shooting_style_name" v-for="(item,index) in style_data" :key="index">
-					<div class="source_url">共享盘地址：{{item.shared_disk_address}}</div>
-					<div class="source_url">网盘地址：{{item.net_disk_address}}</div>
-					<div class="more_image">
-						<el-image :z-index="9009" class="more_image_item" :src="img_url" fit="scale-down" v-for="(img_url,i) in item.img_arr" :key="i" :preview-src-list="item.img_arr"></el-image>
-					</div>
-				</el-tab-pane>
-			</el-tabs>
-			<div v-else>
-				<div class="more_image">
-					<el-image :z-index="9009" class="more_image_item" :src="item" fit="scale-down" v-for="item in commodity_data" :preview-src-list="commodity_data"></el-image>
-				</div>
-			</div>
-		</div>
-		<div slot="footer" class="dialog_footer">
-			<el-button type="primary" size="small" @click="more_image_dialog = false">关闭</el-button>
-		</div>
-	</el-dialog>
+	
 </div>
 </template>
-<style type="text/css">
-.el-carousel__container{
-	width: 240rem !important;
-	height: 240rem !important; 
-}
-.popover_image{
-	height: 400px!important;
-	width: 400px!important;
-}
-</style>
 <style lang="less" scoped>
 .goods_item{
 	margin-bottom: 20rem;
@@ -142,55 +95,6 @@
 		}
 	}
 }
-.image_content{
-	padding: 10rem 20rem;
-	.tab_row{
-		margin-bottom: 13rem;
-		padding-left: 30rem;
-		border-radius:2rem;
-		border:1px solid #FFC998;
-		background: #FFFCFA;
-		width: 100%;
-		height: 36rem;
-		display: flex;
-		.tab_item{
-			margin-right: 68rem;
-			position: relative;
-			height: 36rem;
-			display: flex;
-			align-items: center;
-			font-size:14rem;
-			color:#333333;
-			.active_line{
-				background: #FFC998;
-				position: absolute;
-				left: 0;
-				bottom:3rem;
-				width: 100%;
-				height: 1px;
-			}
-		}
-		.active_tab_item{
-			color: var(--color);
-		}
-	}
-	.source_url{
-		margin-bottom: 10rem;
-		font-size:14rem;
-		color: #333333;
-		cursor: initial;
-	}
-	.more_image{
-		display: flex;
-		flex-wrap: wrap;
-		.more_image_item{
-			margin-right: 25rem;
-			margin-bottom: 25rem;
-			width: 220rem;
-			height: 220rem;
-		}
-	}
-}
 </style>
 <script>
 	import resource from '../api/resource.js'
@@ -214,17 +118,6 @@
 				default:{}
 			}
 		},
-		watch:{
-			active_tab_index:function(n,o){
-				if(n == 0){
-					//获取风格图
-					this.getMoreImage();
-				}else{
-					//获取封面图
-					this.moreImgCommodity();
-				}
-			}
-		},
 		computed:{
 			//图片前缀
 			domain(){
@@ -232,75 +125,7 @@
 			}
 		},
 		methods:{
-			mouseDownFn () {
-				this.firstTime = new Date().getTime();
-			},
-			mouseUpFn () {
-				this.lastTime = new Date().getTime();
-				if((this.lastTime - this.firstTime) < 200){
-					this.isClick = true
-				} else {
-					this.isClick = false
-				}
-			},
-			//幻灯片自动切换事件
-			changeImage(e){
-				this.active_index = e;
-			},
-			//鼠标移入指示器切换当前显示图片
-			checkIndex(index){
-				this.$refs.cardShow.setActiveItem(index);
-			},
-			//获取风格图
-			getMoreImage(){
-				let arg = {
-					style_id:this.info.style_id
-				}
-				resource.moreImgStyle(arg).then(res => {
-					if(res.data.code == 1){
-						let style_data = res.data.data;
-						style_data.map(item => {
-							let img_arr = [];
-							item.img.map(iii => {
-								img_arr.push(this.domain + iii);
-							})
-							item['img_arr'] = img_arr;
-						})
-						this.style_data = style_data;
-						this.more_image_dialog = true;
-					}else{
-						this.$message.warning(res.data.msg);
-					}
-				})		
-			},
-			//获取封面图
-			moreImgCommodity(){
-				let arg = {
-					style_id:this.info.style_id
-				}
-				resource.moreImgCommodity(arg).then(res => {
-					if(res.data.code == 1){
-						let commodity_data = res.data.data.img;
-						let img_arr = [];
-						commodity_data.map(item => {
-							img_arr.push(this.domain + item);
-						})
-						this.commodity_data = img_arr;
-						this.more_image_dialog = true;
-					}else{
-						this.$message.warning(res.data.msg);
-					}
-				})
-			},
-    		//点击跳转详情
-    		getDetail(){
-    			if(!this.isClick) return;
-    			let active_path = `/goods_detail?style_id=${this.info.style_id}`;
-    			localStorage.setItem("active_path",active_path);
-    			this.$store.commit("setPath", active_path);
-    			const routeData = this.$router.resolve(active_path);
-    			window.open(routeData.href);
-    		}
+			
     	}
     }
 </script>

@@ -181,8 +181,14 @@
 			}
 		},
 		created(){
-			//获取筛选条件列表
-			this.getScreenList();
+			console.log(this.page_type)
+			if(this.page_type == 'gys_supplier'){
+				//获取筛选条件列表
+				this.supplierScreenList();
+			}else{
+				//获取筛选条件列表
+				this.getScreenList();
+			}
 		},
 		computed: {
 			screen_open() {
@@ -231,6 +237,40 @@
 							grade_id:''
 						})
 						this.rating_list = rating_list;
+					}else{
+						this.$message.warning(res.data.msg);
+					}
+				})
+			},
+			//供应商筛选项列表
+			supplierScreenList(){
+				commonResource.supplierScreenList().then(res => {
+					if(res.data.code == 1){
+						let data = res.data.data;
+						let market_list = data.market;
+						market_list.unshift({
+							market_name:'全部',
+							market_id:''
+						})
+						this.market_list = market_list;
+						let category_list = data.category;
+						category_list.unshift({
+							category_name:'全部',
+							category_id:''
+						})
+						this.category_list = category_list;
+						let class_list = data.classification;
+						class_list.unshift({
+							classification_name:'全部',
+							classification_id:''
+						})
+						this.class_list = class_list;
+						let style_list = data.shooting_style;
+						style_list.unshift({
+							shooting_style_name:'全部',
+							shooting_style_id:''
+						})
+						this.style_list = style_list;
 					}else{
 						this.$message.warning(res.data.msg);
 					}
