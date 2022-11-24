@@ -96,13 +96,14 @@
 								<el-dropdown-item command="2">编辑</el-dropdown-item>
 							</el-dropdown-menu>
 						</el-dropdown>
-						<el-button type="text" size="small" v-if="scope.row.check_status == 2" @click="checkStatus(scope.row.style_id,scope.row.status)">{{scope.row.status == 1?'下架':'上架'}}</el-button>
+						<el-button type="text" size="small" v-if="scope.row.check_status == 2 || scope.row.check_status == 5" @click="checkStatus(scope.row.style_id,scope.row.check_status)">{{scope.row.check_status == 2?'下架':'上架'}}</el-button>
 						<el-button type="text" size="small" v-if="scope.row.check_status == 3" @click="$router.push('/gys_edit_goods?goods_type=5&style_id=' + scope.row.style_id)">重新提交</el-button>
 					</template>
 				</el-table-column>
 			</el-table>
 			<PaginationWidget id="bottom_row" :total="total" :page="page" @checkPage="checkPage"/>
 		</el-card>
+		<!-- 导入 -->
 		<el-dialog :visible.sync="import_dialog" width="30%">
 			<div slot="title" class="dialog_title">
 				<div>导入</div>
@@ -120,6 +121,21 @@
 			</div>
 			<div slot="footer" class="dialog_footer">
 				<el-button size="small" @click="import_dialog = false">取消</el-button>
+			</div>
+		</el-dialog>
+		<!-- 下架原因 -->
+		<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" destroy-on-close @close="off_reason = ''" :visible.sync="down_dialog" width="30%">
+			<div slot="title" class="dialog_title">
+				<div>确认下架？</div>
+				<img class="close_icon" src="../../static/close_icon.png" @click="down_dialog = false">
+			</div>
+			<div class="remark_content">
+				<el-input type="textarea" :rows="3" placeholder="请输入下架原因" v-model="off_reason">
+				</el-input>
+			</div>
+			<div slot="footer" class="dialog_footer">
+				<el-button size="mini" @click="down_dialog = false">关闭</el-button>
+				<el-button size="mini" type="primary" @click="confirmOff">提交</el-button>
 			</div>
 		</el-dialog>
 	</div>
@@ -164,6 +180,9 @@
 				opacity: 0;
 			}
 		}
+	}
+	.remark_content{
+		padding:20rem;
 	}
 }
 </style>
@@ -243,7 +262,10 @@
 				button_list:{},
 				import_dialog:false,	//导入弹窗
 				multiple_selection:[],
-				fullscreenLoading:false,
+				fullscreenLoading:false,	//导入加载弹窗
+				style_id:"",				//点击的style_id
+				down_dialog:false,			//下架原因弹窗
+				off_reason:"",				//下架原因
 			}
 		},
 		activated(){
@@ -488,30 +510,53 @@
 			},
 			//切换上架或下架
 			checkStatus(style_id,type){
-				this.$confirm(`确认${type == 0?'上架':'下架'}?`, '提示', {
-					confirmButtonText: '确定',
-					cancelButtonText: '取消',
-					type: 'warning'
-				}).then(() => {
-					let arg = {
-						style_id:style_id,
-						type:type == 0?1:0
-					}
-					resource.checkStatus(arg).then(res => {
-						if(res.data.code == 1){
-							this.$message.success(res.data.msg);
+				this.style_id = style_id;
+				if(type == 5){	//上架
+					this.$confirm('确认上架?', '提示', {
+						confirmButtonText: '确定',
+						cancelButtonText: '取消',
+						type: 'warning'
+					}).then(() => {
+						let arg = {
+							style_id:this.style_id,
+							type:1
+						}
+						resource.checkStatus(arg).then(res => {
+							if(res.data.code == 1){
+								this.$message.success(res.data.msg);
 								//获取列表
 								this.getGoodsList();
 							}else{
 								this.$message.warning(res.data.msg);
 							}
 						})
-				}).catch(() => {
-					this.$message({
-						type: 'info',
-						message: '已取消'
-					});          
-				});
+					}).catch(() => {
+						this.$message({
+							type: 'info',
+							message: '已取消'
+						});          
+					});
+				}else{	//下架
+					this.down_dialog = true;
+				}
+			},
+			//确认下架
+			confirmOff(){
+				let arg = {
+					style_id:this.style_id,
+					type:0,
+					off_reason:this.off_reason
+				}
+				resource.checkStatus(arg).then(res => {
+					if(res.data.code == 1){
+						this.$message.success(res.data.msg);
+						this.down_dialog = false;
+						//获取列表
+						this.getGoodsList();
+					}else{
+						this.$message.warning(res.data.msg);
+					}
+				})
 			}
 		},
 		components:{

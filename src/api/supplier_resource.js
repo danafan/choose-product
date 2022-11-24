@@ -4,6 +4,7 @@ let path = {
   supplierIndex:'supplier/supplier/supplier_index',            //供应商列表
   supplierInfo:'supplier/supplier/info',                       //供应商基本信息
   getSupplierGoods:'supplier/supplier/getsuppliergoods',       //款式资料列表
+  checkStatus:'supplier/supplier/upanddown',                   //上下架
 } 
 export default {
   //供应商后台首页
@@ -21,6 +22,10 @@ export default {
   //款式资料列表
   getSupplierGoods(params) {
     return http.get(path.getSupplierGoods, params);
+  },
+  //上下架
+  checkStatus(params) {
+    return http.post(path.checkStatus, params);
   },
  
 };
