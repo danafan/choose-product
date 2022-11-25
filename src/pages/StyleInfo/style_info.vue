@@ -97,7 +97,7 @@
 							</el-dropdown-menu>
 						</el-dropdown>
 						<el-button type="text" size="small" v-if="scope.row.check_status == 2 || scope.row.check_status == 5" @click="checkStatus(scope.row.style_id,scope.row.check_status)">{{scope.row.check_status == 2?'下架':'上架'}}</el-button>
-						<el-button type="text" size="small" v-if="scope.row.check_status == 3" @click="$router.push('/gys_edit_goods?goods_type=5&style_id=' + scope.row.style_id)">重新提交</el-button>
+						<el-button type="text" size="small" v-if="scope.row.check_status == 3 || scope.row.check_status == 6" @click="$router.push('/gys_edit_goods?goods_type=5&style_id=' + scope.row.style_id)">重新提交</el-button>
 					</template>
 				</el-table-column>
 			</el-table>
@@ -363,7 +363,7 @@
 			},
 			//下载模版
 			downTemplate(){
-				window.open(`${this.downLoadUrl}/file/商品批量导入模板.xlsx`);
+				window.open(`${this.downLoadUrl}/file/供应商商品批量导入模板.xlsx`);
 			},
 			//导入
 			uploadCsv(){
@@ -453,7 +453,7 @@
 				if(type == '0'){	//下架
 					title = '确认下架？'
 					let unset_list = this.multiple_selection.filter(item => {
-						return item.check_status == 2 && item.status == 1;
+						return item.check_status == 2;
 					})
 					unset_list.map(item => {
 						style_id.push(item.style_id)
@@ -462,7 +462,7 @@
 				}else if(type == '1'){	//上架
 					title = '确认上架？'
 					let unset_list = this.multiple_selection.filter(item => {
-						return item.check_status == 2 && item.status == 0;
+						return item.check_status == 5;
 					})
 					unset_list.map(item => {
 						style_id.push(item.style_id)

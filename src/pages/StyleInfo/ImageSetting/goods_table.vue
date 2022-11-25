@@ -2,7 +2,7 @@
 	<div class="setting_content">
 		<el-card class="card_box" id="card_box">
 			<TableTitle :title="`商品编号：${style_name}`" id="table_title">
-				<el-button size="mini" type="primary" @click="addFn('1')" v-if="button_list.add == 1">上传商品图</el-button>
+				<el-button size="mini" type="primary" @click="addFn('1')">上传商品图</el-button>
 			</TableTitle>
 			<el-table size="mini" :data="data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" v-loading="loading">
 				<el-table-column label="图片">
@@ -17,9 +17,9 @@
 				</el-table-column>
 				<el-table-column label="操作" width="180" fixed="right">
 					<template slot-scope="scope">
-						<el-button type="text" size="small" @click="addFn('2',scope.row.commodity_id)" v-if="button_list.edit == 1">编辑</el-button>
-						<el-button type="text" size="small" @click="deleteFn(scope.row.commodity_id)" v-if="button_list.del == 1">删除</el-button>
-						<el-button type="text" size="small" @click="changeMainImg(scope.row.commodity_id)" v-if="scope.row.is_main == 0 && button_list.is_main == 1">设为主图</el-button>
+						<el-button type="text" size="small" @click="addFn('2',scope.row.commodity_id)">编辑</el-button>
+						<el-button type="text" size="small" @click="deleteFn(scope.row.commodity_id)">删除</el-button>
+						<el-button type="text" size="small" @click="changeMainImg(scope.row.commodity_id)" v-if="scope.row.is_main == 0">设为主图</el-button>
 					</template>
 				</el-table-column>
 			</el-table>
@@ -33,9 +33,6 @@
 			</div>
 			<div class="dialog_content">
 				<el-form size="small" label-width="120px">
-					<el-form-item label="款式编码：">
-						{{i_id}}
-					</el-form-item>
 					<el-form-item label="图片：" required>
 						<UploadFile :img_list="img_list" :is_multiple="true" :current_num="img.length" :max_num="type == '1'?99:1" @callbackFn="callbackFn"/>
 					</el-form-item>
@@ -49,7 +46,7 @@
 	</div>
 </template>
 <script>
-	import resource from '../../../api/chain_resource.js'
+	import resource from '../../../api/supplier_resource.js'
 
 	import TableTitle from '../../SupplyChain/components/table_title.vue'
 	import PaginationWidget from '../../../components/pagination_widget.vue'
@@ -61,8 +58,6 @@
 				max_height:0,	
 				page:1,						//页码
 				data:[],					//获取的数据
-				i_id:"",
-				button_list:{},
 				total:0,
 				commodity_id:"",
 				show_dialog:false,			//弹窗
@@ -125,7 +120,7 @@
 					pagesize:10
 				}
 				this.loading = true;
-				resource.upLoadImgList(arg).then(res => {
+				resource.uploadImgList(arg).then(res => {
 					if(res.data.code == 1){
 						this.loading = false;
 						let data = res.data.data.data;
@@ -135,9 +130,7 @@
 							item.image_list = image_list;
 						});
 						this.data = data;
-						this.button_list = res.data.data.button_list;
 						this.total = res.data.data.total;
-						this.i_id = res.data.data.i_id;
 					}else{
 						this.$message.warning(res.data.msg);
 					}

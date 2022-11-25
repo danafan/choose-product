@@ -1,7 +1,7 @@
 <template>
 	<div class="chain_page_content">
 		<el-card class="card_box">
-			<TableTitle title="数据列表">
+			<TableTitle :title="table_title">
 				<GoBack/>
 			</TableTitle>
 			<div class="form_row">
@@ -9,12 +9,6 @@
 					<el-form-item label="商品款号：" required>
 						<el-input placeholder="商品款号" v-model="arg.style_name" :disabled="is_detail">
 						</el-input>
-					</el-form-item>
-					<el-form-item label="供应商：" required>
-						<el-select v-model="arg.supplier_id" clearable placeholder="请选择供应商" :disabled="is_detail">
-							<el-option v-for="item in supplier_list" :key="item.supplier_id" :label="item.supplier_name" :value="item.supplier_id">
-							</el-option>
-						</el-select>
 					</el-form-item>
 					<el-form-item label="类目：" required>
 						<el-select v-model="arg.category_id" clearable placeholder="请选择类目" :disabled="is_detail">
@@ -28,16 +22,20 @@
 							</el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item label="面料：" required>
-						<el-input placeholder="面料" v-model="arg.fabric" :disabled="is_detail">
+					<el-form-item label="合作模式：" required>
+						<el-input :placeholder="is_detail?'':'合作模式'" v-model="arg.mode" :disabled="is_detail">
 						</el-input>
 					</el-form-item>
-					<el-form size="small" label-width="100px">
-						<el-form-item label="网盘地址：">
-							<el-input :placeholder="is_detail?'':'网盘地址'" v-model="arg.net_disk_address" :disabled="is_detail">
-							</el-input>
-						</el-form-item>
-					</el-form>
+					<el-form-item label="网盘地址：">
+						<el-input :placeholder="is_detail?'':'网盘地址'" v-model="arg.net_disk_address" :disabled="is_detail">
+						</el-input>
+					</el-form-item>
+					<el-form-item label="商品图：">
+						<div v-if="is_detail">
+							<el-image class="card_img" v-for="item in preview_image" :src="item" fit="scale-down" :preview-src-list="preview_image"></el-image>
+						</div>
+						<UploadFile :img_list="img_list" :is_multiple="true" :current_num="arg.img.length" :max_num="99" @callbackFn="callbackFn" v-else/>
+					</el-form-item>
 				</el-form>
 				<el-form size="small" label-width="100px">
 					<el-form-item label="标题：" required>
@@ -56,8 +54,8 @@
 							</el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item label="合作模式：">
-						<el-input :placeholder="is_detail?'':'合作模式'" v-model="arg.mode" :disabled="is_detail">
+					<el-form-item label="面料：" required>
+						<el-input placeholder="面料" v-model="arg.fabric" :disabled="is_detail">
 						</el-input>
 					</el-form-item>
 					<el-form-item label="尺码：" required>
@@ -70,16 +68,6 @@
 					</el-form-item>
 				</el-form>
 			</div>
-			<div class="form_row">
-				<el-form size="small" label-width="100px">
-					<el-form-item label="商品图：">
-						<div v-if="is_detail">
-							<el-image class="card_img" v-for="item in preview_image" :src="item" fit="scale-down" :preview-src-list="preview_image"></el-image>
-						</div>
-						<UploadFile :img_list="img_list" :is_multiple="true" :current_num="arg.img.length" :max_num="99" @callbackFn="callbackFn" v-else/>
-					</el-form-item>
-				</el-form>
-			</div>
 			<div class="bottom_row" v-if="goods_type == '1' || goods_type == '2' || goods_type == '5'">
 				<el-button size="small" type="primary" @click="commitEditGoods">提交</el-button>
 			</div>
@@ -88,7 +76,7 @@
 </template>
 <script>
 	import commonResource from '../../api/common_resource.js'
-	import resource from '../../api/chain_resource.js'
+	import resource from '../../api/supplier_resource.js'
 
 	import UploadFile from '../../components/upload_file.vue'
 	import GoBack from '../../components/go_back.vue'
@@ -96,9 +84,9 @@
 	export default{
 		data(){
 			return{
+				table_title:"",			//顶部标题
 				is_detail:false,		//是否是详情
 				goods_type:"",			//类型（1:添加；2:编辑；3:查看；5：重新提交）
-				supplier_list:[],		//供应商列表
 				cate_list:[],			//类目列表
 				market_list:[],			//市场列表
 				style_list:[],			//拍摄风格列表
@@ -107,9 +95,7 @@
 				img_list:[],			
 				style_id:"",			//商品ID
 				arg:{
-					i_id:"",				//款式编码
 					style_name:"",			//商品款号
-					supplier_id:"",			//选中的供应商
 					title:"",				//标题
 					category_id:"",			//选中的类目
 					market_id:"",			//选中的市场
@@ -117,17 +103,10 @@
 					classification_id:"",	//选中的分类
 					fabric:"",				//面料
 					mode:"",				//合作模式
-					cost_price:"",			//成本价
 					size:"",				//尺码
 					color:"",				//颜色
-					hot_style:0,			//爆款
-					sole_style:0,			//独家款
-					data_style:0,			//主推款
-					again_style:0,			//二开款
 					net_disk_address:"",	//网盘地址
-					shared_disk_address:"",	//共享盘地址
 					img:[],					//图片列表
-					remark:"",				//备注
 				},								//可传递的参数
 			}
 		},
@@ -137,6 +116,20 @@
 			this.is_detail = this.$route.query.goods_type == '3'?true:false;
 			//类型
 			this.goods_type = this.$route.query.goods_type;
+			switch(this.goods_type){
+				case '1': // 添加
+					this.table_title = "添加商品";
+					break;
+				case '2': // 编辑
+					this.table_title = "编辑商品";
+					break;
+				case '3': // 商品详情
+					this.table_title = "商品详情";
+					break;
+				case '5': // 重新提交
+					this.table_title = "重新提交";
+					break;
+			}
 			//获取数据列表
 			this.getInfoList();
 		},
@@ -149,8 +142,6 @@
 		methods: {
 			//获取数据列表
 			async getInfoList(){
-				//获取供应商列表
-				await this.ajaxSupplierList();
 				//获取类目列表
 				await this.ajaxCateList();
 				//市场列表
@@ -190,7 +181,7 @@
 						}
 					})
 				}else{
-					resource.editGoodsGet(arg).then(res => {
+					resource.editProductStyleGet(arg).then(res => {
 						if(res.data.code == 1){
 							let data_info = res.data.data;
 							//处理详情
@@ -215,27 +206,10 @@
 				for(let key in this.arg){
 					for(let k in data_info){
 						if(key == k){
-							//款式编码逗号转分号
-							if(k == 'i_id' && data_info[k].indexOf(',') > -1){
-								data_info[k] = data_info[k].replaceAll(",", ";");
-							}
 							this.arg[key] = data_info[k];
 						}
 					}
 				}
-			},
-			//获取供应商列表
-			ajaxSupplierList(){
-				return new Promise((resolve)=>{
-					commonResource.ajaxSupplierList().then(res => {
-						if(res.data.code == 1){
-							this.supplier_list = res.data.data;
-							resolve();
-						}else{
-							this.$message.warning(res.data.msg);
-						}
-					})
-				})
 			},
 			//获取类目列表
 			ajaxCateList(){
@@ -297,8 +271,6 @@
 			commitEditGoods(){
 				if(!this.arg.style_name){
 					this.$message.warning('请输入商品款号!');
-				}else if(!this.arg.supplier_id){
-					this.$message.warning('请选择供应商!');
 				}else if(!this.arg.title){
 					this.$message.warning('请输入标题!');
 				}else if(!this.arg.category_id){
@@ -307,29 +279,25 @@
 					this.$message.warning('请选择市场!');
 				}else if(!this.arg.shooting_style_id){
 					this.$message.warning('请选择拍摄风格!');
+				}else if(!this.arg.mode){
+					this.$message.warning('请填写合作模式!');
 				}else if(!this.arg.classification_id){
 					this.$message.warning('请选择分类!');
 				}else if(!this.arg.fabric){
 					this.$message.warning('请输入面料!');
-				}else if(!this.arg.cost_price){
-					this.$message.warning('请输入成本价!');
 				}else if(!this.arg.size){
 					this.$message.warning('请输入尺码!');
 				}else if(!this.arg.color){
 					this.$message.warning('请输入颜色!');
 				}else{
 					var arg = this.goods_type == '1'?this.arg:{...this.arg,...{style_id:this.style_id}};
-					if (arg.i_id.indexOf(";") > -1) {
-						arg.i_id = arg.i_id.replaceAll(";", ",");
-					}
-
 					this.$confirm(`确认${this.goods_type == '1'?'添加':'编辑'}此商品吗?`, '提示', {
 						confirmButtonText: '确定',
 						cancelButtonText: '取消',
 						type: 'warning'
 					}).then(() => {
 						if(this.goods_type == '1'){	//添加
-							resource.addGoods(arg).then(res => {
+							resource.addProductStyle(arg).then(res => {
 								if(res.data.code == 1){
 									this.$message.success(res.data.msg);
 									this.$router.go(-1);
@@ -349,7 +317,7 @@
 									}
 								})
 							}else if(this.goods_type == '2'){	//编辑
-								resource.editGoodsPost(arg).then(res => {
+								resource.editProductStylePost(arg).then(res => {
 									if(res.data.code == 1){
 										this.$message.success(res.data.msg);
 										this.$router.go(-1);
