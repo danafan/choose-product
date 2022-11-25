@@ -7,6 +7,10 @@ Vue.use(Vuex);
 
 const store = new Vuex.Store({
   state: {
+    user_type:localStorage.getItem("user_type")?localStorage.getItem("user_type"):'',
+    ding_user_id: localStorage.getItem("ding_user_id")?localStorage.getItem("ding_user_id"):'',
+    login_token: localStorage.getItem("login_token")?localStorage.getItem("login_token"):'',
+    secret_key: localStorage.getItem("secret_key")?localStorage.getItem("secret_key"):'',
     menu_list:localStorage.getItem("menu_list")?JSON.parse(localStorage.getItem("menu_list")):[],             //导航列表
     car_goods_num:0,     //购物车商品数量
     domain:localStorage.getItem("domain")?localStorage.getItem("domain"):"",
@@ -17,6 +21,13 @@ const store = new Vuex.Store({
     nuread_num:0,         //未读公告数量
   },
   mutations: {
+    //设置用户信息
+    setToken(state, user_info){
+      state.user_type = user_info.user_type;
+      state.ding_user_id = user_info.ding_user_id;
+      state.login_token = user_info.login_token;
+      state.secret_key = user_info.secret_key;
+    },
     //设置导航列表
     setMenuList(state, menu_list){
       state.menu_list = menu_list;

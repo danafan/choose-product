@@ -14,7 +14,6 @@ const gys_supplier = (resolve) => require(["@/pages/Supplier/gys_supplier"], res
 const style_info = (resolve) => require(["@/pages/StyleInfo/style_info"], resolve);
 const gys_edit_goods = (resolve) => require(["@/pages/StyleInfo/gys_edit_goods"], resolve);
 const gys_image_setting = (resolve) => require(["@/pages/StyleInfo/gys_image_setting"], resolve);
-const setting_page = (resolve) => require(["@/pages/SettingPage/setting_page"], resolve);
 const supplier_detail = (resolve) => require(["@/pages/Supplier/supplier_detail"], resolve);
 const supply_chain = (resolve) => require(["@/pages/SupplyChain/supply_chain"], resolve);
 const chain_message_page = (resolve) => require(["@/pages/SupplyChain/pages/chain_message_page"], resolve);
@@ -103,11 +102,6 @@ const router = new Router({
     path: "/gys_image_setting",
     name: "图片管理",
     component: gys_image_setting
-  },
-  {
-    path: "/setting_page",
-    name: "设置",
-    component: setting_page
   },
   {
     path: "/supplier_detail",

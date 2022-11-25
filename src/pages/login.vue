@@ -104,7 +104,7 @@
         background: #FFF8EE;
         border-radius: 6rem;
         padding: 0 22rem;
-        font-size: 16px;
+        font-size: 16rem;
       }
       .login{
         margin-top: 60px;
@@ -237,38 +237,44 @@
           localStorage.setItem("ding_user_name", data.ding_user_name);
           localStorage.setItem("secret_key", data.secret_key);
           localStorage.setItem("login_token", data.login_token);
+          let user_info = {
+            user_type:data.user_type,
+            ding_user_id:data.ding_user_id,
+            login_token:data.login_token,
+            secret_key:data.secret_key
+          }
+          this.$store.commit('setToken',user_info);
           let domain = data.img_domain;
           this.$store.commit('setDomain',domain);
           localStorage.setItem("domain",domain);
+
+          let menu_list = [{
+            menu_name:'首页',
+            web_url:"gys_index"
+          },{
+            menu_name:'供应商',
+            web_url:"gys_supplier"
+          },{
+            menu_name:'款式资料',
+            web_url:"style_info"
+          }]
+
+          this.$store.commit("setMenuList", menu_list);
+          localStorage.setItem("menu_list",JSON.stringify(menu_list))
+
+          this.$store.commit("setPath", menu_list[0].web_url);
+          localStorage.setItem("active_path",menu_list[0].web_url);
+          this.$store.commit("setIndex", 0);
+          localStorage.setItem("active_index",0);
+
+          this.$router.replace('tab_menu');
         } else {
           this.$message.warning(res.data.msg);
         }
       })
 
 
-      let menu_list = [{
-        menu_name:'首页',
-        web_url:"gys_index"
-      },{
-        menu_name:'供应商',
-        web_url:"gys_supplier"
-      },{
-        menu_name:'款式资料',
-        web_url:"style_info"
-      },{
-        menu_name:'设置',
-        web_url:"setting_page"
-      }]
-
-      this.$store.commit("setMenuList", menu_list);
-      localStorage.setItem("menu_list",JSON.stringify(menu_list))
-
-      this.$store.commit("setPath", menu_list[0].web_url);
-      localStorage.setItem("active_path",menu_list[0].web_url);
-      this.$store.commit("setIndex", 0);
-      localStorage.setItem("active_index",0);
-
-      this.$router.replace('tab_menu');
+      
     }
   },
 }

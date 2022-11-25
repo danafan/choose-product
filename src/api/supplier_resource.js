@@ -19,6 +19,7 @@ let path = {
   addUploadImg:'supplier/supplier/adduploadimg',                //添加规格图
   delUploadImg:'supplier/supplier/deluploadimg',                //删除规格图
   changeMainImg:'supplier/supplier/changemainimg',              //设为主图
+  editPwd:'supplier/supplier/edit_pwd',                         //修改密码
 } 
 export default {
   //供应商后台首页
@@ -112,6 +113,10 @@ export default {
   //设为主图
   changeMainImg(params) {
     return http.post(path.changeMainImg, params);
+  },
+  //修改密码
+  editPwd(params) {
+    return http.post(path.editPwd, params);
   },
  
 };

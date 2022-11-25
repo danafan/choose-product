@@ -1,5 +1,6 @@
 import axios from "./index";
 import md5 from "js-md5";
+import store from '../store/index.js'
 
 //中间处理
 export function middleWare(params, type) {
@@ -14,15 +15,9 @@ export function middleWare(params, type) {
     }
   }
 
-  var ding_user_id = !localStorage.getItem("ding_user_id")
-    ? ""
-    : localStorage.getItem("ding_user_id");
-  var login_token = !localStorage.getItem("login_token")
-    ? ""
-    : localStorage.getItem("login_token");
-  var secret_key = !localStorage.getItem("secret_key")
-    ? ""
-    : localStorage.getItem("secret_key");
+  var ding_user_id = store.state.ding_user_id;
+  var login_token = store.state.login_token;
+  var secret_key = store.state.secret_key;
 
   // 生成签名
   var sign_target = {
@@ -53,10 +48,10 @@ export function middleWare(params, type) {
       key.indexOf("remark") == -1 &&
       key != "notice_content" &&
       key != "feedback_content"
-    ) {
+      ) {
       sign_arr.push(`${key}=${sort_obj[key]}`);
-    }
   }
+}
   //sign
   var sign = md5(sign_arr.join("&"));
 
@@ -71,7 +66,7 @@ export function middleWare(params, type) {
   var token = Base64.encode(JSON.stringify(token_obj));
   //组织参数
   var req = { ...params, ...{ sign: sign, token: token } };
-  // var req = { ...params, ...{ admin_id: "8318" } };
+  // var req = { ...params, ...{ admin_id: "8318",utype:'1' } };
   // var req = { ...params, ...{ admin_id: "014017496357903146" } }; //测试
   // var req = { ...params, ...{ admin_id: "16161349938228000" } }; //陈鑫杰
   var get_arr = [];

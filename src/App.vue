@@ -8,7 +8,7 @@
   export default {
     created() {
       let user_type = localStorage.getItem("user_type");
-      if(!localStorage.getItem("cache") && user_type == '1'){
+      if(!localStorage.getItem("cache") && user_type != '2'){
         //获取用户信息
         this.getUserInfo();
       }else{
@@ -32,6 +32,13 @@
               localStorage.setItem("ding_user_name", data.ding_user_name);
               localStorage.setItem("secret_key", data.secret_key);
               localStorage.setItem("login_token", data.login_token);
+              let user_info = {
+                user_type:data.user_type,
+                ding_user_id:data.ding_user_id,
+                login_token:data.login_token,
+                secret_key:data.secret_key
+              }
+              this.$store.commit('setToken',user_info);
               let domain = data.img_domain;
               this.$store.commit('setDomain',domain);
               localStorage.setItem("domain",domain);

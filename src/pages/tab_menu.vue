@@ -27,6 +27,10 @@
       </el-popover>
       <div class="header_right">
         <div class="tab_item" :class="{'active_tab':active_index == index}" v-for="(item,index) in menu_list" @click="checkIndex(index)">{{item.menu_name}}</div>
+        <el-popover placement="bottom" trigger="hover">
+          <el-button type="text" size="mini" @click="edit_dialog = true">修改密码</el-button>
+          <div class="tab_item" slot="reference" v-if="user_type == '2'">设置</div>
+        </el-popover>
         <img class="user_img" src="../static/user_img.png">
         <div class="user_name">{{username}}</div>
         <div class="line"></div>
@@ -46,6 +50,39 @@
     <router-view v-if="!$route.meta.keepAlive"></router-view>
   </div>
   <div class="page_foot"></div>
+  <!-- 修改密码 -->
+  <el-dialog width="30%" :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" destroy-on-close @close="editDialog" :visible.sync="edit_dialog">
+    <div slot="title" class="dialog_title">
+      <div>修改密码</div>
+      <img class="close_icon" src="../static/close_icon.png" @click="edit_dialog = false">
+    </div>
+    <div class="dialog_content">
+      <el-form size="mini" label-width="100px">
+        <el-form-item label="供应商名称：">
+          经帅王子
+        </el-form-item>
+        <el-form-item label="用户名：">
+          <div>{{username}}</div>
+        </el-form-item>
+        <el-form-item label="旧密码：" required>
+          <el-input style="width: 200px" v-model="old_password" placeholder="请输入旧密码">
+          </el-input>
+        </el-form-item>
+        <el-form-item label="新密码：" required>
+          <el-input style="width: 200px" v-model="password" placeholder="请输入新密码">
+          </el-input>
+        </el-form-item>
+        <el-form-item label="确认密码：" required>
+          <el-input style="width: 200px" v-model="confirm_password" placeholder="请确认密码">
+          </el-input>
+        </el-form-item>
+      </el-form>
+    </div>
+    <div slot="footer" class="dialog_footer">
+      <el-button size="small" @click="edit_dialog = false">取消</el-button>
+      <el-button type="primary" size="small" @click="commitFn">确定</el-button>
+    </div>
+  </el-dialog>
 </div>
 </template>
 
@@ -170,6 +207,9 @@
   -webkit-box-orient: vertical;
 
 }
+.dialog_content{
+  padding: 24px 40px;
+}
 .content{
   color: #666666;
 }
@@ -179,18 +219,27 @@
 </style>
 <script>
   import resource from '../api/resource.js'
+  import supplierResource from '../api/supplier_resource.js'
   export default {
     data() {
       return {
         username: "", //用户名
+        edit_dialog:false,      //修改密码弹窗
+        old_password:"",        //旧密码
+        password:"",            //新密码
+        confirm_password:"",    //确认密码
       };
     },
     created() {
-      // this.getNotice();
+      this.getNotice();
       this.username = localStorage.getItem("ding_user_name");
       this.$router.push(this.active_path)
     },
     computed: {
+      //用户类型
+      user_type() {
+        return this.$store.state.user_type;
+      },
       //导航列表
       menu_list() {
         return this.$store.state.menu_list;
@@ -252,6 +301,44 @@
           }
         })
       },
+      //关闭修改密码弹窗
+      editDialog(){
+        this.old_password = "";
+        this.password = "";
+        this.confirm_password = "";
+      },
+      //点击提交修改密码
+      commitFn(){
+        if(this.old_password == ''){
+          this.$message.warning('请输入旧密码!');
+          return;
+        }else if(this.password == ''){
+          this.$message.warning('请输入新密码!');
+          return;
+        }else if(this.confirm_password == ''){
+          this.$message.warning('请确认密码!');
+          return;
+        }else if(this.password !== this.confirm_password){
+          this.$message.warning('确认密码和新密码不一致!');
+          return;
+        }
+        let arg = {
+          old_password:this.old_password,
+          password:this.password,
+          confirm_password:this.confirm_password
+        }
+        supplierResource.editPwd(arg).then(res => {
+          if(res.data.code == 1){
+            this.edit_dialog = false;
+            this.$message.success(res.data.msg);
+            localStorage.clear();
+            this.$router.replace('/login');
+          }else{
+            this.$message.warning(res.data.msg);
+          }
+        })
+      },
+      //退出
       loginOut(){
         let user_id = localStorage.getItem("ding_user_id");
         let arg = {
