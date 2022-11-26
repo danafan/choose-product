@@ -78,6 +78,7 @@ let path = {
   addAccount:'api/supplier_manager/add_account',          //创建账号
   editAccount:'api/supplier_manager/edit_account',        //编辑账号
   delAccount:'api/supplier_manager/del_account',          //删除账号
+  settingRecord:'api/log/list',                           //操作日志
 };  
 export default {
   //类目列表接口
@@ -427,5 +428,9 @@ export default {
   //删除账号
   delAccount(params) {
     return http.post(path.delAccount, params);
+  },
+  //操作日志
+  settingRecord(params) {
+    return http.get(path.settingRecord, params);
   },
 };

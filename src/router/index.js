@@ -29,6 +29,7 @@ const chain_setting_page = (resolve) => require(["@/pages/SupplyChain/pages/chai
 const edit_record = (resolve) => require(["@/pages/SupplyChain/pages/SettingPages/edit_record"], resolve);
 const chain_permissions_page = (resolve) => require(["@/pages/SupplyChain/pages/chain_permissions_page"], resolve);
 const chain_feekback_page = (resolve) => require(["@/pages/SupplyChain/pages/chain_feekback_page"], resolve);
+const setting_record_page = (resolve) => require(["@/pages/SupplyChain/pages/setting_record_page"], resolve);
 
 Vue.use(Router);
 
@@ -203,6 +204,11 @@ const router = new Router({
   path: "/chain_feekback_page",
   name: "反馈",
   component: chain_feekback_page
+},
+{
+  path: "/setting_record_page",
+  name: "操作日志",
+  component: setting_record_page
 },
 ]
 },
