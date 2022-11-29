@@ -78,9 +78,12 @@
 				<el-table-column label="上新时间" prop="new_time_name" show-overflow-tooltip></el-table-column>
 				<el-table-column label="审核状态" prop="common_text" show-overflow-tooltip>
 					<template slot-scope="scope">
-						<div v-if="scope.row.check_status == 1">待审核</div>
-						<div v-if="scope.row.check_status == 2">审核通过</div>
-						<div v-if="scope.row.check_status == 3">审核拒绝</div>
+						<div v-if="scope.row.check_status == 1">上架待审核</div>
+						<div v-if="scope.row.check_status == 2">已上架</div>
+						<div v-if="scope.row.check_status == 3">拒绝上架</div>
+						<div v-if="scope.row.check_status == 4">下架待审核</div>
+						<div v-if="scope.row.check_status == 5">已下架</div>
+						<div v-if="scope.row.check_status == 6">拒绝下架</div>
 					</template>
 				</el-table-column>
 				<el-table-column label="拒绝备注" prop="remark" show-overflow-tooltip></el-table-column>

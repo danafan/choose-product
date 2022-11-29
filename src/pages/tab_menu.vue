@@ -59,7 +59,7 @@
     <div class="dialog_content">
       <el-form size="mini" label-width="100px">
         <el-form-item label="供应商名称：">
-          经帅王子
+          {{supplier_name}}
         </el-form-item>
         <el-form-item label="用户名：">
           <div>{{username}}</div>
@@ -236,6 +236,10 @@
       this.$router.push(this.active_path)
     },
     computed: {
+      //供应商名称
+      supplier_name() {
+        return this.$store.state.supplier_name;
+      },
       //用户类型
       user_type() {
         return this.$store.state.user_type;

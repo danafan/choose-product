@@ -56,7 +56,7 @@
 						<el-button type="text" size="small" @click="getDetail(scope.row.supplier_id)" v-if="button_list.view == 1">查看</el-button>
 						<el-button type="text" size="small" @click="addFn('2',scope.row.supplier_id)" v-if="button_list.edit == 1">编辑</el-button>
 						<el-button type="text" size="small" @click="deleteFn(scope.row.supplier_id)" v-if="button_list.del == 1">删除</el-button>
-						<el-button type="text" size="small" @click="$router.push(`/account_list?supplier_id=${scope.row.supplier_id}`)">账号管理</el-button>
+						<el-button type="text" size="small" @click="$router.push(`/account_list?supplier_id=${scope.row.supplier_id}&supplier_name=${scope.row.supplier_name}`)">账号管理</el-button>
 					</template>
 				</el-table-column>
 			</el-table>
@@ -137,7 +137,7 @@
     				card_box_height -
     				table_title_height -
     				bottom_row_height -
-    				50 +
+    				60 +
     				"px";
     			});
     		},
@@ -145,7 +145,7 @@
     		supplierManagerList(){
     			let arg = {
     				search:this.search,
-    				pagesize:10,
+    				pagesize:20,
     				page:this.page
     			}
     			this.loading = true;

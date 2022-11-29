@@ -2,6 +2,8 @@
 	<div class="goods_item">
 		<div class="image_box" @click="getMoreImage" v-if="info.img != ''">
 			<el-popover
+			:open-delay="500"
+			:close-delay="0"
 			placement="right-start"
 			trigger="hover"
 			>

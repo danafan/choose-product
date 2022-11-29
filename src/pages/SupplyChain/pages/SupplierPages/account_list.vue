@@ -45,7 +45,7 @@
 			<div class="dialog_content">
 				<el-form label-position="right" label-width="100px" size="mini">
 					<el-form-item class="form_item" label='供应商名称：'>
-						<div>hahhaha</div>
+						<div>{{supplier_name}}</div>
 					</el-form-item>
 					<el-form-item class="form_item" label='用户名：'>
 						<el-input style="width: 200px" :disabled="dialog_type == '2'" v-model="username" placeholder="请输入用户名"></el-input>
@@ -56,7 +56,7 @@
 					<el-form-item class="form_item" label='确认密码：'>
 						<el-input style="width: 200px" v-model="confirm_password" placeholder="请输入确认密码"></el-input>
 					</el-form-item>
-					<el-form-item class="form_item" label='确认密码：'>
+					<el-form-item class="form_item" label='是否启用：'>
 						<el-radio-group v-model="status">
 							<el-radio :label="1">启用</el-radio>
 							<el-radio :label="0">停用</el-radio>
@@ -103,6 +103,7 @@
 	export default{
 		data(){
 			return{
+				supplier_name:"",				//供应商名称
 				supplier_id:"",					//供应商ID
 				loading:false,
 				user_name:"",					//用户名
@@ -122,6 +123,7 @@
 		},
 		created(){
 			this.supplier_id = this.$route.query.supplier_id;
+			this.supplier_name = this.$route.query.supplier_name;
 			//获取供应商账号列表
 			this.accountList();
 		},

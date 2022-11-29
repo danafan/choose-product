@@ -7,8 +7,11 @@
   import resource from './api/resource.js'
   export default {
     created() {
+      // this.getUserInfo();
+
+      
       let user_type = localStorage.getItem("user_type");
-      if(!localStorage.getItem("cache") && user_type != '2'){
+      if(!localStorage.getItem("cache") && !!user_type && user_type == '1'){
         //获取用户信息
         this.getUserInfo();
       }else{

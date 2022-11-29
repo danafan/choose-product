@@ -8,6 +8,7 @@ Vue.use(Vuex);
 const store = new Vuex.Store({
   state: {
     user_type:localStorage.getItem("user_type")?localStorage.getItem("user_type"):'',
+    supplier_name:localStorage.getItem("supplier_name")?localStorage.getItem("supplier_name"):'',
     ding_user_id: localStorage.getItem("ding_user_id")?localStorage.getItem("ding_user_id"):'',
     login_token: localStorage.getItem("login_token")?localStorage.getItem("login_token"):'',
     secret_key: localStorage.getItem("secret_key")?localStorage.getItem("secret_key"):'',
@@ -24,6 +25,7 @@ const store = new Vuex.Store({
     //设置用户信息
     setToken(state, user_info){
       state.user_type = user_info.user_type;
+      state.supplier_name = user_info.supplier_name;
       state.ding_user_id = user_info.ding_user_id;
       state.login_token = user_info.login_token;
       state.secret_key = user_info.secret_key;

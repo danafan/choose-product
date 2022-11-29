@@ -20,8 +20,8 @@
           </div>
           <div class="text">{{active_tab == 'gys'?'用户名密码':'钉钉扫码一键'}}登录</div>
           <div class="gys_box" v-if="active_tab == 'gys'">
-            <input class="login_input" v-model="user_name" placeholder="请输入用户名称">
-            <input class="login_input" type="password" v-model="password" placeholder="请输入登录密码">
+            <input class="login_input" ref="userName" autofocus v-model="user_name" placeholder="请输入用户名称" @keyup.enter="login">
+            <input class="login_input" type="password" v-model="password" placeholder="请输入登录密码" @keyup.enter="login">
             <div class="login" @click="login">登录</div>
           </div>
           <div v-if="active_tab == 'sm'">
@@ -175,22 +175,26 @@
       active_tab:function(n,o){
         if(n == 'sm'){
           this.getAppKey();
+        }else{
+          this.$nextTick(() => {
+            this.$refs.userName.focus();
+          })
         }
       }
     },
     methods: {
-     getAppKey() {
-      resource.getAppKey().then((res) => {
-       if (res.data.code == "1") {
-        let appKey = res.data.data.appkey;
-        this.ddLoginInit(appKey);
-      } else {
-        this.$message.warning(res.data.msg);
-      }
-    });
-    },
-    ddLoginInit(appKey) {
-      let url = `${location.origin}/api/scancodes/ewmlogin`;
+      getAppKey() {
+        resource.getAppKey().then((res) => {
+         if (res.data.code == "1") {
+          let appKey = res.data.data.appkey;
+          this.ddLoginInit(appKey);
+        } else {
+          this.$message.warning(res.data.msg);
+        }
+      });
+      },
+      ddLoginInit(appKey) {
+        let url = `${location.origin}/api/scancodes/ewmlogin`;
 			// let url = "http://selectiontest.92nu.com/api/scancodes/ewmlogin";
       const goto = encodeURIComponent(
        `https://oapi.dingtalk.com/connect/oauth2/sns_authorize?appid=${appKey}&response_type=code&scope=snsapi_login&state=STATE&redirect_uri=${url}`
@@ -237,11 +241,13 @@
           localStorage.setItem("ding_user_name", data.ding_user_name);
           localStorage.setItem("secret_key", data.secret_key);
           localStorage.setItem("login_token", data.login_token);
+          localStorage.setItem("supplier_name", data.supplier_name);
           let user_info = {
             user_type:data.user_type,
             ding_user_id:data.ding_user_id,
             login_token:data.login_token,
-            secret_key:data.secret_key
+            secret_key:data.secret_key,
+            supplier_name:data.supplier_name,
           }
           this.$store.commit('setToken',user_info);
           let domain = data.img_domain;

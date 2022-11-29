@@ -5,9 +5,9 @@
 				<GoBack/>
 			</TableTitle>
 			<div class="form_row">
-				<el-form size="small" label-width="100px">
+				<el-form size="small" label-width="100px" style="width:60%">
 					<el-form-item label="商品款号：" required>
-						<el-input placeholder="商品款号" v-model="arg.style_name" :disabled="is_detail">
+						<el-input placeholder="商品款号" style="width:190px" v-model="arg.style_name" :disabled="is_detail">
 						</el-input>
 					</el-form-item>
 					<el-form-item label="类目：" required>
@@ -23,18 +23,12 @@
 						</el-select>
 					</el-form-item>
 					<el-form-item label="合作模式：" required>
-						<el-input :placeholder="is_detail?'':'合作模式'" v-model="arg.mode" :disabled="is_detail">
+						<el-input :placeholder="is_detail?'':'合作模式'" style="width:190px" v-model="arg.mode" :disabled="is_detail">
 						</el-input>
 					</el-form-item>
 					<el-form-item label="网盘地址：">
-						<el-input :placeholder="is_detail?'':'网盘地址'" v-model="arg.net_disk_address" :disabled="is_detail">
+						<el-input :placeholder="is_detail?'':'网盘地址'" style="width:320px" v-model="arg.net_disk_address" :disabled="is_detail">
 						</el-input>
-					</el-form-item>
-					<el-form-item label="商品图：">
-						<div v-if="is_detail">
-							<el-image class="card_img" v-for="item in preview_image" :src="item" fit="scale-down" :preview-src-list="preview_image"></el-image>
-						</div>
-						<UploadFile :img_list="img_list" :is_multiple="true" :current_num="arg.img.length" :max_num="99" @callbackFn="callbackFn" v-else/>
 					</el-form-item>
 				</el-form>
 				<el-form size="small" label-width="100px">
@@ -65,6 +59,16 @@
 					<el-form-item label="颜色：" required>
 						<el-input placeholder="颜色" v-model="arg.color" :disabled="is_detail">
 						</el-input>
+					</el-form-item>
+				</el-form>
+			</div>
+			<div class="form_row">
+				<el-form size="small" label-width="100px">
+					<el-form-item label="商品图：">
+						<div v-if="is_detail">
+							<el-image class="card_img" v-for="item in preview_image" :src="item" fit="scale-down" :preview-src-list="preview_image"></el-image>
+						</div>
+						<UploadFile :img_list="img_list" :is_multiple="true" :current_num="arg.img.length" :max_num="99" @callbackFn="callbackFn" v-else/>
 					</el-form-item>
 				</el-form>
 			</div>
@@ -368,9 +372,6 @@
 				width: 160rem;
 				height: 160rem;
 			}
-		}
-		.margin_bottom{
-			margin-bottom: 20px;
 		}
 		.bottom_row{
 			display: flex;

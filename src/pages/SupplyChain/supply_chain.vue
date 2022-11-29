@@ -7,12 +7,6 @@
 				<div class="chain_text">{{item.name}}</div>
 				<div class="active_line" v-if="active_index == index"></div>
 			</div>
-			<div class="menu_item" :class="{'menu_item_active':active_index == 7}" @click="checkMenu(7)">
-				<img class="chain_icon" src="../../static/setting_record_active.png" v-if="active_index == 7">
-				<img class="chain_icon" src="../../static/setting_record.png" v-else>
-				<div class="chain_text">操作日志</div>
-				<div class="active_line" v-if="active_index == 6"></div>
-			</div>
 		</div>
 		<div class="right_content">
 			<div class="right_content_title">
@@ -113,12 +107,8 @@
 		methods:{
 			checkMenu(index){
 				this.active_index = index;
-				if(index == 7){
-					this.$router.push('/setting_record_page')
-				}else{
-					let path = this.menu_list[index].path;
-					this.$router.push(path);
-				}
+				let path = this.menu_list[index].path;
+				this.$router.push(path);
 			},
 		},
 		components:{

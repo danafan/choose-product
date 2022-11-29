@@ -32,12 +32,6 @@
 						</el-option>
 					</el-select>
 				</el-form-item>
-				<el-form-item label="上架状态：">
-					<el-select v-model="status_id" clearable placeholder="全部">
-						<el-option v-for="item in status_list" :key="item.id" :label="item.name" :value="item.id">
-						</el-option>
-					</el-select>
-				</el-form-item>
 				<el-form-item label="审核状态：">
 					<el-select v-model="check_status_id" clearable placeholder="全部">
 						<el-option v-for="item in check_status_list" :key="item.id" :label="item.name" :value="item.id">
@@ -103,9 +97,12 @@
 				<el-table-column label="共享盘地址" prop="shared_disk_address" show-overflow-tooltip></el-table-column>
 				<el-table-column label="审核状态" prop="common_text" show-overflow-tooltip>
 					<template slot-scope="scope">
-						<div v-if="scope.row.check_status == 1">待审核</div>
-						<div v-if="scope.row.check_status == 2">审核通过</div>
-						<div v-if="scope.row.check_status == 3">审核拒绝</div>
+						<div v-if="scope.row.check_status == 1">上架待审核</div>
+						<div v-if="scope.row.check_status == 2">已上架</div>
+						<div v-if="scope.row.check_status == 3">拒绝上架</div>
+						<div v-if="scope.row.check_status == 4">下架待审核</div>
+						<div v-if="scope.row.check_status == 5">已下架</div>
+						<div v-if="scope.row.check_status == 6">拒绝下架</div>
 					</template>
 				</el-table-column>
 				<el-table-column label="操作" width="160" fixed="right">
@@ -122,7 +119,7 @@
 								<el-dropdown-item command="3" v-if="button_list.del == 1">删除</el-dropdown-item>
 							</el-dropdown-menu>
 						</el-dropdown>
-						<el-button type="text" size="small" v-if="scope.row.check_status == 2 && button_list.in_out == 1" @click="checkStatus(scope.row.style_id,scope.row.status)">{{scope.row.status == 1?'下架':'上架'}}</el-button>
+						<el-button type="text" size="small" v-if="(scope.row.check_status == 2 || scope.row.check_status == 5) && button_list.in_out == 1" @click="checkStatus(scope.row.style_id,scope.row.check_status)">{{scope.row.check_status == 2?'下架':'上架'}}</el-button>
 						<el-button type="text" size="small" v-if="scope.row.check_status == 3 && button_list.reset == 1" @click="$router.push('/edit_goods?page_type=goods&goods_type=5&style_id=' + scope.row.style_id)">重新提交</el-button>
 					</template>
 				</el-table-column>
@@ -214,23 +211,24 @@
 				shooting_style_ids:[],	//选中的拍摄风格
 				class_list:[],			//分类列表
 				classification_ids:[],	//选中的分类
-				status_list:[{
-					name:'已上架',
-					id:1
-				},{
-					name:'已下架',
-					id:0
-				}],						//上架状态列表
-				status_id:"",			//选中的上架状态
 				check_status_list:[{
-					name:'待审核',
+					name:'上架待审核',
 					id:1
 				},{
-					name:'审核通过',
+					name:'审核通过(已上架)',
 					id:2
 				},{
-					name:'审核拒绝',
+					name:'上架审核拒绝',
 					id:3
+				},{
+					name:'下架待审核',
+					id:4
+				},{
+					name:'下架审核通过(已下架)',
+					id:5
+				},{
+					name:'下架审核拒绝',
+					id:6
 				}],						//审核状态列表
 				check_status_id:"",		//选中的审核状态
 				date:[],				//上新日期
@@ -293,7 +291,6 @@
     			this.shooting_style_ids = [];
     			this.date = [];
     			this.check_status_id = "";
-    			this.status_id = "";
     			this.search = "";
     			this.page = 1;
     		}
@@ -414,7 +411,6 @@
 					start_time:this.date && this.date.length > 0?this.date[0]:"",
 					end_time:this.date && this.date.length > 0?this.date[1]:"",
 					check_status:this.check_status_id,
-					status:this.status_id,
 					search:this.search,
 					page:this.page,
 					pagesize:10
@@ -627,14 +623,14 @@
 			},
 			//切换上架或下架
 			checkStatus(style_id,type){
-				this.$confirm(`确认${type == 0?'上架':'下架'}?`, '提示', {
+				this.$confirm(`确认${type == 5?'上架':'下架'}?`, '提示', {
 					confirmButtonText: '确定',
 					cancelButtonText: '取消',
 					type: 'warning'
 				}).then(() => {
 					let arg = {
 						style_id:style_id,
-						type:type == 0?1:0
+						type:type == 5?1:0
 					}
 					resource.checkStatus(arg).then(res => {
 						if(res.data.code == 1){

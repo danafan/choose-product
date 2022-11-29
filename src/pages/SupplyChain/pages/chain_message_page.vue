@@ -144,7 +144,7 @@
     		noticeList(){
     			let arg = {
     				page:this.page,
-    				pagesize:10,
+    				pagesize:20,
     				title:this.keyword
     			}
     			this.loading = true;
