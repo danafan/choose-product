@@ -1,7 +1,7 @@
 <template>
 	<div class="goods_item">
 		<div class="image_box" v-if="info.img != ''">
-			<el-image class="popover_image" fit="scale-down" :src="domain + info.img"></el-image>
+			<el-image class="goods_img" fit="scale-down" :src="domain + info.img"></el-image>
 	</div>
 	<img class="image_box" src="../static/load_failure.png" v-else>
 	<div class="goods_info">

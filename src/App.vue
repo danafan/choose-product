@@ -8,13 +8,12 @@
   export default {
     created() {
       // this.getUserInfo();
+      // return;
 
-      
       let user_type = localStorage.getItem("user_type");
-      if(!localStorage.getItem("cache") && !!user_type && user_type == '1'){
-        //获取用户信息
+      if(!localStorage.getItem("cache") && user_type != '2'){
         this.getUserInfo();
-      }else{
+      }else {
         this.$router.replace('/tab_menu');
       }
     },

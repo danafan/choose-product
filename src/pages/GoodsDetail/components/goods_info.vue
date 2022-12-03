@@ -40,7 +40,7 @@
 				<img class="add_car" src="../../../static/add_car.png">
 				<div>加入选中</div>
 			</div>
-			<div class="button_item select" @click="selectStyle">
+			<div class="button_item select" :class="{'drak_back':goods_info.cost_price == ''}" @click="selectStyle">
 				<div>立即选款</div>
 			</div>
 		</div>
@@ -75,9 +75,9 @@
 							<div class="lable"><span>*</span>店铺：</div>
 							<div class="value">
 								<el-select v-model="shop_code" size="mini" multiple collapse-tags filterable clearable placeholder="选择店铺">
-								<el-option v-for="item in store_list" :key="item.shop_code" :label="item.shop_name" :value="item.shop_code">
-								</el-option>
-							</el-select>
+									<el-option v-for="item in store_list" :key="item.shop_code" :label="item.shop_name" :value="item.shop_code">
+									</el-option>
+								</el-select>
 							</div>
 						</div>
 						<div class="form_item">
@@ -177,13 +177,15 @@
 			},	
 			//点击选款
 			selectStyle(){
-				//获取选款轮播图
-				this.chooseBeforGetImg();
-				//获取店铺列表
-				this.ajaxViewShop();
-				//获取所有需求/发货类型
-				this.getAllDemandSendType();
-				this.show_select = true;
+				if(this.goods_info.cost_price != ''){
+					//获取选款轮播图
+					this.chooseBeforGetImg();
+					//获取店铺列表
+					this.ajaxViewShop();
+					//获取所有需求/发货类型
+					this.getAllDemandSendType();
+					this.show_select = true;
+				}
 			},
 			//提交选款
 			confirmSelect(){
@@ -193,6 +195,8 @@
 					this.$message.warning('请选择需求类型!');
 				}else if(this.send_type == ''){
 					this.$message.warning('请选择发货类型!');
+				}else if(this.selling_price < 0){
+					this.$message.warning('售卖价格应大于0!');
 				}else{
 					var shop_code_arr = [];
 					var shop_name_arr = [];
@@ -376,6 +380,10 @@
 		.select{
 			background: var(--color);
 			color: #ffffff;
+		}
+		.drak_back{
+			border:1px solid #999999;
+			background-color: #999999;
 		}
 	}
 	.select_content{

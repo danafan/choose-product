@@ -33,7 +33,7 @@
 						</el-input>
 					</el-form-item>
 					<el-form-item label="成本价：" required>
-						<el-input type="number" placeholder="成本价" v-model="arg.cost_price" :disabled="is_detail">
+						<el-input type="number" v-model="arg.cost_price" :disabled="is_detail">
 						</el-input>
 					</el-form-item>
 					<el-form-item label="颜色：" required>
@@ -404,6 +404,8 @@
 					this.$message.warning('请输入成本价!');
 				}else if(!this.arg.size){
 					this.$message.warning('请输入尺码!');
+				}else if(this.arg.cost_price < 0){
+					this.$message.warning('成本价应大于0!');
 				}else if(!this.arg.color){
 					this.$message.warning('请输入颜色!');
 				}else{

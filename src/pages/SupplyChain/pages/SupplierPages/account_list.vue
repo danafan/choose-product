@@ -51,10 +51,10 @@
 						<el-input style="width: 200px" :disabled="dialog_type == '2'" v-model="username" placeholder="请输入用户名"></el-input>
 					</el-form-item>
 					<el-form-item class="form_item" label='登录密码：'>
-						<el-input style="width: 200px" v-model="password" placeholder="请输入登录密码"></el-input>
+						<el-input style="width: 200px" v-model="password"  maxlength="20" placeholder="请输入登录密码"></el-input>
 					</el-form-item>
 					<el-form-item class="form_item" label='确认密码：'>
-						<el-input style="width: 200px" v-model="confirm_password" placeholder="请输入确认密码"></el-input>
+						<el-input style="width: 200px" v-model="confirm_password"  maxlength="20" placeholder="请输入确认密码"></el-input>
 					</el-form-item>
 					<el-form-item class="form_item" label='是否启用：'>
 						<el-radio-group v-model="status">
@@ -195,18 +195,18 @@
 			confirmFn(){
 				if(this.username == ""){
 					this.$message.warning('请输入用户名');
-				}else if(this.password == ''){
-					this.$message.warning('请输入密码');
-				}else if(this.confirm_password == ''){
-					this.$message.warning('请确认密码');
-				}else if(this.confirm_password != this.password){
-					this.$message.warning('两次密码输入不一致');
-				}else{
+				}else {
+					if(this.confirm_password != this.password){
+						this.$message.warning('两次密码输入不一致');
+						return;
+					}
 					let arg = {
 						username:this.username,
-						password:this.password,
-						confirm_password:this.confirm_password,
 						status:this.status
+					}
+					if(this.password != '' && this.confirm_password != ''){
+						arg.password = this.password;
+						arg.confirm_password = this.confirm_password;
 					}
 					if(this.dialog_type == '1'){	//添加
 						arg.supplier_id = this.supplier_id;

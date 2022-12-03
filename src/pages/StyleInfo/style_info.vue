@@ -36,10 +36,6 @@
 					<el-date-picker v-model="date" size="mini" type="daterange" unlink-panels value-format="yyyy-MM-dd" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions">
 					</el-date-picker>
 				</el-form-item>
-				<el-form-item label="款式编码：">
-					<el-input placeholder="款式编码" clearable v-model="search">
-					</el-input>
-				</el-form-item>
 				<el-form-item class="form_item">
 					<el-button type="primary" @click="checkPage(1)">查询</el-button>
 				</el-form-item>
@@ -257,7 +253,6 @@
 					},
 					],
 				}, 
-				search:"",				//款式编码
 				max_height:0,	
 				page:1,
 				data:[],				//获取的数据
@@ -289,7 +284,6 @@
     			this.date = [];
     			this.check_status_id = "";
     			this.status_id = "";
-    			this.search = "";
     			this.page = 1;
     		}
 			//获取列表
@@ -399,7 +393,6 @@
 					end_time:this.date && this.date.length > 0?this.date[1]:"",
 					check_status:this.check_status_id,
 					status:this.status_id,
-					search:this.search,
 					page:this.page,
 					pagesize:10
 				}

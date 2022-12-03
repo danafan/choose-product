@@ -37,7 +37,7 @@
 					<img class="add_car" src="../static/add_car.png">
 					<div>待选</div>
 				</div>
-				<div class="xk" @click.stop="selectStyle(info.style_id)">选款</div>
+				<div class="xk" :class="{'drak_back':info.cost_price == ''}" @click.stop="selectStyle(info.style_id)">选款</div>
 			</div>
 			<div class="store_name">{{info.supplier_name}}</div>
 		</div>
@@ -325,6 +325,7 @@
 						height: 12rem;
 					}
 				}
+
 				.xk{
 					margin-left: 10rem;
 					border-radius: 2rem;
@@ -334,6 +335,9 @@
 					line-height: 20rem;
 					font-size: 12rem;
 					color: #ffffff;
+				}
+				.drak_back{
+					background-color: #999999;
 				}
 			}
 			.store_name{
@@ -569,13 +573,15 @@
 			},
 			//点击选款
 			selectStyle(style_id){
-				//获取选款轮播图
-				this.chooseBeforGetImg(style_id);
-				//获取店铺列表
-				this.ajaxViewShop();
-				//获取所有需求/发货类型
-				this.getAllDemandSendType();
-				this.show_select = true;
+				if(this.info.cost_price != ''){
+					//获取选款轮播图
+					this.chooseBeforGetImg(style_id);
+					//获取店铺列表
+					this.ajaxViewShop();
+					//获取所有需求/发货类型
+					this.getAllDemandSendType();
+					this.show_select = true;
+				}
 			},
 			//提交选款
 			confirmSelect(){
@@ -585,6 +591,8 @@
 					this.$message.warning('请选择需求类型!');
 				}else if(this.send_type == ''){
 					this.$message.warning('请选择发货类型!');
+				}else if(this.selling_price < 0){
+					this.$message.warning('售卖价格应大于0!');
 				}else{
 					var shop_code_arr = [];
 					var shop_name_arr = [];

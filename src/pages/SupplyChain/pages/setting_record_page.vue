@@ -39,7 +39,7 @@
 				<el-table-column label="IP地址" width="150" prop="ip" show-overflow-tooltip></el-table-column>
 				<el-table-column label="操作记录" prop="content" show-overflow-tooltip></el-table-column>
 			</el-table>
-			<PaginationWidget id="bottom_row" :total="total" :page="page" @checkPage="checkPage"/>
+			<PaginationWidget id="bottom_row" :total="total" :page="page" :pagesize="30" @checkPage="checkPage"/>
 		</el-card>
 	</div>
 </template>

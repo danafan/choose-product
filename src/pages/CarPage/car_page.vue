@@ -35,7 +35,7 @@
 					<el-button size='mini' type="text" :disabled="selected_list.length == 0" @click="deleteFn('2')">移除</el-button>
 					<div class="all_selected">
 						<div class="selcted_num">已选 {{selected_list.length}} 件</div>
-						<el-button size='mini' type="primary" :disabled="selected_list.length == 0" @click="selectFn">去选中</el-button>
+						<el-button size='mini' type="primary" :disabled="disabled" @click="selectFn">去选中</el-button>
 					</div>
 				</div>
 			</el-card>
@@ -142,6 +142,15 @@
 			//图片前缀
 			domain(){
 				return this.$store.state.domain;
+			},
+			//去选中按钮是否可以点击
+			disabled(){
+				let disabled = false;
+				let arr = this.selected_list.filter(item => {
+					return item.cost_price == '';
+				})
+				disabled = arr.length > 0 || this.selected_list.length == 0;
+				return disabled;
 			}
 		},
 		mounted() {
@@ -151,7 +160,6 @@
     	},
     	methods: {
     		addTableIndex() {
-    			console.log('asd')
     			let table = document.querySelector(".el-table__body-wrapper");
     			let tableSelect = table.getElementsByClassName(
     				"el-table-column--selection"
@@ -238,6 +246,8 @@
 					this.$message.warning('请选择需求类型!');
 				}else if(this.send_type == ''){
 					this.$message.warning('请选择发货类型!');
+				}else if(this.selling_price < 0){
+					this.$message.warning('售卖价格应大于0!');
 				}else{
 					var shop_code_arr = [];
 					var shop_name_arr = [];

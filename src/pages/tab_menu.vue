@@ -65,15 +65,15 @@
           <div>{{username}}</div>
         </el-form-item>
         <el-form-item label="旧密码：" required>
-          <el-input style="width: 200px" v-model="old_password" placeholder="请输入旧密码">
+          <el-input style="width: 200px" v-model="old_password" maxlength="20" placeholder="请输入旧密码">
           </el-input>
         </el-form-item>
         <el-form-item label="新密码：" required>
-          <el-input style="width: 200px" v-model="password" placeholder="请输入新密码">
+          <el-input style="width: 200px" v-model="password" maxlength="20" placeholder="请输入新密码">
           </el-input>
         </el-form-item>
         <el-form-item label="确认密码：" required>
-          <el-input style="width: 200px" v-model="confirm_password" placeholder="请确认密码">
+          <el-input style="width: 200px" v-model="confirm_password" maxlength="20" placeholder="请确认密码">
           </el-input>
         </el-form-item>
       </el-form>

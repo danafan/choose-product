@@ -20,8 +20,8 @@
           </div>
           <div class="text">{{active_tab == 'gys'?'用户名密码':'钉钉扫码一键'}}登录</div>
           <div class="gys_box" v-if="active_tab == 'gys'">
-            <input class="login_input" ref="userName" autofocus v-model="user_name" placeholder="请输入用户名称" @keyup.enter="login">
-            <input class="login_input" type="password" v-model="password" placeholder="请输入登录密码" @keyup.enter="login">
+            <input class="login_input" ref="userName" autofocus v-model="user_name" placeholder="请输入用户名称" maxlength="20" @keyup.enter="login">
+            <input class="login_input" type="password" v-model="password" placeholder="请输入登录密码" maxlength="20" @keyup.enter="login">
             <div class="login" @click="login">登录</div>
           </div>
           <div v-if="active_tab == 'sm'">
