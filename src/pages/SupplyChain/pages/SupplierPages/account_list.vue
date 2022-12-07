@@ -29,7 +29,7 @@
 				</el-table-column>
 				<el-table-column label="操作" width="180" fixed="right">
 					<template slot-scope="scope">
-						<el-button type="text" size="small" @click="editFn('2',scope.row.account_id,scope.row.username)">编辑</el-button>
+						<el-button type="text" size="small" @click="editFn('2',scope.row.account_id,scope.row.username,scope.row.status)">编辑</el-button>
 						<el-button type="text" size="small" @click="deleteFn(scope.row.account_id)">删除</el-button>
 					</template>
 				</el-table-column>
@@ -183,11 +183,12 @@
 				this.status = 1;
 			},
 			//点击编辑
-			editFn(type,account_id,username){
+			editFn(type,account_id,username,status){
 				this.dialog_type = type;
 				if(type == '2'){		//编辑
 					this.username = username;
 					this.account_id = account_id;
+					this.status = status;
 				}
 				this.show_dialog = true;
 			},

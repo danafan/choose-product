@@ -82,11 +82,11 @@
 						<div v-if="scope.row.check_status == 6">拒绝下架</div>
 					</template>
 				</el-table-column>
-				<el-table-column label="拒绝备注" prop="remark" show-overflow-tooltip></el-table-column>
+				<el-table-column label="拒绝备注" prop="refuse_reason" show-overflow-tooltip></el-table-column>
 				<el-table-column label="操作" width="160" fixed="right">
 					<template slot-scope="scope">
-						<el-button style="margin-right: 10px" type="text" size="small" v-if="scope.row.check_status == 2" @click="$router.push('/gys_image_setting?style_id=' + scope.row.style_id + '&style_name=' + scope.row.style_name)">图片管理</el-button>
-						<el-dropdown size="small" v-if="scope.row.check_status == 2" @command="handleCommand($event,scope.row.style_id)">
+						<el-button style="margin-right: 10px" type="text" size="small" v-if="scope.row.check_status == 2 || scope.row.check_status == 6" @click="$router.push('/gys_image_setting?style_id=' + scope.row.style_id + '&style_name=' + scope.row.style_name)">图片管理</el-button>
+						<el-dropdown size="small" v-if="scope.row.check_status == 2 || scope.row.check_status == 6" @command="handleCommand($event,scope.row.style_id)">
 							<el-button type="text" size="small">
 								更多<i class="el-icon-arrow-down el-icon--right"></i>
 							</el-button>
@@ -95,8 +95,8 @@
 								<el-dropdown-item command="2">编辑</el-dropdown-item>
 							</el-dropdown-menu>
 						</el-dropdown>
-						<el-button type="text" size="small" v-if="scope.row.check_status == 2 || scope.row.check_status == 5" @click="checkStatus(scope.row.style_id,scope.row.check_status)">{{scope.row.check_status == 2?'下架':'上架'}}</el-button>
-						<el-button type="text" size="small" v-if="scope.row.check_status == 3 || scope.row.check_status == 6" @click="$router.push('/gys_edit_goods?goods_type=5&style_id=' + scope.row.style_id)">重新提交</el-button>
+						<el-button type="text" size="small" v-if="scope.row.check_status == 2 || scope.row.check_status == 5 || scope.row.check_status == 6" @click="checkStatus(scope.row.style_id,scope.row.check_status)">{{scope.row.check_status == 2 || scope.row.check_status == 6?'下架':'上架'}}</el-button>
+						<el-button type="text" size="small" v-if="scope.row.check_status == 3" @click="$router.push('/gys_edit_goods?goods_type=5&style_id=' + scope.row.style_id)">重新提交</el-button>
 					</template>
 				</el-table-column>
 			</el-table>
@@ -308,8 +308,11 @@
     		onResize() {
     			this.$nextTick(() => {
     				let card_box_height = document.getElementById("card_box").offsetHeight;
+    				console.log(card_box_height)
     				let table_title_height = document.getElementById("table_title").offsetHeight;
+    				console.log(table_title_height)
     				let bottom_row_height = document.getElementById("bottom_row").offsetHeight;
+    				console.log(bottom_row_height)
     				this.max_height =
     				card_box_height -
     				table_title_height -

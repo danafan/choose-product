@@ -21,7 +21,7 @@
 			</el-table>
 			<PaginationWidget id="bottom_row" :total="data.total" :page="page" @checkPage="checkPage"/>
 		</el-card>
-		<!-- 添加或编辑 -->
+		添加或编辑
 		<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" @close="closeDialog" :visible.sync="show_dialog">
 			<div slot="title" class="dialog_title">
 				<div>{{dialog_title}}</div>

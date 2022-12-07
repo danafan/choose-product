@@ -57,7 +57,7 @@
 							<GoodsItem :info="item" v-for="item in goods_list"/>
 							<div class="padding_item" v-for="i in 6-(goods_list.length%6) == 6?0:6-(goods_list.length%6)"></div>
 						</div>
-						<PaginationWidget :total="total" :page="arg.page" :pagesize="pagesize" @checkPage="checkPage"/>
+						<PaginationWidget :total="total" :page="page" :pagesize="pagesize" @checkPage="checkPage"/>
 					</div>
 					<EmptyPage :is_loading="loading" v-else/>
 				</el-card>
@@ -125,7 +125,6 @@
 			},
 			//查询条件回调
 			screenFn(arg){
-				console.log(arg)
 				this.page = 1;
 				this.arg = arg;
 				let obj = {...this.arg,...{page:this.page}};

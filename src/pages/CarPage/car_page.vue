@@ -96,7 +96,7 @@
 				<QuillEditor @callback="getEditor"/>
 			</div>
 			<div slot="footer" class="dialog_footer">
-				<el-button type="primary" size="small" @click="confirmSelect">确认选择</el-button>
+				<el-button type="primary" :disabled="confirmDisabled" size="small" @click="confirmSelect">确认选择</el-button>
 			</div>
 		</el-dialog>
 	</div>
@@ -117,7 +117,7 @@
 				max_height:0,
 				show_select:false,			//选款弹窗
 				store_list:[],			//店铺列表
-				shop_code:"",			//选中的店铺
+				shop_code:[],			//选中的店铺
 				need_type:[],			//需求类型列表
 				demand_type:[],			//选中的需求类型
 				delivery_type_list:[],	//发货类型列表
@@ -125,6 +125,7 @@
 				demand_date:"",			//需求日期
 				selling_price:"",		//售卖价格
 				remark:"",				//备注
+				is_loading:false,
 				
 			}
 		},
@@ -151,6 +152,10 @@
 				})
 				disabled = arr.length > 0 || this.selected_list.length == 0;
 				return disabled;
+			},
+			//确认选择按钮是否可点击
+			confirmDisabled(){
+				return this.shop_code.length == 0 || this.demand_type.length == 0 || this.send_type == "" || this.is_loading;
 			}
 		},
 		mounted() {
@@ -277,8 +282,10 @@
 						selling_price:this.selling_price,
 						remark:this.remark
 					}
+					this.is_loading = true;
 					resource.addSelected(arg).then(res => {
 						if(res.data.code == 1){
+							this.is_loading = false;
 							this.$message.success(res.data.msg);
 							this.show_select = false;
 							//获取购物车列表数量

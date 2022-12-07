@@ -1,10 +1,10 @@
 <template>
 	<div class="chain_page_content">
-		<el-card class="card_box">
-			<TableTitle :title="table_title">
+		<el-card class="card_box" id="card_box">
+			<TableTitle :title="table_title" id="title_box">
 				<GoBack/>
 			</TableTitle>
-			<div class="scroll_box">
+			<div class="scroll_box" :style="{height:max_height}">
 				<div class="form_row">
 					<el-form size="small" label-width="100px" style="width:60%">
 						<el-form-item label="商品款号：" required>
@@ -100,6 +100,7 @@
 				preview_image:[],		//查看详情的图片列表
 				img_list:[],			
 				style_id:"",			//商品ID
+				max_height:0,
 				arg:{
 					style_name:"",			//商品款号
 					title:"",				//标题
@@ -145,7 +146,27 @@
 				return this.$store.state.domain;
 			}
 		},
+		destroyed() {
+			window.removeEventListener("resize", () => {});
+		},
+		mounted() {
+    		//获取表格最大高度
+    		this.onResize();
+    		window.addEventListener("resize", this.onResize());
+    	},
 		methods: {
+			//监听屏幕大小变化
+    		onResize() {
+    			this.$nextTick(() => {
+    				let card_box_height = document.getElementById("card_box").offsetHeight;
+    				let title_height = document.getElementById("title_box").offsetHeight;
+    				this.max_height =
+    				card_box_height -
+    				title_height -
+    				50 +
+    				"px";
+    			});
+    		},
 			//获取数据列表
 			async getInfoList(){
 				//获取类目列表
@@ -365,7 +386,7 @@
 		flex-direction: column;
 		flex:1;
 		.scroll_box{
-			height: 800px;
+			// height: 800px;
 			overflow-y: scroll;
 		}
 		.scroll_box::-webkit-scrollbar{display:none}

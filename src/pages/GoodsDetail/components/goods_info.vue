@@ -125,7 +125,7 @@
 				<QuillEditor @callback="getEditor"/>
 			</div>
 			<div slot="footer" class="dialog_footer">
-				<el-button type="primary" size="small" @click="confirmSelect">确认选择</el-button>
+				<el-button type="primary" :disabled="disabled" size="small" @click="confirmSelect">确认选择</el-button>
 			</div>
 		</el-dialog>
 	</div>
@@ -150,6 +150,7 @@
 				remark:"",				//备注
 				banner_list:[],			//选款弹窗的轮播图
 				active_index:0,			//当前显示的图片下标
+				is_loading:false
 			}
 		},
 		props:{	
@@ -163,6 +164,10 @@
 			//图片前缀
 			domain(){
 				return this.$store.state.domain;
+			},
+			//确认选择按钮是否可点击
+			disabled(){
+				return this.shop_code.length == 0 || this.demand_type.length == 0 || this.send_type == "" || this.is_loading;
 			}
 		},
 		methods:{
@@ -218,8 +223,10 @@
 						selling_price:this.selling_price,
 						remark:this.remark
 					}
+					this.is_loading = true;
 					resource.chooseGoods(arg).then(res => {
 						if(res.data.code == 1){
+							this.is_loading = false;
 							this.$message.success(res.data.msg);
 							this.show_select = false;
 							this.$emit('callback');

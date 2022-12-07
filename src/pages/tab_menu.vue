@@ -27,10 +27,14 @@
       </el-popover>
       <div class="header_right">
         <div class="tab_item" :class="{'active_tab':active_index == index}" v-for="(item,index) in menu_list" @click="checkIndex(index)">{{item.menu_name}}</div>
-        <el-popover placement="bottom" trigger="hover">
-          <el-button type="text" size="mini" @click="edit_dialog = true">修改密码</el-button>
-          <div class="tab_item" slot="reference" v-if="user_type == '2'">设置</div>
-        </el-popover>
+        <div v-if="user_type == '2'">
+          <el-dropdown @command="edit_dialog = true">
+            <div class="tab_item">设置</div>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item>修改密码</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
+        </div>
         <img class="user_img" src="../static/user_img.png">
         <div class="user_name">{{username}}</div>
         <div class="line"></div>
@@ -161,6 +165,7 @@
       color: #333333;
       .tab_item{
         margin-right: 30rem;
+        font-size: 14rem!important;
         cursor:pointer;
       }
       .active_tab{

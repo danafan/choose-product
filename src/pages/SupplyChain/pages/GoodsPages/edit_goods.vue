@@ -2,7 +2,7 @@
 	<div class="chain_page_content">
 		<el-card class="card_box">
 			<div class="form_row">
-				<el-form size="small" label-width="100px">
+				<el-form size="small" style="flex:1" label-width="100px">
 					<el-form-item label="提交人：" v-if="is_detail">
 						<div>{{add_admin_name}}</div>
 					</el-form-item>
@@ -41,7 +41,7 @@
 						</el-input>
 					</el-form-item>
 				</el-form>
-				<el-form size="small" label-width="100px">
+				<el-form size="small" style="flex:1" label-width="100px">
 					<el-form-item label="商品款号：" required>
 						<el-input placeholder="商品款号" v-model="arg.style_name" :disabled="is_detail">
 						</el-input>
@@ -72,6 +72,9 @@
 					</el-form-item>
 					<el-form-item label="审核状态：" v-if="is_detail">
 						{{check_status | checkStatus}}
+					</el-form-item>
+					<el-form-item label="下架原因：" v-if="arg.check_status == 4">
+						{{arg.off_reason}}
 					</el-form-item>
 				</el-form>
 			</div>

@@ -108,8 +108,8 @@
 				<el-table-column label="操作" width="160" fixed="right">
 					<template slot-scope="scope">
 						<el-button type="text" size="small" v-if="(scope.row.check_status == 1 || scope.row.check_status == 4) && button_list.agree_refuse == 1" @click="$router.push('/edit_goods?page_type=goods&goods_type=4&style_id=' + scope.row.style_id)">审核</el-button>
-						<el-button style="margin-right: 10px" type="text" size="small" v-if="scope.row.check_status == 2" @click="$router.push('/image_setting?style_id=' + scope.row.style_id + '&style_name=' + scope.row.style_name)">图片管理</el-button>
-						<el-dropdown size="small" @command="handleCommand($event,scope.row.style_id)" v-if="scope.row.check_status == 2 && (button_list.info == 1 || button_list.edit == 1 || button_list.del == 1)">
+						<el-button style="margin-right: 10px" type="text" size="small" v-if="scope.row.check_status == 2 || scope.row.check_status == 6" @click="$router.push('/image_setting?style_id=' + scope.row.style_id + '&style_name=' + scope.row.style_name)">图片管理</el-button>
+						<el-dropdown size="small" @command="handleCommand($event,scope.row.style_id)" v-if="scope.row.check_status == 2 || scope.row.check_status == 6 && (button_list.info == 1 || button_list.edit == 1 || button_list.del == 1)">
 							<el-button type="text" size="small">
 								更多<i class="el-icon-arrow-down el-icon--right"></i>
 							</el-button>
@@ -119,7 +119,7 @@
 								<el-dropdown-item command="3" v-if="button_list.del == 1">删除</el-dropdown-item>
 							</el-dropdown-menu>
 						</el-dropdown>
-						<el-button type="text" size="small" v-if="(scope.row.check_status == 2 || scope.row.check_status == 5) && button_list.in_out == 1" @click="checkStatus(scope.row.style_id,scope.row.check_status)">{{scope.row.check_status == 2?'下架':'上架'}}</el-button>
+						<el-button type="text" size="small" v-if="(scope.row.check_status == 2 || scope.row.check_status == 5 || scope.row.check_status == 6) && button_list.in_out == 1" @click="checkStatus(scope.row.style_id,scope.row.check_status)">{{scope.row.check_status == 2 || scope.row.check_status == 6?'下架':'上架'}}</el-button>
 						<el-button type="text" size="small" v-if="scope.row.check_status == 3 && button_list.reset == 1" @click="$router.push('/edit_goods?page_type=goods&goods_type=5&style_id=' + scope.row.style_id)">重新提交</el-button>
 					</template>
 				</el-table-column>
