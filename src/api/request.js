@@ -41,13 +41,15 @@ export function middleWare(params, type) {
     sort_obj[item] = val;
   });
   var sign_arr = [];
+
   for (let key in sort_obj) {
     if (
       key != "image" &&
       key != "file" &&
       key.indexOf("remark") == -1 &&
       key != "notice_content" &&
-      key != "feedback_content"
+      key != "feedback_content" &&
+      key != "off_reason"
       ) {
       sign_arr.push(`${key}=${sort_obj[key]}`);
   }
