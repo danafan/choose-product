@@ -33,7 +33,7 @@
 		</div>
 		<div class="set_row">
 			<div class="button_row">
-				<div class="add" @click.stop="addCar">
+				<div class="add" @click.stop="addCar(info.cost_price)">
 					<img class="add_car" src="../static/add_car.png">
 					<div>待选</div>
 				</div>
@@ -586,6 +586,8 @@
 					//获取所有需求/发货类型
 					this.getAllDemandSendType();
 					this.show_select = true;
+				}else{
+					this.$message.warning('该商品没有成本价,不能选款!')
 				}
 			},
 			//提交选款
@@ -730,7 +732,11 @@
 				})
 			},
 			//点击加入购物车
-			addCar(){
+			addCar(cost_price){
+				if(cost_price == ''){
+					this.$message.warning('该商品没有成本价，不能加入待选！')
+					return;
+				}
 				let arg = {
 					style_id:this.info.style_id
 				}

@@ -190,6 +190,8 @@
 					//获取所有需求/发货类型
 					this.getAllDemandSendType();
 					this.show_select = true;
+				}else{
+					this.$message.warning('该商品没有成本价,不能选款!')
 				}
 			},
 			//提交选款
@@ -299,21 +301,25 @@
 			},
 			//点击加入购物车
 			addCar(){
-				let arg = {
-					style_id:this.goods_info.style_id
-				}
-				resource.addSelectCart(arg).then(res => {
-					if(res.data.code == 1){
-						this.$message.success(res.data.msg);
-						let arg = {
-							type:'add',
-							num:1
-						}
-						this.$store.commit('setCarGoods',arg);
-					}else{
-						this.$message.warning(res.data.msg);
+				if(this.goods_info.cost_price != ''){
+					let arg = {
+						style_id:this.goods_info.style_id
 					}
-				})
+					resource.addSelectCart(arg).then(res => {
+						if(res.data.code == 1){
+							this.$message.success(res.data.msg);
+							let arg = {
+								type:'add',
+								num:1
+							}
+							this.$store.commit('setCarGoods',arg);
+						}else{
+							this.$message.warning(res.data.msg);
+						}
+					})
+				}else{
+					this.$message.warning('该商品没有成本价,不能加入待选!')
+				}
 			},
 			
 		},

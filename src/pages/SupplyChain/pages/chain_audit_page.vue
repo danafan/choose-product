@@ -32,9 +32,9 @@
 						</el-option>
 					</el-select>
 				</el-form-item>
-				<el-form-item label="需求店铺：">
-					<el-select v-model="shop_code" clearable multiple filterable collapse-tags placeholder="全部">
-						<el-option v-for="item in store_list" :key="item.shop_code" :label="item.shop_name" :value="item.shop_code">
+				<el-form-item label="分类：">
+					<el-select v-model="classification_ids" clearable multiple filterable collapse-tags placeholder="全部">
+						<el-option v-for="item in class_list" :key="item.classification_id" :label="item.classification_name" :value="item.classification_id">
 						</el-option>
 					</el-select>
 				</el-form-item>
@@ -62,9 +62,9 @@
 						</el-option>
 					</el-select>
 				</el-form-item>
-				<el-form-item label="分类：">
-					<el-select v-model="classification_ids" clearable multiple filterable collapse-tags placeholder="全部">
-						<el-option v-for="item in class_list" :key="item.classification_id" :label="item.classification_name" :value="item.classification_id">
+				<el-form-item label="需求店铺：">
+					<el-select style="width: 330px" v-model="shop_code" clearable multiple filterable collapse-tags placeholder="全部">
+						<el-option v-for="item in store_list" :key="item.shop_code" :label="item.shop_name" :value="item.shop_code">
 						</el-option>
 					</el-select>
 				</el-form-item>

@@ -49,6 +49,8 @@ export function middleWare(params, type) {
       key.indexOf("remark") == -1 &&
       key != "notice_content" &&
       key != "feedback_content" &&
+      key != "err_msg" &&
+      key != "refuse_remark" &&
       key != "off_reason"
       ) {
       sign_arr.push(`${key}=${sort_obj[key]}`);
