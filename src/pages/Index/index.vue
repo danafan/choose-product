@@ -2,7 +2,7 @@
 	<div class="padding_page ddd">
 		<div class="index_container">
 			<div class="padding_page_content">
-				<SearchWidget page_path="index_history" @callback="searchFn" placeholder="搜索款式编码、标题"/>
+				<SearchWidget page_path="index_history" @callback="searchFn" placeholder="搜索款式编码、标题、款号"/>
 				<el-card class="card_box" id="card_box">
 					<ScreeningWidget id="screen_widget" v-if="show_screen" :total_num="total" @callback="screenFn"/>
 					<div class="scroll_view" v-if="goods_list.length > 0">

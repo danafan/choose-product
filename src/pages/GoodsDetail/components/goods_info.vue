@@ -34,6 +34,10 @@
 				<div class="row_lable">面料</div>
 				<div class="row_value">{{goods_info.fabric}}</div>
 			</div>
+			<div class="content_row">
+				<div class="row_lable">网盘地址</div>
+				<el-button type="text" @click="windowOpen(goods_info.net_disk_address)">{{goods_info.net_disk_address}}</el-button>
+			</div>
 		</div>
 		<div class="button_row">
 			<div class="button_item add" @click="addCar">
@@ -321,7 +325,9 @@
 					this.$message.warning('该商品没有成本价,不能加入待选!')
 				}
 			},
-			
+			windowOpen(url){
+				window.open(url);
+			}
 		},
 		components:{
 			QuillEditor

@@ -42,8 +42,8 @@
 					<el-date-picker v-model="date" size="mini" type="daterange" unlink-panels value-format="yyyy-MM-dd" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions">
 					</el-date-picker>
 				</el-form-item>
-				<el-form-item label="款式编码：">
-					<el-input placeholder="款式编码" clearable v-model="search">
+				<el-form-item label="搜索：">
+					<el-input style="width: 200px" placeholder="款式风格、款式编码、款号" clearable v-model="search">
 					</el-input>
 				</el-form-item>
 				<el-form-item class="form_item">
