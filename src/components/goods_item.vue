@@ -181,7 +181,7 @@
 				<el-tab-pane :label="item.shooting_style_name" v-for="(item,index) in style_data" :key="index">
 					<div class="source_url">共享盘地址：{{item.shared_disk_address}}</div>
 					<div class="source_url">网盘地址：
-						<el-button type="text" @click="windowOpen(item.net_disk_address)">{{item.net_disk_address}}</el-button>
+						<el-button type="text" @click="windowOpen(item.net_disk_address)">{{item.or_net_disk_address}}</el-button>
 					</div>
 					<div class="more_image">
 						<el-image :z-index="9009" class="more_image_item" :src="img_url" fit="scale-down" v-for="(img_url,i) in item.img_arr" :key="i" :preview-src-list="item.img_arr"></el-image>
@@ -190,7 +190,7 @@
 			</el-tabs>
 			<div v-else>
 				<div class="source_url">网盘地址：
-					<el-button type="text" @click="windowOpen(commodity_url)">{{commodity_url}}</el-button>
+					<el-button type="text" @click="windowOpen">{{commodity_url}}</el-button>
 				</div>
 				<div class="more_image">
 					<el-image :z-index="9009" class="more_image_item" :src="item" fit="scale-down" v-for="item in commodity_data" :preview-src-list="commodity_data"></el-image>
@@ -537,7 +537,8 @@
 				active_tab_index:0,		//选中的下标
 				style_data:[],			//风格图数据
 				commodity_data:[],		//封面图数据
-				commodity_url:[],		//封面图网盘地址
+				commodity_url:"",		//封面图网盘地址(显示)
+				commodity_open_url:"",		//封面图网盘地址（可跳转）
 				firstTime: '', 			// mousedown的时间戳
 				lastTime: '', 			// mouseup的时间戳
 				isClick: false, 		// false--禁止点击，true--可点击
@@ -733,7 +734,8 @@
 							img_arr.push(this.domain + item);
 						})
 						this.commodity_data = img_arr;
-						this.commodity_url = res.data.data.net_disk_address;
+						this.commodity_url = res.data.data.or_net_disk_address;
+						this.commodity_open_url = res.data.data.net_disk_address;
 						this.more_image_dialog = true;
 					}else{
 						this.$message.warning(res.data.msg);
@@ -815,8 +817,8 @@
     			window.open(routeData.href);
     		},
     		//点击查看网盘
-    		windowOpen(url){
-    			window.open(url)
+    		windowOpen(){
+    			window.open(this.commodity_open_url)
     		}
     	},
     	components:{

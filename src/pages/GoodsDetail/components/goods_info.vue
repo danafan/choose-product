@@ -36,7 +36,7 @@
 			</div>
 			<div class="content_row">
 				<div class="row_lable">网盘地址</div>
-				<el-button type="text" @click="windowOpen(goods_info.net_disk_address)">{{goods_info.net_disk_address}}</el-button>
+				<div class="link" @click="windowOpen(goods_info.net_disk_address)">{{goods_info.or_net_disk_address}}</div>
 			</div>
 		</div>
 		<div class="button_row">
@@ -353,7 +353,6 @@
 		.content_row{
 			margin-bottom: 16rem;
 			display: flex;
-			align-items: center;
 			.row_lable{
 				width: 100rem;
 				font-size:12rem;
@@ -368,6 +367,12 @@
 				flex:1;
 				font-size:12rem;
 				color: #333333;
+			}
+			.link{
+				cursor: pointer;
+				flex:1;
+				font-weight: bold;
+				color: var(--color);
 			}
 		}
 	}

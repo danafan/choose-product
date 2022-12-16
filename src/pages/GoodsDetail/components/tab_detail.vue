@@ -20,7 +20,9 @@
 		</div>
 		<div class="source_box">
 			<div class="source_item">共享盘地址：{{shared_disk_address}}</div>
-			<div class="source_item">网盘地址：{{net_disk_address}}</div>
+			<div class="source_item">网盘地址：
+				<div class="link" @click="windowOpen(net_disk_address)">{{or_net_disk_address}}</div>
+			</div>
 		</div>
 		<div class="image_box" :style="{height:max_height}">
 			<el-image :z-index="2006" class="style_image" :src="item" fit="scale-down" :preview-src-list="style_image_list" v-for="item in style_image_list"></el-image>
@@ -35,7 +37,8 @@
 				max_height:0,
 				active_style_index:0,			//当前选中的风格下标
 				shared_disk_address:"",			//共享盘地址
-				net_disk_address:"",			//网盘地址
+				or_net_disk_address:"",			//网盘地址（显示）
+				net_disk_address:"",			//网盘地址（跳转）
 				style_image_list:[],			//图片列表
 			}
 		},
@@ -61,7 +64,7 @@
     		this.onResize();
     		window.addEventListener("resize", this.onResize());
     	},
-		watch:{
+    	watch:{
 			//切换风格
 			active_style_index:function(n,o){
 				//设置默认元素
@@ -70,17 +73,18 @@
 		},
 		methods:{
 			//监听屏幕大小变化
-    		onResize() {
-    			this.$nextTick(() => {
-    				let white_back_height = document.documentElement.clientHeight;
-    				this.max_height =
-    				white_back_height - 150 + "px";
-    			});
-    		},
+			onResize() {
+				this.$nextTick(() => {
+					let white_back_height = document.documentElement.clientHeight;
+					this.max_height =
+					white_back_height - 150 + "px";
+				});
+			},
 			//设置默认元素
 			setInfoFn(n){
 				this.shared_disk_address = this.goods_info.style_img.length > 0?this.goods_info.style_img[n].shared_disk_address:'';
 				this.net_disk_address = this.goods_info.style_img.length > 0?this.goods_info.style_img[n].net_disk_address:'';
+				this.or_net_disk_address = this.goods_info.style_img.length > 0?this.goods_info.style_img[n].or_net_disk_address:'';
 				let images = [];
 				if( this.goods_info.style_img.length == 0){
 					return;
@@ -89,6 +93,10 @@
 					images.push(this.domain + item);
 				})
 				this.style_image_list = images;
+			},
+			//跳转
+			windowOpen(link){
+				window.open(link);
 			}
 		}
 	}
@@ -140,6 +148,12 @@
 	color: #333333;
 	.source_item{
 		margin-right: 66rem;
+		display: flex;
+		.link{
+			cursor: pointer;
+			font-weight: bold;
+			color: var(--color);
+		}
 	}
 }
 .image_box{
