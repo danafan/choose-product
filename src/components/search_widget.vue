@@ -1,5 +1,5 @@
 <template>
-	<div class="search_widget">
+	<div class="search_widget" @click.stop>
 		<img class="logo_icon" src="../static/logo_icon.png">
 		<div class="search_box">
 			<img class="search_icon" src="../static/search_icon.png">
