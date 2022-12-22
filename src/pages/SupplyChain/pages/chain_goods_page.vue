@@ -101,7 +101,6 @@
 				<el-table-column label="合作模式" prop="mode" show-overflow-tooltip></el-table-column>
 				<el-table-column label="备注" prop="remark" show-overflow-tooltip></el-table-column>
 				<el-table-column label="上新时间" prop="new_time_name" show-overflow-tooltip></el-table-column>
-				<el-table-column label="共享盘地址" prop="shared_disk_address" show-overflow-tooltip></el-table-column>
 				<el-table-column label="审核状态" prop="common_text" show-overflow-tooltip>
 					<template slot-scope="scope">
 						<div v-if="scope.row.check_status == 1">上架待审核</div>
@@ -665,6 +664,7 @@
 				resource.changePrice(arg).then(res => {
 					if(res.data.code == 1){
 						this.$message.success(res.data.msg);
+						this.adjust_dialog = false;
 						//获取列表
 						this.getGoodsList();
 					}else{

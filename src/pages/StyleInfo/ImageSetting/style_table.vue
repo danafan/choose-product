@@ -11,7 +11,6 @@
 						<el-image :z-index="2006" class="image" :src="scope.row.image_list[0]" fit="scale-down" :preview-src-list="scope.row.image_list"></el-image>
 					</template>
 				</el-table-column>
-				<el-table-column label="共享盘地址" prop="shared_disk_address" show-overflow-tooltip></el-table-column>
 				<el-table-column label="网盘地址" prop="net_disk_address" show-overflow-tooltip></el-table-column>
 				<el-table-column label="操作" width="180" fixed="right">
 					<template slot-scope="scope">
@@ -32,9 +31,6 @@
 				<el-form size="small" label-width="120px">
 					<el-form-item label="风格：" required>
 						<el-input v-model="shooting_style_name" placeholder="风格"></el-input>
-					</el-form-item>
-					<el-form-item label="共享盘地址：" required>
-						<el-input v-model="shared_disk_address" placeholder="共享盘地址"></el-input>
 					</el-form-item>
 					<el-form-item label="网盘地址：" required>
 						<el-input v-model="net_disk_address" placeholder="网盘地址"></el-input>
@@ -68,7 +64,6 @@
 				show_dialog:false,			//弹窗
 				dialog_title:"",			//弹窗标题
 				shooting_style_name:"",		//风格
-				shared_disk_address:"",		//共享盘地址
 				net_disk_address:"",		//网盘地址
 				img:[],						//已上传的图片列表（参数）
 				img_list:[],				//已上传的图片列表（显示）
@@ -158,7 +153,6 @@
 						if(res.data.code == 1){
 							let data = res.data.data;
 							this.shooting_style_name = data.shooting_style_name;
-							this.shared_disk_address = data.shared_disk_address;
 							this.net_disk_address = data.net_disk_address;
 							data.img.map(item => {
 								let img_obj = {
@@ -185,7 +179,6 @@
 			//关闭弹窗
 			closeDialog(){
 				this.shooting_style_name = "";		//风格
-				this.shared_disk_address = "";		//共享盘地址
 				this.net_disk_address = "";		//网盘地址
 				this.img = [];						//已上传的图片列表（参数）
 				this.img_list = [];				//已上传的图片列表（显示）
@@ -194,8 +187,6 @@
 			commitFn(){
 				if(this.shooting_style_name == ''){
 					this.$message.warning('请输入风格!');
-				}else if(this.shared_disk_address == ''){
-					this.$message.warning('请输入共享盘地址!');
 				}else if(this.net_disk_address == ''){
 					this.$message.warning('请输入网盘地址!');
 				}else if(this.img.length == 0){
@@ -203,7 +194,6 @@
 				}else{
 					var arg = {
 						shooting_style_name:this.shooting_style_name,
-						shared_disk_address:this.shared_disk_address,
 						net_disk_address:this.net_disk_address,
 						img:this.img.join(',')
 					}

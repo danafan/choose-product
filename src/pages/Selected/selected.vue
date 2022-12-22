@@ -38,6 +38,12 @@
 					<el-table-column label="需求人" prop="ding_user_name" show-overflow-tooltip></el-table-column>
 					<el-table-column label="需求类型" prop="demand_type" show-overflow-tooltip>
 					</el-table-column>
+					<el-table-column label="对接推单" show-overflow-tooltip>
+						<template slot-scope="scope">
+							<div v-if="scope.row.abutment_type == 1">是</div>
+							<div v-if="scope.row.abutment_type == 0">否</div>
+						</template>
+					</el-table-column>
 					<el-table-column label="当前状态" show-overflow-tooltip>
 						<template slot-scope="scope">
 							<div v-if="scope.row.audit_status == 1">待审核</div>
@@ -135,10 +141,6 @@
 				<div class="detail_row">
 					<div class="lable">成本价</div>
 					<div class="value">{{goods_info.cost_price}}</div>
-				</div>
-				<div class="detail_row">
-					<div class="lable">共享盘地址</div>
-					<div class="value">{{goods_info.shared_disk_address}}</div>
 				</div>
 				<div class="detail_row">
 					<div class="lable">百度网盘</div>

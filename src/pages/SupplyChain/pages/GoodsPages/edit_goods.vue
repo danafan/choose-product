@@ -22,8 +22,8 @@
 							</el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item label="拍摄风格：" required>
-						<el-select v-model="arg.shooting_style_id" clearable placeholder="请选择拍摄风格" :disabled="is_detail">
+					<el-form-item label="拍摄风格：">
+						<el-select v-model="shooting_style_ids" multiple filterable collapse-tags clearable placeholder="请选择拍摄风格" :disabled="is_detail">
 							<el-option v-for="item in style_list" :key="item.shooting_style_id" :label="item.shooting_style_name" :value="item.shooting_style_id">
 							</el-option>
 						</el-select>
@@ -35,6 +35,12 @@
 					<el-form-item label="成本价：" required>
 						<el-input type="number" v-model="arg.cost_price" :disabled="is_detail">
 						</el-input>
+					</el-form-item>
+					<el-form-item label="调价状态："  v-if="price_status != 0">
+						{{price_status | priceStatus}}
+					</el-form-item>
+					<el-form-item label="修改后价格："  v-if="price_status != 0">
+						{{edit_price}}
 					</el-form-item>
 					<el-form-item label="颜色：" required>
 						<el-input placeholder="颜色" v-model="arg.color" :disabled="is_detail">
@@ -88,12 +94,6 @@
 						</el-input>
 					</el-form-item>
 				</el-form>
-				<el-form size="small" label-width="150px">
-					<el-form-item label="共享盘地址：">
-						<el-input :placeholder="is_detail?'':'共享盘地址'" v-model="arg.shared_disk_address" :disabled="is_detail">
-						</el-input>
-					</el-form-item>
-				</el-form>
 			</div>
 			<div class="form_row">
 				<el-form size="small" label-width="100px">
@@ -110,7 +110,7 @@
 					<el-form-item label="下架原因：" v-if="check_status == 4">
 						<div>{{off_reason}}</div>
 					</el-form-item>
-					<el-form-item label="拒绝原因：" v-if="check_status == 3 || check_status == 6">
+					<el-form-item label="拒绝原因：" v-if="check_status == 3 || check_status == 6 || price_status == 3">
 						<div>{{refuse_reason}}</div>
 					</el-form-item>
 				</el-form>
@@ -146,6 +146,8 @@
 				style_id:"",			//商品ID
 				add_admin_name:"",		//提交人
 				check_status:"",		//审核状态
+				price_status:"",		//调价审核状态
+				edit_price:"",			//修改后价格
 				off_reason:"",			//下架原因
 				refuse_reason:"",		//拒绝原因
 				arg:{
@@ -155,7 +157,6 @@
 					title:"",				//标题
 					category_id:"",			//选中的类目
 					market_id:"",			//选中的市场
-					shooting_style_id:"",	//选中的拍摄风格
 					classification_id:"",	//选中的分类
 					fabric:"",				//面料
 					mode:"",				//合作模式
@@ -167,10 +168,10 @@
 					data_style:0,			//主推款
 					again_style:0,			//二开款
 					net_disk_address:"",	//网盘地址
-					shared_disk_address:"",	//共享盘地址
 					img:[],					//图片列表
 					remark:"",				//备注
 				},									//可传递的参数
+				shooting_style_ids:[],		//已选中的拍摄风格
 			}
 		},
 		created(){
@@ -301,6 +302,12 @@
 				this.check_status = data_info.check_status;
 				this.off_reason = data_info.off_reason;
 				this.refuse_reason = data_info.refuse_reason;
+				this.price_status = data_info.price_status;
+				this.edit_price = data_info.edit_price;
+				let shooting_style_ids = data_info.shooting_style_id.split(',');
+				this.shooting_style_ids = shooting_style_ids.map(item => {
+					return parseInt(item);
+				})
 				for(let key in this.arg){
 					for(let k in data_info){
 						if(key == k){
@@ -394,8 +401,6 @@
 					this.$message.warning('请选择类目!');
 				}else if(!this.arg.market_id){
 					this.$message.warning('请选择市场!');
-				}else if(!this.arg.shooting_style_id){
-					this.$message.warning('请选择拍摄风格!');
 				}else if(!this.arg.classification_id){
 					this.$message.warning('请选择分类!');
 				}else if(!this.arg.fabric){
@@ -413,6 +418,7 @@
 					if (arg.i_id.indexOf(";") > -1) {
 						arg.i_id = arg.i_id.replaceAll(";", ",");
 					}
+					arg.shooting_style_id = this.shooting_style_ids.join(',');
 
 					this.$confirm(`确认${this.goods_type == '1'?'添加':'编辑'}此商品吗?`, '提示', {
 						confirmButtonText: '确定',
@@ -547,6 +553,21 @@
 					break;
 				}
 				return ss;
+			},
+			priceStatus:function(e){
+				let status_str = "";
+				switch(e){
+					case 1:
+						status_str = '待审核';
+						break;
+					case 2:
+						status_str = '审核通过';
+						break;
+					case 3:
+						status_str = '审核拒绝';
+						break;
+				}
+				return status_str;
 			}
 		},
 		components:{

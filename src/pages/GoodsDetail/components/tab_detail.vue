@@ -19,7 +19,6 @@
 			<div class="style_item" :class="{'active_style_item':active_style_index == index}" v-for="(item,index) in goods_info.style_img" @click="active_style_index = index">{{item.shooting_style_name}}</div>
 		</div>
 		<div class="source_box">
-			<div class="source_item">共享盘地址：{{shared_disk_address}}</div>
 			<div class="source_item">网盘地址：
 				<div class="link" @click="windowOpen(net_disk_address)">{{or_net_disk_address}}</div>
 			</div>
@@ -36,7 +35,6 @@
 			return{
 				max_height:0,
 				active_style_index:0,			//当前选中的风格下标
-				shared_disk_address:"",			//共享盘地址
 				or_net_disk_address:"",			//网盘地址（显示）
 				net_disk_address:"",			//网盘地址（跳转）
 				style_image_list:[],			//图片列表
@@ -82,7 +80,6 @@
 			},
 			//设置默认元素
 			setInfoFn(n){
-				this.shared_disk_address = this.goods_info.style_img.length > 0?this.goods_info.style_img[n].shared_disk_address:'';
 				this.net_disk_address = this.goods_info.style_img.length > 0?this.goods_info.style_img[n].net_disk_address:'';
 				this.or_net_disk_address = this.goods_info.style_img.length > 0?this.goods_info.style_img[n].or_net_disk_address:'';
 				let images = [];

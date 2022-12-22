@@ -179,7 +179,6 @@
 			</div>
 			<el-tabs size="small" v-if="active_tab_index == 0">
 				<el-tab-pane :label="item.shooting_style_name" v-for="(item,index) in style_data" :key="index">
-					<div class="source_url">共享盘地址：{{item.shared_disk_address}}</div>
 					<div class="source_url">网盘地址：
 						<el-button type="text" @click="windowOpen(item.net_disk_address)">{{item.or_net_disk_address}}</el-button>
 					</div>
@@ -533,7 +532,7 @@
 				feedback_content:"",		//反馈文字
 				feedback_img:[],		//上传的图片列表
 				more_image_dialog:false,		//更多图片
-				image_title_list:['风格图','封面图'],	//更多图片类型
+				image_title_list:['风格图'],	//更多图片类型
 				active_tab_index:0,		//选中的下标
 				style_data:[],			//风格图数据
 				commodity_data:[],		//封面图数据

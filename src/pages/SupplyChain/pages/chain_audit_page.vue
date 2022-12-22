@@ -116,7 +116,6 @@
 				<el-table-column label="需求类型" prop="demand_type" show-overflow-tooltip></el-table-column>
 				<el-table-column label="发货类型" prop="send_type" show-overflow-tooltip></el-table-column>
 				<el-table-column label="提交时间" prop="select_time" show-overflow-tooltip></el-table-column>
-				<el-table-column label="共享盘地址" prop="shared_disk_address" show-overflow-tooltip></el-table-column>
 				<el-table-column label="供应商" prop="supplier_name" show-overflow-tooltip></el-table-column>
 				<el-table-column label="选款要求" show-overflow-tooltip>
 					<template slot-scope="scope">
@@ -223,10 +222,6 @@
 					<div class="value">{{goods_info.cost_price}}</div>
 				</div>
 				<div class="detail_row">
-					<div class="lable">共享盘地址</div>
-					<div class="value">{{goods_info.shared_disk_address}}</div>
-				</div>
-				<div class="detail_row">
 					<div class="lable">百度网盘</div>
 					<div class="value">{{goods_info.net_disk_address}}</div>
 				</div>
@@ -254,6 +249,14 @@
 					<div class="lable">选款要求</div>
 					<div class="value" v-html="goods_info.demand_remark"></div>
 				</div>
+				<div class="detail_row" v-if="goods_info.audit_status == 2">
+					<div class="lable">确认备注</div>
+					<div class="value">{{goods_info.aff_reason}}</div>
+				</div>
+				<div class="detail_row" v-if="goods_info.audit_status == 4">
+					<div class="lable">拒绝原因</div>
+					<div class="value">{{goods_info.refund_reason}}</div>
+				</div>
 			</div>
 			<div slot="footer" class="dialog_footer">
 				<el-button type="primary" size="small" @click="detail_dialog = false">关闭</el-button>
@@ -274,15 +277,17 @@
 				<el-button size="mini" type="primary" @click="confirmRemark">提交</el-button>
 			</div>
 		</el-dialog>
-		<!-- 拒绝弹窗 -->
-		<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" destroy-on-close @close="err_msg = ''" :visible.sync="refused_dialog" width="30%">
+		<!-- 单个审批弹窗 -->
+		<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" destroy-on-close @close="allClose" :visible.sync="refused_dialog" width="30%">
 			<div slot="title" class="dialog_title">
-				<div>确认拒绝？</div>
+				<div>确认{{`${audit_type == '1'?'同意':'拒绝'}`}}？</div>
 				<img class="close_icon" src="../../../static/close_icon.png" @click="refused_dialog = false">
 			</div>
 			<div class="remark_content">
 				<div style="color: red;margin-bottom: 5px">（*必填）</div>
-				<el-input type="textarea" :rows="3" placeholder="请输入拒绝原因" v-model="err_msg">
+				<el-input type="textarea" :rows="3" placeholder="请输入同意备注" v-model="msg" v-if="audit_type == '1'">
+				</el-input>
+				<el-input type="textarea" :rows="3" placeholder="请输入拒绝原因" v-model="err_msg" v-if="audit_type == '2'">
 				</el-input>
 			</div>
 			<div slot="footer" class="dialog_footer">
@@ -304,18 +309,23 @@
 							<el-radio :label="2">拒绝</el-radio>
 						</el-radio-group>
 					</el-form-item>
-					<el-form-item label="拒绝原因：" required v-if="audit_type == 2">
-						<el-input type="textarea" :rows="3" placeholder="请输入拒绝原因"
-						v-model="refuse_remark">
+					<el-form-item label="同意备注：" required v-if="audit_type == 1">
+						<el-input type="textarea" :rows="3" placeholder="请输入同意备注"
+						v-model="msg">
 					</el-input>
 				</el-form-item>
-			</el-form>
-		</div>
-		<div slot="footer" class="dialog_footer">
-			<el-button size="mini" @click="allAuditDialog = false">取消</el-button>
-			<el-button size="mini" type="primary" @click="commitAllAudit">确认</el-button>
-		</div>
-	</el-dialog>
+				<el-form-item label="拒绝原因：" required v-if="audit_type == 2">
+					<el-input type="textarea" :rows="3" placeholder="请输入拒绝原因"
+					v-model="refuse_remark">
+				</el-input>
+			</el-form-item>
+		</el-form>
+	</div>
+	<div slot="footer" class="dialog_footer">
+		<el-button size="mini" @click="allAuditDialog = false">取消</el-button>
+		<el-button size="mini" type="primary" @click="commitAllAudit">确认</el-button>
+	</div>
+</el-dialog>
 </div>
 </template>
 <style lang="less" scoped>
@@ -478,6 +488,7 @@
 				multiple_selection:[],
 				allAuditDialog:false,
 				audit_type:1,			//批量审批的类型（1:同意；2:拒绝）
+				msg:"",					//同意备注
 				refuse_remark:"",		//批量拒绝原因
 
 			}
@@ -542,8 +553,8 @@
     						return item.type == 1;
     					})
     					this.send_type_list = data.filter(item => {
-							return item.type == 2
-						});
+    						return item.type == 2
+    					});
     				}else{
     					this.$message.warning(res.data.msg);
     				}
@@ -653,6 +664,8 @@
 		    allClose(){
 		    	this.audit_type = 1;
 		    	this.refuse_remark = "";
+		    	this.msg = "";
+		    	this.err_msg = "";
 		    },
 		    //提价批量审批
 		    commitAllAudit(){
@@ -661,8 +674,13 @@
 		    		ids.push(item.select_id);
 		    	})
 		    	if(this.audit_type == 1){	//同意
+		    		if(this.msg == ''){
+						this.$message.warning('请输入同意备注!');
+						return;
+					}
 		    		let arg = {
-		    			select_id:ids.join(',')
+		    			select_id:ids.join(','),
+		    			msg:this.msg
 		    		}
 					//同意
 					this.agreeAudit(arg)
@@ -751,34 +769,17 @@
 			},
 			//审批
 			auditFn(type,id){
-				if(type == '1'){	//确认
-					this.$confirm(`确认该需求?`, '提示', {
-						confirmButtonText: '确定',
-						cancelButtonText: '取消',
-						type: 'warning'
-					}).then(() => {
-						let arg = {
-							select_id:id
-						}
-						//同意
-						this.agreeAudit(arg)
-					}).catch(() => {
-						this.$message({
-							type: 'info',
-							message: '已取消'
-						});          
-					});
-				}else{		//拒绝
-					this.select_id = id;
-					this.refused_dialog = true;
-				}
+				this.audit_type = type;
+				this.select_id = id;
+				this.refused_dialog = true;
 			},
 			//同意
 			agreeAudit(arg){
 				resource.affirmSelected(arg).then(res => {
 					if(res.data.code == 1){
-						this.$message.success(res.data.msg);
+						this.refused_dialog = false;
 						this.allAuditDialog = false;
+						this.$message.success(res.data.msg);
 						//获取列表
 						this.getGoodsList();
 					}else{
@@ -862,23 +863,38 @@
 			},
 			//提交拒绝
 			confirmRefused(){
-				if(this.err_msg == ''){
-					this.$message.warning('请输入拒绝原因');
-				}else{
-					let arg = {
-						select_id:this.select_id,
-						err_msg:this.err_msg
+				if(this.audit_type == '1'){		//同意
+					if(this.msg == ''){
+						this.$message.warning('请输入同意备注');
+					}else{
+						let arg = {
+							select_id:this.select_id,
+							msg:this.msg
+						}
+						//同意
+						this.agreeAudit(arg)
 					}
+				}else{
+					if(this.err_msg == ''){
+						this.$message.warning('请输入拒绝原因');
+					}else{
+						let arg = {
+							select_id:this.select_id,
+							err_msg:this.err_msg
+						}
 					//拒绝
 					this.refuseAudit(arg)
 				}
 			}
-		},
-		components:{
-			TableTitle,
-			PaginationWidget
+
+
 		}
+	},
+	components:{
+		TableTitle,
+		PaginationWidget
 	}
+}
 </script>
 
 
