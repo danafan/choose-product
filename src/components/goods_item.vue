@@ -29,7 +29,7 @@
 		<div class="desc">{{info.title}}</div>
 		<div class="code_time">
 			<el-tooltip class="item" effect="dark" :content="info.sstyle_name + '（' + info.i_id + '）'" placement="top-start">
-				<div class="code">{{info.sstyle_name}}({{info.i_id}})</div>
+				<div class="code">{{info.sstyle_name}}{{info.i_id?'('+ info.i_id +')':""}}</div>
 			</el-tooltip>
 			<div class="time">{{info.new_time_name}}</div>
 		</div>
@@ -816,8 +816,8 @@
     			window.open(routeData.href);
     		},
     		//点击查看网盘
-    		windowOpen(){
-    			window.open(this.commodity_open_url)
+    		windowOpen(url){
+    			window.open(url)
     		}
     	},
     	components:{

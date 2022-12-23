@@ -166,6 +166,11 @@
 						if(this.type == '2'){
 							//获取分类详情
 							this.getClassInfo();
+						}else{	//创建的时候默认是男装
+							let man_arr = this.cate_list.filter(item => {
+								return item.category_name === '男装';
+							})
+							this.category_id = man_arr[0].category_id;
 						}
 
 					}else{

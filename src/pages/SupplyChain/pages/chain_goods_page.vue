@@ -131,7 +131,7 @@
 					</template>
 				</el-table-column>
 			</el-table>
-			<PaginationWidget id="bottom_row" :total="total" :page="page" @checkPage="checkPage"/>
+			<PaginationWidget id="bottom_row" :total="total" :page="page" :pagesize="100" @checkPage="checkPage"/>
 		</el-card>
 		<el-dialog :visible.sync="import_dialog" width="30%">
 			<div slot="title" class="dialog_title">
@@ -460,7 +460,7 @@
 					price_status:this.price_status,
 					search:this.search,
 					page:this.page,
-					pagesize:10
+					pagesize:100
 				}
 				this.loading = true;
 				resource.getGoodsList(arg).then(res => {

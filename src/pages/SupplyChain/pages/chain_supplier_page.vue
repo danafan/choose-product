@@ -5,6 +5,54 @@
 				<el-form-item class="form_item">
 					<el-input clearable v-model="search" placeholder="搜索供应商、主营"></el-input>
 				</el-form-item>
+				<el-form-item label="市场：">
+					<el-select v-model="market_ids" clearable multiple filterable collapse-tags placeholder="全部">
+						<el-option v-for="item in market_list" :key="item.market_id" :label="item.market_name" :value="item.market_id">
+						</el-option>
+					</el-select>
+				</el-form-item>
+				<el-form-item label="供应商等级：">
+					<el-select v-model="grade_list_ids" clearable multiple filterable collapse-tags placeholder="全部">
+						<el-option v-for="item in grade_list" :key="item.grade_id" :label="item.grade_name" :value="item.grade_id">
+						</el-option>
+					</el-select>
+				</el-form-item>
+				<el-form-item label="提供拍照：">
+					<el-select v-model="supply_photograph" clearable placeholder="全部">
+						<el-option label="是" :value="1"></el-option>
+						<el-option label="否" :value="0"></el-option>
+					</el-select>
+				</el-form-item>
+				<el-form-item label="提供退货：">
+					<el-select v-model="supply_return_goods" clearable placeholder="全部">
+						<el-option label="是" :value="1"></el-option>
+						<el-option label="否" :value="0"></el-option>
+					</el-select>
+				</el-form-item>
+				<el-form-item label="提供换货：">
+					<el-select v-model="supply_exchange_goods" clearable placeholder="全部">
+						<el-option label="是" :value="1"></el-option>
+						<el-option label="否" :value="0"></el-option>
+					</el-select>
+				</el-form-item>
+				<el-form-item label="提供代发：">
+					<el-select v-model="supply_replace_send" clearable placeholder="全部">
+						<el-option label="是" :value="1"></el-option>
+						<el-option label="否" :value="0"></el-option>
+					</el-select>
+				</el-form-item>
+				<el-form-item label="提供入仓：">
+					<el-select v-model="supply_warehousing" clearable placeholder="全部">
+						<el-option label="是" :value="1"></el-option>
+						<el-option label="否" :value="0"></el-option>
+					</el-select>
+				</el-form-item>
+				<el-form-item label="结算方式：">
+					<el-select v-model="supply_monthly_settlement" clearable placeholder="全部">
+						<el-option label="月结" :value="1"></el-option>
+						<el-option label="现结" :value="0"></el-option>
+					</el-select>
+				</el-form-item>
 				<el-form-item class="form_item">
 					<el-button type="primary" @click="checkPage(1)">查询</el-button>
 				</el-form-item>
@@ -12,6 +60,8 @@
 		</el-card>
 		<el-card class="card_box" id="card_box">
 			<TableTitle title="数据列表" id="table_title">
+				<el-button size="mini" type="primary" @click="exportFn">导出</el-button>
+				<el-button size="mini" type="primary" @click="import_dialog = true">导入</el-button>
 				<el-button size="mini" type="primary" @click="addFn('1')" v-if="button_list.add == 1">添加</el-button>
 			</TableTitle>
 			<el-table size="mini" :data="data.data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" v-loading="loading">
@@ -62,6 +112,26 @@
 			</el-table>
 			<PaginationWidget id="bottom_row" :total="data.total" :page="page" :pagesize="20" @checkPage="checkPage"/>
 		</el-card>
+		<!-- 导入 -->
+		<el-dialog :visible.sync="import_dialog" width="30%">
+			<div slot="title" class="dialog_title">
+				<div>导入</div>
+				<img class="close_icon" src="../../../static/close_icon.png" @click="import_dialog = false">
+			</div>
+			<div class="down_box">
+				<!-- <el-button type="primary" plain size="small" @click="downTemplate">下载模版<i class="el-icon-download el-icon--right"></i></el-button> -->
+				<div class="upload_box">
+					<el-button type="primary" size="small">
+						导入
+						<i class="el-icon-upload el-icon--right"></i>
+					</el-button>
+					<input type="file" ref="csvUpload" class="upload_file" accept=".csv, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" @change="uploadCsv">
+				</div>
+			</div>
+			<div slot="footer" class="dialog_footer">
+				<el-button size="small" @click="import_dialog = false">取消</el-button>
+			</div>
+		</el-dialog>
 	</div>
 </template>
 <style lang="less" scoped>
@@ -83,10 +153,32 @@
 	.card_box{
 		flex:1;
 	}
+	.down_box{
+		display:flex;
+		padding:30rem;
+		.upload_box{
+			margin-left: 10px;
+			position: relative;
+			.upload_file{
+				position: absolute;
+				top: 0;
+				bottom: 0;
+				left: 0;
+				right: 0;
+				width: 100%;
+				height: 100%;
+				opacity: 0;
+			}
+		}
+	}
 }
 </style>
 <script>
+	import { exportPost } from "../../../api/export.js";
+
+	import { MessageBox, Message } from "element-ui";
 	import resource from '../../../api/chain_resource.js'
+	import commonResource from '../../../api/common_resource.js'
 
 	import TableTitle from '../components/table_title.vue'
 	import PaginationWidget from '../../../components/pagination_widget.vue'
@@ -95,10 +187,21 @@
 			return{
 				loading:false,
 				search:"",				//供应商、主营
+				market_list:[],			//市场列表
+				market_ids:[],			//选中的市场
+				supply_photograph:1,	//是否拍照
+				supply_return_goods:1,	//是否退货
+				supply_exchange_goods:1,//是否换货
+				supply_replace_send:1,	//是否代发
+				supply_warehousing:1,	//是否入仓
+				supply_monthly_settlement:1,	//结算方式
+				grade_list:[],			//供应商等级
+				grade_list_ids:[],		//选中的供应商等级
 				max_height:0,	
 				page:1,
 				data:{},				//获取的数据
-				button_list:{}
+				button_list:{},
+				import_dialog:false,		//导入弹窗
 			}
 		},
 		beforeRouteLeave(to,from,next){
@@ -114,6 +217,10 @@
 				this.search = "";
 				this.page = 1;
 			}
+			//市场列表
+			this.ajaxMarketList();
+			//供应商等级
+			this.ajaxSupplierGradeList();
 			//获取供应商列表
 			this.supplierManagerList();
 			this.$route.meta.use_cache = false;
@@ -141,24 +248,102 @@
     				"px";
     			});
     		},
-    		//获取供应商列表
-    		supplierManagerList(){
-    			let arg = {
-    				search:this.search,
-    				pagesize:20,
-    				page:this.page
-    			}
-    			this.loading = true;
-    			resource.supplierManagerList(arg).then(res => {
+    		//市场列表
+    		ajaxMarketList(){
+    			commonResource.ajaxMarketList().then(res => {
     				if(res.data.code == 1){
-    					this.loading = false;
-    					this.data = res.data.data;
-    					this.button_list =  res.data.data.button_list;
+    					this.market_list = res.data.data;
     				}else{
     					this.$message.warning(res.data.msg);
     				}
     			})
     		},
+			//供应商等级
+			ajaxSupplierGradeList(){
+				commonResource.ajaxSupplierGradeList().then(res => {
+					if(res.data.code == 1){
+						this.grade_list = res.data.data;
+					}else{
+						this.$message.warning(res.data.msg);
+					}
+				})
+			},
+    		//获取供应商列表
+    		supplierManagerList(){
+    			let arg = {
+    				search:this.search,
+    				market_id:this.market_ids.join(','),
+    				supply_photograph:this.supply_photograph,	//是否拍照
+					supply_return_goods:this.supply_return_goods,	//是否退货
+					supply_exchange_goods:this.supply_exchange_goods,//是否换货
+					supply_replace_send:this.supply_replace_send,	//是否代发
+					supply_warehousing:this.supply_warehousing,	//是否入仓
+					supply_monthly_settlement:this.supply_monthly_settlement,	//结算方式
+					grade_id:this.grade_list_ids.join(','),
+					pagesize:20,
+					page:this.page
+				}
+				this.loading = true;
+				resource.supplierManagerList(arg).then(res => {
+					if(res.data.code == 1){
+						this.loading = false;
+						this.data = res.data.data;
+						this.button_list =  res.data.data.button_list;
+					}else{
+						this.$message.warning(res.data.msg);
+					}
+				})
+			},
+    		//导出
+    		exportFn() {
+    			MessageBox.confirm("确认导出?", "提示", {
+    				confirmButtonText: "确定",
+    				cancelButtonText: "取消",
+    				type: "warning",
+    			})
+    			.then(() => {
+    				let arg = {
+    					search:this.search,
+    					market_id:this.market_ids.join(','),
+    					supply_photograph:this.supply_photograph,	
+    					supply_return_goods:this.supply_return_goods,	
+    					supply_exchange_goods:this.supply_exchange_goods,
+    					supply_replace_send:this.supply_replace_send,	
+    					supply_warehousing:this.supply_warehousing,	
+    					supply_monthly_settlement:this.supply_monthly_settlement,
+    					grade_id:this.grade_list_ids.join(','),
+    				};
+    				resource.supplierExport(arg).then((res) => {
+    					if (res) {
+    						exportPost("\ufeff" + res.data, "供应商");
+    					}
+    				});
+    			})
+    			.catch(() => {
+    				Message({
+    					type: "info",
+    					message: "取消导出",
+    				});
+    			});
+    		},
+    		//导入
+			uploadCsv(){
+				if (this.$refs.csvUpload.files.length > 0) {
+					let files = this.$refs.csvUpload.files;
+					resource.batchAdd({file:files[0]}).then(res => {
+						this.$refs.csvUpload.value = null;
+						this.import_dialog = false;
+						if(res.data.code == 1){
+							this.$message.success(res.data.msg);
+							this.page = 1;
+							//获取列表
+							this.supplierManagerList();
+						}else{
+							this.$message.warning(res.data.msg);
+						}
+					})
+				}
+			},
 			//切换页码
 			checkPage(v){
 				this.page = v;

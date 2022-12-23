@@ -100,7 +100,7 @@
 					</template>
 				</el-table-column>
 			</el-table>
-			<PaginationWidget id="bottom_row" :total="total" :page="page" @checkPage="checkPage"/>
+			<PaginationWidget id="bottom_row" :total="total" :page="page" :pagesize="100" @checkPage="checkPage"/>
 		</el-card>
 		<!-- 导入 -->
 		<el-dialog :visible.sync="import_dialog" width="30%">
@@ -397,7 +397,7 @@
 					check_status:this.check_status_id,
 					status:this.status_id,
 					page:this.page,
-					pagesize:10
+					pagesize:100
 				}
 				this.loading = true;
 				resource.getSupplierGoods(arg).then(res => {

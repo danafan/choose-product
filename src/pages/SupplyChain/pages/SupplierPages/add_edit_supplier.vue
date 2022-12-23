@@ -71,7 +71,7 @@
 							</el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item label="营业执照：" required>
+					<el-form-item label="营业执照：">
 						<UploadFile :img_list="img_list" @callbackFn="callbackFn"/>
 					</el-form-item>
 				</el-form>
