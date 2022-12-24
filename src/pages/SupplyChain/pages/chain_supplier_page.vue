@@ -2,9 +2,6 @@
 	<div class="chain_page_content">
 		<el-card class="form_card">
 			<el-form :inline="true" size="mini">
-				<el-form-item class="form_item">
-					<el-input clearable v-model="search" placeholder="搜索供应商、主营"></el-input>
-				</el-form-item>
 				<el-form-item label="市场：">
 					<el-select v-model="market_ids" clearable multiple filterable collapse-tags placeholder="全部">
 						<el-option v-for="item in market_list" :key="item.market_id" :label="item.market_name" :value="item.market_id">
@@ -52,6 +49,9 @@
 						<el-option label="月结" :value="1"></el-option>
 						<el-option label="现结" :value="0"></el-option>
 					</el-select>
+				</el-form-item>
+				<el-form-item class="form_item">
+					<el-input clearable v-model="search" placeholder="搜索供应商、主营"></el-input>
 				</el-form-item>
 				<el-form-item class="form_item">
 					<el-button type="primary" @click="checkPage(1)">查询</el-button>
@@ -189,12 +189,12 @@
 				search:"",				//供应商、主营
 				market_list:[],			//市场列表
 				market_ids:[],			//选中的市场
-				supply_photograph:1,	//是否拍照
-				supply_return_goods:1,	//是否退货
-				supply_exchange_goods:1,//是否换货
-				supply_replace_send:1,	//是否代发
-				supply_warehousing:1,	//是否入仓
-				supply_monthly_settlement:1,	//结算方式
+				supply_photograph:'',	//是否拍照
+				supply_return_goods:'',	//是否退货
+				supply_exchange_goods:'',//是否换货
+				supply_replace_send:'',	//是否代发
+				supply_warehousing:'',	//是否入仓
+				supply_monthly_settlement:'',	//结算方式
 				grade_list:[],			//供应商等级
 				grade_list_ids:[],		//选中的供应商等级
 				max_height:0,	
@@ -214,7 +214,6 @@
 		},
 		activated(){
 			if(!this.$route.meta.use_cache){
-				this.search = "";
 				this.page = 1;
 			}
 			//市场列表

@@ -48,8 +48,8 @@
 					<el-date-picker v-model="date" size="mini" type="daterange" unlink-panels value-format="yyyy-MM-dd" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions">
 					</el-date-picker>
 				</el-form-item>
-				<el-form-item label="搜索：">
-					<el-input style="width: 200px" placeholder="款式风格、款式编码、款号" clearable v-model="search">
+				<el-form-item>
+					<el-input type="textarea" autosize placeholder="款号/款式编码" v-model="search">
 					</el-input>
 				</el-form-item>
 				<el-form-item class="form_item">
@@ -113,7 +113,7 @@
 				</el-table-column>
 				<el-table-column label="操作" width="160" fixed="right">
 					<template slot-scope="scope">
-						<el-button size="small" type="text" @click="adjustAudit('1',scope.row.style_id)" v-if="scope.row.price_status == '1' && button_list.price_btn == 1">调价审批</el-button>
+						<el-button size="small" type="text" @click="adjustAudit(scope.row.style_id)" v-if="scope.row.price_status == '1' && button_list.price_btn == 1">调价审批</el-button>
 						<el-button type="text" size="small" v-if="(scope.row.check_status == 1 || scope.row.check_status == 4) && button_list.agree_refuse == 1" @click="$router.push('/edit_goods?page_type=goods&goods_type=4&style_id=' + scope.row.style_id)">审核</el-button>
 						<el-button style="margin-right: 10px" type="text" size="small" v-if="scope.row.check_status == 2 || scope.row.check_status == 6" @click="$router.push('/image_setting?style_id=' + scope.row.style_id + '&style_name=' + scope.row.style_name)">图片管理</el-button>
 						<el-dropdown size="small" @command="handleCommand($event,scope.row.style_id)" v-if="scope.row.check_status == 2 || scope.row.check_status == 6 && (button_list.info == 1 || button_list.edit == 1 || button_list.del == 1)">
@@ -357,6 +357,12 @@
 				return this.$store.state.domain;
 			}
 		},
+		watch:{
+			search:function(){
+				//获取表格最大高度
+				this.onResize();
+			}
+		},
 		methods: {
     		//监听屏幕大小变化
     		onResize() {
@@ -458,10 +464,18 @@
 					end_time:this.date && this.date.length > 0?this.date[1]:"",
 					check_status:this.check_status_id,
 					price_status:this.price_status,
-					search:this.search,
 					page:this.page,
 					pagesize:100
 				}
+				let search = "";
+				if (this.search.indexOf("\n") > -1) {
+					search = this.search.replaceAll("\n", ",");
+				} else if (this.search.indexOf(" ") > -1) {
+					search = this.search.replaceAll(" ", ",");
+				} else {
+					search = this.search;
+				}
+				arg.search = search;
 				this.loading = true;
 				resource.getGoodsList(arg).then(res => {
 					if(res.data.code == 1){

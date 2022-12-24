@@ -48,7 +48,7 @@
 						{{data_info.grade_name}}
 					</el-form-item>
 					<el-form-item label="营业执照：">
-						<el-image class="card_img" :src="img_list[0]" fit="scale-down" :preview-src-list="img_list"></el-image>
+						<el-image class="card_img" :src="img_list[0]" fit="scale-down" :preview-src-list="img_list" v-if="img_list.length > 0"></el-image>
 					</el-form-item>
 				</el-form>
 			</div>
@@ -83,7 +83,9 @@
 				resource.supplierManagerInfo(arg).then(res => {
 					if(res.data.code == 1){
 						this.data_info = res.data.data;
-						this.img_list.push(this.domain + this.data_info.business_license);
+						if(this.data_info.business_license != ""){
+							this.img_list.push(this.domain + this.data_info.business_license);
+						}
 					}else{
 						this.$message.warning(res.data.msg);
 					}

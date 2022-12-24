@@ -304,10 +304,13 @@
 				this.refuse_reason = data_info.refuse_reason;
 				this.price_status = data_info.price_status;
 				this.edit_price = data_info.edit_price;
-				let shooting_style_ids = data_info.shooting_style_id.split(',');
+				if(data_info.shooting_style_id != ''){
+					let shooting_style_ids = data_info.shooting_style_id.split(',');
 				this.shooting_style_ids = shooting_style_ids.map(item => {
 					return parseInt(item);
 				})
+				}
+				
 				for(let key in this.arg){
 					for(let k in data_info){
 						if(key == k){

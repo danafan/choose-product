@@ -18,7 +18,7 @@
 			return{
 				style_id:"",					//商品ID
 				style_name:"",
-				tab_list:['风格图','商品图'],		//顶部导航列表
+				tab_list:['风格图'],		//顶部导航列表
 				active_index:0,					//当前选中的导航下标
 			}
 		},
