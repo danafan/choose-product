@@ -23,7 +23,7 @@
 						</el-select>
 					</el-form-item>
 					<el-form-item label="拍摄风格：">
-						<el-select v-model="shooting_style_ids" multiple filterable collapse-tags clearable placeholder="请选择拍摄风格" :disabled="is_detail">
+						<el-select v-model="shooting_style_ids" multiple filterable clearable placeholder="请选择拍摄风格" :disabled="is_detail">
 							<el-option v-for="item in style_list" :key="item.shooting_style_id" :label="item.shooting_style_name" :value="item.shooting_style_id">
 							</el-option>
 						</el-select>
@@ -36,10 +36,10 @@
 						<el-input type="number" v-model="arg.cost_price" :disabled="is_detail">
 						</el-input>
 					</el-form-item>
-					<el-form-item label="调价状态："  v-if="price_status != 0">
+					<el-form-item label="调价状态：" v-if="price_status != 0">
 						{{price_status | priceStatus}}
 					</el-form-item>
-					<el-form-item label="修改后价格："  v-if="price_status != 0">
+					<el-form-item label="修改后价格：" v-if="price_status != 0 && !!edit_price">
 						{{edit_price}}
 					</el-form-item>
 					<el-form-item label="颜色：" required>
@@ -306,9 +306,9 @@
 				this.edit_price = data_info.edit_price;
 				if(data_info.shooting_style_id != ''){
 					let shooting_style_ids = data_info.shooting_style_id.split(',');
-				this.shooting_style_ids = shooting_style_ids.map(item => {
-					return parseInt(item);
-				})
+					this.shooting_style_ids = shooting_style_ids.map(item => {
+						return parseInt(item);
+					})
 				}
 				
 				for(let key in this.arg){
@@ -561,14 +561,14 @@
 				let status_str = "";
 				switch(e){
 					case 1:
-						status_str = '待审核';
-						break;
+					status_str = '待审核';
+					break;
 					case 2:
-						status_str = '审核通过';
-						break;
+					status_str = '审核通过';
+					break;
 					case 3:
-						status_str = '审核拒绝';
-						break;
+					status_str = '审核拒绝';
+					break;
 				}
 				return status_str;
 			}

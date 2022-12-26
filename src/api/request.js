@@ -50,6 +50,7 @@ export function middleWare(params, type) {
       key != "notice_content" &&
       key != "feedback_content" &&
       key != "err_msg" &&
+      key != "msg" &&
       key != "refuse_remark" &&
       key != "off_reason"
       ) {

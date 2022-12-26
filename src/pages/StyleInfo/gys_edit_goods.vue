@@ -7,9 +7,18 @@
 			<div class="scroll_box" :style="{height:max_height}">
 				<div class="form_row">
 					<el-form size="small" label-width="100px" style="width:60%">
-						<el-form-item label="商品款号：" required>
-							<el-input placeholder="商品款号" style="width:190px" v-model="arg.style_name" :disabled="is_detail">
+						<el-form-item label="提交人：" v-if="is_detail">
+							<div>{{arg.add_admin_name}}</div>
+						</el-form-item>
+						<el-form-item label="款式编码：">
+							<el-input type="textarea" autosize :placeholder="is_detail?'':'多个请用分号间隔'" v-model="arg.i_id" :disabled="is_detail">
 							</el-input>
+						</el-form-item>
+						<el-form-item label="供应商：" required>
+							<el-select v-model="arg.supplier_id" clearable placeholder="请选择供应商" :disabled="is_detail">
+								<el-option v-for="item in supplier_list" :key="item.supplier_id" :label="item.supplier_name" :value="item.supplier_id">
+								</el-option>
+							</el-select>
 						</el-form-item>
 						<el-form-item label="类目：" required>
 							<el-select v-model="arg.category_id" clearable placeholder="请选择类目" :disabled="is_detail">
@@ -17,22 +26,30 @@
 								</el-option>
 							</el-select>
 						</el-form-item>
-						<el-form-item label="拍摄风格：" required>
-							<el-select v-model="arg.shooting_style_id" clearable placeholder="请选择拍摄风格" :disabled="is_detail">
-								<el-option v-for="item in style_list" :key="item.shooting_style_id" :label="item.shooting_style_name" :value="item.shooting_style_id">
-								</el-option>
-							</el-select>
-						</el-form-item>
-						<el-form-item label="合作模式：" required>
-							<el-input :placeholder="is_detail?'':'合作模式'" style="width:190px" v-model="arg.mode" :disabled="is_detail">
+						<el-form-item label="拍摄风格：">
+						<el-select v-model="shooting_style_ids" multiple filterable clearable placeholder="请选择拍摄风格" :disabled="is_detail">
+							<el-option v-for="item in style_list" :key="item.shooting_style_id" :label="item.shooting_style_name" :value="item.shooting_style_id">
+							</el-option>
+						</el-select>
+					</el-form-item>
+						<el-form-item label="面料：" required>
+							<el-input placeholder="面料" v-model="arg.fabric" :disabled="is_detail">
 							</el-input>
 						</el-form-item>
-						<el-form-item label="网盘地址：">
-							<el-input :placeholder="is_detail?'':'网盘地址'" style="width:320px" v-model="arg.net_disk_address" :disabled="is_detail">
+						<el-form-item label="成本价：" required>
+							<el-input type="number" v-model="arg.cost_price" :disabled="is_detail">
+							</el-input>
+						</el-form-item>
+						<el-form-item label="颜色：" required>
+							<el-input placeholder="颜色" v-model="arg.color" :disabled="is_detail">
 							</el-input>
 						</el-form-item>
 					</el-form>
 					<el-form size="small" label-width="100px">
+						<el-form-item label="商品款号：" required>
+							<el-input placeholder="商品款号" style="width:190px" v-model="arg.style_name" :disabled="is_detail">
+							</el-input>
+						</el-form-item>
 						<el-form-item label="标题：" required>
 							<el-input placeholder="标题" v-model="arg.title" :disabled="is_detail">
 							</el-input>
@@ -49,16 +66,27 @@
 								</el-option>
 							</el-select>
 						</el-form-item>
-						<el-form-item label="面料：" required>
-							<el-input placeholder="面料" v-model="arg.fabric" :disabled="is_detail">
+						<el-form-item label="合作模式：" required>
+							<el-input :placeholder="is_detail?'':'合作模式'" style="width:190px" v-model="arg.mode" :disabled="is_detail">
 							</el-input>
 						</el-form-item>
 						<el-form-item label="尺码：" required>
 							<el-input placeholder="尺码" v-model="arg.size" :disabled="is_detail">
 							</el-input>
 						</el-form-item>
-						<el-form-item label="颜色：" required>
-							<el-input placeholder="颜色" v-model="arg.color" :disabled="is_detail">
+						
+					</el-form>
+				</div>
+				<div class="form_row margin_bottom">
+					<el-checkbox v-model="arg.hot_style" :true-label="1" :false-label="0" :disabled="is_detail">爆款</el-checkbox>
+					<el-checkbox v-model="arg.sole_style" :true-label="1" :false-label="0" :disabled="is_detail">独家款</el-checkbox>
+					<el-checkbox v-model="arg.data_style" :true-label="1" :false-label="0" :disabled="is_detail">主推款</el-checkbox>
+					<el-checkbox v-model="arg.again_style" :true-label="1" :false-label="0" :disabled="is_detail">二开款</el-checkbox>
+				</div>
+				<div class="form_row">
+					<el-form size="small" label-width="100px">
+						<el-form-item label="网盘地址：">
+							<el-input :placeholder="is_detail?'':'网盘地址'" v-model="arg.net_disk_address" :disabled="is_detail">
 							</el-input>
 						</el-form-item>
 					</el-form>
@@ -70,6 +98,10 @@
 								<el-image class="card_img" v-for="item in preview_image" :src="item" fit="scale-down" :preview-src-list="preview_image"></el-image>
 							</div>
 							<UploadFile :img_list="img_list" :is_multiple="true" :current_num="arg.img.length" :max_num="99" @callbackFn="callbackFn" v-else/>
+						</el-form-item>
+						<el-form-item label="备注：">
+							<el-input type="textarea" :rows="5" :placeholder="is_detail?'':'请输入备注'" v-model="arg.remark" :disabled="is_detail">
+							</el-input>
 						</el-form-item>
 					</el-form>
 				</div>
@@ -93,6 +125,7 @@
 				table_title:"",			//顶部标题
 				is_detail:false,		//是否是详情
 				goods_type:"",			//类型（1:添加；2:编辑；3:查看；5：重新提交）
+				supplier_list:[],		//供应商列表
 				cate_list:[],			//类目列表
 				market_list:[],			//市场列表
 				style_list:[],			//拍摄风格列表
@@ -102,19 +135,28 @@
 				style_id:"",			//商品ID
 				max_height:0,
 				arg:{
+					i_id:"",				//款式编码
+					add_admin_name:"",
 					style_name:"",			//商品款号
+					supplier_id:"",			//选中的供应商
 					title:"",				//标题
 					category_id:"",			//选中的类目
 					market_id:"",			//选中的市场
-					shooting_style_id:"",	//选中的拍摄风格
 					classification_id:"",	//选中的分类
 					fabric:"",				//面料
 					mode:"",				//合作模式
+					cost_price:"",			//成本价
 					size:"",				//尺码
 					color:"",				//颜色
+					hot_style:0,			//爆款
+					sole_style:0,			//独家款
+					data_style:0,			//主推款
+					again_style:0,			//二开款
 					net_disk_address:"",	//网盘地址
 					img:[],					//图片列表
+					remark:"",				//备注
 				},								//可传递的参数
+				shooting_style_ids:[],		//已选中的拍摄风格
 			}
 		},
 		created(){
@@ -154,21 +196,23 @@
     		this.onResize();
     		window.addEventListener("resize", this.onResize());
     	},
-		methods: {
+    	methods: {
 			//监听屏幕大小变化
-    		onResize() {
-    			this.$nextTick(() => {
-    				let card_box_height = document.getElementById("card_box").offsetHeight;
-    				let title_height = document.getElementById("title_box").offsetHeight;
-    				this.max_height =
-    				card_box_height -
-    				title_height -
-    				50 +
-    				"px";
-    			});
-    		},
+			onResize() {
+				this.$nextTick(() => {
+					let card_box_height = document.getElementById("card_box").offsetHeight;
+					let title_height = document.getElementById("title_box").offsetHeight;
+					this.max_height =
+					card_box_height -
+					title_height -
+					50 +
+					"px";
+				});
+			},
 			//获取数据列表
 			async getInfoList(){
+				//获取供应商列表
+				await this.ajaxSupplierList();
 				//获取类目列表
 				await this.ajaxCateList();
 				//市场列表
@@ -230,6 +274,12 @@
 					this.img_list.push(img_obj);
 					this.preview_image.push(this.domain + item);
 				})
+				if(data_info.shooting_style_id != ''){
+					let shooting_style_ids = data_info.shooting_style_id.split(',');
+					this.shooting_style_ids = shooting_style_ids.map(item => {
+						return parseInt(item);
+					})
+				}
 				for(let key in this.arg){
 					for(let k in data_info){
 						if(key == k){
@@ -237,6 +287,19 @@
 						}
 					}
 				}
+			},
+			//获取供应商列表
+			ajaxSupplierList(){
+				return new Promise((resolve)=>{
+					commonResource.ajaxSupplierList().then(res => {
+						if(res.data.code == 1){
+							this.supplier_list = res.data.data;
+							resolve();
+						}else{
+							this.$message.warning(res.data.msg);
+						}
+					})
+				})
 			},
 			//获取类目列表
 			ajaxCateList(){
@@ -402,6 +465,9 @@
 				width: 160rem;
 				height: 160rem;
 			}
+		}
+		.margin_bottom{
+			margin-bottom: 20px;
 		}
 		.bottom_row{
 			display: flex;

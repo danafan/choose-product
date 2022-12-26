@@ -165,7 +165,10 @@
 							urls:data.business_license,
 							show_icon:false
 						}
-						this.img_list.push(img_obj);
+						if(this.business_license != ''){
+							this.img_list.push(img_obj);
+						}
+						
 					}else{
 						this.$message.warning(res.data.msg);
 					}
