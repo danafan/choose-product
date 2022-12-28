@@ -177,23 +177,14 @@
 					<div class="active_line" v-if="active_tab_index == index"></div>
 				</div>
 			</div>
-			<el-tabs size="small" v-if="active_tab_index == 0">
-				<el-tab-pane :label="item.shooting_style_name" v-for="(item,index) in style_data" :key="index">
-					<div class="source_url">网盘地址：
-						<el-button type="text" @click="windowOpen(item.net_disk_address)">{{item.or_net_disk_address}}</el-button>
-					</div>
-					<div class="more_image">
-						<el-image :z-index="9009" class="more_image_item" :src="img_url" fit="scale-down" v-for="(img_url,i) in item.img_arr" :key="i" :preview-src-list="item.img_arr"></el-image>
-					</div>
-				</el-tab-pane>
-			</el-tabs>
-			<div v-else>
-				<div class="source_url">网盘地址：
-					<el-button type="text" @click="windowOpen">{{commodity_url}}</el-button>
-				</div>
-				<div class="more_image">
-					<el-image :z-index="9009" class="more_image_item" :src="item" fit="scale-down" v-for="item in commodity_data" :preview-src-list="commodity_data"></el-image>
-				</div>
+			<div class="source_url">拍摄风格：
+				{{shooting_style_name}}
+			</div>
+			<div class="source_url">网盘地址：
+				<el-button type="text" @click="windowOpen(item.net_disk_address)">{{or_net_disk_address}}</el-button>
+			</div>
+			<div class="more_image">
+				<el-image :z-index="9009" class="more_image_item" :src="img_url" fit="scale-down" v-for="(img_url,i) in img_arr" :key="i" :preview-src-list="img_arr"></el-image>
 			</div>
 		</div>
 		<div slot="footer" class="dialog_footer">
@@ -534,10 +525,13 @@
 				more_image_dialog:false,		//更多图片
 				image_title_list:['风格图'],	//更多图片类型
 				active_tab_index:0,		//选中的下标
-				style_data:[],			//风格图数据
+				img_arr:[],				//风格图图片列表
+				net_disk_address:"",	//网盘地址（跳转）
+				or_net_disk_address:"",	//显示地址
+				shooting_style_name:"",
 				commodity_data:[],		//封面图数据
 				commodity_url:"",		//封面图网盘地址(显示)
-				commodity_open_url:"",		//封面图网盘地址（可跳转）
+				commodity_open_url:"",	//封面图网盘地址（可跳转）
 				firstTime: '', 			// mousedown的时间戳
 				lastTime: '', 			// mouseup的时间戳
 				isClick: false, 		// false--禁止点击，true--可点击
@@ -706,14 +700,14 @@
 				resource.moreImgStyle(arg).then(res => {
 					if(res.data.code == 1){
 						let style_data = res.data.data;
-						style_data.map(item => {
-							let img_arr = [];
-							item.img.map(iii => {
-								img_arr.push(this.domain + iii);
-							})
-							item['img_arr'] = img_arr;
+						let img_arr = [];
+						style_data.img.map(item => {
+							img_arr.push(this.domain + item)
 						})
-						this.style_data = style_data;
+						this.img_arr = img_arr;
+						this.net_disk_address = style_data.net_disk_address;	//网盘地址（跳转）
+						this.or_net_disk_address = style_data.or_net_disk_address;	//显示地址
+						this.shooting_style_name = style_data.shooting_style_name;
 						this.more_image_dialog = true;
 					}else{
 						this.$message.warning(res.data.msg);

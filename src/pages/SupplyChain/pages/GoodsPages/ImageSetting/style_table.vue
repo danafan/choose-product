@@ -4,16 +4,17 @@
 			<TableTitle :title="`商品编号：${style_name}`" id="table_title">
 				<el-button size="mini" type="primary" @click="addFn('1')" v-if="button_list.add == 1">上传风格图</el-button>
 			</TableTitle>
+			<TableTitle :title="`拍摄风格：${shooting_style_name}`" id="table_title">
+			</TableTitle>
 			<el-table size="mini" :data="data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" v-loading="loading">
-				<el-table-column label="风格" prop="shooting_style_name" show-overflow-tooltip></el-table-column>
-				<el-table-column label="图片" width="200">
+				<el-table-column label="图片">
 					<template slot-scope="scope">
 						<el-image :z-index="2006" class="image" :src="scope.row.image_list[0]" fit="scale-down" :preview-src-list="scope.row.image_list"></el-image>
 					</template>
 				</el-table-column>
-				<el-table-column label="网盘地址" prop="net_disk_address" show-overflow-tooltip></el-table-column>
 				<el-table-column label="操作" width="180" fixed="right">
 					<template slot-scope="scope">
+						<el-button type="text" size="small" @click="styleImgChangeMain(scope.row.gallery_id)" v-if="button_list.is_style_main == 1 && scope.row.is_main == 0">设为主图</el-button>
 						<el-button type="text" size="small" @click="addFn('2',scope.row.gallery_id)" v-if="button_list.edit == 1">编辑</el-button>
 						<el-button type="text" size="small" @click="deleteFn(scope.row.gallery_id)" v-if="button_list.del == 1">删除</el-button>
 					</template>
@@ -32,14 +33,8 @@
 					<el-form-item label="款式编码：">
 						{{i_id}}
 					</el-form-item>
-					<el-form-item label="风格：" required>
-						<el-input v-model="shooting_style_name" placeholder="风格"></el-input>
-					</el-form-item>
-					<el-form-item label="网盘地址：" required>
-						<el-input v-model="net_disk_address" placeholder="网盘地址"></el-input>
-					</el-form-item>
 					<el-form-item label="图片：" required>
-						<UploadFile :img_list="img_list" :is_multiple="true" :current_num="img.length" :max_num="99" @callbackFn="callbackFn"/>
+						<UploadFile :img_list="img_list" @callbackFn="callbackFn"/>
 					</el-form-item>
 				</el-form>
 			</div>
@@ -68,8 +63,7 @@
 				i_id:"",
 				show_dialog:false,			//弹窗
 				dialog_title:"",			//弹窗标题
-				shooting_style_name:"",		//风格
-				net_disk_address:"",		//网盘地址
+				shooting_style_name:"",		//拍摄风格
 				img:[],						//已上传的图片列表（参数）
 				img_list:[],				//已上传的图片列表（显示）
 			}
@@ -133,13 +127,18 @@
 						let data = res.data.data.data;
 						data.map(item => {
 							let image_list = [];
-							item.img.map(i => {
-								image_list.push(this.domain + i);
-							})
+							if(item.img){
+								item.img.split(',').map(i => {
+									image_list.push(this.domain + i);
+								})
+							}
+							
 							item.image_list = image_list;
 						});
 						this.data = data;
+						console.log(this.data)
 						this.button_list = res.data.data.button_list;
+						this.shooting_style_name = res.data.data.shooting_style_name;
 						this.total = res.data.data.total;
 						this.i_id = res.data.data.i_id;
 					}else{
@@ -159,15 +158,15 @@
 					resource.editStyleImgGet(arg).then(res => {
 						if(res.data.code == 1){
 							let data = res.data.data;
-							this.shooting_style_name = data.shooting_style_name;
-							this.net_disk_address = data.net_disk_address;
-							data.img.map(item => {
-								let img_obj = {
-									urls:item,
-									show_icon:false
-								}
-								this.img_list.push(img_obj);
-							})	
+							if(data.img){
+								data.img.split(',').map(item => {
+									let img_obj = {
+										urls:item,
+										show_icon:false
+									}
+									this.img_list.push(img_obj);
+								})	
+							}
 							this.img = data.img;				
 							this.show_dialog = true;		
 						}else{
@@ -177,7 +176,6 @@
 				}else{
 					this.show_dialog = true;
 				}
-				
 			},
 			//监听图片列表回调
 			callbackFn(img_arr) {
@@ -185,23 +183,15 @@
 			},
 			//关闭弹窗
 			closeDialog(){
-				this.shooting_style_name = "";		//风格
-				this.net_disk_address = "";		//网盘地址
 				this.img = [];						//已上传的图片列表（参数）
 				this.img_list = [];				//已上传的图片列表（显示）
 			},
 			//弹窗提交
 			commitFn(){
-				if(this.shooting_style_name == ''){
-					this.$message.warning('请输入风格!');
-				}else if(this.net_disk_address == ''){
-					this.$message.warning('请输入网盘地址!');
-				}else if(this.img.length == 0){
+				if(this.img.length == 0){
 					this.$message.warning('请上传风格图!');
 				}else{
 					var arg = {
-						shooting_style_name:this.shooting_style_name,
-						net_disk_address:this.net_disk_address,
 						img:this.img.join(',')
 					}
 					if(this.type == '1'){	//添加
@@ -230,6 +220,32 @@
 						})
 					}
 				}
+			},
+			//点击设为主图
+			styleImgChangeMain(gallery_id){
+				this.$confirm('确认设置为主图?', '提示', {
+					confirmButtonText: '确定',
+					cancelButtonText: '取消',
+					type: 'warning'
+				}).then(() => {
+					let arg = {
+						gallery_id:gallery_id
+					}
+					resource.styleImgChangeMain(arg).then(res => {
+						if(res.data.code == 1){
+							this.$message.success(res.data.msg);
+							//获取风格图列表
+							this.styleImageList();
+						}else{
+							this.$message.warning(res.data.msg);
+						}
+					})
+				}).catch(() => {
+					this.$message({
+						type: 'info',
+						message: '已取消'
+					});          
+				});
 			},
 			//点击删除
 			deleteFn(gallery_id){

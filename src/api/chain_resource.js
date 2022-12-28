@@ -81,7 +81,8 @@ let path = {
   editAccount:'api/supplier_manager/edit_account',        //编辑账号
   delAccount:'api/supplier_manager/del_account',          //删除账号
   settingRecord:'api/log/list',                           //操作日志
-  changePrice:'api/productstyle/changeprice',                 //调价审批
+  changePrice:'api/productstyle/changeprice',             //调价审批
+  styleImgChangeMain:'api/productstyle/styleimgchangemain',   //设为主图
 };  
 export default {
   //类目列表接口
@@ -447,5 +448,9 @@ export default {
   //调价审批
   changePrice(params) {
     return http.post(path.changePrice, params);
+  },
+  //设为主图
+  styleImgChangeMain(params) {
+    return http.post(path.styleImgChangeMain, params);
   },
 };

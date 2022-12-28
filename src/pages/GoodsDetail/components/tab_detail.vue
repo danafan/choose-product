@@ -15,13 +15,7 @@
 			</div>
 		</div>
 		<div class="style_row">
-			<div class="style_item">拍摄风格：</div>
-			<div class="style_item" :class="{'active_style_item':active_style_index == index}" v-for="(item,index) in goods_info.style_img" @click="active_style_index = index">{{item.shooting_style_name}}</div>
-		</div>
-		<div class="source_box">
-			<div class="source_item">网盘地址：
-				<div class="link" @click="windowOpen(net_disk_address)">{{or_net_disk_address}}</div>
-			</div>
+			<div class="style_item">拍摄风格：{{shooting_style_name}}</div>
 		</div>
 		<div class="image_box" :style="{height:max_height}">
 			<el-image :z-index="2006" class="style_image" :src="item" fit="scale-down" :preview-src-list="style_image_list" v-for="item in style_image_list"></el-image>
@@ -35,8 +29,7 @@
 			return{
 				max_height:0,
 				active_style_index:0,			//当前选中的风格下标
-				or_net_disk_address:"",			//网盘地址（显示）
-				net_disk_address:"",			//网盘地址（跳转）
+				shooting_style_name:"",
 				style_image_list:[],			//图片列表
 			}
 		},
@@ -55,7 +48,7 @@
 		},
 		created(){
 			//设置默认元素
-			this.setInfoFn(0);
+			this.setInfoFn();
 		},
 		mounted() {
     		//获取表格最大高度
@@ -79,14 +72,15 @@
 				});
 			},
 			//设置默认元素
-			setInfoFn(n){
-				this.net_disk_address = this.goods_info.style_img.length > 0?this.goods_info.style_img[n].net_disk_address:'';
-				this.or_net_disk_address = this.goods_info.style_img.length > 0?this.goods_info.style_img[n].or_net_disk_address:'';
+			setInfoFn(){
+				let style_img = this.goods_info.style_img;
+
+				this.shooting_style_name = style_img.shooting_style_name;
 				let images = [];
 				if( this.goods_info.style_img.length == 0){
 					return;
 				}
-				this.goods_info.style_img[n].img.map((item,index) => {
+				style_img.img.map((item,index) => {
 					images.push(this.domain + item);
 				})
 				this.style_image_list = images;
