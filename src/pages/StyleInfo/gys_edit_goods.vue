@@ -14,12 +14,6 @@
 							<el-input type="textarea" autosize :placeholder="is_detail?'':'多个请用分号间隔'" v-model="arg.i_id" :disabled="is_detail">
 							</el-input>
 						</el-form-item>
-						<el-form-item label="供应商：" required>
-							<el-select v-model="arg.supplier_id" clearable placeholder="请选择供应商" :disabled="is_detail">
-								<el-option v-for="item in supplier_list" :key="item.supplier_id" :label="item.supplier_name" :value="item.supplier_id">
-								</el-option>
-							</el-select>
-						</el-form-item>
 						<el-form-item label="类目：" required>
 							<el-select v-model="arg.category_id" clearable placeholder="请选择类目" :disabled="is_detail">
 								<el-option v-for="item in cate_list" :key="item.category_id" :label="item.category_name" :value="item.category_id">
@@ -125,7 +119,6 @@
 				table_title:"",			//顶部标题
 				is_detail:false,		//是否是详情
 				goods_type:"",			//类型（1:添加；2:编辑；3:查看；5：重新提交）
-				supplier_list:[],		//供应商列表
 				cate_list:[],			//类目列表
 				market_list:[],			//市场列表
 				style_list:[],			//拍摄风格列表
@@ -138,7 +131,6 @@
 					i_id:"",				//款式编码
 					add_admin_name:"",
 					style_name:"",			//商品款号
-					supplier_id:"",			//选中的供应商
 					title:"",				//标题
 					category_id:"",			//选中的类目
 					market_id:"",			//选中的市场
@@ -211,8 +203,6 @@
 			},
 			//获取数据列表
 			async getInfoList(){
-				//获取供应商列表
-				await this.ajaxSupplierList();
 				//获取类目列表
 				await this.ajaxCateList();
 				//市场列表
@@ -288,19 +278,6 @@
 					}
 				}
 			},
-			//获取供应商列表
-			ajaxSupplierList(){
-				return new Promise((resolve)=>{
-					commonResource.ajaxSupplierList().then(res => {
-						if(res.data.code == 1){
-							this.supplier_list = res.data.data;
-							resolve();
-						}else{
-							this.$message.warning(res.data.msg);
-						}
-					})
-				})
-			},
 			//获取类目列表
 			ajaxCateList(){
 				return new Promise((resolve)=>{
@@ -367,8 +344,6 @@
 					this.$message.warning('请选择类目!');
 				}else if(!this.arg.market_id){
 					this.$message.warning('请选择市场!');
-				}else if(!this.arg.shooting_style_id){
-					this.$message.warning('请选择拍摄风格!');
 				}else if(!this.arg.mode){
 					this.$message.warning('请填写合作模式!');
 				}else if(!this.arg.classification_id){

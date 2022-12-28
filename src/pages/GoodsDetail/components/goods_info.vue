@@ -326,7 +326,11 @@
 				}
 			},
 			windowOpen(url){
-				window.open(url);
+				if(!this.goods_info.or_net_disk_address || this.goods_info.or_net_disk_address.indexOf('https://pan.baidu.com') == -1){
+    				this.$message.warning('该地址不是网盘地址格式!')
+    			}else{
+    				window.open(url)
+    			}
 			}
 		},
 		components:{

@@ -181,7 +181,7 @@
 				{{shooting_style_name}}
 			</div>
 			<div class="source_url">网盘地址：
-				<el-button type="text" @click="windowOpen(item.net_disk_address)">{{or_net_disk_address}}</el-button>
+				<el-button type="text" @click="windowOpen(net_disk_address)">{{or_net_disk_address}}</el-button>
 			</div>
 			<div class="more_image">
 				<el-image :z-index="9009" class="more_image_item" :src="img_url" fit="scale-down" v-for="(img_url,i) in img_arr" :key="i" :preview-src-list="img_arr"></el-image>
@@ -668,7 +668,7 @@
 			},
 			//获取所有需求/发货类型
 			getAllDemandSendType(){
-				commonResource.getAllDemandSendType().then(res => {
+				commonResource.getAllDemandSendType({style_id:this.info.style_id}).then(res => {
 					if(res.data.code == 1){
 						let data = res.data.data;
 						//需求类型
@@ -811,7 +811,12 @@
     		},
     		//点击查看网盘
     		windowOpen(url){
-    			window.open(url)
+    			if(!this.or_net_disk_address || this.or_net_disk_address.indexOf('https://pan.baidu.com') == -1){
+    				this.$message.warning('该地址不是网盘地址格式!')
+    			}else{
+    				window.open(url)
+    			}
+    			
     		}
     	},
     	components:{

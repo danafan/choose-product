@@ -109,7 +109,7 @@
     				card_box_height -
     				table_title_height -
     				bottom_row_height -
-    				55 +
+    				80 +
     				"px";
     			});
     		},
@@ -219,6 +219,8 @@
 							}
 						})
 					}
+					//获取表格最大高度
+					this.onResize();
 				}
 			},
 			//点击设为主图

@@ -2,12 +2,6 @@
 	<div class="chain_page_content">
 		<el-card class="form_card">
 			<el-form :inline="true" size="mini">
-				<el-form-item label="市场：">
-					<el-select v-model="market_ids" clearable multiple filterable collapse-tags placeholder="全部">
-						<el-option v-for="item in market_list" :key="item.market_id" :label="item.market_name" :value="item.market_id">
-						</el-option>
-					</el-select>
-				</el-form-item>
 				<el-form-item label="供应商等级：">
 					<el-select v-model="grade_list_ids" clearable multiple filterable collapse-tags placeholder="全部">
 						<el-option v-for="item in grade_list" :key="item.grade_id" :label="item.grade_name" :value="item.grade_id">
@@ -187,8 +181,6 @@
 			return{
 				loading:false,
 				search:"",				//供应商、主营
-				market_list:[],			//市场列表
-				market_ids:[],			//选中的市场
 				supply_photograph:'',	//是否拍照
 				supply_return_goods:'',	//是否退货
 				supply_exchange_goods:'',//是否换货
@@ -216,8 +208,6 @@
 			if(!this.$route.meta.use_cache){
 				this.page = 1;
 			}
-			//市场列表
-			this.ajaxMarketList();
 			//供应商等级
 			this.ajaxSupplierGradeList();
 			//获取供应商列表
@@ -247,16 +237,6 @@
     				"px";
     			});
     		},
-    		//市场列表
-    		ajaxMarketList(){
-    			commonResource.ajaxMarketList().then(res => {
-    				if(res.data.code == 1){
-    					this.market_list = res.data.data;
-    				}else{
-    					this.$message.warning(res.data.msg);
-    				}
-    			})
-    		},
 			//供应商等级
 			ajaxSupplierGradeList(){
 				commonResource.ajaxSupplierGradeList().then(res => {
@@ -271,7 +251,6 @@
     		supplierManagerList(){
     			let arg = {
     				search:this.search,
-    				market_id:this.market_ids.join(','),
     				supply_photograph:this.supply_photograph,	//是否拍照
 					supply_return_goods:this.supply_return_goods,	//是否退货
 					supply_exchange_goods:this.supply_exchange_goods,//是否换货
@@ -303,7 +282,6 @@
     			.then(() => {
     				let arg = {
     					search:this.search,
-    					market_id:this.market_ids.join(','),
     					supply_photograph:this.supply_photograph,	
     					supply_return_goods:this.supply_return_goods,	
     					supply_exchange_goods:this.supply_exchange_goods,
