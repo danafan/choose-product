@@ -356,6 +356,7 @@
 					this.$message.warning('请输入颜色!');
 				}else{
 					var arg = this.goods_type == '1'?this.arg:{...this.arg,...{style_id:this.style_id}};
+					arg.shooting_style_id = this.shooting_style_ids.join(',');
 					this.$confirm(`确认${this.goods_type == '1'?'添加':'编辑'}此商品吗?`, '提示', {
 						confirmButtonText: '确定',
 						cancelButtonText: '取消',

@@ -229,7 +229,7 @@
 					type: 'warning'
 				}).then(() => {
 					let arg = {
-						commodity_id:gallery_id
+						gallery_id:gallery_id
 					}
 					resource.changeMainImg(arg).then(res => {
 						if(res.data.code == 1){
