@@ -275,7 +275,7 @@
 			},
 			//获取所有需求/发货类型
 			getAllDemandSendType(){
-				commonResource.getAllDemandSendType().then(res => {
+				commonResource.getAllDemandSendType({style_id:this.goods_info.style_id}).then(res => {
 					if(res.data.code == 1){
 						let data = res.data.data;
 						//需求类型
@@ -286,6 +286,9 @@
 						this.delivery_type_list = data.filter(item => {
 							return item.type == 2;
 						})
+						if(this.delivery_type_list.length > 0){
+							this.send_type = this.delivery_type_list[0].name;
+						}
 					}else{
 						this.$message.warning(res.data.msg);
 					}

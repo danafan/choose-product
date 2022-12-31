@@ -18,7 +18,7 @@ let path = {
   editUploadImg:'supplier/supplier/edituploadimg',              //编辑规格图
   addUploadImg:'supplier/supplier/adduploadimg',                //添加规格图
   delUploadImg:'supplier/supplier/deluploadimg',                //删除规格图
-  changeMainImg:'supplier/supplier/changemainimg',              //设为主图
+  changeMainImg:'supplier/supplier/styleimgchangemain',              //设为主图
   editPwd:'supplier/supplier/edit_pwd',                         //修改密码
 } 
 export default {

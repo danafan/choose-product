@@ -679,6 +679,9 @@
 						this.delivery_type_list = data.filter(item => {
 							return item.type == 2;
 						})
+						if(this.delivery_type_list.length > 0){
+							this.send_type = this.delivery_type_list[0].name;
+						}
 					}else{
 						this.$message.warning(res.data.msg);
 					}

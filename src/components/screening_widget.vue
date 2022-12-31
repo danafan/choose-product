@@ -304,6 +304,7 @@
 				this.class_index = 0;
 				this.style_index = 0;
 				this.rating_index = 0;
+				this.season_index = 0;
 				//获取当前条件并传递
 				this.callbackFn();
 			},

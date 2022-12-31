@@ -308,11 +308,8 @@
     		onResize() {
     			this.$nextTick(() => {
     				let card_box_height = document.getElementById("card_box").offsetHeight;
-    				console.log(card_box_height)
     				let table_title_height = document.getElementById("table_title").offsetHeight;
-    				console.log(table_title_height)
     				let bottom_row_height = document.getElementById("bottom_row").offsetHeight;
-    				console.log(bottom_row_height)
     				this.max_height =
     				card_box_height -
     				table_title_height -
@@ -409,7 +406,9 @@
 						data.map(item => {
 							let images = [];
 							item.img.map(i => {
-								images.push(this.domain + i);
+								if(i != ''){
+									images.push(this.domain + i);
+								}
 							})
 							item.images = images;
 							let ksbm = [];
