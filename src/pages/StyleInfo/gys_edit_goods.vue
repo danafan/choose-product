@@ -21,11 +21,11 @@
 							</el-select>
 						</el-form-item>
 						<el-form-item label="拍摄风格：">
-						<el-select v-model="shooting_style_ids" multiple filterable clearable placeholder="请选择拍摄风格" :disabled="is_detail">
-							<el-option v-for="item in style_list" :key="item.shooting_style_id" :label="item.shooting_style_name" :value="item.shooting_style_id">
-							</el-option>
-						</el-select>
-					</el-form-item>
+							<el-select v-model="shooting_style_ids" multiple filterable clearable placeholder="请选择拍摄风格" :disabled="is_detail">
+								<el-option v-for="item in style_list" :key="item.shooting_style_id" :label="item.shooting_style_name" :value="item.shooting_style_id">
+								</el-option>
+							</el-select>
+						</el-form-item>
 						<el-form-item label="面料：" required>
 							<el-input placeholder="面料" v-model="arg.fabric" :disabled="is_detail">
 							</el-input>
@@ -33,6 +33,12 @@
 						<el-form-item label="成本价：" required>
 							<el-input type="number" v-model="arg.cost_price" :disabled="is_detail">
 							</el-input>
+						</el-form-item>
+						<el-form-item label="调价状态：" v-if="!!price_status">
+							{{price_status | priceStatus}}
+						</el-form-item>
+						<el-form-item label="修改后价格：" v-if="price_status != 0 && !!edit_price">
+							{{edit_price}}
 						</el-form-item>
 						<el-form-item label="颜色：" required>
 							<el-input placeholder="颜色" v-model="arg.color" :disabled="is_detail">
@@ -126,6 +132,8 @@
 				preview_image:[],		//查看详情的图片列表
 				img_list:[],			
 				style_id:"",			//商品ID
+				price_status:"",		//调价审核状态
+				edit_price:"",
 				max_height:0,
 				arg:{
 					i_id:"",				//款式编码
@@ -256,6 +264,8 @@
 			},
 			//处理详情
 			setInfo(data_info){
+				this.price_status = data_info.price_status;
+				this.edit_price = data_info.edit_price;
 				data_info.img.map(item => {
 					let img_obj = {
 						urls:item,
@@ -401,6 +411,23 @@
 						});          
 					});
 				}
+			}
+		},
+		filters:{
+			priceStatus:function(e){
+				let status_str = "";
+				switch(e){
+					case 1:
+					status_str = '待审核';
+					break;
+					case 2:
+					status_str = '审核通过';
+					break;
+					case 3:
+					status_str = '审核拒绝';
+					break;
+				}
+				return status_str;
 			}
 		},
 		components:{

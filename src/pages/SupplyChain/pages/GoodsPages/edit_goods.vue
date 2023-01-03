@@ -36,7 +36,7 @@
 						<el-input type="number" v-model="arg.cost_price" :disabled="is_detail">
 						</el-input>
 					</el-form-item>
-					<el-form-item label="调价状态：" v-if="price_status != 0">
+					<el-form-item label="调价状态：" v-if="!!price_status">
 						{{price_status | priceStatus}}
 					</el-form-item>
 					<el-form-item label="修改后价格：" v-if="price_status != 0 && !!edit_price">

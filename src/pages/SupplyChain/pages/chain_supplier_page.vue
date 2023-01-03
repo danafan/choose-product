@@ -113,7 +113,7 @@
 				<img class="close_icon" src="../../../static/close_icon.png" @click="import_dialog = false">
 			</div>
 			<div class="down_box">
-				<!-- <el-button type="primary" plain size="small" @click="downTemplate">下载模版<i class="el-icon-download el-icon--right"></i></el-button> -->
+				<el-button type="primary" plain size="small" @click="downTemplate">下载模版<i class="el-icon-download el-icon--right"></i></el-button>
 				<div class="upload_box">
 					<el-button type="primary" size="small">
 						导入
@@ -303,6 +303,10 @@
     				});
     			});
     		},
+    		//下载模版
+			downTemplate(){
+				window.open(`${this.downLoadUrl}/template/供应商上传模板.xlsx`);
+			},
     		//导入
 			uploadCsv(){
 				if (this.$refs.csvUpload.files.length > 0) {

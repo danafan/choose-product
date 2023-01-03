@@ -25,7 +25,8 @@
 				<el-table size="mini" :data="data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" v-loading="loading">
 					<el-table-column label="图片" width="160">
 						<template slot-scope="scope">
-							<el-image :z-index="2008" class="image" :src="scope.row.images[0]" fit="scale-down" :preview-src-list="scope.row.images"></el-image>
+							<div v-if="scope.row.images.length == 0">暂无</div>
+							<el-image :z-index="2006" class="image" :src="scope.row.images[0]" fit="scale-down" :preview-src-list="scope.row.images" v-else></el-image>
 						</template>
 					</el-table-column>
 					<el-table-column label="款号" prop="style_name" show-overflow-tooltip></el-table-column>
@@ -298,7 +299,9 @@
 						let data_list = data.data;
 						data_list.map(item => {
 							let images = [];
-							images.push(this.domain + item.img);
+							if(item.img){
+								images.push(this.domain + item.img);
+							}
 							item.images = images;
 						})
 						this.data = data_list;

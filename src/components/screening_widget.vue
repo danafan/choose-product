@@ -4,13 +4,13 @@
 		<div class="selected_box" @click.stop="checkFn">
 			<div class="selected_left">
 				<div>已选条件</div>
-				<div class="tj_row" v-if="supplier_index == 0 && market_index == 0 && category_index == 0 && class_index == 0 && style_index == 0 && rating_index == 0">
+				<div class="tj_row" v-if="supplier_index == -1 && market_index == 0 && category_index == 0 && class_index == 0 && style_index == 0 && rating_index == 0 && season_index == 0">
 					<img class="right_arrow" src="../static/down_arrow.png">
 					<div>全部</div>
 				</div>
 				<div class="tj_row" v-else>
 					<img class="right_arrow" src="../static/down_arrow.png" v-if="page_type == 'index'">
-					<div v-if="supplier_list.length > 0 && page_type == 'index'">供应商（{{supplier_list[supplier_index].supplier_name}}）</div>
+					<div v-if="supplier_list.length > 0 && page_type == 'index'">供应商（{{supplier_index == -1?'全部':supplier_list[supplier_index].supplier_name}}）</div>
 					<img class="right_arrow" src="../static/down_arrow.png" v-if="page_type == 'index'">
 					<div v-if="market_list.length > 0 && page_type == 'index'">市场（{{market_list[market_index].market_name}}）</div>
 					<img class="right_arrow" src="../static/down_arrow.png">
@@ -37,8 +37,13 @@
 		<el-card class="conditions_box" v-if="screen_open">
 			<div class="conditions_row" v-if="page_type == 'index'">
 				<div class="lable">供应商：</div>
-				<div class="list">
-					<div class="item" :class="{'active_item':supplier_index == index}" v-for="(item,index) in supplier_list" @click.stop="checkIndex('supplier',index)">{{item.supplier_name}}</div>
+				<div style="flex:1">
+					<div class="list">
+						<div v-for="item in FristPin" class="item" :class="{'active_item':item == a_item}" @click.stop="a_item = item">{{item}}</div>
+					</div>
+					<div class="list">
+						<div class="item" :class="{'active_item':supplier_index == index}" v-for="(item,index) in supplier_list" @click.stop="checkIndex('supplier',index)">{{item.supplier_name}}</div>
+					</div>
 				</div>
 			</div>
 			<div class="conditions_row" v-if="page_type == 'index'">
@@ -105,10 +110,12 @@
 	import { getNowDate,getCurrentDate } from "../api/date.js";
 
 	import commonResource from '../api/common_resource.js'
+
+	import pinyin from '../../node_modules/js-pinyin/index.js'
 	export default{
 		data(){
 			return{
-				supplier_index:0,		//选中的供应商下标
+				supplier_index:-1,		//选中的供应商下标
 				supplier_list:[],		//供应商列表
 				market_index:0,			//选中的市场下标
 				market_list:[],			//市场列表
@@ -180,6 +187,9 @@
 					},
 					],
 				}, 
+				FristPin: ["全部","A", "B", "C", "D", "E", "F", "G", "H", "J", "K", "L", "M", "N", "P", "Q", "R", "S", "T", "W", "X", "Y", "Z"],
+				a_item:"全部",
+				cityjson: {},
 			}
 		},
 		props:{
@@ -195,7 +205,6 @@
 			}
 		},
 		created(){
-			console.log(this.page_type)
 			if(this.page_type == 'gys_supplier'){
 				//获取筛选条件列表
 				this.supplierScreenList();
@@ -209,6 +218,12 @@
 				return this.$store.state.screen_open;
 			},
 		},
+		watch:{
+			a_item:function(n,o){
+				this.supplier_list = this.cityjson[n];
+				this.supplier_index = -1;
+			}
+		},
 		methods:{
 			//获取筛选条件列表
 			getScreenList(){
@@ -216,11 +231,37 @@
 					if(res.data.code == 1){
 						let data = res.data.data;
 						let supplier_list = data.supplier;
-						supplier_list.unshift({
-							supplier_name:'全部',
-							supplier_id:''
-						})
-						this.supplier_list = supplier_list;
+						let pinyin = require('js-pinyin');
+						pinyin.setOptions({checkPolyphone: false, charCase: 0});
+						let cityArr = [];
+						for (let i = 0; i < supplier_list.length; i++) {
+            				//遍历数组,拿到城市名称
+            				let cityName = supplier_list[i].supplier_name;
+            				//取全部城市的首字母
+            				let fristName = pinyin.getCamelChars(cityName).substring(0, 1);    
+            				//	这里截取首字母的第一位
+            				//给原json添加首字母键值对
+            				supplier_list[i].first = fristName;
+            				//放入新数组
+            				cityArr.push(supplier_list[i]);
+            			}
+            			let cityJson = {};
+        				//根据首字母键值对给原数据按首字母分类
+        				for (let i = 0; i < this.FristPin.length; i++) { 
+        					if(i == 0){
+        						cityJson[this.FristPin[i]] = cityArr;
+        					} else{
+        						//这里的FirstPin是一个写入了所有字母的数组,见data中
+        						cityJson[this.FristPin[i]] = cityArr.filter( (value) => {
+        							return value.first === this.FristPin[i];
+        						})
+        					}
+
+        				}
+        				this.cityjson = cityJson;
+        				this.supplier_list = this.cityjson["全部"];
+        				console.log(this.cityjson)
+
 						let market_list = data.market;
 						market_list.unshift({
 							market_name:'全部',
@@ -298,7 +339,7 @@
 				})
 			},
 			resetFn(){
-				this.supplier_index = 0;
+				this.supplier_index = -1;
 				this.market_index = 0;
 				this.category_index = 0;
 				this.class_index = 0;
@@ -396,7 +437,7 @@
 					arg[sort_arr[0].key] = sort_arr[0].val + '-' + sort_arr[0].sort;
 				}
 				//处理供应商
-				if(this.page_type == 'index' && this.supplier_index > 0){
+				if(this.page_type == 'index' && this.supplier_index >= 0){
 					arg.supplier_id = this.supplier_list[this.supplier_index].supplier_id;
 				}
 				//处理市场
@@ -499,6 +540,20 @@
 			width: 110rem;
 			color: #999999;
 		}
+		.szm_row{
+			display: flex;
+			align-items: center;
+			.szm_item{
+				margin-right: 20px;
+				font-size: 12px;
+				cursor: pointer;
+			}
+			.active_index{
+				font-weight: bold;
+				color: var(--color);
+			}
+		}
+		
 		.list{
 			flex:1;
 			display: flex;

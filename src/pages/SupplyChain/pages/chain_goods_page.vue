@@ -153,23 +153,25 @@
 			</div>
 		</el-dialog>
 		<!-- 调价审批 -->
-		<el-dialog width="30%" :visible.sync="adjust_dialog">
+		<el-dialog width="30%" :visible.sync="adjust_dialog" @close="closeAdjust">
 			<div slot="title" class="dialog_title">
 				<div>调价审批</div>
 				<img class="close_icon" src="../../../static/close_icon.png" @click="adjust_dialog = false">
 			</div>
-			<el-form>
-				<el-form-item>
-					<el-radio-group v-model="adjust_type">
-						<el-radio :label="1">同意</el-radio>
-						<el-radio :label="2">拒绝</el-radio>
-					</el-radio-group>
-				</el-form-item>
-				<el-form-item v-if="adjust_type == 2">
-					<el-input type="textarea" :rows="3" placeholder="请输入拒绝原因" v-model="refuse_reason">
-					</el-input>
-				</el-form-item>
-			</el-form>
+			<div style="padding:20px">
+				<el-form>
+					<el-form-item>
+						<el-radio-group v-model="adjust_type">
+							<el-radio :label="1">同意</el-radio>
+							<el-radio :label="2">拒绝</el-radio>
+						</el-radio-group>
+					</el-form-item>
+					<el-form-item v-if="adjust_type == 2">
+						<el-input type="textarea" :rows="3" placeholder="请输入拒绝原因" v-model="refuse_reason">
+						</el-input>
+					</el-form-item>
+				</el-form>
+			</div>
 			<div slot="footer" class="dialog_footer">
 				<el-button size="small" @click="adjust_dialog = false">取 消</el-button>
 				<el-button size="small" type="primary" @click="confirmAdjust">确 定</el-button>
@@ -530,7 +532,7 @@
 				if(type == '0'){	//下架
 					title = '确认下架？'
 					let unset_list = this.multiple_selection.filter(item => {
-						return item.check_status == 2 && item.status == 1;
+						return item.check_status == 2 || item.check_status == 6;
 					})
 					unset_list.map(item => {
 						style_id.push(item.style_id)
@@ -539,7 +541,7 @@
 				}else if(type == '1'){	//上架
 					title = '确认上架？'
 					let unset_list = this.multiple_selection.filter(item => {
-						return item.check_status == 2 && item.status == 0;
+						return item.check_status == 5;
 					})
 					unset_list.map(item => {
 						style_id.push(item.style_id)
@@ -665,6 +667,11 @@
 			adjustAudit(style_id){
 				this.style_id = style_id;
 				this.adjust_dialog = true;
+			},
+			//关闭调价审批
+			closeAdjust(){
+				this.adjust_type = 1;				//调价审批选中的状态
+				this.refuse_reason = "";			//拒绝原因
 			},
 			//提交调价审批
 			confirmAdjust(){

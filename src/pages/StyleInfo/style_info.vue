@@ -451,7 +451,7 @@
 				if(type == '0'){	//下架
 					title = '确认下架？'
 					let unset_list = this.multiple_selection.filter(item => {
-						return item.check_status == 2;
+						return item.check_status == 2 ||  item.check_status == 6;
 					})
 					unset_list.map(item => {
 						style_id.push(item.style_id)
