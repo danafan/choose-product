@@ -39,7 +39,7 @@
 						{{data_info.weixin}}
 					</el-form-item>
 					<el-form-item label="结算方式：">
-						{{data_info.supply_warehousing==1?'月结':'现结'}}
+						{{data_info.supply_monthly_settlement==1?'月结':'现结'}}
 					</el-form-item>
 					<el-form-item label="核心供应商：">
 						{{data_info.is_core==1?'是':'否'}}
@@ -83,7 +83,7 @@
 				resource.supplierManagerInfo(arg).then(res => {
 					if(res.data.code == 1){
 						this.data_info = res.data.data;
-						if(this.data_info.business_license != ""){
+						if(this.data_info.business_license){
 							this.img_list.push(this.domain + this.data_info.business_license);
 						}
 					}else{

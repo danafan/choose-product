@@ -150,22 +150,21 @@
 						this.address = data.address;
 						this.contact_information = data.contact_information;
 						this.main_business = data.main_business;
-						this.supplier_code = data.supplier_code;
+						this.supplier_code = data.supplier_code?data.supplier_code:"";
 						this.supply_photograph = data.supply_photograph;
 						this.supply_return_goods = data.supply_return_goods;
 						this.supply_exchange_goods = data.supply_exchange_goods;
 						this.supply_replace_send = data.supply_replace_send;
 						this.supply_warehousing = data.supply_warehousing;
 						this.supply_monthly_settlement = data.supply_monthly_settlement;
-						this.supply_monthly_settlement = data.supply_monthly_settlement;
-						this.weixin = data.weixin;
+						this.weixin = data.weixin?data.weixin:"";
 						this.grade_id = data.grade_id?data.grade_id:'';
 						this.business_license = data.business_license;
 						let img_obj = {
 							urls:data.business_license,
 							show_icon:false
 						}
-						if(this.business_license != ''){
+						if(this.business_license){
 							this.img_list.push(img_obj);
 						}
 						
