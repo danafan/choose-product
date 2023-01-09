@@ -5,9 +5,9 @@
 				<el-button size="mini" type="primary" @click="addFn('1')" v-if="button_list.add == 1">添加</el-button>
 			</TableTitle>
 			<el-table size="mini" :data="data.data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" v-loading="loading">
-				<el-table-column prop="access_name" label="名称" show-overflow-tooltip align="center"></el-table-column>
-				<el-table-column prop="menu_name" label="所属分组" show-overflow-tooltip align="center"></el-table-column>
-				<el-table-column prop="access_codes" label="权限码" show-overflow-tooltip align="center"></el-table-column>
+				<el-table-column prop="access_name" label="名称" align="center"></el-table-column>
+				<el-table-column prop="menu_name" label="所属分组" align="center"></el-table-column>
+				<el-table-column prop="access_codes" label="权限码" align="center"></el-table-column>
 				<el-table-column label="操作" align="center" width="200" fixed="right">
 					<template slot-scope="scope">
 						<el-button class="button_theme" type="text" size="small" @click="addFn('2',scope.row.id)"

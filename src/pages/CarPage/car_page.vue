@@ -18,12 +18,12 @@
 							<div class="record_title">{{scope.row.title}}</div>
 						</template>
 					</el-table-column>
-					<el-table-column label="供应商" prop="supplier_name" width="160" show-overflow-tooltip></el-table-column>
+					<el-table-column label="供应商" prop="supplier_name" width="160"></el-table-column>
 					<el-table-column label="上新时间" prop="new_time_name" width="150">
 					</el-table-column>
-					<el-table-column label="款号" prop="style_name" show-overflow-tooltip></el-table-column>
-					<el-table-column label="款式编码" prop="i_id" show-overflow-tooltip></el-table-column>
-					<el-table-column label="拍摄风格" prop="shooting_style_name" show-overflow-tooltip></el-table-column>
+					<el-table-column label="款号" prop="style_name"></el-table-column>
+					<el-table-column label="款式编码" prop="i_id"></el-table-column>
+					<el-table-column label="拍摄风格" prop="shooting_style_name"></el-table-column>
 					<el-table-column label="价格" prop="cost_price"></el-table-column>
 					<el-table-column label="操作" width="80" fixed="right">
 						<template slot-scope="scope">

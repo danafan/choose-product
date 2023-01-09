@@ -89,13 +89,13 @@
 			<el-table size="mini" :data="data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" @selection-change="handleSelectionChange" v-loading="loading">
 				<el-table-column type="selection" width="55" fixed :selectable="checkboxInit">
 				</el-table-column>
-				<el-table-column label="款号" prop="style_name" show-overflow-tooltip></el-table-column>
-				<el-table-column label="款式编码" show-overflow-tooltip>
+				<el-table-column label="款号" prop="style_name"></el-table-column>
+				<el-table-column label="款式编码">
 					<template slot-scope="scope">
 						<div v-for="item in scope.row.ksbm">{{item}}</div>
 					</template>
 				</el-table-column>
-				<el-table-column label="对接推单" prop="common_text" show-overflow-tooltip>
+				<el-table-column label="对接推单" prop="common_text">
 					<template slot-scope="scope">
 						<div v-if="scope.row.abutment_type == 0">否</div>
 						<div v-if="scope.row.abutment_type == 1">是</div>
@@ -107,22 +107,22 @@
 						<el-image :z-index="2006" class="image" :src="scope.row.images[0]" fit="scale-down" :preview-src-list="scope.row.images" v-else></el-image>
 					</template>
 				</el-table-column>
-				<el-table-column label="成本价" prop="cost_price" show-overflow-tooltip></el-table-column>
-				<el-table-column label="售卖价" prop="selling_price" show-overflow-tooltip></el-table-column>
-				<el-table-column label="需求人" prop="ding_user_name" show-overflow-tooltip></el-table-column>
-				<el-table-column label="需求店铺" prop="shop_name" show-overflow-tooltip></el-table-column>
-				<el-table-column label="需求部门" prop="select_main_dept_name" show-overflow-tooltip></el-table-column>
-				<el-table-column label="需求日期" prop="demand_date" show-overflow-tooltip></el-table-column>
-				<el-table-column label="需求类型" prop="demand_type" show-overflow-tooltip></el-table-column>
-				<el-table-column label="发货类型" prop="send_type" show-overflow-tooltip></el-table-column>
-				<el-table-column label="提交时间" prop="select_time" show-overflow-tooltip></el-table-column>
-				<el-table-column label="供应商" prop="supplier_name" show-overflow-tooltip></el-table-column>
-				<el-table-column label="选款要求" show-overflow-tooltip>
+				<el-table-column label="成本价" prop="cost_price"></el-table-column>
+				<el-table-column label="售卖价" prop="selling_price"></el-table-column>
+				<el-table-column label="需求人" prop="ding_user_name"></el-table-column>
+				<el-table-column label="需求店铺" prop="shop_name"></el-table-column>
+				<el-table-column label="需求部门" prop="select_main_dept_name"></el-table-column>
+				<el-table-column label="需求日期" prop="demand_date"></el-table-column>
+				<el-table-column label="需求类型" prop="demand_type"></el-table-column>
+				<el-table-column label="发货类型" prop="send_type"></el-table-column>
+				<el-table-column label="提交时间" prop="select_time"></el-table-column>
+				<el-table-column label="供应商" prop="supplier_name"></el-table-column>
+				<el-table-column label="选款要求">
 					<template slot-scope="scope">
 						<div v-html="scope.row.demand_remark"></div>
 					</template>
 				</el-table-column>
-				<el-table-column label="需求状态" prop="common_text" show-overflow-tooltip>
+				<el-table-column label="需求状态" prop="common_text">
 					<template slot-scope="scope">
 						<div v-if="scope.row.audit_status == 0">已撤销</div>
 						<div v-if="scope.row.audit_status == 1">待审核</div>
@@ -130,7 +130,7 @@
 						<div v-if="scope.row.audit_status == 4">已拒绝</div>
 					</template>
 				</el-table-column>
-				<el-table-column label="审核备注" prop="select_remark" show-overflow-tooltip></el-table-column>
+				<el-table-column label="审核备注" prop="select_remark"></el-table-column>
 				<el-table-column label="操作" width="160" fixed="right">
 					<template slot-scope="scope">
 						<el-button type="text" size="small" v-if="button_list.info == 1" @click="selectedInfo(scope.row.select_id)">查看</el-button>

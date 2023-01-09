@@ -68,12 +68,13 @@
 				<el-button size="mini" type="primary" @click="allSetting('2')" v-if="button_list.abu == 1">批量对接推单</el-button>
 				<el-button size="mini" type="primary" @click="$router.push('/edit_goods?page_type=goods&goods_type=1')" v-if="button_list.add == 1">添加</el-button>
 				<el-button size="mini" type="primary" @click="import_dialog = true" v-if="button_list.add == 1">导入</el-button>
+				<el-button size="mini" type="primary" @click="exportFn">导出</el-button>
 			</TableTitle>
 			<el-table size="mini" :data="data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" @selection-change="handleSelectionChange" v-loading="loading">
 				<el-table-column type="selection" width="55" fixed>
 				</el-table-column>
-				<el-table-column label="款号" prop="style_name" show-overflow-tooltip></el-table-column>
-				<el-table-column label="款式编码" show-overflow-tooltip>
+				<el-table-column label="款号" prop="style_name"></el-table-column>
+				<el-table-column label="款式编码">
 					<template slot-scope="scope">
 						<div v-for="item in scope.row.ksbm">{{item}}</div>
 					</template>
@@ -84,24 +85,29 @@
 						<el-image :z-index="2006" class="image" :src="scope.row.images[0]" fit="scale-down" :preview-src-list="scope.row.images" v-else></el-image>
 					</template>
 				</el-table-column>
-				<el-table-column label="成本价" prop="cost_price" show-overflow-tooltip></el-table-column>
-				<el-table-column label="颜色" prop="color" show-overflow-tooltip></el-table-column>
-				<el-table-column label="尺码" prop="size" show-overflow-tooltip></el-table-column>
-				<el-table-column label="面料" prop="fabric" show-overflow-tooltip></el-table-column>
-				<el-table-column label="市场" prop="market" show-overflow-tooltip></el-table-column>
-				<el-table-column label="供应商" prop="supplier" show-overflow-tooltip></el-table-column>
-				<el-table-column label="提供拍照" prop="common_text" show-overflow-tooltip>
+				<el-table-column label="成本价" prop="cost_price"></el-table-column>
+				<el-table-column label="颜色" prop="color"></el-table-column>
+				<el-table-column label="尺码" prop="size"></el-table-column>
+				<el-table-column label="面料" prop="fabric"></el-table-column>
+				<el-table-column label="市场" prop="market"></el-table-column>
+				<el-table-column label="是否对接推单" width="100">
+					<template slot-scope="scope">
+						<div>{{scope.row.abutment_type == 1?'是':'否'}}</div>
+					</template>
+				</el-table-column>
+				<el-table-column label="供应商" prop="supplier"></el-table-column>
+				<el-table-column label="提供拍照" prop="common_text">
 					<template slot-scope="scope">
 						<div>{{scope.row.photograph == 1?'是':'否'}}</div>
 					</template>
 				</el-table-column>
-				<el-table-column label="拍摄风格" prop="shooting_style" show-overflow-tooltip></el-table-column>
-				<el-table-column label="类目" prop="category" show-overflow-tooltip></el-table-column>
-				<el-table-column label="分类" prop="classification" show-overflow-tooltip></el-table-column>
-				<el-table-column label="合作模式" prop="mode" show-overflow-tooltip></el-table-column>
-				<el-table-column label="备注" prop="remark" show-overflow-tooltip></el-table-column>
-				<el-table-column label="上新时间" prop="new_time_name" show-overflow-tooltip></el-table-column>
-				<el-table-column label="审核状态" prop="common_text" show-overflow-tooltip>
+				<el-table-column label="拍摄风格" prop="shooting_style"></el-table-column>
+				<el-table-column label="类目" prop="category"></el-table-column>
+				<el-table-column label="分类" prop="classification"></el-table-column>
+				<el-table-column label="合作模式" prop="mode"></el-table-column>
+				<el-table-column label="备注" prop="remark"></el-table-column>
+				<el-table-column label="上新时间" width="160" prop="new_time_name"></el-table-column>
+				<el-table-column label="审核状态" prop="common_text">
 					<template slot-scope="scope">
 						<div v-if="scope.row.check_status == 1">上架待审核</div>
 						<div v-if="scope.row.check_status == 2">已上架</div>
@@ -226,6 +232,10 @@
 	import commonResource from '../../../api/common_resource.js'
 	import resource from '../../../api/chain_resource.js'
 	import { getNowDate,getCurrentDate } from "../../../api/date.js";
+
+	import { exportPost } from "../../../api/export.js";
+
+	import { MessageBox, Message } from "element-ui";
 
 	import TableTitle from '../components/table_title.vue'
 	import PaginationWidget from '../../../components/pagination_widget.vue'
@@ -453,6 +463,47 @@
 						}
 					})
 				}
+			},
+			//导出
+			exportFn() {
+				MessageBox.confirm("确认导出?", "提示", {
+					confirmButtonText: "确定",
+					cancelButtonText: "取消",
+					type: "warning",
+				})
+				.then(() => {
+					let arg = {
+						supplier_id:this.supplier_ids.join(','),
+						category_id:this.category_ids.join(','),
+						market_id:this.market_ids.join(','),
+						classification_id:this.classification_ids.join(','),
+						shooting_id:this.shooting_style_ids.join(','),
+						start_time:this.date && this.date.length > 0?this.date[0]:"",
+						end_time:this.date && this.date.length > 0?this.date[1]:"",
+						check_status:this.check_status_id,
+						price_status:this.price_status
+					}
+					let search = "";
+					if (this.search.indexOf("\n") > -1) {
+						search = this.search.replaceAll("\n", ",");
+					} else if (this.search.indexOf(" ") > -1) {
+						search = this.search.replaceAll(" ", ",");
+					} else {
+						search = this.search;
+					}
+					arg.search = search;
+					resource.exportProductStyle(arg).then((res) => {
+						if (res) {
+							exportPost("\ufeff" + res.data, "款式资料");
+						}
+					});
+				})
+				.catch(() => {
+					Message({
+						type: "info",
+						message: "取消导出",
+					});
+				});
 			},
 			//获取列表
 			getGoodsList(){

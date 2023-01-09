@@ -159,12 +159,12 @@
 						this.supply_monthly_settlement = data.supply_monthly_settlement;
 						this.weixin = data.weixin?data.weixin:"";
 						this.grade_id = data.grade_id?data.grade_id:'';
-						this.business_license = data.business_license;
+						this.business_license = data.business_license?data.business_license:'';
 						let img_obj = {
-							urls:data.business_license,
+							urls:this.business_license,
 							show_icon:false
 						}
-						if(this.business_license){
+						if(this.business_license != ""){
 							this.img_list.push(img_obj);
 						}
 						

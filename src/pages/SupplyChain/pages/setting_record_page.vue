@@ -28,16 +28,16 @@
 						<div>{{(page - 1) * 30 + scope.$index + 1}}</div>
 					</template>
 				</el-table-column>
-				<el-table-column label="操作人" width="150" prop="add_user_name" show-overflow-tooltip></el-table-column>
-				<el-table-column label="操作分类" width="150" prop="notice_content" show-overflow-tooltip>
+				<el-table-column label="操作人" width="150" prop="add_user_name"></el-table-column>
+				<el-table-column label="操作分类" width="150" prop="notice_content">
 					<template slot-scope="scope">
 						<div v-if="scope.row.user_type == '1'">内部操作</div>
 						<div v-if="scope.row.user_type == '2'">外部操作</div>
 					</template>
 				</el-table-column>
-				<el-table-column label="操作时间" width="160" prop="add_time" show-overflow-tooltip></el-table-column>
-				<el-table-column label="IP地址" width="150" prop="ip" show-overflow-tooltip></el-table-column>
-				<el-table-column label="操作记录" prop="content" show-overflow-tooltip></el-table-column>
+				<el-table-column label="操作时间" width="160" prop="add_time"></el-table-column>
+				<el-table-column label="IP地址" width="150" prop="ip"></el-table-column>
+				<el-table-column label="操作记录" prop="content"></el-table-column>
 			</el-table>
 			<PaginationWidget id="bottom_row" :total="total" :page="page" :pagesize="30" @checkPage="checkPage"/>
 		</el-card>

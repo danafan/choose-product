@@ -5,12 +5,12 @@
 				<el-button size="mini" type="primary" @click="addFn('1')" v-if="button_list.add == 1">添加</el-button>
 			</TableTitle>
 			<el-table size="mini" :data="data.data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" v-loading="loading">
-				<el-table-column prop="menu_role_name" label="角色名称" show-overflow-tooltip align="center"></el-table-column>
-				<el-table-column prop="num" label="角色数量" show-overflow-tooltip align="center">
+				<el-table-column prop="menu_role_name" label="角色名称" align="center"></el-table-column>
+				<el-table-column prop="num" label="角色数量" align="center">
 				</el-table-column>
-				<el-table-column prop="remark" label="角色备注" show-overflow-tooltip align="center"></el-table-column>
-				<el-table-column prop="create_time" width="160" label="创建时间" show-overflow-tooltip align="center"></el-table-column>
-				<el-table-column prop="creater" width="160" label="创建人" show-overflow-tooltip align="center"></el-table-column>
+				<el-table-column prop="remark" label="角色备注" align="center"></el-table-column>
+				<el-table-column prop="create_time" width="160" label="创建时间" align="center"></el-table-column>
+				<el-table-column prop="creater" width="160" label="创建人" align="center"></el-table-column>
 				<el-table-column label="操作" align="center" width="120" fixed="right">
 					<template slot-scope="scope">
 						<el-button type="text" size="small" @click="addFn('2',scope.row.menu_role_id)" v-if="button_list.view == 1">查看</el-button>

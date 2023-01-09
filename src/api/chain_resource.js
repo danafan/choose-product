@@ -40,6 +40,7 @@ let path = {
   feedBackEditGoods:'api/feedback/edit_goods',			//编辑商品
   addAllProductStyle:'api/productstyle/addallproductstyle', //批量添加商品
   getGoodsList:'api/productstyle/getallproductstyle',	//获取商品列表
+  exportProductStyle:'api/productstyle/derivegetallproductstyle', //款式资料导出
   getOnepro:'api/productstyle/getonepro',           //商品信息查看
   addGoods:'api/productstyle/addproductstyle',			//添加商品
   editGoods:'api/productstyle/editproductstyle',		//编辑商品
@@ -264,6 +265,10 @@ export default {
   //获取商品列表
   getGoodsList(params) {
     return http.get(path.getGoodsList, params);
+  },
+  //款式资料导出
+  exportProductStyle(params) {
+    return http.get(path.exportProductStyle, params);
   },
   //查看商品详情
   getOnepro(params) {

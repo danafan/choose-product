@@ -51,28 +51,28 @@
 			<el-table size="mini" :data="data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" @selection-change="handleSelectionChange" v-loading="loading">
 				<el-table-column type="selection" width="55" fixed>
 				</el-table-column>
-				<el-table-column label="款号" prop="style_name" show-overflow-tooltip></el-table-column>
+				<el-table-column label="款号" prop="style_name"></el-table-column>
 				<el-table-column label="图片" width="120">
 					<template slot-scope="scope">
 						<div v-if="scope.row.images.length == 0">暂无</div>
 						<el-image :z-index="2006" class="image" :src="scope.row.images[0]" fit="scale-down" :preview-src-list="scope.row.images" v-else></el-image>
 					</template>
 				</el-table-column>
-				<el-table-column label="颜色" prop="color" show-overflow-tooltip></el-table-column>
-				<el-table-column label="尺码" prop="size" show-overflow-tooltip></el-table-column>
-				<el-table-column label="面料" prop="fabric" show-overflow-tooltip></el-table-column>
-				<el-table-column label="市场" prop="market" show-overflow-tooltip></el-table-column>
-				<el-table-column label="提供拍照" prop="common_text" show-overflow-tooltip>
+				<el-table-column label="颜色" prop="color"></el-table-column>
+				<el-table-column label="尺码" prop="size"></el-table-column>
+				<el-table-column label="面料" prop="fabric"></el-table-column>
+				<el-table-column label="市场" prop="market"></el-table-column>
+				<el-table-column label="提供拍照" prop="common_text">
 					<template slot-scope="scope">
 						<div>{{scope.row.photograph == 1?'是':'否'}}</div>
 					</template>
 				</el-table-column>
-				<el-table-column label="拍摄风格" prop="shooting_style" show-overflow-tooltip></el-table-column>
-				<el-table-column label="类目" prop="category" show-overflow-tooltip></el-table-column>
-				<el-table-column label="分类" prop="classification" show-overflow-tooltip></el-table-column>
-				<el-table-column label="合作模式" prop="mode" show-overflow-tooltip></el-table-column>
-				<el-table-column label="上新时间" prop="new_time_name" show-overflow-tooltip></el-table-column>
-				<el-table-column label="审核状态" prop="common_text" show-overflow-tooltip>
+				<el-table-column label="拍摄风格" prop="shooting_style"></el-table-column>
+				<el-table-column label="类目" prop="category"></el-table-column>
+				<el-table-column label="分类" prop="classification"></el-table-column>
+				<el-table-column label="合作模式" prop="mode"></el-table-column>
+				<el-table-column label="上新时间" prop="new_time_name"></el-table-column>
+				<el-table-column label="审核状态" prop="common_text">
 					<template slot-scope="scope">
 						<div v-if="scope.row.check_status == 1">上架待审核</div>
 						<div v-if="scope.row.check_status == 2">已上架</div>
@@ -82,7 +82,7 @@
 						<div v-if="scope.row.check_status == 6">拒绝下架</div>
 					</template>
 				</el-table-column>
-				<el-table-column label="拒绝备注" prop="refuse_reason" show-overflow-tooltip></el-table-column>
+				<el-table-column label="拒绝备注" prop="refuse_reason"></el-table-column>
 				<el-table-column label="操作" width="160" fixed="right">
 					<template slot-scope="scope">
 						<el-button style="margin-right: 10px" type="text" size="small" v-if="scope.row.check_status == 2 || scope.row.check_status == 6" @click="$router.push('/gys_image_setting?style_id=' + scope.row.style_id + '&style_name=' + scope.row.style_name)">图片管理</el-button>

@@ -17,7 +17,7 @@
 			<TableTitle title="数据列表" id="table_title">
 			</TableTitle>
 			<el-table size="mini" :data="data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" v-loading="loading">
-				<el-table-column label="类型" show-overflow-tooltip width="120" align="center">
+				<el-table-column label="类型" width="120" align="center">
 					<template slot-scope="scope">
 						<div v-if="scope.row.type == 1">类目</div>
 						<div v-if="scope.row.type == 2">分类</div>
@@ -25,9 +25,9 @@
 						<div v-if="scope.row.type == 4">季节</div>
 					</template>
 				</el-table-column>
-				<el-table-column label="修改内容" prop="content" show-overflow-tooltip></el-table-column>
-				<el-table-column label="修改人" prop="add_user_name" show-overflow-tooltip width="120" align="center"></el-table-column>
-				<el-table-column label="修改时间" prop="add_time" show-overflow-tooltip width="160" align="center"></el-table-column>
+				<el-table-column label="修改内容" prop="content"></el-table-column>
+				<el-table-column label="修改人" prop="add_user_name" width="120" align="center"></el-table-column>
+				<el-table-column label="修改时间" prop="add_time" width="160" align="center"></el-table-column>
 			</el-table>
 			<PaginationWidget id="bottom_row" :total="total" :page="page" @checkPage="checkPage"/>
 		</el-card>

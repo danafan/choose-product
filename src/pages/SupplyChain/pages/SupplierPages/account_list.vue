@@ -20,8 +20,8 @@
 						{{scope.$index+1 + (page-1)*10}}
 					</template>
 				</el-table-column>
-				<el-table-column label="供应商" prop="supplier_name" show-overflow-tooltip></el-table-column>
-				<el-table-column label="用户名" prop="username" show-overflow-tooltip></el-table-column>
+				<el-table-column label="供应商" prop="supplier_name"></el-table-column>
+				<el-table-column label="用户名" prop="username"></el-table-column>
 				<el-table-column label="是否启用">
 					<template slot-scope="scope">
 						{{scope.row.status == 1?'是':'否'}}

@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<el-table :show-header="false" :data="selected_record">
-			<el-table-column width="220" prop="shop_name" label="店铺" show-overflow-tooltip>
+			<el-table-column width="220" prop="shop_name" label="店铺">
 				<template slot-scope="scope">
 					<div>{{scope.row.shop_name}}：{{scope.row.ding_user_name}}</div>
 				</template>

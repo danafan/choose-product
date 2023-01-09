@@ -16,19 +16,19 @@
 		<el-card class="card_box" id="card_box">
 			<TableTitle title="数据列表" id="table_title"></TableTitle>
 			<el-table size="mini" :data="data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" v-loading="loading">
-				<el-table-column prop="style_name" label="款号" show-overflow-tooltip align="center"></el-table-column>
-				<el-table-column prop="i_id" label="款式编码" show-overflow-tooltip align="center">
+				<el-table-column prop="style_name" label="款号" align="center"></el-table-column>
+				<el-table-column prop="i_id" label="款式编码" align="center">
 				</el-table-column>
-				<el-table-column prop="feedback_content" label="反馈内容" show-overflow-tooltip align="center"></el-table-column>
+				<el-table-column prop="feedback_content" label="反馈内容" align="center"></el-table-column>
 				<el-table-column label="反馈截图" width="200">
 					<template slot-scope="scope">
 						<el-image :z-index="2006" class="image" :src="scope.row.images[0]" fit="scale-down" :preview-src-list="scope.row.images" v-if="scope.row.images.length > 0"></el-image>
 						<div class="ddd" v-else>暂无图片</div>
 					</template>
 				</el-table-column>
-				<el-table-column prop="feedback_real_name" width="160" label="反馈人" show-overflow-tooltip align="center"></el-table-column>
-				<el-table-column prop="feedback_time" width="160" label="反馈时间" show-overflow-tooltip align="center"></el-table-column>
-				<el-table-column prop="feedback_time" width="160" label="处理状态" show-overflow-tooltip align="center">
+				<el-table-column prop="feedback_real_name" width="160" label="反馈人" align="center"></el-table-column>
+				<el-table-column prop="feedback_time" width="160" label="反馈时间" align="center"></el-table-column>
+				<el-table-column prop="feedback_time" width="160" label="处理状态" align="center">
 					<template slot-scope="scope">
 						<div>{{scope.row.feedback_status == 1?'待处理':'已处理'}}</div>
 					</template>

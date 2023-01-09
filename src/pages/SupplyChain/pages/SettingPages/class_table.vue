@@ -5,10 +5,10 @@
 				<el-button size="mini" type="primary" @click="addFn('1')" v-if="button_list.add == 1">添加</el-button>
 			</TableTitle>
 			<el-table size="mini" :data="data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" v-loading="loading">
-				<el-table-column label="所属类目" prop="category_name" show-overflow-tooltip></el-table-column>
-				<el-table-column label="分类名称" prop="classification_name" show-overflow-tooltip></el-table-column>
-				<el-table-column label="创建人" prop="add_user_name" show-overflow-tooltip></el-table-column>
-				<el-table-column label="创建时间" prop="add_time" show-overflow-tooltip></el-table-column>
+				<el-table-column label="所属类目" prop="category_name"></el-table-column>
+				<el-table-column label="分类名称" prop="classification_name"></el-table-column>
+				<el-table-column label="创建人" prop="add_user_name"></el-table-column>
+				<el-table-column label="创建时间" prop="add_time"></el-table-column>
 				<el-table-column label="操作" width="180" fixed="right">
 					<template slot-scope="scope">
 						<el-button type="text" size="small" @click="addFn('2',scope.row.classification_id)" v-if="button_list.edit == 1">编辑</el-button>

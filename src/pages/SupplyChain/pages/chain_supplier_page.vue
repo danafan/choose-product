@@ -59,11 +59,11 @@
 				<el-button size="mini" type="primary" @click="addFn('1')" v-if="button_list.add == 1">添加</el-button>
 			</TableTitle>
 			<el-table size="mini" :data="data.data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" v-loading="loading">
-				<el-table-column label="供应商名称" prop="supplier_name" show-overflow-tooltip></el-table-column>
-				<el-table-column label="供应商地址" prop="address" show-overflow-tooltip></el-table-column>
-				<el-table-column label="供应商联系方式" width="120" prop="contact_information" show-overflow-tooltip></el-table-column>
-				<el-table-column label="主营" prop="main_business" show-overflow-tooltip></el-table-column>
-				<el-table-column label="微信" prop="weixin" show-overflow-tooltip></el-table-column>
+				<el-table-column label="供应商名称" prop="supplier_name"></el-table-column>
+				<el-table-column label="供应商地址" prop="address"></el-table-column>
+				<el-table-column label="供应商联系方式" width="120" prop="contact_information"></el-table-column>
+				<el-table-column label="主营" prop="main_business"></el-table-column>
+				<el-table-column label="微信" prop="weixin"></el-table-column>
 				<el-table-column label="拍照">
 					<template slot-scope="scope">
 						{{scope.row.supply_photograph == 1?'是':'否'}}
@@ -94,7 +94,7 @@
 						{{scope.row.supply_monthly_settlement == 1?'月结':'现结'}}
 					</template>
 				</el-table-column>
-				<el-table-column label="供应商等级" prop="grade_name" show-overflow-tooltip></el-table-column>
+				<el-table-column label="供应商等级" prop="grade_name"></el-table-column>
 				<el-table-column label="操作" width="180" fixed="right">
 					<template slot-scope="scope">
 						<el-button type="text" size="small" @click="getDetail(scope.row.supplier_id)" v-if="button_list.view == 1">查看</el-button>

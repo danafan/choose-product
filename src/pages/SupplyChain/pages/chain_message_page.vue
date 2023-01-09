@@ -15,12 +15,12 @@
 				<el-button size="mini" type="primary" @click="addFn('1')" v-if="button_list.add == 1">添加公告</el-button>
 			</TableTitle>
 			<el-table size="mini" :data="data.data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" v-loading="loading">
-				<el-table-column label="公告标题" prop="notice_title" show-overflow-tooltip></el-table-column>
-				<el-table-column label="公告内容" prop="notice_content" show-overflow-tooltip></el-table-column>
-				<el-table-column label="发布日期" prop="add_time" show-overflow-tooltip></el-table-column>
-				<el-table-column label="开始时间" prop="start_day" show-overflow-tooltip></el-table-column>
-				<el-table-column label="结束时间" prop="end_day" show-overflow-tooltip></el-table-column>
-				<el-table-column label="发布人" prop="add_user_name" show-overflow-tooltip></el-table-column>
+				<el-table-column label="公告标题" prop="notice_title"></el-table-column>
+				<el-table-column label="公告内容" prop="notice_content"></el-table-column>
+				<el-table-column label="发布日期" prop="add_time"></el-table-column>
+				<el-table-column label="开始时间" prop="start_day"></el-table-column>
+				<el-table-column label="结束时间" prop="end_day"></el-table-column>
+				<el-table-column label="发布人" prop="add_user_name"></el-table-column>
 				<el-table-column label="操作" width="140" fixed="right">
 					<template slot-scope="scope">
 						<el-button type="text" size="small" disabled v-if="scope.row.is_online">已发布</el-button>

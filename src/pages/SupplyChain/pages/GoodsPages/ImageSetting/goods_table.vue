@@ -10,7 +10,7 @@
 						<el-image :z-index="2006" class="image" :src="scope.row.image_list[0]" fit="scale-down" :preview-src-list="scope.row.image_list"></el-image>
 					</template>
 				</el-table-column>
-				<el-table-column label="是否主图" show-overflow-tooltip>
+				<el-table-column label="是否主图">
 					<template slot-scope="scope">
 						<div>{{scope.row.is_main == 1?'是':'否'}}</div>
 					</template>

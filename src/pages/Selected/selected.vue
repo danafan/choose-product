@@ -29,23 +29,23 @@
 							<el-image :z-index="2006" class="image" :src="scope.row.images[0]" fit="scale-down" :preview-src-list="scope.row.images" v-else></el-image>
 						</template>
 					</el-table-column>
-					<el-table-column label="款号" prop="style_name" show-overflow-tooltip></el-table-column>
-					<el-table-column label="款式编码" prop="i_id" show-overflow-tooltip></el-table-column>
-					<el-table-column label="成本价" prop="cost_price" show-overflow-tooltip></el-table-column>
-					<el-table-column label="售卖价" prop="selling_price" show-overflow-tooltip></el-table-column>
-					<el-table-column label="需求部门" prop="select_main_dept_name" show-overflow-tooltip></el-table-column>
-					<el-table-column label="需求店铺" prop="shop_name" show-overflow-tooltip></el-table-column>
-					<el-table-column label="需求日期" prop="demand_date" show-overflow-tooltip></el-table-column>
-					<el-table-column label="需求人" prop="ding_user_name" show-overflow-tooltip></el-table-column>
-					<el-table-column label="需求类型" prop="demand_type" show-overflow-tooltip>
+					<el-table-column label="款号" prop="style_name"></el-table-column>
+					<el-table-column label="款式编码" prop="i_id"></el-table-column>
+					<el-table-column label="成本价" prop="cost_price"></el-table-column>
+					<el-table-column label="售卖价" prop="selling_price"></el-table-column>
+					<el-table-column label="需求部门" prop="select_main_dept_name"></el-table-column>
+					<el-table-column label="需求店铺" prop="shop_name"></el-table-column>
+					<el-table-column label="需求日期" prop="demand_date"></el-table-column>
+					<el-table-column label="需求人" prop="ding_user_name"></el-table-column>
+					<el-table-column label="需求类型" prop="demand_type">
 					</el-table-column>
-					<el-table-column label="对接推单" show-overflow-tooltip>
+					<el-table-column label="对接推单">
 						<template slot-scope="scope">
 							<div v-if="scope.row.abutment_type == 1">是</div>
 							<div v-if="scope.row.abutment_type == 0">否</div>
 						</template>
 					</el-table-column>
-					<el-table-column label="当前状态" show-overflow-tooltip>
+					<el-table-column label="当前状态">
 						<template slot-scope="scope">
 							<div v-if="scope.row.audit_status == 1">待审核</div>
 							<div v-if="scope.row.audit_status == 2">已确认</div>
