@@ -35,10 +35,11 @@
 		</div>
 		<div class="set_row">
 			<div class="button_row">
-				<div class="add" @click.stop="addCar(info.cost_price)">
+				<div class="add" @click.stop="addCar(info.cost_price)" v-if="info.in_cart == 0">
 					<img class="add_car" src="../static/add_car.png">
 					<div>待选</div>
 				</div>
+				<div class="yjr" v-else @click.stop>已加入</div>
 				<div class="xk" :class="{'drak_back':info.cost_price == ''}" @click.stop="selectStyle(info.style_id)">选款</div>
 			</div>
 			<div class="store_name">{{info.supplier_name}}</div>
@@ -322,7 +323,10 @@
 						height: 12rem;
 					}
 				}
-
+				.yjr{
+					font-size: 12rem;
+					color: #999999;
+				}
 				.xk{
 					margin-left: 10rem;
 					border-radius: 2rem;
@@ -750,6 +754,7 @@
 				resource.addSelectCart(arg).then(res => {
 					if(res){
 						this.$message.success(res.data.msg);
+						this.$emit('setStatus',this.info.style_id)
 						let arg = {
 							type:'add',
 							num:1
