@@ -2,12 +2,16 @@
 	<div class="chain_page_content">
 		<el-card class="card_box">
 			<div class="form_row">
-				<el-form size="small" style="flex:1" label-width="100px">
+				<el-form size="small" style="flex:1" label-width="120px">
 					<el-form-item label="提交人：" v-if="is_detail">
 						<div>{{add_admin_name}}</div>
 					</el-form-item>
 					<el-form-item label="款式编码：">
 						<el-input type="textarea" autosize :placeholder="is_detail?'':'多个请用分号间隔'" v-model="arg.i_id" :disabled="is_detail">
+						</el-input>
+					</el-form-item>
+					<el-form-item label="BD款式编码：">
+						<el-input type="textarea" autosize :placeholder="is_detail?'':'多个请用分号间隔'" v-model="arg.bd_i_id" :disabled="is_detail">
 						</el-input>
 					</el-form-item>
 					<el-form-item label="供应商：" required>
@@ -42,10 +46,6 @@
 					<el-form-item label="修改后价格：" v-if="price_status != 0 && !!edit_price">
 						{{edit_price}}
 					</el-form-item>
-					<el-form-item label="颜色：" required>
-						<el-input placeholder="颜色" v-model="arg.color" :disabled="is_detail">
-						</el-input>
-					</el-form-item>
 				</el-form>
 				<el-form size="small" style="flex:1" label-width="100px">
 					<el-form-item label="商品款号：" required>
@@ -74,6 +74,10 @@
 					</el-form-item>
 					<el-form-item label="尺码：" required>
 						<el-input placeholder="尺码" v-model="arg.size" :disabled="is_detail">
+						</el-input>
+					</el-form-item>
+					<el-form-item label="颜色：" required>
+						<el-input placeholder="颜色" v-model="arg.color" :disabled="is_detail">
 						</el-input>
 					</el-form-item>
 					<el-form-item label="审核状态：" v-if="is_detail">
@@ -152,6 +156,7 @@
 				refuse_reason:"",		//拒绝原因
 				arg:{
 					i_id:"",				//款式编码
+					bd_i_id:"",				//bd款式编码
 					style_name:"",			//商品款号
 					supplier_id:"",			//选中的供应商
 					title:"",				//标题
@@ -275,7 +280,7 @@
 								for(let k in data_info){
 									if(key == k){
 										//款式编码逗号转分号
-										if(k == 'i_id' && data_info[k].indexOf(',') > -1){
+										if((k == 'i_id' || k == 'bd_i_id') && data_info[k].indexOf(',') > -1){
 											data_info[k] = data_info[k].replaceAll(",", ";");
 										}
 										this.arg[key] = data_info[k];
@@ -315,7 +320,7 @@
 					for(let k in data_info){
 						if(key == k){
 							//款式编码逗号转分号
-							if(k == 'i_id' && data_info[k].indexOf(',') > -1){
+							if((k == 'i_id' || k == 'bd_i_id') && data_info[k].indexOf(',') > -1){
 								data_info[k] = data_info[k].replaceAll(",", ";");
 							}
 							this.arg[key] = data_info[k];
@@ -420,6 +425,9 @@
 					var arg = this.goods_type == '1'?this.arg:{...this.arg,...{style_id:this.style_id}};
 					if (arg.i_id.indexOf(";") > -1) {
 						arg.i_id = arg.i_id.replaceAll(";", ",");
+					}
+					if (arg.bd_i_id.indexOf(";") > -1) {
+						arg.bd_i_id = arg.bd_i_id.replaceAll(";", ",");
 					}
 					arg.shooting_style_id = this.shooting_style_ids.join(',');
 

@@ -84,6 +84,8 @@ let path = {
   settingRecord:'api/log/list',                           //操作日志
   changePrice:'api/productstyle/changeprice',             //调价审批
   styleImgChangeMain:'api/productstyle/styleimgchangemain',   //设为主图
+  examineEditIid:'api/selected/examineeditiid',           //编辑款式编码
+  editGoodsIid:'api/productstyle/editgoodsiid',           //批量编辑款式编码
 };  
 export default {
   //类目列表接口
@@ -457,5 +459,13 @@ export default {
   //设为主图
   styleImgChangeMain(params) {
     return http.post(path.styleImgChangeMain, params);
+  },
+  //编辑款式编码
+  examineEditIid(params) {
+    return http.post(path.examineEditIid, params);
+  },
+  //批量编辑款式编码
+  editGoodsIid(params) {
+    return http.post(path.editGoodsIid, params);
   },
 };

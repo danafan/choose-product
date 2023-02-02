@@ -30,7 +30,12 @@
 						</template>
 					</el-table-column>
 					<el-table-column label="款号" prop="style_name"></el-table-column>
-					<el-table-column label="款式编码" prop="i_id"></el-table-column>
+					<el-table-column label="款式编码">
+						<template slot-scope="scope">
+							<div>普通：{{scope.row.i_id}}</div>
+							<div>BD：{{scope.row.bd_i_id}}</div>
+						</template>
+					</el-table-column>
 					<el-table-column label="成本价" prop="cost_price"></el-table-column>
 					<el-table-column label="售卖价" prop="selling_price"></el-table-column>
 					<el-table-column label="需求部门" prop="select_main_dept_name"></el-table-column>
@@ -81,7 +86,10 @@
 				</div>
 				<div class="detail_row">
 					<div class="lable">款式编码</div>
-					<div class="value">{{goods_info.i_id}}</div>
+					<div class="value">
+						<div>普通：{{goods_info.i_id}}</div>
+						<div>BD：{{goods_info.bd_i_id}}</div>
+					</div>
 				</div>
 				<div class="detail_row">
 					<div class="lable">供应商</div>

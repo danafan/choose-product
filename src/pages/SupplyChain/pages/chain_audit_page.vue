@@ -92,7 +92,8 @@
 				<el-table-column label="款号" prop="style_name"></el-table-column>
 				<el-table-column label="款式编码">
 					<template slot-scope="scope">
-						<div v-for="item in scope.row.ksbm">{{item}}</div>
+						<div>普通：{{scope.row.i_id}}</div>
+						<div>BD：{{scope.row.bd_i_id}}</div>
 					</template>
 				</el-table-column>
 				<el-table-column label="对接推单" prop="common_text">
@@ -105,6 +106,11 @@
 					<template slot-scope="scope">
 						<div v-if="scope.row.images.length == 0">暂无</div>
 						<el-image :z-index="2006" class="image" :src="scope.row.images[0]" fit="scale-down" :preview-src-list="scope.row.images" v-else></el-image>
+					</template>
+				</el-table-column>
+				<el-table-column label="网盘地址">
+					<template slot-scope="scope">
+						<el-button class="pre_wrap" size="small" type="text" @click="windowOpen(scope.row.net_disk_address,scope.row.or_net_disk_address)">{{scope.row.or_net_disk_address}}</el-button>
 					</template>
 				</el-table-column>
 				<el-table-column label="成本价" prop="cost_price"></el-table-column>
@@ -134,6 +140,7 @@
 				<el-table-column label="操作" width="160" fixed="right">
 					<template slot-scope="scope">
 						<el-button type="text" size="small" v-if="button_list.info == 1" @click="selectedInfo(scope.row.select_id)">查看</el-button>
+						<el-button type="text" size="small" v-if="button_list.edit_i_id == 1" @click="editInfo(scope.row.select_id,scope.row.i_id,scope.row.bd_i_id)">编辑</el-button>
 						<el-button type="text" size="small" v-if="scope.row.audit_status == 1 && button_list.aff == 1" @click="auditFn('1',scope.row.select_id)">确认需求</el-button>
 						<el-button type="text" size="small" v-if="(scope.row.audit_status == 1 || scope.row.audit_status == 2) && button_list.ref == 1" @click="auditFn('2',scope.row.select_id)">拒绝需求</el-button>
 						<el-button type="text" size="small" v-if="button_list.addre == 1" @click="addRemark(scope.row.select_id,scope.row.select_remark)">备注</el-button>
@@ -159,7 +166,10 @@
 				</div>
 				<div class="detail_row">
 					<div class="lable">款式编码</div>
-					<div class="value">{{goods_info.i_id}}</div>
+					<div class="value">
+						<div>普通：{{goods_info.i_id}}</div>
+						<div>BD：{{goods_info.bd_i_id}}</div>
+					</div>
 				</div>
 				<div class="detail_row">
 					<div class="lable">供应商</div>
@@ -326,6 +336,29 @@
 		<el-button size="mini" type="primary" @click="commitAllAudit">确认</el-button>
 	</div>
 </el-dialog>
+<!-- 编辑 -->
+<el-dialog :visible.sync="edit_dialog" @close="closeEdit" width="30%">
+	<div slot="title" class="dialog_title">
+		<div>编辑款式编码</div>
+		<img class="close_icon" src="../../../static/close_icon.png" @click="edit_dialog = false">
+	</div>
+	<div class="down_box">
+		<el-form :inline="true" size="mini">
+			<el-form-item label="款式编码：">
+				<el-input type="textarea" autosize placeholder="多个请用分号间隔" v-model="edit_arg.i_id">
+				</el-input>
+			</el-form-item>
+			<el-form-item label="BD款式编码：">
+				<el-input type="textarea" autosize placeholder="多个请用分号间隔" v-model="edit_arg.bd_i_id">
+				</el-input>
+			</el-form-item>
+		</el-form>
+	</div>
+	<div slot="footer" class="dialog_footer">
+		<el-button size="mini" @click="edit_dialog = false">取消</el-button>
+		<el-button size="mini" type="primary" @click="commitEdit">确认</el-button>
+	</div>
+</el-dialog>
 </div>
 </template>
 <style lang="less" scoped>
@@ -477,7 +510,6 @@
 				data:[],				//获取的数据
 				total:0,
 				button_list:{},
-				import_dialog:false,	//导入弹窗
 				detail_dialog:false,	//详情弹窗
 				goods_info:{},			//详情
 				remark_dialog:false,
@@ -490,7 +522,12 @@
 				audit_type:1,			//批量审批的类型（1:同意；2:拒绝）
 				msg:"",					//同意备注
 				refuse_remark:"",		//批量拒绝原因
-
+				edit_dialog:false,		//编辑款式编码弹窗
+				edit_arg:{
+					select_id:"",
+					i_id:"",
+					bd_i_id:""
+				},						//编辑信息
 			}
 		},
 		created(){
@@ -675,9 +712,9 @@
 		    	})
 		    	if(this.audit_type == 1){	//同意
 		    		if(this.msg == ''){
-						this.$message.warning('请输入同意备注!');
-						return;
-					}
+		    			this.$message.warning('请输入同意备注!');
+		    			return;
+		    		}
 		    		let arg = {
 		    			select_id:ids.join(','),
 		    			msg:this.msg
@@ -730,15 +767,6 @@
 								images.push(this.domain + i);
 							})
 							item.images = images;
-							let ksbm = [];
-							if(item.i_id){
-								item.i_id.split(',').map(i => {
-									ksbm.push(i);
-								})
-								item.ksbm = ksbm;
-							}else{
-								item.ksbm = [];
-							}
 						})
 						this.data = data;
 					}else{
@@ -882,19 +910,58 @@
 							select_id:this.select_id,
 							err_msg:this.err_msg
 						}
-					//拒绝
-					this.refuseAudit(arg)
+						//拒绝
+						this.refuseAudit(arg)
+					}
+				}
+			},
+			//点击编辑
+			editInfo(select_id,i_id,bd_i_id){
+				this.edit_arg.select_id = select_id;
+				this.edit_arg.i_id = i_id.replaceAll(",", ";");
+				this.edit_arg.bd_i_id = bd_i_id.replaceAll(",", ";");
+				this.edit_dialog = true;
+			},
+			//关闭编辑
+			closeEdit(){
+				this.edit_arg = {
+					select_id:"",
+					i_id:"",
+					bd_i_id:""
+				}
+			},
+			//提交编辑
+			commitEdit(){
+				if (this.edit_arg.i_id.indexOf(";") > -1) {
+					this.edit_arg.i_id = this.edit_arg.i_id.replaceAll(";", ",");
+				}
+				if (this.edit_arg.bd_i_id.indexOf(";") > -1) {
+					this.edit_arg.bd_i_id = this.edit_arg.bd_i_id.replaceAll(";", ",");
+				}
+				resource.examineEditIid(this.edit_arg).then(res => {
+					if(res.data.code == 1){
+						this.$message.success(res.data.msg);
+						this.edit_dialog = false;
+						//获取列表
+						this.getGoodsList();
+					}else{
+						this.$message.warning(res.data.msg);
+					}
+				})
+			},
+			windowOpen(url,old_url){
+				if(!old_url || old_url.indexOf('https://pan.baidu.com') == -1){
+					this.$message.warning('该地址不是网盘地址格式!')
+				}else{
+					window.open(url)
 				}
 			}
-
-
+		},
+		components:{
+			TableTitle,
+			PaginationWidget
 		}
-	},
-	components:{
-		TableTitle,
-		PaginationWidget
 	}
-}
 </script>
 
 

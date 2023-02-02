@@ -59,6 +59,7 @@
 		</el-card>
 		<el-card class="card_box" id="card_box">
 			<TableTitle title="数据列表" id="table_title">
+				<el-button size="mini" type="primary" v-if="button_list.edit_i_id == 1" @click="importFn('1')">修改款式编码</el-button>
 				<el-button size="mini" type="primary" @click="allSetting('adjust')" v-if="button_list.price_btn == 1">调价审批</el-button>
 				<el-button size="mini" type="primary" v-if="is_check == 1 && button_list.agree_refuse == 1" @click="allSetting('audit_1')">批量同意</el-button>
 				<el-button size="mini" type="primary" v-if="is_check == 1 && button_list.agree_refuse == 1" @click="allSetting('audit_2')">批量拒绝</el-button>
@@ -67,7 +68,7 @@
 				<el-button size="mini" type="primary" @click="allSetting('3')" v-if="button_list.del == 1">批量删除</el-button>
 				<el-button size="mini" type="primary" @click="allSetting('2')" v-if="button_list.abu == 1">批量对接推单</el-button>
 				<el-button size="mini" type="primary" @click="$router.push('/edit_goods?page_type=goods&goods_type=1')" v-if="button_list.add == 1">添加</el-button>
-				<el-button size="mini" type="primary" @click="import_dialog = true" v-if="button_list.add == 1">导入</el-button>
+				<el-button size="mini" type="primary" @click="importFn('2')" v-if="button_list.add == 1">导入</el-button>
 				<el-button size="mini" type="primary" @click="exportFn">导出</el-button>
 			</TableTitle>
 			<el-table size="mini" :data="data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" @selection-change="handleSelectionChange" v-loading="loading">
@@ -76,13 +77,19 @@
 				<el-table-column label="款号" prop="style_name"></el-table-column>
 				<el-table-column label="款式编码">
 					<template slot-scope="scope">
-						<div v-for="item in scope.row.ksbm">{{item}}</div>
+						<div>普通：{{scope.row.i_id}}</div>
+						<div>BD：{{scope.row.bd_i_id}}</div>
 					</template>
 				</el-table-column>
 				<el-table-column label="图片" width="120">
 					<template slot-scope="scope">
 						<div v-if="scope.row.images.length == 0">暂无</div>
 						<el-image :z-index="2006" class="image" :src="scope.row.images[0]" fit="scale-down" :preview-src-list="scope.row.images" v-else></el-image>
+					</template>
+				</el-table-column>
+				<el-table-column label="网盘地址">
+					<template slot-scope="scope">
+						<el-button class="pre_wrap" size="small" type="text" @click="windowOpen(scope.row.net_disk_address,scope.row.or_net_disk_address)">{{scope.row.or_net_disk_address}}</el-button>
 					</template>
 				</el-table-column>
 				<el-table-column label="成本价" prop="cost_price"></el-table-column>
@@ -319,7 +326,8 @@
 				data:[],				//获取的数据
 				total:0,
 				button_list:{},
-				import_dialog:false,	//导入弹窗
+				import_dialog:false,	//导入或批量修改弹窗
+				import_type:"1",		//导入弹窗类型
 				multiple_selection:[],
 				is_check:0,				//1:展示批量审核；0：不展示
 				fullscreenLoading:false,
@@ -440,28 +448,54 @@
 					}
 				})
 			},
+			//点击批量编辑或导入
+			importFn(type){
+				this.import_type = type;
+				this.import_dialog = true;
+			},
 			//下载模版
 			downTemplate(){
-				window.open(`${this.downLoadUrl}/file/商品批量导入模板.xlsx`);
+				if(this.import_type == '1'){
+					window.open(`${this.downLoadUrl}/file/批量更新款式编码模板.xlsx`);
+				}else{
+					window.open(`${this.downLoadUrl}/file/商品批量导入模板.xlsx`);
+				}
 			},
 			//导入
 			uploadCsv(){
 				if (this.$refs.csvUpload.files.length > 0) {
 					let files = this.$refs.csvUpload.files;
 					this.fullscreenLoading = true;
-					resource.addAllProductStyle({file:files[0]}).then(res => {
-						this.$refs.csvUpload.value = null;
-						this.import_dialog = false;
-						this.fullscreenLoading = false;
-						if(res.data.code == 1){
-							this.$message.success(res.data.msg);
-							this.page = 1;
-							//获取列表
-							this.getGoodsList();
-						}else{
-							this.$message.warning(res.data.msg);
-						}
-					})
+					if(this.import_type == '1'){	//批量修改
+						resource.editGoodsIid({file:files[0]}).then(res => {
+							this.$refs.csvUpload.value = null;
+							this.import_dialog = false;
+							this.fullscreenLoading = false;
+							if(res.data.code == 1){
+								this.$message.success(res.data.msg);
+								this.page = 1;
+								//获取列表
+								this.getGoodsList();
+							}else{
+								this.$message.warning(res.data.msg);
+							}
+						})
+					}else{	//导入
+						resource.addAllProductStyle({file:files[0]}).then(res => {
+							this.$refs.csvUpload.value = null;
+							this.import_dialog = false;
+							this.fullscreenLoading = false;
+							if(res.data.code == 1){
+								this.$message.success(res.data.msg);
+								this.page = 1;
+								//获取列表
+								this.getGoodsList();
+							}else{
+								this.$message.warning(res.data.msg);
+							}
+						})
+					}
+					
 				}
 			},
 			//导出
@@ -543,15 +577,6 @@
 								images.push(this.domain + i);
 							})
 							item.images = images;
-							let ksbm = [];
-							if(item.i_id){
-								item.i_id.split(',').map(i => {
-									ksbm.push(i);
-								})
-								item.ksbm = ksbm;
-							}else{
-								item.ksbm = [];
-							}
 						})
 						this.data = data;
 					}else{
@@ -802,6 +827,13 @@
 						message: '已取消'
 					});          
 				});
+			},
+			windowOpen(url,old_url){
+				if(!old_url || old_url.indexOf('https://pan.baidu.com') == -1){
+					this.$message.warning('该地址不是网盘地址格式!')
+				}else{
+					window.open(url)
+				}
 			}
 		},
 		components:{
