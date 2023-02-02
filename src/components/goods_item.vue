@@ -28,8 +28,15 @@
 		</div>
 		<div class="desc">{{info.title}}</div>
 		<div class="code_time">
-			<el-tooltip class="item" effect="dark" :content="info.sstyle_name + '（' + info.i_id + '）'" placement="top-start">
-				<div class="code">{{info.sstyle_name}}{{info.i_id?'('+ info.i_id +')':""}}</div>
+			<el-tooltip class="item" effect="dark" :content="info.sstyle_name +  `（普通：${info.i_id} BD：${info.bd_i_id}）`" placement="top-start">
+				<div slot="content">
+					{{info.sstyle_name}}
+					<br/>
+					{{`普通：${info.i_id}`}}
+					<br/>
+					{{`BD：${info.bd_i_id}`}}
+				</div>
+				<div class="code">{{info.sstyle_name}}{{`(普通:${info.i_id};BD:${info.bd_i_id})`}}</div>
 			</el-tooltip>
 			<div class="time">{{info.new_time_name}}</div>
 		</div>
@@ -79,8 +86,12 @@
 						<div class="value">{{info.supplier_name}}</div>
 					</div>
 					<div class="form_item">
-						<div class="lable">款号：</div>
+						<div class="lable">款式编码：</div>
 						<div class="value">{{info.i_id}}</div>
+					</div>
+					<div class="form_item">
+						<div class="lable">BD款式编码：</div>
+						<div class="value">{{info.bd_i_id}}</div>
 					</div>
 					<div class="form_item">
 						<div class="lable">价格：</div>

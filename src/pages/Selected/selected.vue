@@ -30,10 +30,20 @@
 						</template>
 					</el-table-column>
 					<el-table-column label="款号" prop="style_name"></el-table-column>
-					<el-table-column label="款式编码">
+					<el-table-column label="款式编码" width="140">
 						<template slot-scope="scope">
-							<div>普通：{{scope.row.i_id}}</div>
-							<div>BD：{{scope.row.bd_i_id}}</div>
+							<div class="item_row">
+								<div class="item_label">普通：</div>
+								<div>
+									<div v-for="item in scope.row.new_i_id">{{item}}</div>
+								</div>
+							</div>
+							<div class="item_row">
+								<div class="item_label">BD：</div>
+								<div>
+									<div v-for="item in scope.row.new_bd_i_id">{{item}}</div>
+								</div>
+							</div>
 						</template>
 					</el-table-column>
 					<el-table-column label="成本价" prop="cost_price"></el-table-column>
@@ -311,6 +321,13 @@
 								images.push(this.domain + item.img);
 							}
 							item.images = images;
+
+							if(item.i_id){
+								item.new_i_id = item.i_id.split(',')
+							}
+							if(item.bd_i_id){
+								item.new_bd_i_id = item.bd_i_id.split(',')
+							}
 						})
 						this.data = data_list;
 						this.total = data.total;
@@ -448,6 +465,13 @@
 		.image{
 			width: 140rem;
 			height: 140rem;
+		}
+		.item_row{
+			display: flex;
+			.item_label{
+				width: 36px;
+				text-align:end;
+			}
 		}
 	}
 }
