@@ -17,7 +17,21 @@
 			<TableTitle title="数据列表" id="table_title"></TableTitle>
 			<el-table size="mini" :data="data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" v-loading="loading">
 				<el-table-column prop="style_name" label="款号" align="center"></el-table-column>
-				<el-table-column prop="i_id" label="款式编码" align="center">
+				<el-table-column label="款式编码" width="140">
+					<template slot-scope="scope">
+						<div class="item_row">
+							<div class="item_label">普通：</div>
+							<div>
+								<div v-for="item in scope.row.new_i_id">{{item}}</div>
+							</div>
+						</div>
+						<div class="item_row">
+							<div class="item_label">BD：</div>
+							<div>
+								<div v-for="item in scope.row.new_bd_i_id">{{item}}</div>
+							</div>
+						</div>
+					</template>
 				</el-table-column>
 				<el-table-column prop="feedback_content" label="反馈内容" align="center"></el-table-column>
 				<el-table-column label="反馈截图" width="200">
@@ -113,6 +127,12 @@
 								images.push(this.domain + i);
 							})
 							item.images = images;
+							if(item.i_id){
+								item.new_i_id = item.i_id.split(',')
+							}
+							if(item.bd_i_id){
+								item.new_bd_i_id = item.bd_i_id.split(',')
+							}
 						})
 						this.data = data;
 						this.total = res.data.data.total;
@@ -180,6 +200,13 @@
 		.image{
 			width: 165rem;
 			height: 68rem;
+		}
+		.item_row{
+			display: flex;
+			.item_label{
+				width: 36px;
+				text-align:end;
+			}
 		}
 	}
 }
