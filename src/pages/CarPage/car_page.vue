@@ -7,12 +7,24 @@
 				<el-table ref="multipleTable" size="mini" :data="car_goods" tooltip-effect="dark" style="width: 100%" @selection-change="changeSelected" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" v-loading="loading">
 					<el-table-column type="selection" width="85" fixed="left" :selectable="setStatus">
 					</el-table-column>
-					<el-table-column label="图片" width="160">
+					<!-- <el-table-column label="图片" width="160">
 						<template slot-scope="scope">
 							<div class="sx" v-if="scope.row.status == 1">失效</div>
 							<el-image :z-index="2008" class="image" :src="scope.row.images[0]" fit="scale-down" :preview-src-list="scope.row.images"></el-image>
 						</template>
+					</el-table-column> -->
+					<el-table-column label="图片" width="150">
+						<template slot-scope="scope">
+							<div class="sx" v-if="scope.row.status == 1">失效</div>
+							<div v-else-if="scope.row.images.length == 0">暂无</div>
+							<el-carousel trigger="hover" :autoplay="false" height="100px" v-else>
+								<el-carousel-item v-for="item in scope.row.images" :key="item">
+									<el-image :z-index="2006" class="image" :src="item" fit="scale-down" :preview-src-list="scope.row.images"></el-image>
+								</el-carousel-item>
+							</el-carousel>
+						</template>
 					</el-table-column>
+
 					<el-table-column label="标题" prop="price" width="160">
 						<template slot-scope="scope">
 							<div class="record_title">{{scope.row.title}}</div>
@@ -399,25 +411,25 @@
 			color: #333333;
 		}
 		.image{
-			width: 140rem;
-			height: 140rem;
+			width: 100px;
+			height: 100px;
 		}
-		
-		.record_title{
-			font-size:12rem;
-			color: var(--color);
-		}
-		.bottom_row{
-			padding-top: 18rem;
+	}
+
+	.record_title{
+		font-size:12rem;
+		color: var(--color);
+	}
+	.bottom_row{
+		padding-top: 18rem;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		.all_selected{
 			display: flex;
 			align-items: center;
-			justify-content: space-between;
-			.all_selected{
-				display: flex;
-				align-items: center;
-				.selcted_num{
-					margin-right: 12rem;
-				}
+			.selcted_num{
+				margin-right: 12rem;
 			}
 		}
 	}

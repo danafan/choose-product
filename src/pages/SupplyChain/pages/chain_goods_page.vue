@@ -91,10 +91,14 @@
 						</div>
 					</template>
 				</el-table-column>
-				<el-table-column label="图片" width="120">
+				<el-table-column label="图片" width="150">
 					<template slot-scope="scope">
 						<div v-if="scope.row.images.length == 0">暂无</div>
-						<el-image :z-index="2006" class="image" :src="scope.row.images[0]" fit="scale-down" :preview-src-list="scope.row.images" v-else></el-image>
+						<el-carousel trigger="hover" :autoplay="false" height="100px" v-else>
+							<el-carousel-item v-for="item in scope.row.images" :key="item">
+								<el-image :z-index="2006" class="image" :src="item" fit="scale-down" :preview-src-list="scope.row.images"></el-image>
+							</el-carousel-item>
+						</el-carousel>
 					</template>
 				</el-table-column>
 				<el-table-column label="网盘地址">
@@ -221,8 +225,8 @@
 	.card_box{
 		flex:1;
 		.image{
-			width: 58rem;
-			height: 58rem;
+			width: 100px;
+			height: 100px;
 		}
 		.item_row{
 			display: flex;

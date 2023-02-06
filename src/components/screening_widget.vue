@@ -27,7 +27,6 @@
 					<div v-if="rating_list.length > 0 && page_type != 'gys_supplier'">等级（{{rating_list[rating_index].grade_name}}）</div>
 					<div class="reset_button" @click.stop="resetFn">重置选择</div>
 				</div>
-				
 			</div>
 			<div class="selected_right">
 				<div>{{screen_open?'收起':'展开'}}</div>
@@ -70,14 +69,12 @@
 					<div class="item" :class="{'active_item':style_index == index}" v-for="(item,index) in style_list" @click.stop="checkIndex('style',index)">{{item.shooting_style_name}}</div>
 				</div>
 			</div>
-
 			<div class="conditions_row" v-if="page_type == 'index'">
 				<div class="lable">季节：</div>
 				<div class="list">
 					<div class="item" :class="{'active_item':season_index == index}" v-for="(item,index) in season_list" @click.stop="checkIndex('season',index)">{{item.season_name}}</div>
 				</div>
 			</div>
-
 			<div class="conditions_row none_border" v-if="page_type != 'gys_supplier'">
 				<div class="lable">供应商评级：</div>
 				<div class="list">
@@ -220,8 +217,16 @@
 		},
 		watch:{
 			a_item:function(n,o){
-				this.supplier_list = this.cityjson[n];
-				this.supplier_index = -1;
+				if(n != ''){
+					this.supplier_list = this.cityjson[n];
+					this.supplier_index = -1;
+					if(n == '全部'){
+						//获取当前条件并传递
+						this.callbackFn();
+					}
+				}else{
+
+				}
 			}
 		},
 		methods:{
@@ -262,36 +267,36 @@
         				this.supplier_list = this.cityjson["全部"];
         				console.log(this.cityjson)
 
-						let market_list = data.market;
-						market_list.unshift({
-							market_name:'全部',
-							market_id:''
-						})
-						this.market_list = market_list;
-						let category_list = data.category;
-						category_list.unshift({
-							category_name:'全部',
-							category_id:''
-						})
-						this.category_list = category_list;
-						let class_list = data.classification;
-						class_list.unshift({
-							classification_name:'全部',
-							classification_id:''
-						})
-						this.class_list = class_list;
-						let style_list = data.shooting_style;
-						style_list.unshift({
-							shooting_style_name:'全部',
-							shooting_style_id:''
-						})
-						this.style_list = style_list;
-						let rating_list = data.grade;
-						rating_list.unshift({
-							grade_name:'全部',
-							grade_id:''
-						})
-						this.rating_list = rating_list;
+        				let market_list = data.market;
+        				market_list.unshift({
+        					market_name:'全部',
+        					market_id:''
+        				})
+        				this.market_list = market_list;
+        				let category_list = data.category;
+        				category_list.unshift({
+        					category_name:'全部',
+        					category_id:''
+        				})
+        				this.category_list = category_list;
+        				let class_list = data.classification;
+        				class_list.unshift({
+        					classification_name:'全部',
+        					classification_id:''
+        				})
+        				this.class_list = class_list;
+        				let style_list = data.shooting_style;
+        				style_list.unshift({
+        					shooting_style_name:'全部',
+        					shooting_style_id:''
+        				})
+        				this.style_list = style_list;
+        				let rating_list = data.grade;
+        				rating_list.unshift({
+        					grade_name:'全部',
+        					grade_id:''
+        				})
+        				this.rating_list = rating_list;
 						//季节
 						let season_list = data.season;
 						season_list.unshift({
@@ -357,6 +362,7 @@
 			checkIndex(type,index){
 				switch(type){
 					case 'supplier':
+					this.a_item = "";
 					this.supplier_index = index;
 					break;
 					case 'market':
