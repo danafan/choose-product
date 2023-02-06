@@ -11,7 +11,7 @@
 						<template slot-scope="scope">
 							<div class="sx" v-if="scope.row.status == 1">失效</div>
 							<div v-else-if="scope.row.images.length == 0">暂无</div>
-							<el-carousel trigger="hover" :autoplay="false" height="100px" v-else>
+							<el-carousel trigger="hover" indicator-position="none" :autoplay="false" height="100px" v-else>
 								<el-carousel-item v-for="item in scope.row.images" :key="item">
 									<el-image :z-index="2006" class="image" :src="item" fit="scale-down" :preview-src-list="scope.row.images"></el-image>
 								</el-carousel-item>
@@ -28,7 +28,23 @@
 					<el-table-column label="上新时间" prop="new_time_name" width="150">
 					</el-table-column>
 					<el-table-column label="款号" prop="style_name"></el-table-column>
-					<el-table-column label="款式编码" prop="i_id"></el-table-column>
+					<!-- <el-table-column label="款式编码" prop="i_id"></el-table-column> -->
+					<el-table-column label="款式编码" width="140">
+					<template slot-scope="scope">
+						<div class="item_row">
+							<div class="item_label">普通：</div>
+							<div>
+								<div v-for="item in scope.row.new_i_id">{{item}}</div>
+							</div>
+						</div>
+						<div class="item_row">
+							<div class="item_label">BD：</div>
+							<div>
+								<div v-for="item in scope.row.new_bd_i_id">{{item}}</div>
+							</div>
+						</div>
+					</template>
+				</el-table-column>
 					<el-table-column label="拍摄风格" prop="shooting_style_name"></el-table-column>
 					<el-table-column label="价格" prop="cost_price"></el-table-column>
 					<el-table-column label="操作" width="80" fixed="right">
@@ -215,6 +231,12 @@
 								images.push(this.domain + i);
 							})
 							item.images = images;
+							if(item.i_id){
+								item.new_i_id = item.i_id.split(',')
+							}
+							if(item.bd_i_id){
+								item.new_bd_i_id = item.bd_i_id.split(',')
+							}
     					})
     					this.car_goods = car_goods;
     				}else{
@@ -409,6 +431,13 @@
 		.image{
 			width: 100px;
 			height: 100px;
+		}
+		.item_row{
+			display: flex;
+			.item_label{
+				width: 36px;
+				text-align:end;
+			}
 		}
 	}
 
