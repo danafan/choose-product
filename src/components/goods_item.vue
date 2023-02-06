@@ -695,7 +695,9 @@
 						})
 						if(this.delivery_type_list.length > 0){
 							this.send_type = [];
-							this.send_type.push(this.delivery_type_list[0].name);
+							if(this.delivery_type_list.length < 2){
+								this.send_type.push(this.delivery_type_list[0].name);
+							}
 						}
 					}else{
 						this.$message.warning(res.data.msg);
