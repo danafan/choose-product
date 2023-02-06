@@ -225,7 +225,7 @@
 	.card_box{
 		flex:1;
 		.image{
-			width: 100px;
+			// width: 100px;
 			height: 100px;
 		}
 		.item_row{

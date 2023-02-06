@@ -206,10 +206,10 @@
 </div>
 </template>
 <style type="text/css">
-.el-carousel__container{
+/*.el-carousel__container{
 	width: 240rem !important;
 	height: 240rem !important; 
-}
+}*/
 .popover_image{
 	height: 400px!important;
 	width: 400px!important;
@@ -221,7 +221,6 @@
 	margin-bottom: 20rem;
 	border:1px solid #EDEDED;
 	width: 265rem;
-	// height: 436rem;
 	cursor:pointer;
 	.image_box{
 		position: relative;

@@ -7,12 +7,6 @@
 				<el-table ref="multipleTable" size="mini" :data="car_goods" tooltip-effect="dark" style="width: 100%" @selection-change="changeSelected" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" v-loading="loading">
 					<el-table-column type="selection" width="85" fixed="left" :selectable="setStatus">
 					</el-table-column>
-					<!-- <el-table-column label="图片" width="160">
-						<template slot-scope="scope">
-							<div class="sx" v-if="scope.row.status == 1">失效</div>
-							<el-image :z-index="2008" class="image" :src="scope.row.images[0]" fit="scale-down" :preview-src-list="scope.row.images"></el-image>
-						</template>
-					</el-table-column> -->
 					<el-table-column label="图片" width="150">
 						<template slot-scope="scope">
 							<div class="sx" v-if="scope.row.status == 1">失效</div>
@@ -216,9 +210,11 @@
     					this.loading = false;
     					let car_goods = res.data.data.data;
     					car_goods.map(item => {
-    						let arr = [];
-    						arr.push(this.domain + item.img);
-    						item.images = arr;
+    						let images = [];
+							item.img.map(i => {
+								images.push(this.domain + i);
+							})
+							item.images = images;
     					})
     					this.car_goods = car_goods;
     				}else{

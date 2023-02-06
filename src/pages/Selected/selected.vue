@@ -23,22 +23,16 @@
 					</el-form>
 				</div>
 				<el-table size="mini" :data="data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" v-loading="loading">
-					<!-- <el-table-column label="图片" width="160">
+					<el-table-column label="图片" width="150">
 						<template slot-scope="scope">
 							<div v-if="scope.row.images.length == 0">暂无</div>
-							<el-image :z-index="2006" class="image" :src="scope.row.images[0]" fit="scale-down" :preview-src-list="scope.row.images" v-else></el-image>
+							<el-carousel trigger="hover" :autoplay="false" height="100px" v-else>
+								<el-carousel-item v-for="item in scope.row.images" :key="item">
+									<el-image :z-index="2006" class="image" :src="item" fit="scale-down" :preview-src-list="scope.row.images"></el-image>
+								</el-carousel-item>
+							</el-carousel>
 						</template>
-					</el-table-column> -->
-					<el-table-column label="图片" width="150">
-					<template slot-scope="scope">
-						<div v-if="scope.row.images.length == 0">暂无</div>
-						<el-carousel trigger="hover" :autoplay="false" height="100px" v-else>
-							<el-carousel-item v-for="item in scope.row.images" :key="item">
-								<el-image :z-index="2006" class="image" :src="item" fit="scale-down" :preview-src-list="scope.row.images"></el-image>
-							</el-carousel-item>
-						</el-carousel>
-					</template>
-				</el-table-column>
+					</el-table-column>
 					<el-table-column label="款号" prop="style_name"></el-table-column>
 					<el-table-column label="款式编码" width="140">
 						<template slot-scope="scope">
@@ -327,9 +321,9 @@
 						let data_list = data.data;
 						data_list.map(item => {
 							let images = [];
-							if(item.img){
-								images.push(this.domain + item.img);
-							}
+							item.img.map(i => {
+								images.push(this.domain + i);
+							})
 							item.images = images;
 
 							if(item.i_id){
