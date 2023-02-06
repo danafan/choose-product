@@ -120,7 +120,7 @@
 					<div class="form_item">
 						<div class="lable"><span>*</span>发货类型：</div>
 						<div class="value">
-							<el-select v-model="send_type" size="mini" clearable placeholder="选择发货类型">
+							<el-select v-model="send_type" size="mini" multiple collapse-tags filterable clearable placeholder="选择发货类型">
 								<el-option v-for="item in delivery_type_list" :key="item.name" :label="item.name" :value="item.name">
 								</el-option>
 							</el-select>
@@ -527,7 +527,7 @@
 				need_type:[],			//需求类型列表
 				demand_type:[],			//选中的需求类型
 				delivery_type_list:[],	//发货类型列表
-				send_type:"",			//选中的发货类型
+				send_type:[],			//选中的发货类型
 				demand_date:"",			//需求日期
 				selling_price:"",		//售卖价格
 				remark:"",				//备注
@@ -577,7 +577,7 @@
 			},
 			//确认选择按钮是否可点击
 			disabled(){
-				return this.shop_code.length == 0 || this.demand_type.length == 0 || this.send_type == "" || this.is_loading;
+				return this.shop_code.length == 0 || this.demand_type.length == 0 || this.send_type .length == 0 || this.is_loading;
 			}
 		},
 		methods:{
@@ -612,7 +612,7 @@
 					this.$message.warning('请选择店铺!');
 				}else if(this.demand_type.length == 0){
 					this.$message.warning('请选择需求类型!');
-				}else if(this.send_type == ''){
+				}else if(this.send_type.length == 0){
 					this.$message.warning('请选择发货类型!');
 				}else if(this.selling_price < 0){
 					this.$message.warning('售卖价格应大于0!');
@@ -632,7 +632,7 @@
 						shop_code:shop_code_arr.join(','),
 						shop_name:shop_name_arr.join(','),
 						demand_type:this.demand_type.join(','),
-						send_type:this.send_type,
+						send_type:this.send_type.join(','),
 						demand_date:this.demand_date?this.demand_date:"",
 						selling_price:this.selling_price,
 						remark:this.remark
@@ -694,7 +694,8 @@
 							return item.type == 2;
 						})
 						if(this.delivery_type_list.length > 0){
-							this.send_type = this.delivery_type_list[0].name;
+							this.send_type = [];
+							this.send_type.push(this.delivery_type_list[0].name);
 						}
 					}else{
 						this.$message.warning(res.data.msg);
