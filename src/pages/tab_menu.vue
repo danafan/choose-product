@@ -228,6 +228,7 @@
   export default {
     data() {
       return {
+        active_index:0,
         username: "",           //用户名
         edit_dialog:false,      //修改密码弹窗
         old_password:"",        //旧密码
@@ -239,6 +240,10 @@
       this.getNotice();
       this.username = localStorage.getItem("ding_user_name");
       let path = window.location.hash.split('#/')[1];
+      
+      this.active_index = this.menu_list.findIndex(item => {
+        return item.web_url == path
+      })
       //判断是刚登录进来的直接进入首页
       if(path == 'tab_menu'){
          this.$router.push('/index')
@@ -270,9 +275,9 @@
         return this.$store.state.active_path;
       },
       //当前高亮下标
-      active_index() {
-        return this.$store.state.active_index;
-      },
+      // active_index() {
+      //   return this.$store.state.active_index;
+      // },
     },
     methods: {
       //全局关闭筛选项下拉
@@ -286,13 +291,13 @@
       //点击切换导航
       checkIndex(index){
         this.$store.commit("setIndex", index);
-        localStorage.setItem("active_index",index);
+        // localStorage.setItem("active_index",index);
         let active_path = this.menu_list[index].web_url;
-        if(this.active_path != active_path){
+        // if(this.active_path != active_path){
           // localStorage.setItem("active_path",active_path);
           // this.$store.commit("setPath", active_path);
           this.$router.push(active_path);
-        }
+        // }
       },
       //查看公告
       noticeDetail(row, column, event){

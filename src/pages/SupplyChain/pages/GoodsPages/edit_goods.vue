@@ -27,13 +27,13 @@
 						</el-select>
 					</el-form-item>
 					<el-form-item label="拍摄风格：">
-						<el-select v-model="shooting_style_ids" multiple filterable clearable placeholder="请选择拍摄风格" :disabled="is_detail">
+						<el-select v-model="shooting_style_ids" multiple filterable clearable :placeholder="is_detail?'':'请选择拍摄风格'" :disabled="is_detail">
 							<el-option v-for="item in style_list" :key="item.shooting_style_id" :label="item.shooting_style_name" :value="item.shooting_style_id">
 							</el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item label="面料：" required>
-						<el-input placeholder="面料" v-model="arg.fabric" :disabled="is_detail">
+					<el-form-item label="面料：">
+						<el-input :placeholder="is_detail?'':'面料'" v-model="arg.fabric" :disabled="is_detail">
 						</el-input>
 					</el-form-item>
 					<el-form-item label="成本价：" required>
@@ -72,12 +72,12 @@
 						<el-input :placeholder="is_detail?'':'合作模式'" v-model="arg.mode" :disabled="is_detail">
 						</el-input>
 					</el-form-item>
-					<el-form-item label="尺码：" required>
-						<el-input placeholder="尺码" v-model="arg.size" :disabled="is_detail">
+					<el-form-item label="尺码：">
+						<el-input :placeholder="is_detail?'':'尺码'" v-model="arg.size" :disabled="is_detail">
 						</el-input>
 					</el-form-item>
-					<el-form-item label="颜色：" required>
-						<el-input placeholder="颜色" v-model="arg.color" :disabled="is_detail">
+					<el-form-item label="颜色：">
+						<el-input :placeholder="is_detail?'':'颜色'"  v-model="arg.color" :disabled="is_detail">
 						</el-input>
 					</el-form-item>
 					<el-form-item label="审核状态：" v-if="is_detail">
@@ -411,16 +411,10 @@
 					this.$message.warning('请选择市场!');
 				}else if(!this.arg.classification_id){
 					this.$message.warning('请选择分类!');
-				}else if(!this.arg.fabric){
-					this.$message.warning('请输入面料!');
 				}else if(!this.arg.cost_price){
 					this.$message.warning('请输入成本价!');
-				}else if(!this.arg.size){
-					this.$message.warning('请输入尺码!');
 				}else if(this.arg.cost_price < 0){
 					this.$message.warning('成本价应大于0!');
-				}else if(!this.arg.color){
-					this.$message.warning('请输入颜色!');
 				}else{
 					var arg = this.goods_type == '1'?this.arg:{...this.arg,...{style_id:this.style_id}};
 					if (arg.i_id.indexOf(";") > -1) {
