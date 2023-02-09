@@ -52,6 +52,10 @@ export function middleWare(params, type) {
       key != "err_msg" &&
       key != "msg" &&
       key != "refuse_remark" &&
+      key != "fabric" &&
+      key != "size" &&
+      key != "color" &&
+      key != "mode" &&
       key != "off_reason"
       ) {
       sign_arr.push(`${key}=${sort_obj[key]}`);

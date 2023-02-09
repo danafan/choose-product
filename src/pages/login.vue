@@ -256,8 +256,7 @@
 
           let menu_list = [{
             menu_name:'首页',
-            // web_url:"gys_index"
-            web_url:"index"
+            web_url:"gys_index"
           },{
             menu_name:'供应商',
             web_url:"gys_supplier"

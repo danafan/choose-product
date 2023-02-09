@@ -241,15 +241,18 @@
       this.username = localStorage.getItem("ding_user_name");
       let path = window.location.hash.split('#/')[1];
       
-      this.active_index = this.menu_list.findIndex(item => {
-        return item.web_url == path
-      })
+      this.active_index = path == 'tab_menu'?0:this.user_type == '1'&&this.getActiveIndex(path) == -1?this.menu_list.length - 1:this.getActiveIndex(path);
       //判断是刚登录进来的直接进入首页
       if(path == 'tab_menu'){
-         this.$router.push('/index')
+       if(this.user_type == '2'){
+        this.$router.push('/gys_index')
+      }else{
+        this.$router.push('/index')
       }
-    },
-    computed: {
+
+    }
+  },
+  computed: {
       //供应商名称
       supplier_name() {
         return this.$store.state.supplier_name;
@@ -280,6 +283,12 @@
       // },
     },
     methods: {
+      //获取当前选中的下标
+      getActiveIndex(path){
+        return this.menu_list.findIndex(item => {
+          return item.web_url == path
+        })
+      },
       //全局关闭筛选项下拉
       closeFn(){
         this.$store.commit("setScreen", false);
@@ -290,7 +299,8 @@
       },
       //点击切换导航
       checkIndex(index){
-        this.$store.commit("setIndex", index);
+        // this.$store.commit("setIndex", index);
+        this.active_index = index;
         // localStorage.setItem("active_index",index);
         let active_path = this.menu_list[index].web_url;
         // if(this.active_path != active_path){

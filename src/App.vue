@@ -7,6 +7,7 @@
   import resource from './api/resource.js'
   export default {
     created() {
+      
       // this.getUserInfo();
       // return;
        
@@ -16,6 +17,10 @@
       }else {
         // this.$router.replace('/tab_menu');
       }
+      if(window.location.hash.split('#/')[1] == ''){
+        this.$router.replace('/tab_menu')
+      }
+
     },
     watch:{
       $route:function(n,o){
