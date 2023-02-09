@@ -228,7 +228,7 @@
   export default {
     data() {
       return {
-        username: "", //用户名
+        username: "",           //用户名
         edit_dialog:false,      //修改密码弹窗
         old_password:"",        //旧密码
         password:"",            //新密码
@@ -238,7 +238,11 @@
     created() {
       this.getNotice();
       this.username = localStorage.getItem("ding_user_name");
-      this.$router.push(this.active_path)
+      let path = window.location.hash.split('#/')[1];
+      //判断是刚登录进来的直接进入首页
+      if(path == 'tab_menu'){
+         this.$router.push('/index')
+      }
     },
     computed: {
       //供应商名称
@@ -285,8 +289,8 @@
         localStorage.setItem("active_index",index);
         let active_path = this.menu_list[index].web_url;
         if(this.active_path != active_path){
-          localStorage.setItem("active_path",active_path);
-          this.$store.commit("setPath", active_path);
+          // localStorage.setItem("active_path",active_path);
+          // this.$store.commit("setPath", active_path);
           this.$router.push(active_path);
         }
       },
@@ -301,8 +305,8 @@
             //获取公告列表
             this.getNotice();
             let active_path = `/notice_page?notice_id=${row.notice_id}`;
-            localStorage.setItem("active_path",active_path);
-            this.$store.commit("setPath", active_path);
+            // localStorage.setItem("active_path",active_path);
+            // this.$store.commit("setPath", active_path);
             const routeData = this.$router.resolve(active_path);
             window.open(routeData.href);
           }else{

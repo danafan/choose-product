@@ -44,8 +44,8 @@
 			},
 			goCarPage(){
 				let active_path = `/car_page`;
-				    			localStorage.setItem("active_path",active_path);
-				    			this.$store.commit("setPath", active_path);
+				// localStorage.setItem("active_path",active_path);
+				// this.$store.commit("setPath", active_path);
 				const routeData = this.$router.resolve(active_path);
 				window.open(routeData.href);
 			}

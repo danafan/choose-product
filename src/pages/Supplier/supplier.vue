@@ -114,16 +114,16 @@
 			//点击跳转商品详情
 			getDetail(style_id){
 				let active_path = `/goods_detail?style_id=${style_id}`;
-				localStorage.setItem("active_path",active_path);
-				this.$store.commit("setPath", active_path);
+				// localStorage.setItem("active_path",active_path);
+				// this.$store.commit("setPath", active_path);
 				const routeData = this.$router.resolve(active_path);
 				window.open(routeData.href);
 			},
 			//点击跳转供应商详情
 			supplierDetail(supplier_id){
 				let active_path = `/supplier_detail?supplier_id=${supplier_id}`;
-				localStorage.setItem("active_path",active_path);
-				this.$store.commit("setPath", active_path);
+				// localStorage.setItem("active_path",active_path);
+				// this.$store.commit("setPath", active_path);
 				const routeData = this.$router.resolve(active_path);
 				window.open(routeData.href);
 			}

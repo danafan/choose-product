@@ -825,8 +825,8 @@
     		getDetail(){
     			if(!this.isClick) return;
     			let active_path = `/goods_detail?style_id=${this.info.style_id}`;
-    			localStorage.setItem("active_path",active_path);
-    			this.$store.commit("setPath", active_path);
+    			// localStorage.setItem("active_path",active_path);
+    			// this.$store.commit("setPath", active_path);
     			const routeData = this.$router.resolve(active_path);
     			window.open(routeData.href);
     		},

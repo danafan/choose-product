@@ -256,7 +256,8 @@
 
           let menu_list = [{
             menu_name:'首页',
-            web_url:"gys_index"
+            // web_url:"gys_index"
+            web_url:"index"
           },{
             menu_name:'供应商',
             web_url:"gys_supplier"
@@ -268,10 +269,10 @@
           this.$store.commit("setMenuList", menu_list);
           localStorage.setItem("menu_list",JSON.stringify(menu_list))
 
-          this.$store.commit("setPath", menu_list[0].web_url);
-          localStorage.setItem("active_path",menu_list[0].web_url);
-          this.$store.commit("setIndex", 0);
-          localStorage.setItem("active_index",0);
+          // this.$store.commit("setPath", menu_list[0].web_url);
+          // localStorage.setItem("active_path",menu_list[0].web_url);
+          // this.$store.commit("setIndex", 0);
+          // localStorage.setItem("active_index",0);
 
           this.$router.replace('tab_menu');
         } else {

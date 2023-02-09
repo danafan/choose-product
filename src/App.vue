@@ -9,12 +9,12 @@
     created() {
       // this.getUserInfo();
       // return;
-
+       
       let user_type = localStorage.getItem("user_type");
       if(!localStorage.getItem("cache") && user_type != '2'){
         this.getUserInfo();
       }else {
-        this.$router.replace('/tab_menu');
+        // this.$router.replace('/tab_menu');
       }
     },
     watch:{
@@ -61,10 +61,11 @@
               this.$store.commit("setMenuList", menu_list);
               localStorage.setItem("menu_list",JSON.stringify(menu_list))
 
-              this.$store.commit("setPath", menu_list[0].web_url);
-              localStorage.setItem("active_path",menu_list[0].web_url);
-              this.$store.commit("setIndex", 0);
-              localStorage.setItem("active_index",0);
+              // this.$store.commit("setPath", menu_list[0].web_url);
+              // localStorage.setItem("active_path",menu_list[0].web_url);
+              
+              // this.$store.commit("setIndex", 0);
+              // localStorage.setItem("active_index",0);
 
               this.$router.replace('tab_menu');
             }else{
