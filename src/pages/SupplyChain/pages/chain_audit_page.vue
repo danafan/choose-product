@@ -1,7 +1,13 @@
 <template>
 	<div class="chain_page_content">
 		<el-card class="form_card">
-			<el-form :inline="true" size="mini">
+			<div class="up_down_row">
+				<div class="selected_right" @click="is_up = !is_up">
+					<div>{{is_up?'收起':'展开'}}</div>
+					<img class="down_arrow" :class="{'rotate':is_up == true}" src="../../../static/down_arrow.png">
+				</div>
+			</div>
+			<el-form :inline="true" size="mini" v-show="is_up">
 				<el-form-item label="需求类型：">
 					<el-select v-model="demand_type" clearable multiple filterable collapse-tags placeholder="全部">
 						<el-option v-for="item in demand_list" :key="item.name" :label="item.name" :value="item.name">
@@ -124,7 +130,7 @@
 				</el-table-column>
 				<el-table-column label="网盘地址">
 					<template slot-scope="scope">
-						<el-button class="pre_wrap" size="small" type="text" @click="windowOpen(scope.row.net_disk_address,scope.row.or_net_disk_address)">{{scope.row.or_net_disk_address}}</el-button>
+						<el-button class="pre_wrap" size="small" type="text" @click="windowOpen(scope.row.net_disk_address,scope.row.or_net_disk_address)">访问链接</el-button>
 					</template>
 				</el-table-column>
 				<el-table-column label="成本价" prop="cost_price"></el-table-column>
@@ -161,7 +167,7 @@
 					</template>
 				</el-table-column>
 			</el-table>
-			<PaginationWidget id="bottom_row" :total="total" :page="page" @checkPage="checkPage"/>
+			<PaginationWidget id="bottom_row" :total="total" :page="page" :pagesize="100" @checkPage="checkPage"/>
 		</el-card>
 		<!-- 详情弹窗 -->
 		<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" destroy-on-close :visible.sync="detail_dialog">
@@ -387,6 +393,26 @@
 	flex-direction: column;
 	.form_card{
 		margin-bottom: 16rem;
+		.up_down_row{
+			display: flex;
+			justify-content: flex-end;
+			align-items: center;
+			.selected_right{
+				display: flex;
+				align-items: center;
+				cursor: pointer;
+				.down_arrow{
+					margin-left: 5rem;
+					transform: rotate(-90deg);
+					width: 14rem;
+					height: 8rem;
+				}
+				.rotate{
+					transform: rotate(0deg);
+				}
+			}
+			
+		}
 		.form_item{
 			margin-bottom:0 !important;
 		}
@@ -461,6 +487,7 @@
 	export default{
 		data(){
 			return{
+				is_up:false,
 				loading:false,
 				demand_list:[],			//需求类型
 				demand_type:[],			//选中的需求类型
@@ -572,6 +599,12 @@
     		this.ajaxClassList();
     		//获取列表
     		this.getGoodsList();
+    	},
+    	watch:{
+    		is_up:function(n,o){
+    			//获取表格最大高度
+    			this.onResize();
+    		}
     	},
     	destroyed() {
     		window.removeEventListener("resize", () => {});
@@ -773,7 +806,7 @@
 					end_time:this.date && this.date.length > 0?this.date[1]:"",
 					i_id:this.i_id,
 					page:this.page,
-					pagesize:10
+					pagesize:100
 				}
 				this.loading = true;
 				resource.examineList(arg).then(res => {

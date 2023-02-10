@@ -1,13 +1,28 @@
 <template>
 	<div class="chain_page">
-		<div class="left_menu">
-			<div class="menu_item" :class="{'menu_item_active':active_index == index}" v-for="(item,index) in menu_list" @click="checkMenu(index)">
-				<img class="chain_icon" :src="item.icon_active" v-if="active_index == index">
-				<img class="chain_icon" :src="item.icon" v-else>
-				<div class="chain_text">{{item.name}}</div>
-				<div class="active_line" v-if="active_index == index"></div>
+		<el-menu class="el-menu-vertical-demo" :collapse="is_collapse">
+			<div class="collapse_row">
+				<i class="el-icon-s-unfold fold_icon" v-if="is_collapse" @click="is_collapse = !is_collapse"></i>
+				<i class="el-icon-s-fold fold_icon" v-else @click="is_collapse = !is_collapse"></i>
 			</div>
-		</div>
+			<el-menu-item :index="(index + 1).toString()" v-for="(item,index) in menu_list" @click="checkMenu(index)">
+				<div class="menu_item" :class="[{'menu_item_active':active_index == index},{'collapse_menu_item':is_collapse}]">
+					<div v-if="is_collapse">
+						<el-tooltip class="item" effect="dark" :content="item.name" placement="right">
+							<img class="collapse_chain_icon" :src="item.icon_active" v-if="active_index == index">
+							<img class="collapse_chain_icon" :src="item.icon" v-else>
+						</el-tooltip>
+					</div>
+					<div v-else>
+						<img class="chain_icon" :src="item.icon_active" v-if="active_index == index">
+						<img class="chain_icon" :src="item.icon" v-else>
+					</div>
+
+					<div class="chain_text" v-if="!is_collapse">{{item.name}}</div>
+					<div class="active_line" v-if="active_index == index && !is_collapse"></div>
+				</div>
+			</el-menu-item>
+		</el-menu>
 		<div class="right_content">
 			<div class="right_content_title">
 				<div class="page_title">{{title}}</div>
@@ -29,6 +44,7 @@
 	export default{
 		data(){
 			return{
+				is_collapse:true,	//左侧导航是否收起
 				menu_list:[],
 				active_index:0,		//当前选中的导航下标
 				title:"",			//标题
@@ -116,6 +132,11 @@
 		}
 	}
 </script>
+<style type="text/css">
+.el-menu-item{
+	padding: 0!important;
+}
+</style>
 <style lang="less" scoped>
 .chain_page{
 	position: absolute;
@@ -124,40 +145,60 @@
 	width: 100%;
 	height: 100%;
 	display: flex;
-	.left_menu{
-		box-shadow: 2px 0px 4px 0px rgba(232,232,232,0.5);
-		border: 1px solid #F1F1F1;
-		background: #ffffff;
+	.collapse_row{
+		height: 30px;
+		padding-right: 5px;
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		.fold_icon{
+			font-size:20px;
+			cursor: pointer;
+		}
+	}
+	.menu_item{
 		width: 208rem;
-		height: 100%;
+		height: 56px;
+		display: flex;
+		align-items: center;
+		font-size: 16rem;
+		color: #333333;
+		position: relative;
+		cursor:pointer;
 		padding-left: 16rem;
-		.menu_item{
-			margin-bottom: 8rem;
-			height: 40rem;
-			display: flex;
-			align-items: center;
-			font-size: 14rem;
-			color: #333333;
-			position: relative;
-			cursor:pointer;
-			.chain_icon{
-				margin-right: 5rem;
-				width: 14rem;
-				height: 14rem;
-			}
-			.active_line{
-				position: absolute;
-				top: 0;
-				right: 0;
-				background: var(--color);
-				width: 2rem;
-				height: 40rem;
-			}
+		.chain_icon{
+			margin-right: 8rem;
+			width: 16rem;
+			height: 16rem;
 		}
-		.menu_item_active{
-			background: #FFFAF5;
-			color: var(--color);
+		.active_line{
+			position: absolute;
+			top: 0;
+			right: 0;
+			background: var(--color);
+			width: 2rem;
+			height: 56px;
 		}
+	}
+	.chain_text{
+		position: relative;
+		top: 2rem;
+	}
+	.collapse_menu_item{
+		width: 64px;
+		height: 56px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		padding-left: 0;
+		.collapse_chain_icon{
+			width: 24px;
+			height: 24px;
+		}
+	}
+	.menu_item_active{
+		background: #FFFAF5;
+		color: var(--color);
 	}
 	.right_content{
 		flex:1;

@@ -28,15 +28,17 @@
 		</div>
 		<div class="desc">{{info.title}}</div>
 		<div class="code_time">
-			<el-tooltip class="item" effect="dark" :content="info.sstyle_name +  `（普通：${info.i_id} BD：${info.bd_i_id}）`" placement="top-start">
+			<el-tooltip class="item" effect="dark" placement="top-start">
 				<div slot="content">
 					{{info.sstyle_name}}
-					<br/>
-					{{`普通：${info.i_id}`}}
-					<br/>
-					{{`BD：${info.bd_i_id}`}}
+					<div v-if="info.i_id != ''">{{`普通：${info.i_id}`}}</div>
+					<div v-if="info.bd_i_id != ''">{{`BD：${info.bd_i_id}`}}</div>
 				</div>
-				<div class="code">{{info.sstyle_name}}{{`(普通:${info.i_id};BD:${info.bd_i_id})`}}</div>
+				<div class="code">
+					<div>{{info.sstyle_name}}</div>
+					<div>{{info.i_id != ''?`普通:${info.i_id}`:""}}</div>
+					<div>{{info.bd_i_id != ''?`BD:${info.bd_i_id}`:""}}</div>
+				</div>
 			</el-tooltip>
 			<div class="time">{{info.new_time_name}}</div>
 		</div>
@@ -209,11 +211,11 @@
 /*.el-carousel__container{
 	width: 240rem !important;
 	height: 240rem !important; 
-}*/
-.popover_image{
-	height: 400px!important;
-	width: 400px!important;
-}
+	}*/
+	.popover_image{
+		height: 400px!important;
+		width: 400px!important;
+	}
 </style>
 <style lang="less" scoped>
 
@@ -297,6 +299,7 @@
 			font-size:12rem;
 			color: #999999;
 			.code{
+				display: flex;
 				flex:1;
 				word-break: break-all;
 				text-overflow: ellipsis;

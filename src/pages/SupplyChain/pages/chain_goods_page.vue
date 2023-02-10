@@ -1,7 +1,13 @@
 <template>
 	<div class="chain_page_content" v-loading.fullscreen.lock="fullscreenLoading">
 		<el-card class="form_card">
-			<el-form :inline="true" size="mini">
+			<div class="up_down_row">
+				<div class="selected_right" @click="is_up = !is_up">
+					<div>{{is_up?'收起':'展开'}}</div>
+					<img class="down_arrow" :class="{'rotate':is_up == true}" src="../../../static/down_arrow.png">
+				</div>
+			</div>
+			<el-form :inline="true" size="mini" v-show="is_up">
 				<el-form-item label="供应商：">
 					<el-select v-model="supplier_ids" clearable multiple filterable collapse-tags placeholder="全部">
 						<el-option v-for="item in supplier_list" :key="item.supplier_id" :label="item.supplier_name" :value="item.supplier_id">
@@ -103,7 +109,7 @@
 				</el-table-column>
 				<el-table-column label="网盘地址">
 					<template slot-scope="scope">
-						<el-button class="pre_wrap" size="small" type="text" @click="windowOpen(scope.row.net_disk_address,scope.row.or_net_disk_address)">{{scope.row.or_net_disk_address}}</el-button>
+						<el-button class="pre_wrap" size="small" type="text" @click="windowOpen(scope.row.net_disk_address,scope.row.or_net_disk_address)">访问链接</el-button>
 					</template>
 				</el-table-column>
 				<el-table-column label="成本价" prop="cost_price"></el-table-column>
@@ -218,6 +224,26 @@
 	flex-direction: column;
 	.form_card{
 		margin-bottom: 16rem;
+		.up_down_row{
+			display: flex;
+			justify-content: flex-end;
+			align-items: center;
+			.selected_right{
+				display: flex;
+				align-items: center;
+				cursor: pointer;
+				.down_arrow{
+					margin-left: 5rem;
+					transform: rotate(-90deg);
+					width: 14rem;
+					height: 8rem;
+				}
+				.rotate{
+					transform: rotate(0deg);
+				}
+			}
+			
+		}
 		.form_item{
 			margin-bottom:0 !important;
 		}
@@ -270,6 +296,7 @@
 	export default{
 		data(){
 			return{
+				is_up:false,
 				loading:false,
 				supplier_list:[],		//供应商列表
 				supplier_ids:[],		//选中的供应商
@@ -402,7 +429,11 @@
 			search:function(){
 				//获取表格最大高度
 				this.onResize();
-			}
+			},
+			is_up:function(n,o){
+    			//获取表格最大高度
+    			this.onResize();
+    		}
 		},
 		methods: {
     		//监听屏幕大小变化
