@@ -1,13 +1,14 @@
 <template>
 	<div class="chain_page_content" v-loading.fullscreen.lock="fullscreenLoading">
 		<el-card class="form_card">
-			<div class="up_down_row">
+			<div class="up_down_row" :class="{'between':!is_up}">
+				<div class="search_title" v-if="!is_up">查询条件</div>
 				<div class="selected_right" @click="is_up = !is_up">
 					<div>{{is_up?'收起':'展开'}}</div>
 					<img class="down_arrow" :class="{'rotate':is_up == true}" src="../../../static/down_arrow.png">
 				</div>
 			</div>
-			<el-form :inline="true" size="mini" v-show="is_up">
+			<el-form style="margin-top: 10px;" :inline="true" size="mini" v-show="is_up">
 				<el-form-item label="供应商：">
 					<el-select v-model="supplier_ids" clearable multiple filterable collapse-tags placeholder="全部">
 						<el-option v-for="item in supplier_list" :key="item.supplier_id" :label="item.supplier_name" :value="item.supplier_id">
@@ -55,7 +56,7 @@
 					</el-date-picker>
 				</el-form-item>
 				<el-form-item>
-					<el-input type="textarea" autosize placeholder="款号/款式编码" v-model="search">
+					<el-input placeholder="款号/款式编码" v-model="search">
 					</el-input>
 				</el-form-item>
 				<el-form-item class="form_item">
@@ -228,6 +229,10 @@
 			display: flex;
 			justify-content: flex-end;
 			align-items: center;
+			.search_title{
+				font-size: 14px;
+				font-weight: bold;
+			}
 			.selected_right{
 				display: flex;
 				align-items: center;
@@ -243,6 +248,9 @@
 				}
 			}
 			
+		}
+		.between{
+			justify-content:space-between;
 		}
 		.form_item{
 			margin-bottom:0 !important;

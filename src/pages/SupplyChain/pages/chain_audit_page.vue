@@ -1,13 +1,14 @@
 <template>
 	<div class="chain_page_content">
 		<el-card class="form_card">
-			<div class="up_down_row">
+			<div class="up_down_row" :class="{'between':!is_up}">
+				<div class="search_title" v-if="!is_up">查询条件</div>
 				<div class="selected_right" @click="is_up = !is_up">
 					<div>{{is_up?'收起':'展开'}}</div>
 					<img class="down_arrow" :class="{'rotate':is_up == true}" src="../../../static/down_arrow.png">
 				</div>
 			</div>
-			<el-form :inline="true" size="mini" v-show="is_up">
+			<el-form style="margin-top: 10px;" :inline="true" size="mini" v-show="is_up">
 				<el-form-item label="需求类型：">
 					<el-select v-model="demand_type" clearable multiple filterable collapse-tags placeholder="全部">
 						<el-option v-for="item in demand_list" :key="item.name" :label="item.name" :value="item.name">
@@ -397,6 +398,10 @@
 			display: flex;
 			justify-content: flex-end;
 			align-items: center;
+			.search_title{
+				font-size: 14px;
+				font-weight: bold;
+			}
 			.selected_right{
 				display: flex;
 				align-items: center;
@@ -412,6 +417,9 @@
 				}
 			}
 			
+		}
+		.between{
+			justify-content:space-between;
 		}
 		.form_item{
 			margin-bottom:0 !important;
