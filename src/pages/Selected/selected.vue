@@ -20,6 +20,9 @@
 						<el-form-item class="form_item">
 							<el-button type="primary" @click="checkPage(1)">查询</el-button>
 						</el-form-item>
+						<el-form-item class="form_item">
+							<el-checkbox :true-label="1" :false-label="0" v-model="only_self" @change="checkPage(1)">只看自己</el-checkbox>
+						</el-form-item>
 					</el-form>
 				</div>
 				<el-table size="mini" :data="data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" v-loading="loading">
@@ -238,6 +241,7 @@
 				}],							//tab列表
 				active_index:0,				//当前选中的tab下标
 				search:"",					//搜索框的内容
+				only_self:0,
 				page:1,
 				data:[],
 				total:0,
@@ -311,6 +315,7 @@
 					status:this.tab_list[this.active_index].id,
 					search:this.search,
 					shop_code:this.shop_code,
+					only_self:this.only_self,
 					page:this.page
 				}
 				this.loading = true;

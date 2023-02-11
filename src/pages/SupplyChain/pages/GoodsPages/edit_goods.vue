@@ -46,6 +46,20 @@
 					<el-form-item label="修改后价格：" v-if="price_status != 0 && !!edit_price">
 						{{edit_price}}
 					</el-form-item>
+					<el-form-item label="网盘地址：">
+						<el-input :placeholder="is_detail?'':'网盘地址'" v-model="arg.net_disk_address" :disabled="is_detail">
+						</el-input>
+					</el-form-item>
+					<el-form-item label="备注：">
+						<el-input type="textarea" :rows="5" :placeholder="is_detail?'':'请输入备注'" v-model="arg.remark" :disabled="is_detail">
+						</el-input>
+					</el-form-item>
+					<el-form-item label="下架原因：" v-if="check_status == 4">
+						<div>{{off_reason}}</div>
+					</el-form-item>
+					<el-form-item label="拒绝原因：" v-if="check_status == 3 || check_status == 6 || price_status == 3">
+						<div>{{refuse_reason}}</div>
+					</el-form-item>
 				</el-form>
 				<el-form size="small" style="flex:1" label-width="100px">
 					<el-form-item label="商品款号：" required>
@@ -83,19 +97,55 @@
 					<el-form-item label="审核状态：" v-if="is_detail">
 						{{check_status | checkStatus}}
 					</el-form-item>
-				</el-form>
-			</div>
-			<div class="form_row margin_bottom">
-				<el-checkbox v-model="arg.hot_style" :true-label="1" :false-label="0" :disabled="is_detail">爆款</el-checkbox>
-				<el-checkbox v-model="arg.sole_style" :true-label="1" :false-label="0" :disabled="is_detail">独家款</el-checkbox>
-				<el-checkbox v-model="arg.data_style" :true-label="1" :false-label="0" :disabled="is_detail">主推款</el-checkbox>
-				<el-checkbox v-model="arg.again_style" :true-label="1" :false-label="0" :disabled="is_detail">二开款</el-checkbox>
-			</div>
-			<div class="form_row">
-				<el-form size="small" label-width="100px">
-					<el-form-item label="网盘地址：">
-						<el-input :placeholder="is_detail?'':'网盘地址'" v-model="arg.net_disk_address" :disabled="is_detail">
+					<el-form-item label="爆款：">
+						<el-radio-group v-model="arg.hot_style" :disabled="is_detail">
+							<el-radio :label="1">是</el-radio>
+							<el-radio :label="0">否</el-radio>
+						</el-radio-group>
+					</el-form-item>
+					<el-form-item label="爆款链接：" v-if="arg.hot_style">
+						<el-tag size="small" :key="url" v-for="url in link_urls" :closable="!is_detail" :disable-transitions="false" @close="handleClose(url)">
+							{{url}}
+						</el-tag>
+						<el-input class="input-new-tag" v-if="inputVisible" v-model="inputValue" ref="saveTagInput" size="small" @keyup.enter.native="handleInputConfirm" @blur="handleInputConfirm">
 						</el-input>
+						<el-button size="mini" v-if="!inputVisible && !is_detail" type="primary" icon="el-icon-plus" @click="showInput">新增</el-button>
+					</el-form-item>
+					<el-form-item label="爆款图片：" v-if="arg.hot_style">
+						<div v-if="is_detail">
+							<el-image class="bk_card_img" v-for="item in preview_bk_image" :src="item" fit="scale-down" :preview-src-list="preview_bk_image"></el-image>
+						</div>
+						<UploadFile :img_list="bk_img_list" :is_multiple="true" :current_num="bk_img.length" :size="80" :max_num="9" @callbackFn="bkCallbackFn" v-else/>
+					</el-form-item>
+					<el-form-item label="主推款：">
+						<el-radio-group v-model="arg.data_style" :disabled="is_detail">
+							<el-radio :label="1">是</el-radio>
+							<el-radio :label="0">否</el-radio>
+						</el-radio-group>
+					</el-form-item>
+					<el-form-item label="库存数：" v-if="arg.data_style">
+						<el-input type="number" v-model="kcs" :disabled="is_detail">
+						</el-input>
+					</el-form-item>
+					<el-form-item label="调价：" v-if="arg.data_style">
+						<el-input type="number" v-model="tj" :disabled="is_detail">
+						</el-input>
+					</el-form-item>
+					<el-form-item label="备注：" v-if="arg.data_style">
+						<el-input type="textarea" :rows="3" :placeholder="is_detail?'':'请输入备注'" v-model="bz" :disabled="is_detail">
+						</el-input>
+					</el-form-item>
+					<el-form-item label="独家款：">
+						<el-radio-group v-model="arg.sole_style" :disabled="is_detail">
+							<el-radio :label="1">是</el-radio>
+							<el-radio :label="0">否</el-radio>
+						</el-radio-group>
+					</el-form-item>
+					<el-form-item label="二开款：">
+						<el-radio-group v-model="arg.again_style" :disabled="is_detail">
+							<el-radio :label="1">是</el-radio>
+							<el-radio :label="0">否</el-radio>
+						</el-radio-group>
 					</el-form-item>
 				</el-form>
 			</div>
@@ -106,16 +156,6 @@
 							<el-image class="card_img" v-for="item in preview_image" :src="item" fit="scale-down" :preview-src-list="preview_image"></el-image>
 						</div>
 						<UploadFile :img_list="img_list" :is_multiple="true" :current_num="arg.img.length" :max_num="99" @callbackFn="callbackFn" v-else/>
-					</el-form-item>
-					<el-form-item label="备注：">
-						<el-input type="textarea" :rows="5" :placeholder="is_detail?'':'请输入备注'" v-model="arg.remark" :disabled="is_detail">
-						</el-input>
-					</el-form-item>
-					<el-form-item label="下架原因：" v-if="check_status == 4">
-						<div>{{off_reason}}</div>
-					</el-form-item>
-					<el-form-item label="拒绝原因：" v-if="check_status == 3 || check_status == 6 || price_status == 3">
-						<div>{{refuse_reason}}</div>
 					</el-form-item>
 				</el-form>
 			</div>
@@ -146,6 +186,7 @@
 				style_list:[],			//拍摄风格列表
 				class_list:[],			//分类列表
 				preview_image:[],		//查看详情的图片列表
+				preview_bk_image:[],	//查看详情的爆款图片列表
 				img_list:[],			
 				style_id:"",			//商品ID
 				add_admin_name:"",		//提交人
@@ -175,8 +216,17 @@
 					net_disk_address:"",	//网盘地址
 					img:[],					//图片列表
 					remark:"",				//备注
-				},									//可传递的参数
+				},							//可传递的参数
 				shooting_style_ids:[],		//已选中的拍摄风格
+				link_urls: [],				//已填写的爆款链接列表
+				inputVisible: false,		//是否显示新建链接的输入框
+				inputValue: '',				//新建链接的输入框内容
+				bk_img_list:[],				//选中的爆款图片列表(可查看)
+				bk_img:[],					//选中的爆款图片列表（可传递）
+				kcs:"",						//库存数
+				tj:"",						//调价
+				bz:"",						//备注
+
 			}
 		},
 		created(){
@@ -309,6 +359,21 @@
 				this.refuse_reason = data_info.refuse_reason;
 				this.price_status = data_info.price_status;
 				this.edit_price = data_info.edit_price;
+
+				this.link_urls = data_info.hot_url;
+				data_info.hot_img.map(item => {
+					let img_obj = {
+						urls:item,
+						show_icon:false
+					}
+					this.bk_img_list.push(img_obj);
+					this.preview_bk_image.push(this.domain + item);
+				})
+				this.bk_img = data_info.hot_img;
+				this.kcs = data_info.data_num;
+				this.tj = data_info.data_price;
+				this.bz = data_info.data_remark;
+
 				if(data_info.shooting_style_id != ''){
 					let shooting_style_ids = data_info.shooting_style_id.split(',');
 					this.shooting_style_ids = shooting_style_ids.map(item => {
@@ -397,6 +462,29 @@
 			callbackFn(img_arr) {
 				this.arg.img = img_arr;
 			},
+			//删除当前选中的爆款链接
+			handleClose(url) {
+				this.link_urls.splice(this.link_urls.indexOf(url), 1);
+			},
+			//监听爆款图片列表回调
+			bkCallbackFn(img_arr){
+				this.bk_img = img_arr;
+			},
+			//点击新增爆款链接
+			showInput() {
+				this.inputVisible = true;
+				this.$nextTick(_ => {
+					this.$refs.saveTagInput.$refs.input.focus();
+				});
+			},
+			handleInputConfirm() {
+				let inputValue = this.inputValue;
+				if (inputValue) {
+					this.link_urls.push(inputValue);
+				}
+				this.inputVisible = false;
+				this.inputValue = '';
+			},
 			//底部提交
 			commitEditGoods(){
 				if(!this.arg.style_name){
@@ -416,6 +504,13 @@
 						arg.bd_i_id = arg.bd_i_id.replaceAll(";", ",");
 					}
 					arg.shooting_style_id = this.shooting_style_ids.join(',');
+
+					arg.hot_url = this.link_urls.join(',');
+					arg.hot_img = this.bk_img.join(',');
+					arg.data_num = this.kcs;
+					arg.data_price = this.tj;
+					arg.data_remark = this.bz;
+
 
 					this.$confirm(`确认${this.goods_type == '1'?'添加':'编辑'}此商品吗?`, '提示', {
 						confirmButtonText: '确定',
@@ -572,6 +667,21 @@
 		}
 	}
 </script>
+<style>
+.el-tag {
+	margin-right: 10px;
+	margin-bottom: 10px;
+}
+.button-new-tag {
+    /*height: 32px;
+    line-height: 30px;
+    padding-top: 0;
+    padding-bottom: 0;*/
+}
+.input-new-tag {
+	/*width: 90px;*/
+}
+</style>
 <style lang="less" scoped>
 .chain_page_content{
 	position: absolute;
@@ -599,6 +709,13 @@
 				width: 160rem;
 				height: 160rem;
 			}
+		}
+		.bk_card_img{
+			margin-right: 16px;
+			margin-bottom: 16px;
+			border-radius: 2rem;
+			width: 80px;
+			height: 80px;
 		}
 		.margin_bottom{
 			margin-bottom: 20px;

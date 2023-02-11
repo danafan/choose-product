@@ -1,13 +1,13 @@
 <template>
 	<div class="image_list">
-		<div class="view_card_img" @mouseenter="item.show_icon = true" @mouseleave="item.show_icon = false" v-for="(item,index) in preview_images" :key="index">
+		<div class="view_card_img" :style="{width:`${size}px`,height:`${size}px`,marginRight:`${size/5}px`,marginBottom:`${size/5}px`}" @mouseenter="item.show_icon = true" @mouseleave="item.show_icon = false" v-for="(item,index) in preview_images" :key="index">
 			<el-image class="card_img" :src="domain + item.urls" fit="scale-down"></el-image>
 			<div class="delete_img" v-if="item.show_icon == true">
-				<img class="delete_icon" src="../static/delete_icon.png" @click="deleteFile(item.urls,index)">
+				<img :style="{width:`${size/4}px`,height:`${size/4}px`}" src="../static/delete_icon.png" @click="deleteFile(item.urls,index)">
 			</div>
 		</div>
-		<div class="upload_container" v-if="preview_images.length < max_num">
-			<img class="upload_icon" src="../static/upload_icon.png">
+		<div class="upload_container" :style="{width:`${size}px`,height:`${size}px`}" v-if="preview_images.length < max_num">
+			<img :style="{width:`${size/4}px`,height:`${size/4}px`}" src="../static/upload_icon.png">
 			<div class="upload_text">点击上传</div>
 			<input type="file" ref="imgUpload" class="upload_file" accept="image/*" :multiple="is_multiple" @change="uploadFn">
 		</div>
@@ -15,15 +15,12 @@
 </template>
 <style lang="less" scoped>
 .image_list {
+	flex:1;
 	display: flex;
 	flex-wrap: wrap;
 	.view_card_img {
-		margin-right: 40rem;
-		margin-bottom: 20rem;
 		border-radius: 2rem;
 		position: relative;
-		width: 160rem;
-		height: 160rem;
 		.card_img,
 		.delete_img {
 			border-radius: 2rem;
@@ -36,16 +33,10 @@
 			display: flex;
 			align-items: center;
 			justify-content: center;
-			.delete_icon {
-				width: 40rem;
-				height: 40rem;
-			}
 		}
 	}
 	.upload_container{
 		border:1px solid #D9D9D9;
-		width: 160rem;
-		height: 160rem;
 		border-radius: 2rem;
 		position: relative;
 		display: flex;
@@ -53,13 +44,8 @@
 		justify-content:center;
 		align-items:center;
 		color: #666666;
-		.upload_icon{
-			width: 40rem;
-			height: 40rem;
-		}
 		.upload_text{
-			margin-top: 16rem;
-			font-size: 14rem;
+			font-size: 12px;
 		}
 		.upload_file {
 			position: absolute;
@@ -107,6 +93,11 @@
 			max_num:{
 				type:Number,
 				default:1
+			},
+			//尺寸
+			size:{
+				type:Number,
+				default:120
 			}
 		},
 		created(){

@@ -56,7 +56,7 @@
 					</el-date-picker>
 				</el-form-item>
 				<el-form-item>
-					<el-input placeholder="款号/款式编码" v-model="search">
+					<el-input type="textarea" :autosize="{ minRows: 1, maxRows: 4}" placeholder="款号/款式编码" v-model="search">
 					</el-input>
 				</el-form-item>
 				<el-form-item class="form_item">
@@ -149,15 +149,15 @@
 					<template slot-scope="scope">
 						<el-button size="small" type="text" @click="adjustAudit(scope.row.style_id)" v-if="scope.row.price_status == '1' && button_list.price_btn == 1">调价审批</el-button>
 						<el-button type="text" size="small" v-if="(scope.row.check_status == 1 || scope.row.check_status == 4) && button_list.agree_refuse == 1" @click="$router.push('/edit_goods?page_type=goods&goods_type=4&style_id=' + scope.row.style_id)">审核</el-button>
-						<el-button style="margin-right: 10px" type="text" size="small" v-if="scope.row.check_status == 2 || scope.row.check_status == 6" @click="$router.push('/image_setting?style_id=' + scope.row.style_id + '&style_name=' + scope.row.style_name)">图片管理</el-button>
-						<el-dropdown size="small" @command="handleCommand($event,scope.row.style_id)" v-if="scope.row.check_status == 2 || scope.row.check_status == 6 && (button_list.info == 1 || button_list.edit == 1 || button_list.del == 1)">
+						<el-button style="margin-right: 10px" type="text" size="small" v-if="scope.row.check_status != 1 && scope.row.check_status != 3 && scope.row.check_status != 4 && scope.row.check_status != 5 && button_list.edit == 1" @click="$router.push('/edit_goods?page_type=goods&goods_type=2&style_id=' + scope.row.style_id);">编辑</el-button>
+						<el-dropdown size="small" @command="handleCommand($event,scope.row.style_id,scope.row.style_id,scope.row.style_name)" v-if="scope.row.check_status != 1 && scope.row.check_status != 4 && (button_list.info == 1 || button_list.del == 1)">
 							<el-button type="text" size="small">
 								更多<i class="el-icon-arrow-down el-icon--right"></i>
 							</el-button>
 							<el-dropdown-menu slot="dropdown">
 								<el-dropdown-item command="1" v-if="button_list.info == 1">查看</el-dropdown-item>
-								<el-dropdown-item command="2" v-if="button_list.edit == 1">编辑</el-dropdown-item>
-								<el-dropdown-item command="3" v-if="button_list.del == 1">删除</el-dropdown-item>
+								<el-dropdown-item command="2" v-if="scope.row.check_status == 2 || scope.row.check_status == 6">图片管理</el-dropdown-item>
+								<el-dropdown-item command="3" v-if="(scope.row.check_status == 3 || scope.row.check_status == 5) && button_list.del == 1">删除</el-dropdown-item>
 							</el-dropdown-menu>
 						</el-dropdown>
 						<el-button type="text" size="small" v-if="(scope.row.check_status == 2 || scope.row.check_status == 5 || scope.row.check_status == 6) && button_list.in_out == 1" @click="checkStatus(scope.row.style_id,scope.row.check_status)">{{scope.row.check_status == 2 || scope.row.check_status == 6?'下架':'上架'}}</el-button>
@@ -841,11 +841,11 @@
 				})
 			},
 			//监听更多操作按钮
-			handleCommand(e,id){
+			handleCommand(e,id,name){
 				if(e == '1'){	//查看
 					this.$router.push('/edit_goods?page_type=goods&goods_type=3&style_id=' + id);
-				}else if(e == '2'){	//编辑
-					this.$router.push('/edit_goods?page_type=goods&goods_type=2&style_id=' + id);
+				}else if(e == '2'){	//图片管理
+					this.$router.push('/image_setting?style_id=' + id + '&style_name=' + name)
 				}else if(e == '3'){	//删除
 					this.$confirm(`确认删除?`, '提示', {
 						confirmButtonText: '确定',
