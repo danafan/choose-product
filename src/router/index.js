@@ -19,6 +19,7 @@ const supply_chain = (resolve) => require(["@/pages/SupplyChain/supply_chain"], 
 const chain_message_page = (resolve) => require(["@/pages/SupplyChain/pages/chain_message_page"], resolve);
 const chain_goods_page = (resolve) => require(["@/pages/SupplyChain/pages/chain_goods_page"], resolve);
 const chain_audit_page = (resolve) => require(["@/pages/SupplyChain/pages/chain_audit_page"], resolve);
+const b_z_promotion_page = (resolve) => require(["@/pages/SupplyChain/pages/b_z_promotion_page"], resolve);
 const edit_goods = (resolve) => require(["@/pages/SupplyChain/pages/GoodsPages/edit_goods"], resolve);
 const image_setting = (resolve) => require(["@/pages/SupplyChain/pages/GoodsPages/image_setting"], resolve);
 const chain_supplier_page = (resolve) => require(["@/pages/SupplyChain/pages/chain_supplier_page"], resolve);
@@ -132,6 +133,11 @@ const router = new Router({
     path: "/chain_audit_page",
     name: "商品审核",
     component: chain_audit_page
+  },
+  {
+    path: "/b_z_promotion_page",
+    name: "爆/主推款审",
+    component: b_z_promotion_page
   },
   {
     path: "/edit_goods",

@@ -86,6 +86,7 @@ let path = {
   styleImgChangeMain:'api/productstyle/styleimgchangemain',   //设为主图
   examineEditIid:'api/selected/examineeditiid',           //编辑款式编码
   editGoodsIid:'api/productstyle/editgoodsiid',           //批量编辑款式编码
+  hotDataList:'api/productstyle/hotdatalist',             //爆款主推款审核列表
 };  
 export default {
   //类目列表接口
@@ -467,5 +468,9 @@ export default {
   //批量编辑款式编码
   editGoodsIid(params) {
     return http.post(path.editGoodsIid, params);
+  },
+  //爆款主推款审核列表
+  hotDataList(params) {
+    return http.get(path.hotDataList, params);
   },
 };
