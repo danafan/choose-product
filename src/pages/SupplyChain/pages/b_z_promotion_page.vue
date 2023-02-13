@@ -4,9 +4,7 @@
 			<el-form :inline="true" size="mini">
 				<el-form-item label="审核状态：">
 					<el-select v-model="status" clearable placeholder="全部">
-						<el-option label="待审核" :value="0"></el-option>
-						<el-option label="审核通过" :value="1"></el-option>
-						<el-option label="审核拒绝" :value="2"></el-option>
+						<el-option :label="item.name" :value="item.id" v-for="item in status_list"></el-option>
 					</el-select>
 				</el-form-item>
 				<el-form-item label="类型：">
@@ -59,16 +57,44 @@
 				<el-table-column label="库存" prop="data_num"></el-table-column>
 				<el-table-column label="调价" prop="data_price"></el-table-column>
 				<el-table-column label="主推款备注" prop="remark"></el-table-column>
-				<el-table-column label="当前状态" prop="status"></el-table-column>
+				<el-table-column label="当前状态" prop="status">
+					<template slot-scope="scope">
+						{{scope.row.status | status(status_list)}}
+					</template>
+				</el-table-column>
 				<el-table-column label="审核备注" prop="status_remark"></el-table-column>
 				<el-table-column label="操作" width="80" fixed="right">
 					<template slot-scope="scope">
-						<el-button type="text" size="small">审核</el-button>
+						<el-button type="text" size="small" @click="auditFn(scope.row.id)">审核</el-button>
 					</template>
 				</el-table-column>
 			</el-table>
 			<PaginationWidget id="bottom_row" :total="data.total" :page="page" :pagesize="20" @checkPage="checkPage"/>
 		</el-card>
+		<!-- 审核详情 -->
+		<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" destroy-on-close :visible.sync="audit_dialog" width="45%">
+			<div slot="title" class="dialog_title">
+				<div>审核详情</div>
+				<img class="close_icon" src="../../../static/close_icon.png" @click="audit_dialog = false">
+			</div>
+			<div>
+				<el-form size="mini">
+					<el-form-item label="款式：">
+						{{info_data.type == 1?'爆款':'主推款'}}
+					</el-form-item>
+					<el-form-item label="图片：">
+						<el-image class="card_img" :z-index="2006" v-for="item in info_data.preview_image" :src="item" fit="scale-down" :preview-src-list="info_data.preview_image"></el-image>
+					</el-form-item>
+					<el-form-item label="链接：">
+						萨达阿里斯顿
+					</el-form-item>
+				</el-form>
+			</div>
+			<div slot="footer" class="dialog_footer">
+				<el-button size="mini" @click="audit_dialog = false">取消</el-button>
+				<el-button size="mini" type="primary" @click="confirmAudit">提交</el-button>
+			</div>
+		</el-dialog>
 	</div>
 </template>
 <style lang="less" scoped>
@@ -90,24 +116,10 @@
 	.card_box{
 		flex:1;
 	}
-	.down_box{
-		display:flex;
-		padding:30rem;
-		.upload_box{
-			margin-left: 10px;
-			position: relative;
-			.upload_file{
-				position: absolute;
-				top: 0;
-				bottom: 0;
-				left: 0;
-				right: 0;
-				width: 100%;
-				height: 100%;
-				opacity: 0;
-			}
+	.card_img{
+			width: 120rem;
+			height: 120rem;
 		}
-	}
 }
 </style>
 <script>
@@ -119,6 +131,16 @@
 		data(){
 			return{
 				loading:false,
+				status_list:[{
+					id:0,
+					name:'待审核'
+				},{
+					id:1,
+					name:'审核通过'
+				},{
+					id:2,
+					name:'审核拒绝'
+				}],
 				status:"",					//审核状态
 				type:"",					//类型
 				search:"",					//搜索内容
@@ -126,6 +148,8 @@
 				page:1,
 				table_data:[],				//数据列表
 				data:{},					//获取的数据
+				audit_dialog:false,			//审核弹窗
+				info_data:{},				//审核详情
 			}
 		},
 		created(){
@@ -177,30 +201,30 @@
     					let data = res.data.data;
     					let table_data = data.data;
     					table_data.map(item => {
-							let images = [];
-							item.img.map(i => {
-								images.push(this.domain + i);
-							})
-							item.images = images;
+    						let images = [];
+    						item.img.map(i => {
+    							images.push(this.domain + i);
+    						})
+    						item.images = images;
 
-							let hot_images = [];
-							item.hot_img.map(i => {
-								hot_images.push(this.domain + i);
-							})
-							item.hot_images = hot_images;
+    						let hot_images = [];
+    						item.hot_img.map(i => {
+    							hot_images.push(this.domain + i);
+    						})
+    						item.hot_images = hot_images;
 
-							let new_hot_url = [];
-							item.hot_url.map((i,index) => {
-								let new_obj = {
-									name:`链接${index + 1}`,
-									url:i
-								}
-								new_hot_url.push(new_obj);
-							})
-							item.new_hot_url = new_hot_url;
-							
-						})
-						this.table_data = table_data;
+    						let new_hot_url = [];
+    						item.hot_url.map((i,index) => {
+    							let new_obj = {
+    								name:`链接${index + 1}`,
+    								url:i
+    							}
+    							new_hot_url.push(new_obj);
+    						})
+    						item.new_hot_url = new_hot_url;
+
+    					})
+    					this.table_data = table_data;
 
     					this.button_list =  res.data.data.button_list;
     				}else{
@@ -217,8 +241,35 @@
 			//点击链接
 			openWindow(url){
 				window.open(url)
-			}
+			},
+			//点击审核
+			auditFn(id){
+				resource.hotDataInfo({id:id}).then(res => {
+					if(res.data.code == 1){
+						this.info_data = res.data.data;
+						let preview_image = [];
+						this.info_data.hot_img.map(item => {
+							preview_image.push(this.domain + item)
+						})
+						this.info_data['preview_image'] = preview_image;
+						this.audit_dialog = true;
+					}else{
+						this.$message.warning(res.data.msg);
+					}
+				})
+			},
+			//提价审核
+			confirmAudit(){
 
+			}
+		},
+		filters:{
+			status(v,status_list){
+				let arr = status_list.filter(item => {
+					return item.id == v;
+				})
+				return arr.length > 0?arr[0].name:"-";
+			}
 		},
 		components:{
 			TableTitle,

@@ -87,6 +87,7 @@ let path = {
   examineEditIid:'api/selected/examineeditiid',           //编辑款式编码
   editGoodsIid:'api/productstyle/editgoodsiid',           //批量编辑款式编码
   hotDataList:'api/productstyle/hotdatalist',             //爆款主推款审核列表
+  hotDataInfo:'api/productstyle/hotdatainfo',             //获取爆款详情
 };  
 export default {
   //类目列表接口
@@ -472,5 +473,9 @@ export default {
   //爆款主推款审核列表
   hotDataList(params) {
     return http.get(path.hotDataList, params);
+  },
+  //爆款主推款审核详情
+  hotDataInfo(params) {
+    return http.get(path.hotDataInfo, params);
   },
 };
