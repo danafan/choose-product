@@ -26,6 +26,7 @@ let path = {
   supplierInfo:'api/supplier/info',                       //供应商基本信息
   supplierGoods:'api/supplier/goods',                     //供应商商品列表
   hotDataIndex:'api/productstyle/hotdataindex',           //爆款主推款列表
+  pushHostData:'api/productstyle/pushhostdata',           //推爆款
 } 
 export default {
   //页面顶部公告列表
@@ -131,5 +132,9 @@ export default {
   //爆款主推款列表
   hotDataIndex(params) {
     return http.get(path.hotDataIndex, params);
+  },
+  //推爆款
+  pushHostData(params) {
+    return http.post(path.pushHostData, params);
   },
 };

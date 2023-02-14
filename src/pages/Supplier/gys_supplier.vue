@@ -2,7 +2,7 @@
 	<div class="padding_page ddd">
 		<div class="supplier_detail_container">
 			<div class="padding_page_content">
-				<SearchWidget page_path="supplier_detai" @callback="searchFn" placeholder="供应商详情搜索"/>
+				<SearchWidget page_path="supplier_detai" @callback="searchFn" placeholder="搜索款号"/>
 				<el-card class="card_box" id="card_box">
 					<div class="top_content" id="top_content">
 						<div class="info_row">
