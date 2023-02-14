@@ -113,7 +113,12 @@
 						<el-button class="pre_wrap" size="small" type="text" @click="windowOpen(scope.row.net_disk_address,scope.row.or_net_disk_address)">访问链接</el-button>
 					</template>
 				</el-table-column>
-				<el-table-column label="成本价" prop="cost_price"></el-table-column>
+				<el-table-column label="成本价" prop="cost_price" width="150">
+					<template slot-scope="scope">
+						<div>{{scope.row.price_status == '1'?'原成本价：':''}}{{scope.row.cost_price}}</div>
+						<div v-if="scope.row.price_status == '1'">调后成本价：{{scope.row.edit_price}}</div>
+					</template>
+				</el-table-column>
 				<el-table-column label="颜色" prop="color"></el-table-column>
 				<el-table-column label="尺码" prop="size"></el-table-column>
 				<el-table-column label="面料" prop="fabric"></el-table-column>
@@ -147,7 +152,7 @@
 				</el-table-column>
 				<el-table-column label="操作" width="160" fixed="right">
 					<template slot-scope="scope">
-						<el-button size="small" type="text" @click="adjustAudit(scope.row.style_id)" v-if="scope.row.price_status == '1' && button_list.price_btn == 1">调价审批</el-button>
+						<el-button size="small" type="text" @click="adjustAudit(scope.row.style_id,scope.row.cost_price,scope.row.edit_price)" v-if="scope.row.price_status == '1' && button_list.price_btn == 1">调价审批</el-button>
 						<el-button type="text" size="small" v-if="(scope.row.check_status == 1 || scope.row.check_status == 4) && button_list.agree_refuse == 1" @click="$router.push('/edit_goods?page_type=goods&goods_type=4&style_id=' + scope.row.style_id)">审核</el-button>
 						<el-button style="margin-right: 10px" type="text" size="small" v-if="scope.row.check_status != 1 && scope.row.check_status != 3 && scope.row.check_status != 4 && scope.row.check_status != 5 && button_list.edit == 1" @click="$router.push('/edit_goods?page_type=goods&goods_type=2&style_id=' + scope.row.style_id);">编辑</el-button>
 						<el-dropdown size="small" @command="handleCommand($event,scope.row.style_id,scope.row.style_id,scope.row.style_name)" v-if="scope.row.check_status != 1 && scope.row.check_status != 4 && (button_list.info == 1 || button_list.del == 1)">
@@ -194,6 +199,12 @@
 			</div>
 			<div style="padding:20px">
 				<el-form>
+					<el-form-item label="原成本价：">
+						<div>{{cost_price}}</div>
+					</el-form-item>
+					<el-form-item label="调后成本价：">
+						<div>{{edit_price}}</div>
+					</el-form-item>
 					<el-form-item>
 						<el-radio-group v-model="adjust_type">
 							<el-radio :label="1">同意</el-radio>
@@ -388,6 +399,8 @@
 				is_check:0,				//1:展示批量审核；0：不展示
 				fullscreenLoading:false,
 				style_id:"",				//点击的款式ID
+				cost_price:"",
+				edit_price:"",
 				adjust_dialog:false,		//调价审批
 				adjust_type:1,				//调价审批选中的状态
 				refuse_reason:"",			//拒绝原因
@@ -442,8 +455,8 @@
     			//获取表格最大高度
     			this.onResize();
     		}
-		},
-		methods: {
+    	},
+    	methods: {
     		//监听屏幕大小变化
     		onResize() {
     			this.$nextTick(() => {
@@ -812,8 +825,10 @@
 				});
 			},
 			//调价审批
-			adjustAudit(style_id){
+			adjustAudit(style_id,cost_price,edit_price){
 				this.style_id = style_id;
+				this.cost_price = cost_price;
+				this.edit_price = edit_price;
 				this.adjust_dialog = true;
 			},
 			//关闭调价审批

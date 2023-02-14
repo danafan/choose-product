@@ -785,9 +785,9 @@
 			},
 			//关闭选款弹窗
 			closeSelectDialog(){
-				this.shop_code = [];			//选中的店铺
-				this.demand_type = [];			//选中的需求类型
-				this.send_type = "";			//选中的发货类型
+				// this.shop_code = [];			//选中的店铺
+				// this.demand_type = [];			//选中的需求类型
+				// this.send_type = "";			//选中的发货类型
 				this.demand_date = "";			//需求日期
 				this.selling_price = "";		//售卖价格
 				this.remark = "";				//备注
