@@ -63,57 +63,9 @@
 					</template>
 				</el-table-column>
 				<el-table-column label="审核备注" prop="status_remark"></el-table-column>
-				<el-table-column label="操作" width="80" fixed="right">
-					<template slot-scope="scope">
-						<el-button type="text" size="small" @click="auditFn(scope.row.id)">审核</el-button>
-					</template>
-				</el-table-column>
 			</el-table>
 			<PaginationWidget id="bottom_row" :total="data.total" :page="page" :pagesize="20" @checkPage="checkPage"/>
 		</el-card>
-		<!-- 审核详情 -->
-		<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" destroy-on-close @close="closeDialog" :visible.sync="audit_dialog" width="45%">
-			<div slot="title" class="dialog_title">
-				<div>审核详情</div>
-				<img class="close_icon" src="../../../static/close_icon.png" @click="audit_dialog = false">
-			</div>
-			<div>
-				<el-form size="mini">
-					<el-form-item label="款式：">
-						{{info_data.type == 1?'爆款':'主推款'}}
-					</el-form-item>
-					<el-form-item label="图片：" v-if="info_data.type == 1">
-						<el-image class="card_img" :z-index="2006" v-for="item in info_data.preview_image" :src="item" fit="scale-down" :preview-src-list="info_data.preview_image"></el-image>
-					</el-form-item>
-					<el-form-item label="链接：" v-if="info_data.type == 1">
-						<el-button type="text" size="small" v-for="item in info_data.new_hot_url" @click="openWindow(item.url)">{{item.name}}</el-button>
-					</el-form-item>
-					<el-form-item label="库存：" v-if="info_data.type == 2">
-						{{info_data.data_num}}
-					</el-form-item>
-					<el-form-item label="调价：" v-if="info_data.type == 2">
-						{{info_data.data_price}}
-					</el-form-item>
-					<el-form-item label="备注：" v-if="info_data.type == 2">
-						{{info_data.remark}}
-					</el-form-item>
-					<el-form-item>
-						<el-radio-group v-model="audit_status">
-							<el-radio :label="1">同意</el-radio>
-							<el-radio :label="2">拒绝</el-radio>
-						</el-radio-group>
-					</el-form-item>
-					<el-form-item>
-						<el-input type="textarea" :rows="3" placeholder="请输入备注" v-model="remark">
-						</el-input>
-					</el-form-item>
-				</el-form>
-			</div>
-			<div slot="footer" class="dialog_footer">
-				<el-button size="mini" @click="audit_dialog = false">取消</el-button>
-				<el-button size="mini" type="primary" @click="confirmAudit">提交</el-button>
-			</div>
-		</el-dialog>
 	</div>
 </template>
 <style lang="less" scoped>
@@ -142,10 +94,10 @@
 }
 </style>
 <script>
-	import resource from '../../../api/chain_resource.js'
+	import resource from '../../api/resource.js'
 
-	import TableTitle from '../components/table_title.vue'
-	import PaginationWidget from '../../../components/pagination_widget.vue'
+	import TableTitle from '../SupplyChain/components/table_title.vue'
+	import PaginationWidget from '../../components/pagination_widget.vue'
 	export default{
 		data(){
 			return{
@@ -167,10 +119,6 @@
 				page:1,
 				table_data:[],				//数据列表
 				data:{},					//获取的数据
-				audit_dialog:false,			//审核弹窗
-				info_data:{},				//审核详情
-				audit_status:1,				//审核状态
-				remark:"",					//审核备注
 			}
 		},
 		created(){
@@ -216,7 +164,7 @@
     				page:this.page
     			}
     			this.loading = true;
-    			resource.hotDataList(arg).then(res => {
+    			resource.hotDataIndex(arg).then(res => {
     				if(res.data.code == 1){
     					this.loading = false;
     					let data = res.data.data;
@@ -263,56 +211,7 @@
 			openWindow(url){
 				window.open(url)
 			},
-			//点击审核
-			auditFn(id){
-				resource.hotDataInfo({id:id}).then(res => {
-					if(res.data.code == 1){
-						this.info_data = res.data.data;
-						let preview_image = [];
-						this.info_data.hot_img.map(item => {
-							preview_image.push(this.domain + item)
-						})
-						this.info_data['preview_image'] = preview_image;
-
-						let new_hot_url = [];
-						this.info_data.hot_url.map((i,index) => {
-							let new_obj = {
-								name:`链接${index + 1}`,
-								url:i
-							}
-							new_hot_url.push(new_obj);
-						})
-						this.info_data.new_hot_url = new_hot_url;
-
-						this.audit_dialog = true;
-					}else{
-						this.$message.warning(res.data.msg);
-					}
-				})
-			},
-			//关闭审核
-			closeDialog(){
-				this.audit_status = 1;
-				this.remark = "";
-			},
-			//提价审核
-			confirmAudit(){
-				let arg = {
-					id:this.info_data.id,
-					status:this.audit_status,
-					remark:this.remark
-				}
-				resource.hotDataInfoPost(arg).then(res => {
-					if(res.data.code == 1){
-						this.$message.success(res.data.msg);
-						//获取列表
-    					this.hotDataList();
-						this.audit_dialog = false;
-					}else{
-						this.$message.warning(res.data.msg);
-					}
-				})
-			}
+			
 		},
 		filters:{
 			status(v,status_list){

@@ -94,9 +94,13 @@
 			<div class="style_row" v-if="page_type != 'gys_supplier'">
 				<div class="style_item" :class="{'active_color':item.is_selected === 1}" v-for="(item,index) in cate_style_list" @click="checkStyle(index)">{{item.name}}</div>
 			</div>
+			<el-radio-group v-model="up_type">
+				<el-radio :label="1">今日上新</el-radio>
+				<el-radio :label="3">三日上新</el-radio>
+				<el-radio :label="7">七日上新</el-radio>
+			</el-radio-group>
 			<div class="date_row">
-				<div class="date_lable">上新时间：</div>
-				<el-date-picker v-model="date" size="mini" type="daterange" unlink-panels value-format="yyyy-MM-dd" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions" @change="callbackFn">
+				<el-date-picker v-model="date" size="mini" type="daterange" unlink-panels value-format="yyyy-MM-dd" range-separator="至" start-placeholder="上新时间" end-placeholder="上新时间" :picker-options="pickerOptions" @change="changeDate">
 				</el-date-picker>
 			</div>
 			
@@ -155,6 +159,7 @@
 					name:'二开款',
 					is_selected:0
 				}],								//款式列表
+				up_type:null,					//上新类型
 				date:[],						//上新日期
 				pickerOptions: {
 					shortcuts: [
@@ -226,6 +231,28 @@
 					}
 				}else{
 
+				}
+			},
+			//上新类型
+			up_type:function(n,o){
+				switch(n){
+					case 1:
+					this.date = [getNowDate(),getNowDate()];
+					//获取当前条件并传递
+					this.callbackFn();
+					break;
+					case 3:
+					this.date = [getCurrentDate(3),getNowDate()];
+					//获取当前条件并传递
+					this.callbackFn();
+					break;
+					case 7:
+					this.date = [getCurrentDate(7),getNowDate()];
+					//获取当前条件并传递
+					this.callbackFn();
+					break;
+					default:
+					return
 				}
 			}
 		},
@@ -419,6 +446,12 @@
 				//获取当前条件并传递
 				this.callbackFn();
 			},
+			//切换上新时间筛选器
+			changeDate(){
+				this.up_type = null;
+				//获取当前条件并传递
+				this.callbackFn();
+			},
 			//获取当前条件并传递
 			callbackFn(){	
 				var arg = {
@@ -605,11 +638,11 @@
 			display: flex;
 			align-items: center;
 			justify-content: center;
-			margin-right: 45rem;
+			margin-right: 25rem;
 			display: flex;
 			align-items: center;
-			padding-left: 8rem;
-			padding-right: 8rem;
+			padding-left: 3rem;
+			padding-right: 3rem;
 			cursor:pointer;
 			.sort_icon{
 				margin-left: 2rem;
@@ -633,9 +666,9 @@
 			display: flex;
 			align-items: center;
 			justify-content: center;
-			margin-right: 58rem;
-			padding-left: 8rem;
-			padding-right: 8rem;
+			margin-right: 25rem;
+			padding-left: 3rem;
+			padding-right: 3rem;
 			cursor:pointer;
 		}
 		.style_item:hover{

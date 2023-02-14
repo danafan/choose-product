@@ -258,11 +258,14 @@
             menu_name:'首页',
             web_url:"gys_index"
           },{
-            menu_name:'供应商',
+            menu_name:'我的款式',
             web_url:"gys_supplier"
           },{
             menu_name:'款式资料',
             web_url:"style_info"
+          },{
+            menu_name:'爆款主推款',
+            web_url:"b_z_page"
           }]
 
           this.$store.commit("setMenuList", menu_list);

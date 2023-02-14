@@ -27,16 +27,15 @@
       </el-popover>
       <div class="header_right">
         <div class="tab_item" :class="{'active_tab':active_index == index}" v-for="(item,index) in menu_list" @click="checkIndex(index)">{{item.menu_name}}</div>
-        <div v-if="user_type == '2'">
+        <img class="user_img" src="../static/user_img.png">
+        <div>
           <el-dropdown @command="edit_dialog = true">
-            <div class="tab_item">设置</div>
+            <div class="user_name">{{username}}</div>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item>修改密码</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
         </div>
-        <img class="user_img" src="../static/user_img.png">
-        <div class="user_name">{{username}}</div>
         <div class="line"></div>
         <el-popconfirm
         title="确认退出？"
@@ -299,15 +298,9 @@
       },
       //点击切换导航
       checkIndex(index){
-        // this.$store.commit("setIndex", index);
         this.active_index = index;
-        // localStorage.setItem("active_index",index);
         let active_path = this.menu_list[index].web_url;
-        // if(this.active_path != active_path){
-          // localStorage.setItem("active_path",active_path);
-          // this.$store.commit("setPath", active_path);
-          this.$router.push(active_path);
-        // }
+        this.$router.push(active_path);
       },
       //查看公告
       noticeDetail(row, column, event){

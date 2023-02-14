@@ -618,6 +618,7 @@
 					price_status:this.price_status,
 					page:this.page,
 					pagesize:100
+					// pagesize:5
 				}
 				let search = "";
 				if (this.search.indexOf("\n") > -1) {

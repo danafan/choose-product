@@ -5,6 +5,7 @@ const tab_menu = (resolve) => require(["@/pages/tab_menu"], resolve);
 const login = (resolve) => require(["@/pages/login"], resolve);
 const index = (resolve) => require(["@/pages/Index/index"], resolve);
 const gys_index = (resolve) => require(["@/pages/Index/gys_index"], resolve);
+const b_z_page = (resolve) => require(["@/pages/BZpage/b_z_page"], resolve);
 const notice_page = (resolve) => require(["@/pages/NoticePage/notice_page"], resolve);
 const goods_detail = (resolve) => require(["@/pages/GoodsDetail/goods_detail"], resolve);
 const selected = (resolve) => require(["@/pages/Selected/selected"], resolve);
@@ -60,6 +61,11 @@ const router = new Router({
       path: "/gys_index",
       name: "首页",
       component: gys_index
+    },
+    {
+      path: "/b_z_page",
+      name: "爆款主推款",
+      component: b_z_page
     },
     {
       path: "/goods_detail",
