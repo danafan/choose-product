@@ -1,6 +1,15 @@
 <template>
 	<div class="setting_content">
 		<el-card class="card_box" id="card_box">
+			<el-form :inline="true" size="mini">
+				<el-form-item>
+					<el-input placeholder="搜索姓名" clearable v-model="search">
+					</el-input>
+				</el-form-item>
+				<el-form-item class="form_item">
+					<el-button type="primary" @click="checkPage(1)">查询</el-button>
+				</el-form-item>
+			</el-form>
 			<TableTitle title="数据列表" id="table_title">
 				<el-button size="mini" type="primary" @click="addFn('1')" v-if="button_list.add == 1">添加</el-button>
 			</TableTitle>
@@ -76,6 +85,7 @@
 	export default{
 		data(){
 			return{
+				search:"",
 				loading:false,
 				data:{},					//返回数据
 				button_list:{},				//按钮权限
@@ -129,6 +139,7 @@
 			//获取列表
 			getData(){
 				let arg = {
+					search:this.search,
 					pagesize:10,
 					page:this.page
 				}

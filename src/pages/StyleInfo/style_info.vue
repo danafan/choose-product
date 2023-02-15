@@ -59,6 +59,7 @@
 					</template>
 				</el-table-column>
 				<el-table-column label="颜色" prop="color"></el-table-column>
+				<el-table-column label="成本价" prop="cost_price"></el-table-column>
 				<el-table-column label="尺码" prop="size"></el-table-column>
 				<el-table-column label="面料" prop="fabric"></el-table-column>
 				<el-table-column label="市场" prop="market"></el-table-column>

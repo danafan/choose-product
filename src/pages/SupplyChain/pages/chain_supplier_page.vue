@@ -61,7 +61,8 @@
 			<el-table size="mini" :data="data.data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" v-loading="loading">
 				<el-table-column label="供应商名称" prop="supplier_name"></el-table-column>
 				<el-table-column label="供应商地址" prop="address"></el-table-column>
-				<el-table-column label="供应商联系方式" width="120" prop="contact_information"></el-table-column>
+				<el-table-column label="联系人" width="120" prop="contactor"></el-table-column>
+				<el-table-column label="联系方式" width="120" prop="contact_information"></el-table-column>
 				<el-table-column label="主营" prop="main_business"></el-table-column>
 				<el-table-column label="微信" prop="weixin"></el-table-column>
 				<el-table-column label="拍照">

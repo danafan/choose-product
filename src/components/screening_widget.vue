@@ -100,7 +100,7 @@
 				<el-radio :label="7">七日上新</el-radio>
 			</el-radio-group>
 			<div class="date_row">
-				<el-date-picker v-model="date" size="mini" type="daterange" unlink-panels value-format="yyyy-MM-dd" range-separator="至" start-placeholder="上新时间" end-placeholder="上新时间" :picker-options="pickerOptions" @change="changeDate">
+				<el-date-picker v-model="date" size="mini" type="daterange" unlink-panels value-format="yyyy-MM-dd" range-separator="至" start-placeholder="上新时间" end-placeholder="上新时间" @change="changeDate">
 				</el-date-picker>
 			</div>
 			
@@ -160,35 +160,7 @@
 					is_selected:0
 				}],								//款式列表
 				up_type:null,					//上新类型
-				date:[],						//上新日期
-				pickerOptions: {
-					shortcuts: [
-					{
-						text: "今日上新",
-						onClick(picker) {
-							const start = getNowDate();
-							const end = getNowDate();
-							picker.$emit("pick", [start, end]);
-						},
-					},
-					{
-						text: "三日上新",
-						onClick(picker) {
-							const start = getCurrentDate(3);
-							const end = getNowDate();
-							picker.$emit("pick", [start, end]);
-						},
-					},
-					{
-						text: "七日上新",
-						onClick(picker) {
-							const start = getCurrentDate(7);
-							const end = getNowDate();
-							picker.$emit("pick", [start, end]);
-						},
-					},
-					],
-				}, 
+				date:[],						//上新日期 
 				FristPin: ["全部","A", "B", "C", "D", "E", "F", "G", "H", "J", "K", "L", "M", "N", "P", "Q", "R", "S", "T", "W", "X", "Y", "Z"],
 				a_item:"全部",
 				cityjson: {},

@@ -8,15 +8,14 @@
   export default {
     created() {
       
-      this.getUserInfo();
-      return;
+      // this.getUserInfo();
+      // return;
        
       let user_type = localStorage.getItem("user_type");
       if(!localStorage.getItem("cache") && user_type != '2'){
         this.getUserInfo();
-      }else {
-        // this.$router.replace('/tab_menu');
       }
+      
       if(window.location.hash.split('#/')[1] == ''){
         this.$router.replace('/tab_menu')
       }

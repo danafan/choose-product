@@ -35,6 +35,9 @@
 					<el-form-item label="供应商联系方式：">
 						{{data_info.contact_information}}
 					</el-form-item>
+					<el-form-item label="联系人：">
+						{{data_info.contactor}}
+					</el-form-item>
 					<el-form-item label="供应商微信：">
 						{{data_info.weixin}}
 					</el-form-item>
@@ -46,6 +49,9 @@
 					</el-form-item>
 					<el-form-item label="供应商等级：">
 						{{data_info.grade_name}}
+					</el-form-item>
+					<el-form-item label="供应商介绍：">
+						{{data_info.description}}
 					</el-form-item>
 					<el-form-item label="营业执照：">
 						<el-image class="card_img" :src="img_list[0]" fit="scale-down" :preview-src-list="img_list" v-if="img_list.length > 0"></el-image>

@@ -10,10 +10,6 @@
 						<el-form-item label="提交人：" v-if="is_detail">
 							<div>{{arg.add_admin_name}}</div>
 						</el-form-item>
-						<el-form-item label="款式编码：">
-							<el-input type="textarea" autosize :placeholder="is_detail?'':'多个请用分号间隔'" v-model="arg.i_id" :disabled="is_detail">
-							</el-input>
-						</el-form-item>
 						<el-form-item label="类目：" required>
 							<el-select v-model="arg.category_id" clearable placeholder="请选择类目" :disabled="is_detail">
 								<el-option v-for="item in cate_list" :key="item.category_id" :label="item.category_name" :value="item.category_id">
@@ -136,7 +132,6 @@
 				edit_price:"",
 				max_height:0,
 				arg:{
-					i_id:"",				//款式编码
 					add_admin_name:"",
 					style_name:"",			//商品款号
 					title:"",				//标题

@@ -7,10 +7,11 @@
 					<div class="supplier_item" v-for="item in supplier_list">
 						<div class="text_info">
 							<div class="info_item">供应商：{{item.supplier_name}}</div>
-							<div class="info_item">供应商编码：{{item.supplier_code}}</div>
+							<div class="info_item">供应商编码：{{item.supplier_code}}{{item.supplier_code}}{{item.supplier_code}}{{item.supplier_code}}</div>
 							<div class="info_item">主营：{{item.main_business}}</div>
 							<div class="info_item">结算方式：{{item.supply_monthly_settlement == 1?'月结':'现结'}}</div>
 							<div class="info_item">供应商等级：<span>{{item.grade_name}}</span></div>
+							<div class="info_item">介绍：{{item.description}}</div>
 						</div>
 						<div class="image_list">
 							<div v-for="i in item.goods_list" @click="getDetail(i.style_id)">
@@ -114,16 +115,12 @@
 			//点击跳转商品详情
 			getDetail(style_id){
 				let active_path = `/goods_detail?style_id=${style_id}`;
-				// localStorage.setItem("active_path",active_path);
-				// this.$store.commit("setPath", active_path);
 				const routeData = this.$router.resolve(active_path);
 				window.open(routeData.href);
 			},
 			//点击跳转供应商详情
 			supplierDetail(supplier_id){
 				let active_path = `/supplier_detail?supplier_id=${supplier_id}`;
-				// localStorage.setItem("active_path",active_path);
-				// this.$store.commit("setPath", active_path);
 				const routeData = this.$router.resolve(active_path);
 				window.open(routeData.href);
 			}
@@ -164,8 +161,12 @@
 					align-items: flex-start;
 					justify-content: space-around;
 					.info_item{
+						width: 100%;
 						font-size:12rem;
 						color: #333333;
+						overflow: hidden;
+						text-overflow: ellipsis;
+						white-space: nowrap;
 						span{
 							color: var(--color);
 							font-weight: bold;

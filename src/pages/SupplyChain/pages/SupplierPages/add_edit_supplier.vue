@@ -50,6 +50,9 @@
 					<el-form-item label="供应商联系方式：" required>
 						<el-input clearable v-model="contact_information" placeholder="供应商联系方式"></el-input>
 					</el-form-item>
+					<el-form-item label="联系人：">
+						<el-input clearable v-model="contactor" placeholder="联系人"></el-input>
+					</el-form-item>
 					<el-form-item label="供应商微信：">
 						<el-input clearable v-model="weixin" placeholder="供应商微信"></el-input>
 					</el-form-item>
@@ -70,6 +73,9 @@
 							<el-option v-for="item in grade_list" :key="item.grade_id" :label="item.grade_name" :value="item.grade_id">
 							</el-option>
 						</el-select>
+					</el-form-item>
+					<el-form-item label="供应商介绍：">
+						<el-input type="textarea" :rows="3" clearable v-model="description" placeholder="供应商介绍"></el-input>
 					</el-form-item>
 					<el-form-item label="营业执照：">
 						<UploadFile :img_list="img_list" @callbackFn="callbackFn"/>
@@ -100,6 +106,8 @@
 				supply_warehousing:0,	//是否入仓
 				supplier_code:"",		//供应商编码
 				contact_information:"",	//供应商联系方式
+				contactor:"",			//联系人
+				description:"",			//介绍
 				weixin:"",				//供应商微信
 				payment_method:[{
 					name:'现结',
@@ -149,6 +157,8 @@
 						this.supplier_name = data.supplier_name;
 						this.address = data.address;
 						this.contact_information = data.contact_information;
+						this.contactor = data.contactor;
+						this.description = data.description;
 						this.main_business = data.main_business;
 						this.supplier_code = data.supplier_code?data.supplier_code:"";
 						this.supply_photograph = data.supply_photograph;
@@ -190,6 +200,8 @@
 						supplier_name:this.supplier_name,
 						address:this.address,
 						contact_information:this.contact_information,
+						contactor:this.contactor,
+						description:this.description,
 						business_license:this.business_license,
 						main_business:this.main_business,
 						supplier_code:this.supplier_code,
