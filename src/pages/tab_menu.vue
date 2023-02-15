@@ -238,9 +238,19 @@
     created() {
       this.getNotice();
       this.username = localStorage.getItem("ding_user_name");
-      let path = window.location.hash.split('#/')[1];
-      
-      this.active_index = path == 'tab_menu'?0:this.user_type == '1'&&this.getActiveIndex(path) == -1?this.menu_list.length - 1:this.getActiveIndex(path);
+      let path = window.location.hash.split('#/')[1].indexOf('?') > -1?window.location.hash.split('#/')[1].split('?')[0]:window.location.hash.split('#/')[1];
+      if(path == 'tab_menu'){
+        this.active_index = 0;
+      }else if(this.user_type == '1' && this.getActiveIndex(path) == -1){
+        if(path == 'supplier_detail'){  //供应商详情
+          this.active_index = 2;
+        }
+      }else{
+        this.getActiveIndex(path);
+      }
+      console.log(path)
+      console.log(this.getActiveIndex(path))
+      // this.active_index = path == 'tab_menu'?0:this.user_type == '1'&&this.getActiveIndex(path) == -1?this.menu_list.length - 1:this.getActiveIndex(path);
       //判断是刚登录进来的直接进入首页
       if(path == 'tab_menu'){
        if(this.user_type == '2'){
