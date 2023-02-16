@@ -65,7 +65,7 @@
 				<el-table-column label="审核备注" prop="status_remark"></el-table-column>
 				<el-table-column label="操作" width="80" fixed="right">
 					<template slot-scope="scope">
-						<el-button type="text" size="small" @click="auditFn(scope.row.id)">审核</el-button>
+						<el-button type="text" size="small" @click="auditFn(scope.row.id)" v-if="button_list.is_ex == 1">审核</el-button>
 					</template>
 				</el-table-column>
 			</el-table>
@@ -165,6 +165,7 @@
 				search:"",					//搜索内容
 				max_height:0,	
 				page:1,
+				button_list:{},				//权限按钮
 				table_data:[],				//数据列表
 				data:{},					//获取的数据
 				audit_dialog:false,			//审核弹窗

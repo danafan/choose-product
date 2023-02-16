@@ -35,9 +35,11 @@
 					<div v-if="info.bd_i_id != ''">{{`BD：${info.bd_i_id}`}}</div>
 				</div>
 				<div class="code">
-					<div>{{info.sstyle_name}}</div>
-					<div>{{info.i_id != ''?`普通:${info.i_id}`:""}}</div>
-					<div>{{info.bd_i_id != ''?`BD:${info.bd_i_id}`:""}}</div>
+					<span>{{info.sstyle_name}}</span>
+					<span v-if="info.i_id != '' || info.bd_i_id != ''">（</span>
+					<span>{{info.i_id != ''?`普通:${info.i_id}`:""}}</span>
+					<span>{{info.bd_i_id != ''?`BD:${info.bd_i_id}`:""}}</span>
+					<span v-if="info.i_id != '' || info.bd_i_id != ''">）</span>
 				</div>
 			</el-tooltip>
 			<div class="time">{{info.new_time_name}}</div>
@@ -299,16 +301,13 @@
 			font-size:12rem;
 			color: #999999;
 			.code{
-				display: flex;
 				flex:1;
-				word-break: break-all;
-				text-overflow: ellipsis;
 				overflow: hidden;
-				display: -webkit-box;
-				-webkit-line-clamp: 1;
-				-webkit-box-orient: vertical;
+				text-overflow: ellipsis;
+				white-space: nowrap;
 			}
 			.time{
+				margin-left: 5px;
 				white-space:normal;
 			}
 		}

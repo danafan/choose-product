@@ -48,13 +48,13 @@
 							</el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item label="绑定部门：" required v-if="menu_role_ids.indexOf(1) == -1">
+					<el-form-item label="绑定部门：" v-if="menu_role_ids.indexOf(1) == -1">
 						<el-select v-model="dept_names" clearable multiple filterable collapse-tags placeholder="选择部门" @change="ajaxViewShop">
 							<el-option v-for="item in dept_list" :key="item.dept_name" :label="item.dept_name" :value="item.dept_name">
 							</el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item label="绑定店铺：" required v-if="menu_role_ids.indexOf(1) == -1">
+					<el-form-item label="绑定店铺：" v-if="menu_role_ids.indexOf(1) == -1">
 						<el-select v-model="shop_codes" clearable multiple filterable collapse-tags placeholder="选择店铺" @change="selectedStore">
 							<el-option v-for="item in shop_list" :key="item.shop_code" :label="item.shop_name" :value="item.shop_code">
 							</el-option>
@@ -268,14 +268,6 @@
 				}
 				if(this.menu_role_ids.length == 0){	
 					this.$message.warning('请选择角色!');
-					return;
-				}
-				if(this.menu_role_ids.indexOf(1) == -1 && this.dept_names.length == 0){	
-					this.$message.warning('请选择部门!');
-					return;
-				}
-				if(this.menu_role_ids.indexOf(1) == -1 && this.shop_codes.length == 0){	
-					this.$message.warning('请选择店铺!');
 					return;
 				}
 				let arg = {

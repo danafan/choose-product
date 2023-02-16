@@ -80,7 +80,7 @@
 					</el-input>
 				</el-form-item>
 				<el-form-item label="选款日期：">
-					<el-date-picker v-model="date" size="mini" type="daterange" unlink-panels value-format="yyyy-MM-dd" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期">
+					<el-date-picker v-model="date" size="mini" type="daterange" unlink-panels value-format="yyyy-MM-dd" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" @change="up_type = null">
 					</el-date-picker>
 				</el-form-item>
 				<el-form-item>
@@ -139,7 +139,8 @@
 			</el-table-column>
 			<el-table-column label="网盘地址">
 				<template slot-scope="scope">
-					<el-button class="pre_wrap" size="small" type="text" @click="windowOpen(scope.row.net_disk_address,scope.row.or_net_disk_address)">访问链接</el-button>
+					<el-button class="pre_wrap" size="small" type="text" @click="windowOpen(scope.row.net_disk_address,scope.row.or_net_disk_address)" v-if="scope.row.or_net_disk_address !== ''">访问链接</el-button>
+					<div v-else>未填写</div>
 				</template>
 			</el-table-column>
 			<el-table-column label="成本价" prop="cost_price"></el-table-column>

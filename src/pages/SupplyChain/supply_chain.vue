@@ -112,14 +112,14 @@
 			this.menu_list = new_menu_list;
 
 
-			let cc = {
-				icon:require(`../../static/chain_audit.png`),
-				icon_active:require(`../../static/chain_audit_active.png`),
-				list:[],
-				path:`/b_z_promotion_page`,
-				name:"爆/主推款审"
-			}
-			this.menu_list.push(cc);
+			// let cc = {
+			// 	icon:require(`../../static/chain_audit.png`),
+			// 	icon_active:require(`../../static/chain_audit_active.png`),
+			// 	list:[],
+			// 	path:`/b_z_promotion_page`,
+			// 	name:"爆/主推款审"
+			// }
+			// this.menu_list.push(cc);
 			this.title = this.menu_list[this.active_index].name;
 			let path = this.menu_list[this.active_index].path;
 			this.$router.push(path);

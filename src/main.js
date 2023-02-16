@@ -17,6 +17,7 @@ import pinyin from 'js-pinyin'
 Vue.use(ElementUI);
 Vue.use(VueQuillEditor);
 
+Vue.prototype.isPrice = /^(([0-9]+)|([0-9]+\.[0-9]{0,2}))$/;	//正数且最多两位小数
 Vue.prototype.downLoadUrl = 'http://selectiontest.92nu.com';				//下载模版前缀
 
 new Vue({

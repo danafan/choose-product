@@ -65,12 +65,6 @@
               this.$store.commit("setMenuList", menu_list);
               localStorage.setItem("menu_list",JSON.stringify(menu_list))
 
-              // this.$store.commit("setPath", menu_list[0].web_url);
-              // localStorage.setItem("active_path",menu_list[0].web_url);
-              
-              // this.$store.commit("setIndex", 0);
-              // localStorage.setItem("active_index",0);
-
               this.$router.replace('tab_menu');
             }else{
               this.$message.warning(res.data.msg);

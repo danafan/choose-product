@@ -94,6 +94,13 @@
 			<div class="style_row" v-if="page_type != 'gys_supplier'">
 				<div class="style_item" :class="{'active_color':item.is_selected === 1}" v-for="(item,index) in cate_style_list" @click="checkStyle(index)">{{item.name}}</div>
 			</div>
+			<div class="price_row">
+				<div>价格：</div>
+				<el-input style="width: 50px;" size="mini" type="number" v-model="start_price"></el-input>&nbsp~&nbsp
+				<el-input style="width: 50px;" size="mini" type="number" v-model="end_price"></el-input>
+				&nbsp
+				<el-button size="mini" type="primary" @click="searchPrice">查询</el-button>
+			</div>
 			<el-radio-group v-model="up_type">
 				<el-radio :label="1">今日上新</el-radio>
 				<el-radio :label="3">三日上新</el-radio>
@@ -161,6 +168,8 @@
 				}],								//款式列表
 				up_type:null,					//上新类型
 				date:[],						//上新日期 
+				start_price:"",
+				end_price:"",
 				FristPin: ["全部","A", "B", "C", "D", "E", "F", "G", "H", "J", "K", "L", "M", "N", "P", "Q", "R", "S", "T", "W", "X", "Y", "Z"],
 				a_item:"全部",
 				cityjson: {},
@@ -424,11 +433,25 @@
 				//获取当前条件并传递
 				this.callbackFn();
 			},
+			//点击查询价格区间
+			searchPrice(){
+				if(!this.isPrice.test(parseFloat(this.start_price)) || !this.isPrice.test(parseFloat(this.end_price))){
+					this.$message.warning('价格必须大于0且最多两位小数');
+					return;
+				}else if(parseFloat(parseFloat(this.start_price)) > parseFloat(parseFloat(this.end_price))){
+					this.$message.warning('起始价格不能高于结束金额');
+					return;
+				}
+				//获取当前条件并传递
+				this.callbackFn();
+			},
 			//获取当前条件并传递
 			callbackFn(){	
 				var arg = {
 					start_time:this.date && this.date.length > 0?this.date[0]:"",
 					end_time:this.date && this.date.length > 0?this.date[1]:"",
+					start_price:parseFloat(this.start_price),
+					end_price:parseFloat(this.end_price),
 				}
 
 				//处理排序
@@ -648,6 +671,10 @@
 			background: #ffffff;
 			color:var(--color);
 		}
+	}
+	.price_row{
+		display: flex;
+		align-items: center;
 	}
 	.date_row{
 		display: flex;
