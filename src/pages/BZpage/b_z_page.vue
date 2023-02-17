@@ -217,7 +217,15 @@
 			},
 			//点击链接
 			openWindow(url){
-				window.open(url)
+				if(url.indexOf('http://') == -1 && url.indexOf('https://') == -1 ){
+					this.$alert(`【${url}】不是正确的链接格式!`, '提示', {
+						confirmButtonText: '我知道了',
+						callback: action => {
+						}
+					});
+				}else{
+					window.open(url)
+				}
 			},
 			
 		},

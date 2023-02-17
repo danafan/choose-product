@@ -94,7 +94,7 @@
 			<div class="style_row" v-if="page_type != 'gys_supplier'">
 				<div class="style_item" :class="{'active_color':item.is_selected === 1}" v-for="(item,index) in cate_style_list" @click="checkStyle(index)">{{item.name}}</div>
 			</div>
-			<div class="price_row">
+			<div class="price_row" v-if="page_type != 'gys_supplier'">
 				<div>价格：</div>
 				<el-input style="width: 50px;" size="mini" type="number" v-model="start_price"></el-input>&nbsp~&nbsp
 				<el-input style="width: 50px;" size="mini" type="number" v-model="end_price"></el-input>
@@ -435,10 +435,13 @@
 			},
 			//点击查询价格区间
 			searchPrice(){
-				if(!this.isPrice.test(parseFloat(this.start_price)) || !this.isPrice.test(parseFloat(this.end_price))){
+				if(this.start_price != '' && !this.isPrice.test(parseFloat(this.start_price))){
 					this.$message.warning('价格必须大于0且最多两位小数');
 					return;
-				}else if(parseFloat(parseFloat(this.start_price)) > parseFloat(parseFloat(this.end_price))){
+				}else if(this.end_price != '' && !this.isPrice.test(parseFloat(this.end_price))){
+					this.$message.warning('价格必须大于0且最多两位小数');
+					return;
+				}else if(parseFloat(this.start_price) > parseFloat(this.end_price)){
 					this.$message.warning('起始价格不能高于结束金额');
 					return;
 				}

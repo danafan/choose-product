@@ -28,7 +28,9 @@
 							</div>
 							<div class="info_item">
 								<div class="info_lable">介绍：</div>
-								<div class="info_value">{{supplier_info.description}}</div>
+								<el-tooltip class="item" effect="dark" :content="supplier_info.description" placement="top-end">
+									<div class="info_value">{{supplier_info.description}}</div>
+								</el-tooltip>
 							</div>
 						</div>
 						<div class="info_line"></div>
@@ -105,7 +107,7 @@
 			//获取列表
 			this.getList(arg);
 		},
-    	methods:{
+		methods:{
 			//供应商基本信息
 			supplierInfo(){
 				let arg = {

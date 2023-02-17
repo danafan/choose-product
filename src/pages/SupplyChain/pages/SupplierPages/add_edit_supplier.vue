@@ -75,7 +75,8 @@
 						</el-select>
 					</el-form-item>
 					<el-form-item label="供应商介绍：">
-						<el-input type="textarea" :rows="3" clearable v-model="description" placeholder="供应商介绍"></el-input>
+						<el-input type="textarea" maxlength="100"
+						show-word-limit :rows="3" clearable v-model="description" placeholder="供应商介绍"></el-input>
 					</el-form-item>
 					<el-form-item label="营业执照：">
 						<UploadFile :img_list="img_list" @callbackFn="callbackFn"/>
