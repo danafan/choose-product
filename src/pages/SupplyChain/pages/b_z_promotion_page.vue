@@ -38,7 +38,12 @@
 					</template>
 				</el-table-column>
 				<el-table-column label="成本价" prop="cost_price"></el-table-column>
-				<el-table-column label="款式" prop="style_name"></el-table-column>
+				<el-table-column label="款式" prop="style_name">
+					<template slot-scope="scope">
+						<div>{{scope.row.type == 1?'爆款':'主推款'}}</div>
+					</template>
+				</el-table-column>
+				<el-table-column label="供应商" show-overflow-tooltip prop="supplier_name"></el-table-column>
 				<el-table-column label="爆款图片" width="150">
 					<template slot-scope="scope">
 						<div v-if="scope.row.hot_images.length == 0">暂无</div>
@@ -65,11 +70,11 @@
 				<el-table-column label="审核备注" prop="status_remark"></el-table-column>
 				<el-table-column label="操作" width="80" fixed="right">
 					<template slot-scope="scope">
-						<el-button type="text" size="small" @click="auditFn(scope.row.id)" v-if="button_list.is_ex == 1">审核</el-button>
+						<el-button type="text" size="small" @click="auditFn(scope.row.id)" v-if="scope.row.status == 0 && button_list.is_ex == 1">审核</el-button>
 					</template>
 				</el-table-column>
 			</el-table>
-			<PaginationWidget id="bottom_row" :total="data.total" :page="page" :pagesize="20" @checkPage="checkPage"/>
+			<PaginationWidget id="bottom_row" :total="total" :page="page" :pagesize="20" @checkPage="checkPage"/>
 		</el-card>
 		<!-- 审核详情 -->
 		<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" destroy-on-close @close="closeDialog" :visible.sync="audit_dialog" width="45%">
@@ -134,6 +139,10 @@
 	}
 	.card_box{
 		flex:1;
+		.image{
+			width: 100px;
+			height: 100px;
+		}
 	}
 	.card_img{
 		width: 120rem;
@@ -167,7 +176,7 @@
 				page:1,
 				button_list:{},				//权限按钮
 				table_data:[],				//数据列表
-				data:{},					//获取的数据
+				total:0,
 				audit_dialog:false,			//审核弹窗
 				info_data:{},				//审核详情
 				audit_status:1,				//审核状态
@@ -247,7 +256,7 @@
 
     					})
     					this.table_data = table_data;
-
+    					this.total =  res.data.data.total;
     					this.button_list =  res.data.data.button_list;
     				}else{
     					this.$message.warning(res.data.msg);

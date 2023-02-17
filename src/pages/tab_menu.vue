@@ -27,65 +27,69 @@
       </el-popover>
       <div class="header_right">
         <div class="tab_item" :class="{'active_tab':active_index == index}" v-for="(item,index) in menu_list" @click="checkIndex(index)">{{item.menu_name}}</div>
-        <img class="user_img" src="../static/user_img.png">
+        
         <div>
           <el-dropdown @command="edit_dialog = true">
-            <div class="user_name">{{username}}</div>
-            <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item>修改密码</el-dropdown-item>
-            </el-dropdown-menu>
-          </el-dropdown>
-        </div>
-        <div class="line"></div>
-        <el-popconfirm
-        title="确认退出？"
-        @confirm="loginOut"
-        >
-        <div slot="reference" class="login_out">退出</div>
-      </el-popconfirm>
-    </div>
+            <div style="display: flex;align-items: center">
+             <img class="user_img" src="../static/user_img.png">
+             <div class="user_name">{{username}}</div>
+           </div>
+           
+           <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item>修改密码</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
+      </div>
+      <div class="line"></div>
+      <el-popconfirm
+      title="确认退出？"
+      @confirm="loginOut"
+      >
+      <div slot="reference" class="login_out">退出</div>
+    </el-popconfirm>
   </div>
-  <div class="content">
-    <keep-alive>
-      <router-view v-if="$route.meta.keepAlive">
-      </router-view>
-    </keep-alive>
-    <router-view v-if="!$route.meta.keepAlive"></router-view>
+</div>
+<div class="content">
+  <keep-alive>
+    <router-view v-if="$route.meta.keepAlive">
+    </router-view>
+  </keep-alive>
+  <router-view v-if="!$route.meta.keepAlive"></router-view>
+</div>
+<div class="page_foot"></div>
+<!-- 修改密码 -->
+<el-dialog width="30%" :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" destroy-on-close @close="editDialog" :visible.sync="edit_dialog">
+  <div slot="title" class="dialog_title">
+    <div>修改密码</div>
+    <img class="close_icon" src="../static/close_icon.png" @click="edit_dialog = false">
   </div>
-  <div class="page_foot"></div>
-  <!-- 修改密码 -->
-  <el-dialog width="30%" :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" destroy-on-close @close="editDialog" :visible.sync="edit_dialog">
-    <div slot="title" class="dialog_title">
-      <div>修改密码</div>
-      <img class="close_icon" src="../static/close_icon.png" @click="edit_dialog = false">
-    </div>
-    <div class="dialog_content">
-      <el-form size="mini" label-width="100px">
-        <el-form-item label="供应商名称：">
-          {{supplier_name}}
-        </el-form-item>
-        <el-form-item label="用户名：">
-          <div>{{username}}</div>
-        </el-form-item>
-        <el-form-item label="旧密码：" required>
-          <el-input style="width: 200px" v-model="old_password" maxlength="20" placeholder="请输入旧密码">
-          </el-input>
-        </el-form-item>
-        <el-form-item label="新密码：" required>
-          <el-input style="width: 200px" v-model="password" maxlength="20" placeholder="请输入新密码">
-          </el-input>
-        </el-form-item>
-        <el-form-item label="确认密码：" required>
-          <el-input style="width: 200px" v-model="confirm_password" maxlength="20" placeholder="请确认密码">
-          </el-input>
-        </el-form-item>
-      </el-form>
-    </div>
-    <div slot="footer" class="dialog_footer">
-      <el-button size="small" @click="edit_dialog = false">取消</el-button>
-      <el-button type="primary" size="small" @click="commitFn">确定</el-button>
-    </div>
-  </el-dialog>
+  <div class="dialog_content">
+    <el-form size="mini" label-width="100px">
+      <el-form-item label="供应商名称：">
+        {{supplier_name}}
+      </el-form-item>
+      <el-form-item label="用户名：">
+        <div>{{username}}</div>
+      </el-form-item>
+      <el-form-item label="旧密码：" required>
+        <el-input style="width: 200px" v-model="old_password" maxlength="20" placeholder="请输入旧密码">
+        </el-input>
+      </el-form-item>
+      <el-form-item label="新密码：" required>
+        <el-input style="width: 200px" v-model="password" maxlength="20" placeholder="请输入新密码">
+        </el-input>
+      </el-form-item>
+      <el-form-item label="确认密码：" required>
+        <el-input style="width: 200px" v-model="confirm_password" maxlength="20" placeholder="请确认密码">
+        </el-input>
+      </el-form-item>
+    </el-form>
+  </div>
+  <div slot="footer" class="dialog_footer">
+    <el-button size="small" @click="edit_dialog = false">取消</el-button>
+    <el-button type="primary" size="small" @click="commitFn">确定</el-button>
+  </div>
+</el-dialog>
 </div>
 </template>
 

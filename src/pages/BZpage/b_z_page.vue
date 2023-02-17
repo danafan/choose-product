@@ -14,7 +14,7 @@
 					</el-select>
 				</el-form-item>
 				<el-form-item>
-					<el-input clearable v-model="search" placeholder="款号/款式编码"></el-input>
+					<el-input clearable v-model="search" placeholder="款号"></el-input>
 				</el-form-item>
 				<el-form-item class="form_item">
 					<el-button type="primary" @click="checkPage(1)">查询</el-button>
@@ -26,7 +26,6 @@
 			</TableTitle>
 			<el-table size="mini" :data="table_data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" v-loading="loading">
 				<el-table-column label="款号" prop="style_name"></el-table-column>
-				<el-table-column label="款式编码" prop="i_id"></el-table-column>
 				<el-table-column label="图片" width="150">
 					<template slot-scope="scope">
 						<div v-if="scope.row.images.length == 0">暂无</div>
@@ -38,7 +37,12 @@
 					</template>
 				</el-table-column>
 				<el-table-column label="成本价" prop="cost_price"></el-table-column>
-				<el-table-column label="款式" prop="style_name"></el-table-column>
+				<el-table-column label="款式" prop="style_name">
+					<template slot-scope="scope">
+						<div>{{scope.row.type == 1?'爆款':'主推款'}}</div>
+					</template>
+				</el-table-column>
+				<el-table-column label="供应商" show-overflow-tooltip prop="supplier_name"></el-table-column>
 				<el-table-column label="爆款图片" width="150">
 					<template slot-scope="scope">
 						<div v-if="scope.row.hot_images.length == 0">暂无</div>
@@ -86,6 +90,10 @@
 	}
 	.card_box{
 		flex:1;
+		.image{
+			width: 100px;
+			height: 100px;
+		}
 	}
 	.card_img{
 		width: 120rem;

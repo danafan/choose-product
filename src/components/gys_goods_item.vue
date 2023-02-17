@@ -273,6 +273,7 @@
 				}
 				resource.pushHostData(arg).then(res => {
 					if(res.data.code == 1){
+						this.send_dialog = false;
 						this.$message.success(res.data.msg);
 					}else{
 						this.$message.warning(res.data.msg);
