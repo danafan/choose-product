@@ -2,7 +2,7 @@
 	<div class="chain_page_content">
 		<el-card class="card_box">
 			<div class="form_row">
-				<el-form size="small" style="flex:1" label-width="120px">
+				<el-form size="small" style="width: 50%" label-width="120px">
 					<el-form-item label="提交人：" v-if="is_detail">
 						<div>{{add_admin_name}}</div>
 					</el-form-item>
@@ -61,7 +61,7 @@
 						<div>{{refuse_reason}}</div>
 					</el-form-item>
 				</el-form>
-				<el-form size="small" style="flex:1" label-width="100px">
+				<el-form size="small" style="width: 50%" label-width="100px">
 					<el-form-item label="商品款号：" required>
 						<el-input placeholder="商品款号" v-model="arg.style_name" :disabled="is_detail">
 						</el-input>
@@ -669,8 +669,19 @@
 </script>
 <style>
 .el-tag {
+	position: relative;
+	max-width: 300px;
 	margin-right: 10px;
-	margin-bottom: 10px;
+	margin-bottom: 0!important;
+	overflow: hidden!important;
+	text-overflow: ellipsis!important;
+	white-space: nowrap!important;
+	padding-right: 18px;
+}
+.el-tag__close{
+	position: absolute!important;
+	right: 1px!important;
+	top: 3px!important;
 }
 </style>
 <style lang="less" scoped>

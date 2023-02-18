@@ -27,18 +27,20 @@
       </el-popover>
       <div class="header_right">
         <div class="tab_item" :class="{'active_tab':active_index == index}" v-for="(item,index) in menu_list" @click="checkIndex(index)">{{item.menu_name}}</div>
-        
-        <div>
+        <div v-if="user_type == 2">
           <el-dropdown @command="edit_dialog = true">
             <div style="display: flex;align-items: center">
              <img class="user_img" src="../static/user_img.png">
              <div class="user_name">{{username}}</div>
            </div>
-           
            <el-dropdown-menu slot="dropdown">
             <el-dropdown-item>修改密码</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
+      </div>
+      <div style="display: flex;align-items: center" v-else>
+        <img class="user_img" src="../static/user_img.png">
+             <div class="user_name">{{username}}</div>
       </div>
       <div class="line"></div>
       <el-popconfirm

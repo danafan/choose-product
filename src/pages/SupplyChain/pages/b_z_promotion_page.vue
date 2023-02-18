@@ -26,7 +26,22 @@
 			</TableTitle>
 			<el-table size="mini" :data="table_data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" v-loading="loading">
 				<el-table-column label="款号" prop="style_name"></el-table-column>
-				<el-table-column label="款式编码" prop="i_id"></el-table-column>
+				<el-table-column label="款式编码" prop="i_id" width="140">
+					<template slot-scope="scope">
+						<div class="item_row">
+							<div class="item_label">普通：</div>
+							<div>
+								<div v-for="item in scope.row.new_i_id">{{item}}</div>
+							</div>
+						</div>
+						<div class="item_row">
+							<div class="item_label">BD：</div>
+							<div>
+								<div v-for="item in scope.row.new_bd_i_id">{{item}}</div>
+							</div>
+						</div>
+					</template>
+				</el-table-column>
 				<el-table-column label="图片" width="150">
 					<template slot-scope="scope">
 						<div v-if="scope.row.images.length == 0">暂无</div>
@@ -143,6 +158,13 @@
 			width: 100px;
 			height: 100px;
 		}
+		.item_row{
+			display: flex;
+			.item_label{
+				width: 36px;
+				text-align:end;
+			}
+		}
 	}
 	.card_img{
 		width: 120rem;
@@ -254,6 +276,13 @@
     						})
     						item.new_hot_url = new_hot_url;
 
+    						if(item.i_id){
+								item.new_i_id = item.i_id.split(',')
+							}
+							if(item.bd_i_id){
+								item.new_bd_i_id = item.bd_i_id.split(',')
+							}
+
     					})
     					this.table_data = table_data;
     					this.total =  res.data.data.total;
@@ -271,7 +300,15 @@
 			},
 			//点击链接
 			openWindow(url){
-				window.open(url)
+				if(url.indexOf('http://') == -1 && url.indexOf('https://') == -1 ){
+					this.$alert(`【${url}】不是正确的链接格式!`, '提示', {
+						confirmButtonText: '我知道了',
+						callback: action => {
+						}
+					});
+				}else{
+					window.open(url)
+				}
 			},
 			//点击审核
 			auditFn(id){
@@ -316,7 +353,7 @@
 					if(res.data.code == 1){
 						this.$message.success(res.data.msg);
 						//获取列表
-    					this.hotDataList();
+						this.hotDataList();
 						this.audit_dialog = false;
 					}else{
 						this.$message.warning(res.data.msg);

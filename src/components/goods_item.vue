@@ -26,7 +26,7 @@
 			</div>
 			<div class="cate">{{info.style_name}}</div>
 		</div>
-		<div class="desc">{{info.title}}</div>
+		<div class="desc">&nbsp{{info.title}}</div>
 		<div class="code_time">
 			<el-tooltip class="item" effect="dark" placement="top-start">
 				<div slot="content">
@@ -608,6 +608,15 @@
 					this.$message.warning('该商品没有成本价,不能选款!')
 				}
 			},
+			//缓存选款的店铺、需求类型、发货类型参数
+			changeSelectForm(){	
+				let form = {
+					shop_code:this.shop_code,
+					demand_type:this.demand_type,
+					send_type:this.send_type
+				}
+				localStorage.setItem("selectedForm",JSON.stringify(form))
+			},
 			//提交选款
 			confirmSelect(){
 				if(this.shop_code.length == 0){
@@ -645,6 +654,7 @@
 							this.is_loading = false;
 							this.$message.success(res.data.msg);
 							this.show_select = false;
+							this.changeSelectForm();
 						}else{
 							this.$message.warning(res.data.msg);
 						}
@@ -677,6 +687,19 @@
 				commonResource.ajaxViewShop(arg).then(res => {
 					if(res.data.code == 1){
 						this.store_list = res.data.data;
+						let selectedForm = localStorage.getItem("selectedForm");
+						if(selectedForm){
+							let new_selected_form = JSON.parse(localStorage.getItem("selectedForm"));
+							this.shop_code = [];
+							new_selected_form.shop_code.map(item => {
+								let arr = this.store_list.filter(i => {
+									return i.shop_code == item;
+								})
+								if(arr.length > 0){
+									this.shop_code.push(arr[0].shop_code)
+								}
+							})
+						}
 					}else{
 						this.$message.warning(res.data.msg);
 					}
@@ -695,11 +718,40 @@
 						this.delivery_type_list = data.filter(item => {
 							return item.type == 2;
 						})
-						if(this.delivery_type_list.length > 0){
-							this.send_type = [];
-							if(this.delivery_type_list.length < 2){
+
+						this.demand_type = [];
+						this.send_type = [];
+
+						let selectedForm = localStorage.getItem("selectedForm");
+						if(selectedForm){
+							let new_selected_form = JSON.parse(localStorage.getItem("selectedForm"));
+
+							new_selected_form.demand_type.map(item => {
+								let arr = this.need_type.filter(i => {
+									return i.name == item;
+								})
+								if(arr.length > 0){
+									this.demand_type.push(arr[0].name)
+								}
+							})
+
+							if(this.delivery_type_list.length == 1){
 								this.send_type.push(this.delivery_type_list[0].name);
+							} else {
+								new_selected_form.send_type.map(item => {
+									let arr = this.delivery_type_list.filter(i => {
+										return i.name == item;
+									})
+									if(arr.length > 0){
+										this.send_type.push(arr[0].name)
+									}
+								})
 							}
+							
+						}else{
+							if(this.delivery_type_list.length == 1){
+								this.send_type.push(this.delivery_type_list[0].name);
+							} 
 						}
 					}else{
 						this.$message.warning(res.data.msg);
@@ -784,9 +836,6 @@
 			},
 			//关闭选款弹窗
 			closeSelectDialog(){
-				// this.shop_code = [];			//选中的店铺
-				// this.demand_type = [];			//选中的需求类型
-				// this.send_type = "";			//选中的发货类型
 				this.demand_date = "";			//需求日期
 				this.selling_price = "";		//售卖价格
 				this.remark = "";				//备注
@@ -827,8 +876,6 @@
     		getDetail(){
     			if(!this.isClick) return;
     			let active_path = `/goods_detail?style_id=${this.info.style_id}`;
-    			// localStorage.setItem("active_path",active_path);
-    			// this.$store.commit("setPath", active_path);
     			const routeData = this.$router.resolve(active_path);
     			window.open(routeData.href);
     		},

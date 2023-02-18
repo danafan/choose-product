@@ -53,6 +53,7 @@
 							<el-option v-for="item in dept_list" :key="item.dept_name" :label="item.dept_name" :value="item.dept_name">
 							</el-option>
 						</el-select>
+						<el-checkbox style="margin-left: 8px" :indeterminate="isIndeterminateDept" v-model="checkAllDept" @change="checkAllDeptFn"></el-checkbox>
 					</el-form-item>
 					<el-form-item label="绑定店铺：" v-if="menu_role_ids.indexOf(1) == -1">
 						<el-select v-model="shop_codes" clearable multiple filterable collapse-tags placeholder="选择店铺" @change="selectedStore">
@@ -105,8 +106,10 @@
 				view_type:1,				//是否查看记录
 				dialog_title:"",			//弹窗标题
 				type:"",					//弹窗类型
-				isIndeterminate: false,		//当前半全选状态
-				checkAll: false,			//当前全选状态
+				isIndeterminateDept: false,	//当前半全选状态(部门)
+				isIndeterminate: false,		//当前半全选状态（店铺）
+				checkAllDept: false,			//当前全选状态（部门）
+				checkAll: false,			//当前全选状态（店铺）
 			}
 		},
 		created(){
@@ -206,6 +209,10 @@
 						this.menu_role_ids = data.info.menu_role_ids;
 						this.dept_list = data.dept_list;
 						this.dept_names = data.selected_depts;
+						this.isIndeterminateDept =
+						this.dept_names.length > 0 &&
+						this.dept_names.length < this.dept_list.length;
+						this.checkAllDept = this.dept_names.length == this.dept_list.length;
 						this.view_type = data.view_type;
 						//获取店铺列表
 						this.ajaxViewShop(this.dept_names,data.selected_shops);
@@ -215,8 +222,12 @@
 					}
 				})
 			},
-			//获取店铺列表
+			//切换选中部门
 			ajaxViewShop(dept_names,selected_shops) {
+				this.isIndeterminateDept =
+				dept_names.length > 0 &&
+				dept_names.length < this.dept_list.length;
+				this.checkAllDept = dept_names.length == this.dept_list.length;
 				let arg = {
 					type: 2,
 					dept_name: dept_names.join(","),
@@ -247,6 +258,21 @@
 				selected_shops.length < this.shop_list.length;
 				this.checkAll = selected_shops.length == this.shop_list.length;
 			},
+			//切换是否全选部门
+			checkAllDeptFn(val) {
+				this.isIndeterminateDept = false;
+				if (val) {
+					let arr = [];
+					this.dept_list.map((item) => {
+						arr.push(item.dept_name);
+					});
+					this.dept_names = arr;
+				} else {
+					this.dept_names = [];
+				}
+    			//获取店铺列表
+    			this.ajaxViewShop(this.dept_names);
+    		},
     		//切换是否全选店铺
     		checkAllStore(val) {
     			this.isIndeterminate = false;

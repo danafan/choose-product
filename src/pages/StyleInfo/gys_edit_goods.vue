@@ -6,7 +6,7 @@
 			</TableTitle>
 			<div class="scroll_box" :style="{height:max_height}">
 				<div class="form_row">
-					<el-form size="small" label-width="100px" style="width:60%">
+					<el-form size="small" label-width="100px" style="width:50%">
 						<el-form-item label="提交人：" v-if="is_detail">
 							<div>{{arg.add_admin_name}}</div>
 						</el-form-item>
@@ -131,20 +131,6 @@
 						</el-form-item>
 					</el-form>
 				</div>
-				<!-- <div class="form_row margin_bottom">
-					<el-checkbox v-model="arg.hot_style" :true-label="1" :false-label="0" :disabled="is_detail">爆款</el-checkbox>
-					<el-checkbox v-model="arg.sole_style" :true-label="1" :false-label="0" :disabled="is_detail">独家款</el-checkbox>
-					<el-checkbox v-model="arg.data_style" :true-label="1" :false-label="0" :disabled="is_detail">主推款</el-checkbox>
-					<el-checkbox v-model="arg.again_style" :true-label="1" :false-label="0" :disabled="is_detail">二开款</el-checkbox>
-				</div> -->
-				<!-- <div class="form_row">
-					<el-form size="small" label-width="100px">
-						<el-form-item label="网盘地址：">
-							<el-input :placeholder="is_detail?'':'网盘地址'" v-model="arg.net_disk_address" :disabled="is_detail">
-							</el-input>
-						</el-form-item>
-					</el-form>
-				</div> -->
 				<div class="form_row">
 					<el-form size="small" label-width="100px">
 						<el-form-item label="商品图：">
@@ -153,10 +139,6 @@
 							</div>
 							<UploadFile :img_list="img_list" :is_multiple="true" :current_num="arg.img.length" :max_num="99" @callbackFn="callbackFn" v-else/>
 						</el-form-item>
-						<!-- <el-form-item label="备注：">
-							<el-input type="textarea" :rows="5" :placeholder="is_detail?'':'请输入备注'" v-model="arg.remark" :disabled="is_detail">
-							</el-input>
-						</el-form-item> -->
 					</el-form>
 				</div>
 				<div class="bottom_row" v-if="goods_type == '1' || goods_type == '2' || goods_type == '5'">
