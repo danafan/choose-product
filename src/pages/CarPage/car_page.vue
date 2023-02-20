@@ -340,7 +340,7 @@
 			//获取店铺列表
 			ajaxViewShop(){
 				let arg = {
-					type:1,
+					type:3,
 				}
 				commonResource.ajaxViewShop(arg).then(res => {
 					if(res.data.code == 1){

@@ -122,7 +122,7 @@
 				</el-table-column>
 				<el-table-column label="颜色" prop="color"></el-table-column>
 				<el-table-column label="尺码" prop="size"></el-table-column>
-				<el-table-column label="面料" prop="fabric"></el-table-column>
+				<el-table-column label="面料" width="120" show-overflow-tooltip prop="fabric"></el-table-column>
 				<el-table-column label="市场" prop="market"></el-table-column>
 				<el-table-column label="是否对接推单" width="100">
 					<template slot-scope="scope">
@@ -200,10 +200,10 @@
 			</div>
 			<div style="padding:20px">
 				<el-form>
-					<el-form-item label="原成本价：">
+					<el-form-item label="原成本价：" v-if="cost_price">
 						<div>{{cost_price}}</div>
 					</el-form-item>
-					<el-form-item label="调后成本价：">
+					<el-form-item label="调后成本价：" v-if="edit_price">
 						<div>{{edit_price}}</div>
 					</el-form-item>
 					<el-form-item>
@@ -835,6 +835,8 @@
 			//关闭调价审批
 			closeAdjust(){
 				this.adjust_type = 1;				//调价审批选中的状态
+				this.cost_price = '';
+				this.edit_price = '';
 				this.refuse_reason = "";			//拒绝原因
 			},
 			//提交调价审批

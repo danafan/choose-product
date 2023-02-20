@@ -984,8 +984,8 @@
 			//点击编辑
 			editInfo(select_id,i_id,bd_i_id){
 				this.edit_arg.select_id = select_id;
-				this.edit_arg.i_id = i_id.replaceAll(",", ";");
-				this.edit_arg.bd_i_id = bd_i_id.replaceAll(",", ";");
+				this.edit_arg.i_id = i_id?i_id.replaceAll(",", ";"):"";
+				this.edit_arg.bd_i_id = bd_i_id?bd_i_id.replaceAll(",", ";"):'';
 				this.edit_dialog = true;
 			},
 			//关闭编辑

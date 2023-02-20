@@ -44,7 +44,7 @@
 				</el-table-column>
 				<el-table-column label="图片" width="150">
 					<template slot-scope="scope">
-						<div v-if="scope.row.images.length == 0">暂无</div>
+						<div v-if="scope.row.images.length == 0"></div>
 						<el-carousel trigger="hover" indicator-position="none" :autoplay="false" height="100px" v-else>
 							<el-carousel-item v-for="item in scope.row.images" :key="item">
 								<el-image :z-index="2006" class="image" :src="item" fit="scale-down" :preview-src-list="scope.row.images"></el-image>
@@ -97,7 +97,7 @@
 				<div>审核详情</div>
 				<img class="close_icon" src="../../../static/close_icon.png" @click="audit_dialog = false">
 			</div>
-			<div>
+			<div style="padding:20px">
 				<el-form size="mini">
 					<el-form-item label="款式：">
 						{{info_data.type == 1?'爆款':'主推款'}}

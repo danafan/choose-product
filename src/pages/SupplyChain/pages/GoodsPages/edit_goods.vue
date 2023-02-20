@@ -104,9 +104,15 @@
 						</el-radio-group>
 					</el-form-item>
 					<el-form-item label="爆款链接：" v-if="arg.hot_style">
-						<el-tag size="small" :key="url" v-for="url in link_urls" :closable="!is_detail" :disable-transitions="false" @close="handleClose(url)">
-							{{url}}
-						</el-tag>
+						<div style="display: flex;flex-wrap: wrap">
+							<div :key="url" v-for="url in link_urls">
+								<el-tooltip class="item" effect="dark" :content="url" placement="top-start">
+									<el-tag size="small" :closable="!is_detail" :disable-transitions="false" @close="handleClose(url)">
+										{{url}}
+									</el-tag>
+								</el-tooltip>
+							</div>
+						</div>
 						<el-input class="input-new-tag" v-if="inputVisible" v-model="inputValue" ref="saveTagInput" size="small" @keyup.enter.native="handleInputConfirm" @blur="handleInputConfirm">
 						</el-input>
 						<el-button size="mini" v-if="!inputVisible && !is_detail" type="primary" icon="el-icon-plus" @click="showInput">新增</el-button>

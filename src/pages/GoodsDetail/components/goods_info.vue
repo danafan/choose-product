@@ -202,6 +202,15 @@
 					this.$message.warning('该商品没有成本价,不能选款!')
 				}
 			},
+			//缓存选款的店铺、需求类型、发货类型参数
+			changeSelectForm(){	
+				let form = {
+					shop_code:this.shop_code,
+					demand_type:this.demand_type,
+					send_type:this.send_type
+				}
+				localStorage.setItem("selectedForm",JSON.stringify(form))
+			},
 			//提交选款
 			confirmSelect(){
 				if(this.shop_code.length == 0){
@@ -239,6 +248,7 @@
 							this.is_loading = false;
 							this.$message.success(res.data.msg);
 							this.show_select = false;
+							this.changeSelectForm();
 							this.$emit('callback');
 						}else{
 							this.$message.warning(res.data.msg);
@@ -267,11 +277,24 @@
 			//获取店铺列表
 			ajaxViewShop(){
 				let arg = {
-					type:1,
+					type:3,
 				}
 				commonResource.ajaxViewShop(arg).then(res => {
 					if(res.data.code == 1){
 						this.store_list = res.data.data;
+						let selectedForm = localStorage.getItem("selectedForm");
+						if(selectedForm){
+							let new_selected_form = JSON.parse(localStorage.getItem("selectedForm"));
+							this.shop_code = [];
+							new_selected_form.shop_code.map(item => {
+								let arr = this.store_list.filter(i => {
+									return i.shop_code == item;
+								})
+								if(arr.length > 0){
+									this.shop_code.push(arr[0].shop_code)
+								}
+							})
+						}
 					}else{
 						this.$message.warning(res.data.msg);
 					}
@@ -290,11 +313,40 @@
 						this.delivery_type_list = data.filter(item => {
 							return item.type == 2;
 						})
-						if(this.delivery_type_list.length > 0){
-							this.send_type = [];
-							if(this.delivery_type_list.length < 2){
+						
+						this.demand_type = [];
+						this.send_type = [];
+
+						let selectedForm = localStorage.getItem("selectedForm");
+						if(selectedForm){
+							let new_selected_form = JSON.parse(localStorage.getItem("selectedForm"));
+
+							new_selected_form.demand_type.map(item => {
+								let arr = this.need_type.filter(i => {
+									return i.name == item;
+								})
+								if(arr.length > 0){
+									this.demand_type.push(arr[0].name)
+								}
+							})
+
+							if(this.delivery_type_list.length == 1){
 								this.send_type.push(this.delivery_type_list[0].name);
+							} else {
+								new_selected_form.send_type.map(item => {
+									let arr = this.delivery_type_list.filter(i => {
+										return i.name == item;
+									})
+									if(arr.length > 0){
+										this.send_type.push(arr[0].name)
+									}
+								})
 							}
+							
+						}else{
+							if(this.delivery_type_list.length == 1){
+								this.send_type.push(this.delivery_type_list[0].name);
+							} 
 						}
 					}else{
 						this.$message.warning(res.data.msg);

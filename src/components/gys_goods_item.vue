@@ -40,9 +40,16 @@
 			</div>
 			<el-form style="margin-top: 15px;" size="small" label-width="100px">
 				<el-form-item label="爆款链接：" v-if="type == 1" required>
-					<el-tag size="small" :key="url" v-for="url in link_urls" closable :disable-transitions="false" @close="handleClose(url)">
-						{{url}}
-					</el-tag>
+					<div style="display: flex;flex-wrap: wrap">
+						<div :key="url" v-for="url in link_urls">
+							<el-tooltip class="item" effect="dark" :content="url" placement="top-start">
+								<el-tag size="small" closable :disable-transitions="false" @close="handleClose(url)">
+									{{url}}
+								</el-tag>
+							</el-tooltip>
+						</div>
+					</div>
+					
 					<el-input class="input-new-tag" v-if="inputVisible" v-model="inputValue" ref="saveTagInput" size="small" @keyup.enter.native="handleInputConfirm" @blur="handleInputConfirm">
 					</el-input>
 					<el-button size="mini" v-if="!inputVisible" type="primary" icon="el-icon-plus" @click="showInput">新增</el-button>
@@ -73,8 +80,19 @@
 </template>
 <style>
 .el-tag {
+	position: relative;
+	max-width: 300px;
 	margin-right: 10px;
-	margin-bottom: 10px;
+	margin-bottom: 0!important;
+	overflow: hidden!important;
+	text-overflow: ellipsis!important;
+	white-space: nowrap!important;
+	padding-right: 18px;
+}
+.el-tag__close{
+	position: absolute!important;
+	right: 1px!important;
+	top: 3px!important;
 }
 </style>
 <style lang="less" scoped>
@@ -263,8 +281,12 @@
 					arg['hot_url'] = this.link_urls.join(',');
 					arg['hot_img'] = this.bk_img.join(',');
 				}else{	//主推款
-					if(this.data_num == ''){
-						this.$message.warning('请输入库存数');
+					if(!this.isZzs.test(this.data_num)){
+						this.$message.warning('库存数不能为空且是正整数');
+						return
+					}
+					if(this.tj && !this.isZzs.test(this.tj)){
+						this.$message.warning('调价必须是正整数');
 						return
 					}
 					arg['data_num'] = this.kcs;
