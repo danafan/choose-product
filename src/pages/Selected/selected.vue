@@ -203,6 +203,10 @@
 					<div class="lable">拒绝原因</div>
 					<div class="value">{{goods_info.refund_reason}}</div>
 				</div>
+				<div class="detail_row">
+					<div class="lable">选款要求</div>
+					<div class="value" v-html="goods_info.demand_remark"></div>
+				</div>
 			</div>
 			<div slot="footer" class="dialog_footer">
 				<el-button type="primary" size="small" @click="detail_dialog = false">关闭</el-button>

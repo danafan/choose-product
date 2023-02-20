@@ -281,18 +281,20 @@
 					arg['hot_url'] = this.link_urls.join(',');
 					arg['hot_img'] = this.bk_img.join(',');
 				}else{	//主推款
-					if(!this.isZzs.test(this.data_num)){
+					if(!this.isZzs.test(this.kcs)){
 						this.$message.warning('库存数不能为空且是正整数');
 						return
 					}
-					if(this.tj && !this.isZzs.test(this.tj)){
-						this.$message.warning('调价必须是正整数');
+					if(this.tj && !this.isPrice.test(this.tj)){
+						this.$message.warning('调价需大于0且最多两位小数');
 						return
 					}
 					arg['data_num'] = this.kcs;
 					arg['data_price'] = this.tj;
 					arg['remark'] = this.bz;
 				}
+				console.log(arg)
+				return
 				resource.pushHostData(arg).then(res => {
 					if(res.data.code == 1){
 						this.send_dialog = false;

@@ -153,11 +153,6 @@
 			<el-table-column label="发货类型" prop="send_type"></el-table-column>
 			<el-table-column label="提交时间" prop="select_time"></el-table-column>
 			<el-table-column label="供应商" prop="supplier_name"></el-table-column>
-			<el-table-column label="选款要求">
-				<template slot-scope="scope">
-					<div v-html="scope.row.demand_remark"></div>
-				</template>
-			</el-table-column>
 			<el-table-column label="需求状态" prop="common_text">
 				<template slot-scope="scope">
 					<div v-if="scope.row.audit_status == 0">已撤销</div>
