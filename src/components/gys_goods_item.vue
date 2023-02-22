@@ -307,7 +307,12 @@
 				resource.pushHostData(arg).then(res => {
 					if(res.data.code == 1){
 						this.send_dialog = false;
+						this.$emit('reload');
 						this.$message.success(res.data.msg);
+					}else if(res.data.code == 9){
+						this.send_dialog = false;
+						this.$emit('reload');
+						this.$message.warning(res.data.msg);
 					}else{
 						this.$message.warning(res.data.msg);
 					}

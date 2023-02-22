@@ -54,7 +54,7 @@
 					<ScreeningWidget id="screen_widget" v-if="show_screen" :total_num="total" page_type="gys_supplier" @callback="screenFn"/>
 					<div class="scroll_view" v-if="goods_list.length > 0">
 						<div class="goods_list">
-							<GoodsItem :info="item" v-for="item in goods_list"/>
+							<GoodsItem @reload="getList(arg)" :info="item" v-for="item in goods_list"/>
 							<div class="padding_item" v-for="i in 6-(goods_list.length%6) == 6?0:6-(goods_list.length%6)"></div>
 						</div>
 						<PaginationWidget :total="total" :page="page" :pagesize="pagesize" @checkPage="checkPage"/>
