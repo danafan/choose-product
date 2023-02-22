@@ -163,7 +163,7 @@
 					name:'独家款',
 					is_selected:0
 				},{
-					name:'二开款',
+					name:'自主款',
 					is_selected:0
 				}],								//款式列表
 				up_type:null,					//上新类型

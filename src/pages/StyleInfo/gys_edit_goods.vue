@@ -80,7 +80,7 @@
 						</el-form-item>
 						
 						<el-form-item label="爆款：">
-							<el-radio-group v-model="arg.hot_style" :disabled="is_detail">
+							<el-radio-group v-model="arg.hot_style" :disabled="is_detail || hot_status === 0">
 								<el-radio :label="1">是</el-radio>
 								<el-radio :label="0">否</el-radio>
 							</el-radio-group>
@@ -89,39 +89,38 @@
 							<div style="display: flex;flex-wrap: wrap">
 								<div :key="url" v-for="url in link_urls">
 									<el-tooltip class="item" effect="dark" :content="url" placement="top-start">
-										<el-tag size="small" :closable="!is_detail" :disable-transitions="false" @close="handleClose(url)">
+										<el-tag size="small" :closable="!is_detail && default_hot_style === 0" :disable-transitions="false" @close="handleClose(url)">
 											{{url}}
 										</el-tag>
 									</el-tooltip>
 								</div>
 							</div>
-							
 							<el-input class="input-new-tag" v-if="inputVisible" v-model="inputValue" ref="saveTagInput" size="small" @keyup.enter.native="handleInputConfirm" @blur="handleInputConfirm">
 							</el-input>
-							<el-button size="mini" v-if="!inputVisible && !is_detail" type="primary" icon="el-icon-plus" @click="showInput">新增</el-button>
+							<el-button size="mini" v-if="!inputVisible && !is_detail && default_hot_style === 0" type="primary" icon="el-icon-plus" @click="showInput">新增</el-button>
 						</el-form-item>
 						<el-form-item label="爆款图片：" v-if="arg.hot_style">
-							<div v-if="is_detail">
+							<div v-if="is_detail || default_hot_style === 1">
 								<el-image class="bk_card_img" v-for="item in preview_bk_image" :src="item" fit="scale-down" :preview-src-list="preview_bk_image"></el-image>
 							</div>
 							<UploadFile :img_list="bk_img_list" :is_multiple="true" :current_num="bk_img.length" :size="80" :max_num="9" @callbackFn="bkCallbackFn" v-else/>
 						</el-form-item>
 						<el-form-item label="主推款：">
-							<el-radio-group v-model="arg.data_style" :disabled="is_detail">
+							<el-radio-group v-model="arg.data_style" :disabled="is_detail || data_status === 0">
 								<el-radio :label="1">是</el-radio>
 								<el-radio :label="0">否</el-radio>
 							</el-radio-group>
 						</el-form-item>
 						<el-form-item label="库存数：" v-if="arg.data_style">
-							<el-input type="number" v-model="kcs" :disabled="is_detail">
+							<el-input type="number" v-model="kcs" :disabled="is_detail || default_data_style === 1">
 							</el-input>
 						</el-form-item>
 						<el-form-item label="调价：" v-if="arg.data_style">
-							<el-input type="number" v-model="tj" :disabled="is_detail">
+							<el-input type="number" v-model="tj" :disabled="is_detail || default_data_style === 1">
 							</el-input>
 						</el-form-item>
 						<el-form-item label="备注：" v-if="arg.data_style">
-							<el-input type="textarea" :rows="3" :placeholder="is_detail?'':'请输入备注'" v-model="bz" :disabled="is_detail">
+							<el-input type="textarea" :rows="3" :placeholder="is_detail?'':'请输入备注'" v-model="bz" :disabled="is_detail || default_data_style === 1">
 							</el-input>
 						</el-form-item>
 						<el-form-item label="独家款：">
@@ -130,7 +129,7 @@
 								<el-radio :label="0">否</el-radio>
 							</el-radio-group>
 						</el-form-item>
-						<el-form-item label="二开款：">
+						<el-form-item label="自主款：">
 							<el-radio-group v-model="arg.again_style" :disabled="is_detail">
 								<el-radio :label="1">是</el-radio>
 								<el-radio :label="0">否</el-radio>
@@ -200,6 +199,10 @@
 					remark:"",				//备注
 				},							//可传递的参数
 				shooting_style_ids:[],		//已选中的拍摄风格
+				default_hot_style:0,		//默认是否爆款
+				default_data_style:0,		//默认是否主推款
+				hot_status:10,				//爆款审核状态
+				data_status:10,				//主推款审核状态
 				link_urls: [],				//已填写的爆款链接列表
 				inputVisible: false,		//是否显示新建链接的输入框
 				inputValue: '',				//新建链接的输入框内容
@@ -317,6 +320,12 @@
 			setInfo(data_info){
 				this.price_status = data_info.price_status;
 				this.edit_price = data_info.edit_price;
+
+				this.default_hot_style = data_info.hot_style;//默认是否爆款
+				this.default_data_style = data_info.data_style;	//默认是否主推款
+				this.hot_status = data_info.hot_status; //爆款审核状态
+				this.data_status = data_info.data_status; //主推款审核状态
+
 				data_info.img.map(item => {
 					let img_obj = {
 						urls:item,

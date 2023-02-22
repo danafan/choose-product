@@ -18,8 +18,8 @@
 			<div class="num_row">
 				<div class="kh">款号：{{info.p_style_name}}</div>
 				<div class="buts">
-					<div class="but" @click="sendFn(1)">推爆款</div>
-					<div class="but" @click="sendFn(2)">推主推</div>
+					<div class="but" :class="{'drak_back':info.hot_style == 1}" @click="sendFn(1,info.hot_style)">推爆款</div>
+					<div class="but" :class="{'drak_back':info.data_style == 1}" @click="sendFn(2,info.data_style)">推主推</div>
 				</div>
 			</div>
 			<div class="img_list">
@@ -170,6 +170,9 @@
 				font-size: 12rem;
 				color: #ffffff;
 			}
+			.drak_back{
+				background-color: #999999;
+			}
 		}
 		.img_list{
 			margin-top: 12rem;
@@ -226,9 +229,17 @@
 		},
 		methods:{
 			//点击推爆款或主推款
-			sendFn(type){
-				this.type = type;
-				this.send_dialog = true;
+			sendFn(type,style){
+				if(style == 0){
+					this.type = type;
+					this.send_dialog = true;
+				}else{
+					if(type == 1){
+						this.$message.warning('爆款已推！');
+					}else{
+						this.$message.warning('主推款已推！');
+					}
+				}
 			},
 			//关闭推款弹窗
 			closeSendDialog(){
@@ -293,8 +304,6 @@
 					arg['data_price'] = this.tj;
 					arg['remark'] = this.bz;
 				}
-				console.log(arg)
-				return
 				resource.pushHostData(arg).then(res => {
 					if(res.data.code == 1){
 						this.send_dialog = false;
