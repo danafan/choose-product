@@ -143,7 +143,7 @@
 					<el-checkbox :true-label="1" :false-label="0" v-model="type">24小时内不再提示</el-checkbox>
 				</div>
 				<div slot="footer" class="dialog_footer">
-					<el-button size="small" @click="cancelToast">取消</el-button>
+					<el-button size="small" @click="toast_dialog = false">取消</el-button>
 					<el-button type="primary" size="small" @click="confirmSelect(1)">继续选择</el-button>
 				</div>
 			</el-dialog>
@@ -567,11 +567,12 @@
 			}
 		}
 	}
-	.toast_content{
-		padding: 10rem 20rem;
-		.toast_text{
-			margin-bottom: 15rem;
-		}
+	
+}
+.toast_content{
+	padding: 10rem 20rem;
+	.toast_text{
+		margin-bottom: 15rem;
 	}
 }
 </style>
