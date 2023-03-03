@@ -17,6 +17,10 @@
 								</el-option>
 							</el-select>
 						</el-form-item>
+						<el-form-item label="需求人：">
+							<el-input placeholder="需求人" clearable v-model="search_user">
+							</el-input>
+						</el-form-item>
 						<el-form-item class="form_item">
 							<el-button type="primary" @click="checkPage(1)">查询</el-button>
 						</el-form-item>
@@ -30,7 +34,7 @@
 						<template slot-scope="scope">
 							<div v-if="scope.row.images.length == 0">暂无</div>
 							<el-carousel trigger="hover" indicator-position="none" :autoplay="false" height="100px" v-else>
-								<el-carousel-item v-for="item in scope.row.images" :key="item">
+								<el-carousel-item v-for="(item,index) in scope.row.images" :key="index">
 									<el-image :z-index="2006" class="image" :src="item" fit="scale-down" :preview-src-list="scope.row.images"></el-image>
 								</el-carousel-item>
 							</el-carousel>
@@ -227,6 +231,7 @@
 				loading:false,	
 				store_list:[],			//店铺列表
 				shop_code:"",			//选中的店铺
+				search_user:"",			//需求人
 				tab_list:[{
 					name:'全部',
 					id:''
@@ -319,6 +324,7 @@
 					status:this.tab_list[this.active_index].id,
 					search:this.search,
 					shop_code:this.shop_code,
+					search_user:this.search_user,
 					only_self:this.only_self,
 					page:this.page
 				}

@@ -345,8 +345,8 @@
 					}
 					this.is_loading = true;
 					resource.addSelected(arg).then(res => {
+						this.is_loading = false;
 						if(res.data.code == 1){
-							this.is_loading = false;
 							this.$message.success(res.data.msg);
 							this.show_select = false;
 							this.toast_dialog = false;

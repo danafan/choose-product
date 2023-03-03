@@ -603,7 +603,7 @@
 			},
 			//确认选择按钮是否可点击
 			disabled(){
-				return this.shop_code.length == 0 || this.demand_type.length == 0 || this.send_type .length == 0 || this.is_loading;
+				return this.shop_code.length == 0 || this.demand_type.length == 0 || this.send_type.length == 0 || this.is_loading;
 			}
 		},
 		methods:{
@@ -675,8 +675,8 @@
 					}
 					this.is_loading = true;
 					resource.chooseGoods(arg).then(res => {
+						this.is_loading = false;
 						if(res.data.code == 1){
-							this.is_loading = false;
 							this.$message.success(res.data.msg);
 							this.show_select = false;
 							this.toast_dialog = false;
