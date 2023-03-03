@@ -10,7 +10,7 @@
       
       // this.getUserInfo();
       // return;
-       
+      
       let user_type = localStorage.getItem("user_type");
       if(!localStorage.getItem("cache") && user_type != '2'){
         this.getUserInfo();

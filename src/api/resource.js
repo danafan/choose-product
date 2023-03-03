@@ -27,6 +27,7 @@ let path = {
   supplierGoods:'api/supplier/goods',                     //供应商商品列表
   hotDataIndex:'supplier/productstyle/hotdataindex',           //爆款主推款列表
   pushHostData:'supplier/productstyle/pushhostdata',           //推爆款
+  twoFourTitle:'api/home/twofourtitle',                   //切换24小时不提示
 } 
 export default {
   //页面顶部公告列表
@@ -136,5 +137,9 @@ export default {
   //推爆款
   pushHostData(params) {
     return http.post(path.pushHostData, params);
+  },
+  //切换24小时不提示
+  twoFourTitle(params) {
+    return http.get(path.twoFourTitle, params);
   },
 };

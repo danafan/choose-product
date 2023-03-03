@@ -132,8 +132,23 @@
 				</div>
 				<QuillEditor @callback="getEditor"/>
 			</div>
+			<!-- 提示弹窗 -->
+			<el-dialog :close-on-click-modal="false" width="35%" :close-on-press-escape="false" :show-close="false" :visible.sync="toast_dialog" append-to-body>
+				<div slot="title" class="dialog_title">
+					<div>温馨提示</div>
+					<img class="close_icon" src="../../../static/close_icon.png" @click="toast_dialog = false">
+				</div>
+				<div class="toast_content">
+					<div class="toast_text">{{toast_content}}</div>
+					<el-checkbox :true-label="1" :false-label="0" v-model="type">24小时内不再提示</el-checkbox>
+				</div>
+				<div slot="footer" class="dialog_footer">
+					<el-button size="small" @click="toast_dialog = false">取消</el-button>
+					<el-button type="primary" size="small" @click="confirmSelect(1)">继续选择</el-button>
+				</div>
+			</el-dialog>
 			<div slot="footer" class="dialog_footer">
-				<el-button type="primary" :disabled="disabled" size="small" @click="confirmSelect">确认选择</el-button>
+				<el-button type="primary" :disabled="disabled" size="small" @click="confirmSelect(0)">确认选择</el-button>
 			</div>
 		</el-dialog>
 	</div>
@@ -158,7 +173,10 @@
 				remark:"",				//备注
 				banner_list:[],			//选款弹窗的轮播图
 				active_index:0,			//当前显示的图片下标
-				is_loading:false
+				is_loading:false,
+				toast_dialog:false,		//有提交过的提示
+				toast_content:"",		//提示内容
+				type:0,					//0:提示；1:不提示
 			}
 		},
 		props:{	
@@ -177,6 +195,12 @@
 			disabled(){
 				return this.shop_code.length == 0 || this.demand_type.length == 0 || this.send_type.length == 0 || this.is_loading;
 			}
+		},
+		watch:{
+			//切换24小时内不提示
+			type:function(n,o){
+				this.checkToast(n);
+			},
 		},
 		methods:{
 			//监听选款弹窗关闭
@@ -212,7 +236,7 @@
 				localStorage.setItem("selectedForm",JSON.stringify(form))
 			},
 			//提交选款
-			confirmSelect(){
+			confirmSelect(go_on){
 				if(this.shop_code.length == 0){
 					this.$message.warning('请选择店铺!');
 				}else if(this.demand_type.length == 0){
@@ -240,7 +264,8 @@
 						send_type:this.send_type.join(','),
 						demand_date:this.demand_date?this.demand_date:"",
 						selling_price:this.selling_price,
-						remark:this.remark
+						remark:this.remark,
+						go_on:go_on
 					}
 					this.is_loading = true;
 					resource.chooseGoods(arg).then(res => {
@@ -248,13 +273,25 @@
 							this.is_loading = false;
 							this.$message.success(res.data.msg);
 							this.show_select = false;
+							this.toast_dialog = false;
 							this.changeSelectForm();
 							this.$emit('callback');
+						}else if(res.data.code == 5){
+							this.toast_content = res.data.msg;
+							this.toast_dialog = true;
 						}else{
 							this.$message.warning(res.data.msg);
 						}
 					})
 				}
+			},
+			//切换24小时内不提示
+			checkToast(type){
+				resource.twoFourTitle({type:type}).then(res => {
+					if(res.data.code != 1){
+						this.$message.warning(res.data.msg);
+					}
+				})
 			},
 			//获取选款轮播图
 			chooseBeforGetImg(){
@@ -528,6 +565,12 @@
 					}
 				}
 			}
+		}
+	}
+	.toast_content{
+		padding: 10rem 20rem;
+		.toast_text{
+			margin-bottom: 15rem;
 		}
 	}
 }

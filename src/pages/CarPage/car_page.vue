@@ -30,21 +30,21 @@
 					<el-table-column label="款号" prop="style_name"></el-table-column>
 					<!-- <el-table-column label="款式编码" prop="i_id"></el-table-column> -->
 					<el-table-column label="款式编码" width="140">
-					<template slot-scope="scope">
-						<div class="item_row">
-							<div class="item_label">普通：</div>
-							<div>
-								<div v-for="item in scope.row.new_i_id">{{item}}</div>
+						<template slot-scope="scope">
+							<div class="item_row">
+								<div class="item_label">普通：</div>
+								<div>
+									<div v-for="item in scope.row.new_i_id">{{item}}</div>
+								</div>
 							</div>
-						</div>
-						<div class="item_row">
-							<div class="item_label">BD：</div>
-							<div>
-								<div v-for="item in scope.row.new_bd_i_id">{{item}}</div>
+							<div class="item_row">
+								<div class="item_label">BD：</div>
+								<div>
+									<div v-for="item in scope.row.new_bd_i_id">{{item}}</div>
+								</div>
 							</div>
-						</div>
-					</template>
-				</el-table-column>
+						</template>
+					</el-table-column>
 					<el-table-column label="拍摄风格" prop="shooting_style_name"></el-table-column>
 					<el-table-column label="价格" prop="cost_price"></el-table-column>
 					<el-table-column label="操作" width="80" fixed="right">
@@ -117,8 +117,23 @@
 				</div>
 				<QuillEditor @callback="getEditor"/>
 			</div>
+			<!-- 提示弹窗 -->
+			<el-dialog :close-on-click-modal="false" width="35%" :close-on-press-escape="false" :show-close="false" :visible.sync="toast_dialog" append-to-body>
+				<div slot="title" class="dialog_title">
+					<div>温馨提示</div>
+					<img class="close_icon" src="../../static/close_icon.png" @click="toast_dialog = false">
+				</div>
+				<div class="toast_content">
+					<div class="toast_text">{{toast_content}}</div>
+					<el-checkbox :true-label="1" :false-label="0" v-model="type">24小时内不再提示</el-checkbox>
+				</div>
+				<div slot="footer" class="dialog_footer">
+					<el-button size="small" @click="toast_dialog = false">取消</el-button>
+					<el-button type="primary" size="small" @click="confirmSelect(1)">继续选择</el-button>
+				</div>
+			</el-dialog>
 			<div slot="footer" class="dialog_footer">
-				<el-button type="primary" :disabled="confirmDisabled" size="small" @click="confirmSelect">确认选择</el-button>
+				<el-button type="primary" :disabled="confirmDisabled" size="small" @click="confirmSelect(0)">确认选择</el-button>
 			</div>
 		</el-dialog>
 	</div>
@@ -148,6 +163,9 @@
 				selling_price:"",		//售卖价格
 				remark:"",				//备注
 				is_loading:false,
+				toast_dialog:false,		//有提交过的提示
+				toast_content:"",		//提示内容
+				type:0,					//0:提示；1:不提示
 				
 			}
 		},
@@ -157,6 +175,12 @@
 		created(){
 			//获取购物车列表数量
 			this.getCarList();
+		},
+		watch:{
+			//切换24小时内不提示
+			type:function(n,o){
+				this.checkToast(n);
+			},
 		},
 		updated(){
 			this.addTableIndex();
@@ -202,8 +226,14 @@
     				item.appendChild(span);
     			});
     		},
-
-
+    		//切换24小时内不提示
+    		checkToast(type){
+    			resource.twoFourTitle({type:type}).then(res => {
+    				if(res.data.code != 1){
+    					this.$message.warning(res.data.msg);
+    				}
+    			})
+    		},
     		//监听屏幕大小变化
     		onResize() {
     			this.$nextTick(() => {
@@ -227,16 +257,16 @@
     					let car_goods = res.data.data.data;
     					car_goods.map(item => {
     						let images = [];
-							item.img.map(i => {
-								images.push(this.domain + i);
-							})
-							item.images = images;
-							if(item.i_id){
-								item.new_i_id = item.i_id.split(',')
-							}
-							if(item.bd_i_id){
-								item.new_bd_i_id = item.bd_i_id.split(',')
-							}
+    						item.img.map(i => {
+    							images.push(this.domain + i);
+    						})
+    						item.images = images;
+    						if(item.i_id){
+    							item.new_i_id = item.i_id.split(',')
+    						}
+    						if(item.bd_i_id){
+    							item.new_bd_i_id = item.bd_i_id.split(',')
+    						}
     					})
     					this.car_goods = car_goods;
     				}else{
@@ -274,7 +304,7 @@
 				this.remark = "";				//备注
 			},
 			//提交选款
-			confirmSelect(){
+			confirmSelect(go_on){
 				if(this.shop_code.length == 0){
 					this.$message.warning('请选择店铺!');
 				}else if(this.demand_type.length == 0){
@@ -310,7 +340,8 @@
 						demand_date:this.demand_date?this.demand_date:"",
 						send_type:this.send_type.join(','),
 						selling_price:this.selling_price,
-						remark:this.remark
+						remark:this.remark,
+						go_on:go_on
 					}
 					this.is_loading = true;
 					resource.addSelected(arg).then(res => {
@@ -318,10 +349,14 @@
 							this.is_loading = false;
 							this.$message.success(res.data.msg);
 							this.show_select = false;
+							this.toast_dialog = false;
 							//缓存选款的店铺、需求类型、发货类型参数
 							this.changeSelectForm();
 							//获取购物车列表数量
 							this.getCarList();
+						}else if(res.data.code == 5){
+							this.toast_content = res.data.msg;
+							this.toast_dialog = true;
 						}else{
 							this.$message.warning(res.data.msg);
 						}
@@ -543,6 +578,12 @@
 				}
 			}
 		}
+	}
+}
+.toast_content{
+	padding: 10rem 20rem;
+	.toast_text{
+		margin-bottom: 15rem;
 	}
 }
 </style>
