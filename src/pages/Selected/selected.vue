@@ -18,8 +18,10 @@
 							</el-select>
 						</el-form-item>
 						<el-form-item label="需求人：">
-							<el-input placeholder="需求人" clearable v-model="search_user">
-							</el-input>
+							<el-select v-model="search_user" filterable clearable placeholder="全部">
+								<el-option v-for="item in user_list" :key="item.search_user" :label="item.search_user" :value="item.search_user">
+								</el-option>
+							</el-select>
 						</el-form-item>
 						<el-form-item class="form_item">
 							<el-button type="primary" @click="checkPage(1)">查询</el-button>
@@ -231,6 +233,7 @@
 				loading:false,	
 				store_list:[],			//店铺列表
 				shop_code:"",			//选中的店铺
+				user_list:[],			//需求人列表
 				search_user:"",			//需求人
 				tab_list:[{
 					name:'全部',
@@ -272,6 +275,8 @@
 		created(){
 			//获取所有店铺列表
 			this.ajaxViewShop();
+			//获取所有需求人
+    		this.getUserName();
 			//获取列表
 			this.getSelected();
 		},
@@ -306,6 +311,16 @@
     			commonResource.ajaxViewShop().then(res => {
     				if(res.data.code == 1){
     					this.store_list = res.data.data;
+    				}else{
+    					this.$message.warning(res.data.msg);
+    				}
+    			})
+    		},
+    		//获取所有需求人
+    		getUserName(){
+    			resource.getUserName().then(res => {
+    				if(res.data.code == 1){
+    					this.user_list = res.data.data;
     				}else{
     					this.$message.warning(res.data.msg);
     				}
