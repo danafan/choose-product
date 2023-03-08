@@ -592,15 +592,20 @@
 						price_status:this.price_status
 					}
 					let search = "";
-					if (this.search.indexOf("\n") > -1) {
-						search = this.search.replaceAll("\n", ",");
-					} else if (this.search.indexOf(" ") > -1) {
-						search = this.search.replaceAll(" ", ",");
-					} else if (this.search.indexOf("+") > -1) {
-						search = this.search.replaceAll("+", "%2B");
-					} else {
+					if(this.search.indexOf("\n") > -1 || this.search.indexOf(" ") > -1 || this.search.indexOf("+") > -1){
+						if (this.search.indexOf("\n") > -1) {
+							search = this.search.replaceAll("\n", ",");
+						}
+						if (this.search.indexOf(" ") > -1) {
+							search = this.search.replaceAll(" ", ",");
+						}
+						if (this.search.indexOf("+") > -1) {
+							search = this.search.replaceAll("+", "%2B");
+						}
+					}else{
 						search = this.search;
 					}
+					
 					arg.search = search;
 
 					var arr = [];

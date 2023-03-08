@@ -71,7 +71,7 @@ const store = new Vuex.Store({
   actions: {
     // 获取公告列表
     getNotice (context) {
-      resource.showNotice().then(res => {
+      resource.showNotice({user_type:this.state.user_type}).then(res => {
        if(res.data.code == 1){
          context.commit('setNoticeList', res.data.data.list);
          context.commit('setNureadNum', res.data.data.nuread_num);

@@ -252,7 +252,7 @@
           this.active_index = 2;
         }
       }else{
-        this.getActiveIndex(path);
+        this.active_index = this.getActiveIndex(path);
       }
       console.log(path)
       console.log(this.getActiveIndex(path))
