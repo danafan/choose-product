@@ -53,7 +53,7 @@
 			</div>
 		</div>
 		<!-- 选款弹窗 -->
-		<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" @close="closeDialog" :visible.sync="show_select">
+		<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" @close="closeDialog" destroy-on-close :visible.sync="show_select">
 			<div slot="title" class="dialog_title">
 				<div>选款</div>
 				<img class="close_icon" src="../../../static/close_icon.png" @click="show_select = false">

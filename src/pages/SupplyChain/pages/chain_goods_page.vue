@@ -596,6 +596,8 @@
 						search = this.search.replaceAll("\n", ",");
 					} else if (this.search.indexOf(" ") > -1) {
 						search = this.search.replaceAll(" ", ",");
+					} else if (this.search.indexOf("+") > -1) {
+						search = this.search.replaceAll("+", "%2B");
 					} else {
 						search = this.search;
 					}

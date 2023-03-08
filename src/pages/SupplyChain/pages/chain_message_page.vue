@@ -52,6 +52,12 @@
 						start-placeholder="开始时间" end-placeholder="结束时间" :picker-options="pickerOptions">
 					</el-date-picker>
 				</el-form-item>
+				<el-form-item label="可见范围：" required>
+					<el-checkbox-group v-model="arg_view_type">
+						<el-checkbox :label="1">内部</el-checkbox>
+						<el-checkbox :label="2">供应商</el-checkbox>
+					</el-checkbox-group>
+				</el-form-item>
 			</el-form>
 		</div>
 		<div slot="footer" class="dialog_footer">
@@ -110,7 +116,8 @@
 					disabledDate(time) {
 						return time.getTime() < Date.now() - 8.64e7;
 					},
-				}
+				},
+				arg_view_type:[1],			//添加或编辑可见范围
 			}
 		},
 		created(){
@@ -196,6 +203,7 @@
 						let data = res.data.data;
 						this.notice_title = data.notice_title;
 						this.notice_content = data.notice_content;
+						this.arg_view_type = data.view_type;
 						let info_date = [];
 						info_date[0] = data.start_day;
 						info_date[1] = data.end_day;
@@ -213,12 +221,15 @@
 					this.$message.warning('请输入公告内容');
 				}else if(!this.date || this.date.length == 0){
 					this.$message.warning('请选择在线时间');
+				}else if(this.arg_view_type.length == 0){
+					this.$message.warning('请选择可见范围');
 				}else{
 					var arg = {
 						notice_title:this.notice_title,
 						notice_content:this.notice_content,
 						start_date:this.date && this.date.length > 0?this.date[0]:"",
 						end_date:this.date && this.date.length > 0?this.date[1]:"",
+						view_type:this.arg_view_type
 					}
 					if(this.type == '1'){		//创建
 						resource.addNotice(arg).then(res => {
@@ -279,6 +290,7 @@
 				this.notice_title = '';
 				this.notice_content = '';
 				this.date = [];
+				this.arg_view_type = [1];
 			}
 		},
 		components:{
