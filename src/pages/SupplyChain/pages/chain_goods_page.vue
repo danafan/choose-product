@@ -591,19 +591,17 @@
 						check_status:this.check_status_id,
 						price_status:this.price_status
 					}
-					let search = "";
-					if(this.search.indexOf("\n") > -1 || this.search.indexOf(" ") > -1 || this.search.indexOf("+") > -1){
-						if (this.search.indexOf("\n") > -1) {
-							search = this.search.replaceAll("\n", ",");
+					let search = JSON.parse(JSON.stringify(this.search));
+					if(search.indexOf("\n") > -1 || search.indexOf(" ") > -1 || search.indexOf("+") > -1){
+						if (search.indexOf("\n") > -1) {
+							search = search.replaceAll("\n", ",");
 						}
-						if (this.search.indexOf(" ") > -1) {
-							search = this.search.replaceAll(" ", ",");
+						if (search.indexOf(" ") > -1) {
+							search = search.replaceAll(" ", ",");
 						}
-						if (this.search.indexOf("+") > -1) {
-							search = this.search.replaceAll("+", "%2B");
+						if (search.indexOf("+") > -1) {
+							search = search.replaceAll("+", "%2B");
 						}
-					}else{
-						search = this.search;
 					}
 					
 					arg.search = search;
@@ -639,17 +637,21 @@
 					price_status:this.price_status,
 					page:this.page,
 					pagesize:100
-					// pagesize:5
 				}
-				let search = "";
-				if (this.search.indexOf("\n") > -1) {
-					search = this.search.replaceAll("\n", ",");
-				} else if (this.search.indexOf(" ") > -1) {
-					search = this.search.replaceAll(" ", ",");
-				} else {
-					search = this.search;
+				let search = JSON.parse(JSON.stringify(this.search));
+				if(search.indexOf("\n") > -1 || search.indexOf(" ") > -1 || search.indexOf("+") > -1){
+					if (search.indexOf("\n") > -1) {
+						search = search.replaceAll("\n", ",");
+					}
+					if (search.indexOf(" ") > -1) {
+						search = search.replaceAll(" ", ",");
+					}
+					if (search.indexOf("+") > -1) {
+						search = search.replaceAll("+", "%2B");
+					}
 				}
 				arg.search = search;
+
 				this.loading = true;
 				resource.getGoodsList(arg).then(res => {
 					if(res.data.code == 1){

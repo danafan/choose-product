@@ -250,6 +250,8 @@
       }else if(this.user_type == '1' && this.getActiveIndex(path) == -1){
         if(path == 'supplier_detail'){  //供应商详情
           this.active_index = 2;
+        }else if(path == 'chain_audit_page' || path == 'chain_goods_page' || path == 'b_z_promotion_page' || path == 'chain_supplier_page' || path == 'chain_message_page' || path == 'chain_setting_page' || path == 'chain_feekback_page' || path == 'chain_permissions_page' || path == 'setting_record_page'){
+          this.active_index = 3;
         }
       }else{
         this.active_index = this.getActiveIndex(path);
