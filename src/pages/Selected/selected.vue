@@ -322,10 +322,12 @@
     			this.$nextTick(() => {
     				let card_box_height = document.getElementById("card_box").offsetHeight;
     				let all_title_height = document.getElementById("tab_row").offsetHeight;
+    				let table_title_height = document.getElementById('table_title').offsetHeight;
     				let bottom_row_height = document.getElementById("bottom_row").offsetHeight;
     				this.max_height =
     				card_box_height -
     				all_title_height -
+    				table_title_height - 
     				bottom_row_height -
     				110 +
     				"px";
