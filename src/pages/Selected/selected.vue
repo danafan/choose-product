@@ -24,223 +24,214 @@
 							</el-select>
 						</el-form-item>
 						<el-form-item label="时间：">
-							<!-- <el-date-picker
-							size="small"
+							<el-date-picker
 							v-model="date_time"
+							type="datetimerange"
 							value-format="yyyy-MM-dd HH"
 							format="yyyy-MM-dd HH"
-							type="datetime"
-							@focus="focus"
-							placeholder="选择日期时间">
-						</el-date-picker> -->
-						<el-date-picker
-						v-model="date_time"
-						type="datetimerange"
-						value-format="yyyy-MM-dd HH"
-						format="yyyy-MM-dd HH"
-						range-separator="至"
-						start-placeholder="开始时间"
-						end-placeholder="结束时间">
-					</el-date-picker>
-				</el-form-item>
-				<el-form-item class="form_item">
-					<el-button type="primary" @click="checkPage(1)">查询</el-button>
-				</el-form-item>
-				<el-form-item class="form_item">
-					<el-checkbox :true-label="1" :false-label="0" v-model="only_self" @change="checkPage(1)">只看自己</el-checkbox>
-				</el-form-item>
-			</el-form>
-		</div>
-		<TableTitle id="table_title">
-			<el-button size="mini" type="primary" @click="exportFn">导出</el-button>
-		</TableTitle>
-		<el-table size="mini" :data="data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" v-loading="loading">
-			<el-table-column label="图片" width="150">
-				<template slot-scope="scope">
-					<div v-if="scope.row.images.length == 0">暂无</div>
-					<el-carousel trigger="hover" indicator-position="none" :autoplay="false" height="100px" v-else>
-						<el-carousel-item v-for="(item,index) in scope.row.images" :key="index">
-							<el-image :z-index="2006" class="image" :src="item" fit="scale-down" :preview-src-list="scope.row.images"></el-image>
-						</el-carousel-item>
-					</el-carousel>
-				</template>
-			</el-table-column>
-			<el-table-column label="款号" prop="style_name"></el-table-column>
-			<el-table-column label="款式编码" width="140">
-				<template slot-scope="scope">
-					<div class="item_row">
-						<div class="item_label">普通：</div>
-						<div>
-							<div v-for="item in scope.row.new_i_id">{{item}}</div>
+							range-separator="至"
+							start-placeholder="开始时间"
+							end-placeholder="结束时间">
+						</el-date-picker>
+					</el-form-item>
+					<el-form-item class="form_item">
+						<el-button type="primary" @click="checkPage(1)">查询</el-button>
+					</el-form-item>
+					<el-form-item class="form_item">
+						<el-checkbox :true-label="1" :false-label="0" v-model="only_self" @change="checkPage(1)">只看自己</el-checkbox>
+					</el-form-item>
+				</el-form>
+			</div>
+			<TableTitle id="table_title">
+				<el-button size="mini" type="primary" @click="exportFn">导出</el-button>
+			</TableTitle>
+			<el-table size="mini" :data="data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" v-loading="loading">
+				<el-table-column label="图片" width="150">
+					<template slot-scope="scope">
+						<div v-if="scope.row.images.length == 0">暂无</div>
+						<el-carousel trigger="hover" indicator-position="none" :autoplay="false" height="100px" v-else>
+							<el-carousel-item v-for="(item,index) in scope.row.images" :key="index">
+								<el-image :z-index="2006" class="image" :src="item" fit="scale-down" :preview-src-list="scope.row.images"></el-image>
+							</el-carousel-item>
+						</el-carousel>
+					</template>
+				</el-table-column>
+				<el-table-column label="款号" prop="style_name"></el-table-column>
+				<el-table-column label="款式编码" width="140">
+					<template slot-scope="scope">
+						<div class="item_row">
+							<div class="item_label">普通：</div>
+							<div>
+								<div v-for="item in scope.row.new_i_id">{{item}}</div>
+							</div>
 						</div>
-					</div>
-					<div class="item_row">
-						<div class="item_label">BD：</div>
-						<div>
-							<div v-for="item in scope.row.new_bd_i_id">{{item}}</div>
+						<div class="item_row">
+							<div class="item_label">BD：</div>
+							<div>
+								<div v-for="item in scope.row.new_bd_i_id">{{item}}</div>
+							</div>
 						</div>
-					</div>
-				</template>
-			</el-table-column>
-			<el-table-column label="成本价" prop="cost_price"></el-table-column>
-			<el-table-column label="售卖价" prop="selling_price"></el-table-column>
-			<el-table-column label="需求部门" prop="select_main_dept_name"></el-table-column>
-			<el-table-column label="需求店铺" prop="shop_name"></el-table-column>
-			<el-table-column label="需求日期" prop="demand_date"></el-table-column>
-			<el-table-column label="需求人" prop="ding_user_name"></el-table-column>
-			<el-table-column label="需求类型" prop="demand_type">
-			</el-table-column>
-			<el-table-column label="对接推单">
-				<template slot-scope="scope">
-					<div v-if="scope.row.abutment_type == 1">是</div>
-					<div v-if="scope.row.abutment_type == 0">否</div>
-				</template>
-			</el-table-column>
-			<el-table-column label="当前状态">
-				<template slot-scope="scope">
-					<div v-if="scope.row.audit_status == 1">待审核</div>
-					<div v-if="scope.row.audit_status == 2">已确认</div>
-					<div v-if="scope.row.audit_status == 4">已拒绝</div>
-					<div v-if="scope.row.audit_status == 0">已撤销</div>
-				</template>
-			</el-table-column>
-			<el-table-column label="操作" width="120" fixed="right">
-				<template slot-scope="scope">
-					<el-button type="text" size="small" @click="undoSelected(scope.row.select_id)" v-if="scope.row.audit_status == 1">撤销</el-button>
-					<el-button type="text" size="small" @click="selectedInfo(scope.row.select_id)">详情</el-button>
-				</template>
-			</el-table-column>
-		</el-table>
-		<PaginationWidget id="bottom_row" :total="total" :page="page" @checkPage="checkPage"/>
-	</el-card>
-	<CarWidget/>
-</div>
-<!-- 详情弹窗 -->
-<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" destroy-on-close :visible.sync="detail_dialog">
-	<div slot="title" class="dialog_title">
-		<div>商品详情</div>
-		<img class="close_icon" src="../../static/close_icon.png" @click="detail_dialog = false">
+					</template>
+				</el-table-column>
+				<el-table-column label="成本价" prop="cost_price"></el-table-column>
+				<el-table-column label="售卖价" prop="selling_price"></el-table-column>
+				<el-table-column label="需求部门" prop="select_main_dept_name"></el-table-column>
+				<el-table-column label="需求店铺" prop="shop_name"></el-table-column>
+				<el-table-column label="需求日期" prop="demand_date"></el-table-column>
+				<el-table-column label="需求人" prop="ding_user_name"></el-table-column>
+				<el-table-column label="需求类型" prop="demand_type">
+				</el-table-column>
+				<el-table-column label="对接推单">
+					<template slot-scope="scope">
+						<div v-if="scope.row.abutment_type == 1">是</div>
+						<div v-if="scope.row.abutment_type == 0">否</div>
+					</template>
+				</el-table-column>
+				<el-table-column label="当前状态">
+					<template slot-scope="scope">
+						<div v-if="scope.row.audit_status == 1">待审核</div>
+						<div v-if="scope.row.audit_status == 2">已确认</div>
+						<div v-if="scope.row.audit_status == 4">已拒绝</div>
+						<div v-if="scope.row.audit_status == 0">已撤销</div>
+					</template>
+				</el-table-column>
+				<el-table-column label="操作" width="120" fixed="right">
+					<template slot-scope="scope">
+						<el-button type="text" size="small" @click="undoSelected(scope.row.select_id)" v-if="scope.row.audit_status == 1">撤销</el-button>
+						<el-button type="text" size="small" @click="selectedInfo(scope.row.select_id)">详情</el-button>
+					</template>
+				</el-table-column>
+			</el-table>
+			<PaginationWidget id="bottom_row" :total="total" :page="page" @checkPage="checkPage"/>
+		</el-card>
+		<CarWidget/>
 	</div>
-	<div class="dialog_content">
-		<div class="detail_row">
-			<div class="lable">标题</div>
-			<div class="value">{{goods_info.title}}</div>
+	<!-- 详情弹窗 -->
+	<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" destroy-on-close :visible.sync="detail_dialog">
+		<div slot="title" class="dialog_title">
+			<div>商品详情</div>
+			<img class="close_icon" src="../../static/close_icon.png" @click="detail_dialog = false">
 		</div>
-		<div class="detail_row">
-			<div class="lable">款号</div>
-			<div class="value">{{goods_info.style_name}}</div>
-		</div>
-		<div class="detail_row">
-			<div class="lable">款式编码</div>
-			<div class="value">
-				<div>普通：{{goods_info.i_id}}</div>
-				<div>BD：{{goods_info.bd_i_id}}</div>
+		<div class="dialog_content">
+			<div class="detail_row">
+				<div class="lable">标题</div>
+				<div class="value">{{goods_info.title}}</div>
+			</div>
+			<div class="detail_row">
+				<div class="lable">款号</div>
+				<div class="value">{{goods_info.style_name}}</div>
+			</div>
+			<div class="detail_row">
+				<div class="lable">款式编码</div>
+				<div class="value">
+					<div>普通：{{goods_info.i_id}}</div>
+					<div>BD：{{goods_info.bd_i_id}}</div>
+				</div>
+			</div>
+			<div class="detail_row">
+				<div class="lable">供应商</div>
+				<div class="value">{{goods_info.supplier_name}}</div>
+			</div>
+			<div class="detail_row">
+				<div class="lable">市场</div>
+				<div class="value">{{goods_info.market_name}}</div>
+			</div>
+			<div class="detail_row">
+				<div class="lable">提供拍照</div>
+				<div class="value">{{goods_info.supply_photograph == 1?'是':'否'}}</div>
+			</div>
+			<div class="detail_row">
+				<div class="lable">提供退货</div>
+				<div class="value">{{goods_info.supply_return_goods == 1?'是':'否'}}</div>
+			</div>
+			<div class="detail_row">
+				<div class="lable">提供换货</div>
+				<div class="value">{{goods_info.supply_exchange_goods == 1?'是':'否'}}</div>
+			</div>
+			<div class="detail_row">
+				<div class="lable">提供代发</div>
+				<div class="value">{{goods_info.supply_replace_send == 1?'是':'否'}}</div>
+			</div>
+			<div class="detail_row">
+				<div class="lable">结算方式</div>
+				<div class="value">{{goods_info.supply_monthly_settlement == 1?'月结':'现结'}}</div>
+			</div>
+			<div class="detail_row">
+				<div class="lable">类目</div>
+				<div class="value">{{goods_info.category_name}}</div>
+			</div>
+			<div class="detail_row">
+				<div class="lable">分类</div>
+				<div class="value">{{goods_info.classification_name}}</div>
+			</div>
+			<div class="detail_row">
+				<div class="lable">拍摄风格</div>
+				<div class="value">{{goods_info.shooting_style_name}}</div>
+			</div>
+			<div class="detail_row">
+				<div class="lable">合作模式</div>
+				<div class="value">{{goods_info.mode}}</div>
+			</div>
+			<div class="detail_row">
+				<div class="lable">备注</div>
+				<div class="value">{{goods_info.remark}}</div>
+			</div>
+			<div class="detail_row">
+				<div class="lable">面料</div>
+				<div class="value">{{goods_info.fabric}}</div>
+			</div>
+			<div class="detail_row">
+				<div class="lable">尺码</div>
+				<div class="value">{{goods_info.size}}</div>
+			</div>
+			<div class="detail_row">
+				<div class="lable">成本价</div>
+				<div class="value">{{goods_info.cost_price}}</div>
+			</div>
+			<div class="detail_row">
+				<div class="lable">百度网盘</div>
+				<div class="value">{{goods_info.net_disk_address}}</div>
+			</div>
+			<div class="detail_row">
+				<div class="lable">店铺</div>
+				<div class="value">{{goods_info.shop_name}}</div>
+			</div>
+			<div class="detail_row">
+				<div class="lable">需求类型</div>
+				<div class="value">{{goods_info.demand_type}}</div>
+			</div>
+			<div class="detail_row">
+				<div class="lable">发货类型</div>
+				<div class="value">{{goods_info.send_type}}</div>
+			</div>
+			<div class="detail_row">
+				<div class="lable">需求日期</div>
+				<div class="value">{{goods_info.demand_date}}</div>
+			</div>
+			<div class="detail_row">
+				<div class="lable">售卖价格</div>
+				<div class="value">{{goods_info.selling_price}}</div>
+			</div>
+			<div class="detail_row">
+				<div class="lable">当前状态</div>
+				<div class="value" v-if="goods_info.audit_status == 0">已撤销</div>
+				<div class="value" v-if="goods_info.audit_status == 1">待审核</div>
+				<div class="value" v-if="goods_info.audit_status == 2">已确认</div>
+				<div class="value" v-if="goods_info.audit_status == 4">已拒绝</div>
+			</div>
+			<div class="detail_row" v-if="goods_info.audit_status == 4">
+				<div class="lable">拒绝原因</div>
+				<div class="value">{{goods_info.refund_reason}}</div>
+			</div>
+			<div class="detail_row">
+				<div class="lable">选款要求</div>
+				<div class="value" v-html="goods_info.demand_remark"></div>
 			</div>
 		</div>
-		<div class="detail_row">
-			<div class="lable">供应商</div>
-			<div class="value">{{goods_info.supplier_name}}</div>
+		<div slot="footer" class="dialog_footer">
+			<el-button type="primary" size="small" @click="detail_dialog = false">关闭</el-button>
 		</div>
-		<div class="detail_row">
-			<div class="lable">市场</div>
-			<div class="value">{{goods_info.market_name}}</div>
-		</div>
-		<div class="detail_row">
-			<div class="lable">提供拍照</div>
-			<div class="value">{{goods_info.supply_photograph == 1?'是':'否'}}</div>
-		</div>
-		<div class="detail_row">
-			<div class="lable">提供退货</div>
-			<div class="value">{{goods_info.supply_return_goods == 1?'是':'否'}}</div>
-		</div>
-		<div class="detail_row">
-			<div class="lable">提供换货</div>
-			<div class="value">{{goods_info.supply_exchange_goods == 1?'是':'否'}}</div>
-		</div>
-		<div class="detail_row">
-			<div class="lable">提供代发</div>
-			<div class="value">{{goods_info.supply_replace_send == 1?'是':'否'}}</div>
-		</div>
-		<div class="detail_row">
-			<div class="lable">结算方式</div>
-			<div class="value">{{goods_info.supply_monthly_settlement == 1?'月结':'现结'}}</div>
-		</div>
-		<div class="detail_row">
-			<div class="lable">类目</div>
-			<div class="value">{{goods_info.category_name}}</div>
-		</div>
-		<div class="detail_row">
-			<div class="lable">分类</div>
-			<div class="value">{{goods_info.classification_name}}</div>
-		</div>
-		<div class="detail_row">
-			<div class="lable">拍摄风格</div>
-			<div class="value">{{goods_info.shooting_style_name}}</div>
-		</div>
-		<div class="detail_row">
-			<div class="lable">合作模式</div>
-			<div class="value">{{goods_info.mode}}</div>
-		</div>
-		<div class="detail_row">
-			<div class="lable">备注</div>
-			<div class="value">{{goods_info.remark}}</div>
-		</div>
-		<div class="detail_row">
-			<div class="lable">面料</div>
-			<div class="value">{{goods_info.fabric}}</div>
-		</div>
-		<div class="detail_row">
-			<div class="lable">尺码</div>
-			<div class="value">{{goods_info.size}}</div>
-		</div>
-		<div class="detail_row">
-			<div class="lable">成本价</div>
-			<div class="value">{{goods_info.cost_price}}</div>
-		</div>
-		<div class="detail_row">
-			<div class="lable">百度网盘</div>
-			<div class="value">{{goods_info.net_disk_address}}</div>
-		</div>
-		<div class="detail_row">
-			<div class="lable">店铺</div>
-			<div class="value">{{goods_info.shop_name}}</div>
-		</div>
-		<div class="detail_row">
-			<div class="lable">需求类型</div>
-			<div class="value">{{goods_info.demand_type}}</div>
-		</div>
-		<div class="detail_row">
-			<div class="lable">发货类型</div>
-			<div class="value">{{goods_info.send_type}}</div>
-		</div>
-		<div class="detail_row">
-			<div class="lable">需求日期</div>
-			<div class="value">{{goods_info.demand_date}}</div>
-		</div>
-		<div class="detail_row">
-			<div class="lable">售卖价格</div>
-			<div class="value">{{goods_info.selling_price}}</div>
-		</div>
-		<div class="detail_row">
-			<div class="lable">当前状态</div>
-			<div class="value" v-if="goods_info.audit_status == 0">已撤销</div>
-			<div class="value" v-if="goods_info.audit_status == 1">待审核</div>
-			<div class="value" v-if="goods_info.audit_status == 2">已确认</div>
-			<div class="value" v-if="goods_info.audit_status == 4">已拒绝</div>
-		</div>
-		<div class="detail_row" v-if="goods_info.audit_status == 4">
-			<div class="lable">拒绝原因</div>
-			<div class="value">{{goods_info.refund_reason}}</div>
-		</div>
-		<div class="detail_row">
-			<div class="lable">选款要求</div>
-			<div class="value" v-html="goods_info.demand_remark"></div>
-		</div>
-	</div>
-	<div slot="footer" class="dialog_footer">
-		<el-button type="primary" size="small" @click="detail_dialog = false">关闭</el-button>
-	</div>
-</el-dialog>
+	</el-dialog>
 </div>
 </template>
 <script>

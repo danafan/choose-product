@@ -19,7 +19,7 @@ let path = {
   removeCarGoods:'api/selectcart/removewaitselect',       //删除购物车
   addSelected:'api/selectcart/addselected',
   getSelected:'api/selected/getselected',                 //获取已选列表
-  selectedExport:'selected/allselectedderive',            //已选导出
+  selectedExport:'api/selected/allselectedderive',            //已选导出
   selectedInfo:'api/selected/selectedinfo',               //已选详情
   undoSelected:'api/selected/revocationselected',         //撤销已选
   cancelSelected:'api/selected/cancelselected',           //取消已选
