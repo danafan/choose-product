@@ -81,6 +81,7 @@
 			<el-table size="mini" :data="data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" @selection-change="handleSelectionChange" v-loading="loading">
 				<el-table-column type="selection" width="55" fixed>
 				</el-table-column>
+				<el-table-column label="标题" prop="title"></el-table-column>
 				<el-table-column label="款号" prop="style_name"></el-table-column>
 				<el-table-column label="款式编码" width="140">
 					<template slot-scope="scope">

@@ -40,8 +40,14 @@
 					<div class="list">
 						<div v-for="item in FristPin" class="item" :class="{'active_item':item == a_item}" @click.stop="a_item = item">{{item}}</div>
 					</div>
-					<div class="list">
-						<div class="item" :class="{'active_item':supplier_index == index}" v-for="(item,index) in supplier_list" @click.stop="checkIndex('supplier',index)">{{item.supplier_name}}</div>
+					<div class="flex as">
+						<div class="list" :class="{'supplier_list':!open_more}">
+							<div class="item" :class="{'active_item':supplier_index == index}" v-for="(item,index) in supplier_list" @click.stop="checkIndex('supplier',index)">{{item.supplier_name}}</div>
+						</div>
+						<div class="flex ac pointer" @click.stop="open_more = !open_more">
+							<div class="more_text">{{open_more?'收起':'更多'}}</div>
+							<img class="more_arrow" :class="{'up_rotate':open_more == true}" src="../static/down_arrow.png">
+						</div>
 					</div>
 				</div>
 			</div>
@@ -138,6 +144,11 @@
 				season_index:0,			//选中的季节下标
 				season_list:[],			//季节列表
 				sort_list:[{
+					name:'7天销量',
+					key:'sales_seven',
+					val:'sales_seven',
+					sort:'default'
+				},{
 					name:'30天销量',
 					key:'sales',
 					val:'sales_num_all',
@@ -154,6 +165,12 @@
 					sort:'default'
 				}],								//排序列表
 				cate_style_list:[{
+					name:'深度库存',
+					is_selected:0
+				},{
+					name:'视频款',
+					is_selected:0
+				},{
 					name:'爆款',
 					is_selected:0
 				},{
@@ -173,6 +190,7 @@
 				FristPin: ["全部","A", "B", "C", "D", "E", "F", "G", "H", "J", "K", "L", "M", "N", "P", "Q", "R", "S", "T", "W", "X", "Y", "Z"],
 				a_item:"全部",
 				cityjson: {},
+				open_more:false,		//是否更多
 			}
 		},
 		props:{
@@ -401,9 +419,6 @@
 					if(index == i){
 						switch(item.sort){
 							case 'default':
-							item.sort = 'asc';
-							break;
-							case 'asc':
 							item.sort = 'desc';
 							break;
 							case 'desc':
@@ -453,26 +468,28 @@
 				var arg = {
 					start_time:this.date && this.date.length > 0?this.date[0]:"",
 					end_time:this.date && this.date.length > 0?this.date[1]:"",
-					start_price:parseFloat(this.start_price),
-					end_price:parseFloat(this.end_price),
+					start_price:this.start_price?parseFloat(this.start_price):'',
+					end_price:this.end_price?parseFloat(this.end_price):'',
 				}
 
 				//处理排序
 				let sort_arr = this.sort_list.filter(item => {
 					return item.sort != 'default';
 				})
-
-				//处理款式分类
-				if(this.page_type != 'gys_supplier'){
-					arg.hot_style = this.cate_style_list[0].is_selected;
-					arg.data_style = this.cate_style_list[1].is_selected;
-					arg.sole_style = this.cate_style_list[2].is_selected;
-					arg.again_style = this.cate_style_list[3].is_selected;
-				}
-
 				if(sort_arr.length > 0){
 					arg[sort_arr[0].key] = sort_arr[0].val + '-' + sort_arr[0].sort;
 				}
+
+				//处理款式分类
+				if(this.page_type != 'gys_supplier'){
+					arg.depth_inventory = this.cate_style_list[0].is_selected;
+					arg.video_style = this.cate_style_list[1].is_selected;
+					arg.hot_style = this.cate_style_list[2].is_selected;
+					arg.data_style = this.cate_style_list[3].is_selected;
+					arg.sole_style = this.cate_style_list[4].is_selected;
+					arg.again_style = this.cate_style_list[5].is_selected;
+				}
+
 				//处理供应商
 				if(this.page_type == 'index' && this.supplier_index >= 0){
 					arg.supplier_id = this.supplier_list[this.supplier_index].supplier_id;
@@ -555,16 +572,25 @@
 		display: flex;
 		align-items: center;
 		cursor:pointer;
-		.down_arrow{
-			margin-left: 5rem;
-			transform: rotate(-90deg);
-			width: 7rem;
-			height: 4rem;
-		}
-		.rotate{
-			transform: rotate(0deg);
-		}
+		
 	}
+}
+.down_arrow{
+	margin-left: 5rem;
+	transform: rotate(-90deg);
+	width: 7rem;
+	height: 4rem;
+}
+.more_arrow{
+	margin-left: 5rem;
+	width: 7rem;
+	height: 4rem;
+}
+.rotate{
+	transform: rotate(0deg);
+}
+.up_rotate{
+	transform: rotate(180deg);
 }
 .conditions_box{
 	background: #ffffff;
@@ -606,6 +632,14 @@
 			.active_item{
 				color: var(--color);
 			}
+		}
+		.supplier_list{
+			max-height: 50px;
+			overflow: hidden;
+		}
+		.more_text{
+			font-size: 12px;
+			color: #666666;
 		}
 	}
 	.none_border{

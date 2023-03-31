@@ -55,6 +55,22 @@
 								<div class="info_lable">评级：</div>
 								<div class="info_value">{{supplier_info.grade_name}}</div>
 							</div>
+							<div class="info_item">
+								<div class="info_lable">7天销量：</div>
+								<div class="info_value">{{supplier_info.sales_num_7}}</div>
+							</div>
+							<div class="info_item">
+								<div class="info_lable">30天销量：</div>
+								<div class="info_value">{{supplier_info.sales_num_30}}</div>
+							</div>
+							<div class="info_item">
+								<div class="info_lable">发货率：</div>
+								<div class="info_value">{{supplier_info.grade_name}}</div>
+							</div>
+							<div class="info_item">
+								<div class="info_lable">退货率：</div>
+								<div class="info_value">{{supplier_info.grade_name}}</div>
+							</div>
 						</div>
 					</div>
 					<ScreeningWidget id="screen_widget" v-if="show_screen" :total_num="total" page_type="supplier" @callback="screenFn"/>

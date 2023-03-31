@@ -49,18 +49,17 @@
 						</el-select>
 					</el-form-item>
 					<el-form-item label="绑定部门：" v-if="menu_role_ids.indexOf(1) == -1">
-						<el-select v-model="dept_names" clearable multiple filterable collapse-tags placeholder="选择部门" @change="ajaxViewShop">
-							<el-option v-for="item in dept_list" :key="item.dept_name" :label="item.dept_name" :value="item.dept_name">
-							</el-option>
-						</el-select>
-						<el-checkbox style="margin-left: 8px" :indeterminate="isIndeterminateDept" v-model="checkAllDept" @change="checkAllDeptFn"></el-checkbox>
+						<div style="display: flex">
+							<el-tree :data="dept_list" ref="tree" node-key="dept_id" :default-checked-keys="dept_ids" :props="props" show-checkbox @check="checkChange"></el-tree>
+							<el-checkbox style="margin-left: 8px;position: relative;top:-3px;" :indeterminate="isIndeterminateDept" v-model="checkAllDept" @change="checkAllDeptFn">全选</el-checkbox>
+						</div>
 					</el-form-item>
 					<el-form-item label="绑定店铺：" v-if="menu_role_ids.indexOf(1) == -1">
 						<el-select v-model="shop_codes" clearable multiple filterable collapse-tags placeholder="选择店铺" @change="selectedStore">
 							<el-option v-for="item in shop_list" :key="item.shop_code" :label="item.shop_name" :value="item.shop_code">
 							</el-option>
 						</el-select>
-						<el-checkbox style="margin-left: 8px" :indeterminate="isIndeterminate" v-model="checkAll" @change="checkAllStore"></el-checkbox>
+						<el-checkbox style="margin-left: 8px" :indeterminate="isIndeterminate" v-model="checkAll" @change="checkAllStore">全选</el-checkbox>
 					</el-form-item>
 					<el-form-item label="是否查看记录：" v-if="menu_role_ids.indexOf(1) == -1">
 						<el-radio-group v-model="view_type">
@@ -99,8 +98,12 @@
 				user_name:"",				//编辑时的员工姓名
 				role_list:[],				//所有角色列表
 				menu_role_ids:[],			//选中的角色
+				props:{
+					label: 'dept_name',
+					children: 'list'
+				},
 				dept_list:[],				//所有部门列表
-				dept_names:[],				//选中的部门
+				dept_ids:[],				//选中的部门
 				shop_list:[],				//店铺列表
 				shop_codes:[],				//选中的店铺列表
 				view_type:1,				//是否查看记录
@@ -176,7 +179,7 @@
 			closeDialog(){
 				this.user_id = "";
 				this.menu_role_ids = [];
-				this.dept_names = [];
+				this.dept_ids = [];
 				this.shop_codes = [];
 				this.view_type = 1;
 			},
@@ -189,7 +192,7 @@
 						this.role_list = data.role_list;
 						this.dept_list = data.dept_list;
 						//获取店铺列表
-						this.ajaxViewShop(this.dept_names);
+						this.ajaxViewShop(this.dept_ids);
 						this.show_dialog = true;
 					}else{
 						this.$message.warning(res.data.msg);
@@ -208,29 +211,34 @@
 						this.role_list = data.menu_role_list;
 						this.menu_role_ids = data.info.menu_role_ids;
 						this.dept_list = data.dept_list;
-						this.dept_names = data.selected_depts;
+						this.dept_ids = data.selected_depts;
 						this.isIndeterminateDept =
-						this.dept_names.length > 0 &&
-						this.dept_names.length < this.dept_list.length;
-						this.checkAllDept = this.dept_names.length == this.dept_list.length;
+						this.dept_ids.length > 0 &&
+						this.dept_ids.length < this.dept_list.length;
+						this.checkAllDept = this.dept_ids.length == this.dept_list.length;
 						this.view_type = data.view_type;
 						//获取店铺列表
-						this.ajaxViewShop(this.dept_names,data.selected_shops);
+						this.ajaxViewShop(this.dept_ids,data.selected_shops);
 						this.show_dialog = true;
 					}else{
 						this.$message.warning(res.data.msg);
 					}
 				})
 			},
+			//点击某个部门选项
+			checkChange(data, checked) {
+				this.dept_ids = checked.checkedKeys;
+				this.ajaxViewShop(this.dept_ids);
+			},
 			//切换选中部门
-			ajaxViewShop(dept_names,selected_shops) {
+			ajaxViewShop(dept_ids,selected_shops) {
 				this.isIndeterminateDept =
-				dept_names.length > 0 &&
-				dept_names.length < this.dept_list.length;
-				this.checkAllDept = dept_names.length == this.dept_list.length;
+				dept_ids.length > 0 &&
+				dept_ids.length < this.dept_list.length;
+				this.checkAllDept = dept_ids.length == this.dept_list.length;
 				let arg = {
 					type: 2,
-					dept_name: dept_names.join(","),
+					dept_ids: dept_ids.join(","),
 				};
 				commonResource.ajaxViewShop(arg).then((res) => {
 					if (res.data.code == 1) {
@@ -266,12 +274,12 @@
 					this.dept_list.map((item) => {
 						arr.push(item.dept_name);
 					});
-					this.dept_names = arr;
+					this.dept_ids = arr;
 				} else {
-					this.dept_names = [];
+					this.dept_ids = [];
 				}
     			//获取店铺列表
-    			this.ajaxViewShop(this.dept_names);
+    			this.ajaxViewShop(this.dept_ids);
     		},
     		//切换是否全选店铺
     		checkAllStore(val) {
@@ -299,7 +307,7 @@
 				let arg = {
 					user_id:this.type == '1'?this.user_id:this.id,
 					menu_role_id:this.menu_role_ids.join(','),
-					dept_names:this.menu_role_ids.indexOf(1) == -1?this.dept_names.join(','):'-1',
+					dept_ids:this.menu_role_ids.indexOf(1) == -1?this.dept_ids.join(','):'-1',
 					shop_codes:this.menu_role_ids.indexOf(1) == -1?this.shop_codes.join(','):'-1',
 					view_type:this.view_type
 				}

@@ -30,6 +30,10 @@
 							<el-input type="number" v-model="arg.cost_price" :disabled="is_detail">
 							</el-input>
 						</el-form-item>
+						<el-form-item label="控价：">
+							<el-input type="number" v-model="arg.price_control" :disabled="is_detail">
+							</el-input>
+						</el-form-item>
 						<el-form-item label="网盘地址：">
 							<el-input :placeholder="is_detail?'':'网盘地址'" v-model="arg.net_disk_address" :disabled="is_detail">
 							</el-input>
@@ -135,6 +139,18 @@
 								<el-radio :label="0">否</el-radio>
 							</el-radio-group>
 						</el-form-item>
+						<el-form-item label="深度库存 ：">
+							<el-radio-group v-model="arg.depth_inventory" :disabled="is_detail || data_status === 0">
+								<el-radio :label="1">是</el-radio>
+								<el-radio :label="0">否</el-radio>
+							</el-radio-group>
+						</el-form-item>
+						<el-form-item label="视频款：">
+							<el-radio-group v-model="arg.video_style" :disabled="is_detail || data_status === 0">
+								<el-radio :label="1">是</el-radio>
+								<el-radio :label="0">否</el-radio>
+							</el-radio-group>
+						</el-form-item>
 					</el-form>
 				</div>
 				<div class="form_row">
@@ -188,12 +204,15 @@
 					fabric:"",				//面料
 					mode:"",				//合作模式
 					cost_price:"",			//成本价
+					price_control:"",		//控价
 					size:"",				//尺码
 					color:"",				//颜色
 					hot_style:0,			//爆款
 					sole_style:0,			//独家款
 					data_style:0,			//主推款
 					again_style:0,			//二开款
+					depth_inventory:0,		//深度库存
+					video_style:0,			//视频款
 					net_disk_address:"",	//网盘地址
 					img:[],					//图片列表
 					remark:"",				//备注

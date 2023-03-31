@@ -23,6 +23,8 @@
 				<img class="goods_tag" src="../static/du_icon.png" v-if="info.sole_style == 1">
 				<img class="goods_tag" src="../static/tui_tag_icon.png" v-if="info.data_style == 1">
 				<img class="goods_tag" src="../static/kai_icon.png" v-if="info.again_style == 1">
+				<img class="goods_tag" src="../static/shen_icon.png" v-if="info.depth_inventory == 1">
+				<img class="goods_tag" src="../static/shi_icon.png" v-if="info.video_style == 1">
 			</div>
 			<div class="cate">{{info.style_name}}</div>
 		</div>
@@ -44,6 +46,22 @@
 			</el-tooltip>
 			<div class="time">{{info.new_time_name}}</div>
 		</div>
+		<div class="line mt-6"></div>
+		<div class="flex jsb mt-6 f12">
+			<div class="flex ac">
+				<div class="dark">40%毛利：</div>
+				<div class="primary_color">¥{{info.price_40}}</div>
+			</div>
+			<div class="flex ac">
+				<div class="dark">50%毛利：</div>
+				<div class="primary_color">¥{{info.price_50}}</div>
+			</div>
+		</div>
+		<div class="flex ac mt-6 f12">
+				<div class="dark">控价：</div>
+				<div class="primary_color">¥{{info.price_control}}</div>
+			</div>
+		<div class="line mt-6"></div>
 		<div class="set_row">
 			<div class="button_row">
 				<div class="add" @click.stop="addCar(info.cost_price)" v-if="info.in_cart == 0">
@@ -55,11 +73,16 @@
 			</div>
 			<div class="store_name">{{info.supplier_name}}</div>
 		</div>
+		<div class="line mt-6"></div>
 		<div class="num_row">
 			<div>浏览：{{info.views_num}}</div>
 			<div>选中：{{info.select_num}}</div>
 			<div>30天销量：{{info.sales_num_all}}</div>
 		</div>
+		<div class="num_row">
+			<div>7天销量：{{info.sales_num_all}}</div>
+		</div>
+		<div class="line mt-6"></div>
 		<div class="img_back">
 			<div class="img_list">
 				<img class="info_icon" src="../static/tui_icon.png" v-if="info.supply_return_goods == 1">
@@ -322,6 +345,23 @@
 				white-space:normal;
 			}
 		}
+		.line{
+			background:#F0F0F0;
+			width: 100%;
+			height: 1px;
+		}
+		.mt-6{
+			margin-top: 6px;
+		}
+		.f12{
+			font-size: 12px;
+		}
+		.dark{
+			color: #666666;
+		}
+		.primary_color{
+			color: #F37605;
+		}
 		.set_row{
 			margin-top: 10rem;
 			display: flex;
@@ -556,7 +596,7 @@
 				feedback_content:"",		//反馈文字
 				feedback_img:[],		//上传的图片列表
 				more_image_dialog:false,		//更多图片
-				image_title_list:['风格图'],	//更多图片类型
+				image_title_list:['风格'],	//更多图片类型
 				active_tab_index:0,		//选中的下标
 				img_arr:[],				//风格图图片列表
 				net_disk_address:"",	//网盘地址（跳转）

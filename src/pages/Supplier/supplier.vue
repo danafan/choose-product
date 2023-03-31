@@ -13,6 +13,15 @@
 							<div class="info_item">供应商等级：<span>{{item.grade_name}}</span></div>
 							<div class="info_item">介绍：{{item.description}}</div>
 						</div>
+						<div class="line"></div>
+						<div class="text_info">
+							<div class="info_item">30天销量：{{item.sales_num_30}}</div>
+							<div class="info_item">7天销量：{{item.sales_num_7}}</div>
+							<div class="info_item">发货率：{{item.supplier_name}}</div>
+							<div class="info_item">退货率：{{item.supplier_name}}</div>
+							<div class="info_item">&nbsp</div>
+							<div class="info_item">&nbsp</div>
+						</div>
 						<div class="image_list">
 							<div v-for="i in item.goods_list" @click="getDetail(i.style_id)">
 								<el-image :z-index="2006" class="image_item" :src="domain + i.img" fit="scale-down" v-if='i.img'></el-image>
@@ -152,10 +161,15 @@
 				height: 220rem;
 				display: flex;
 				padding: 10rem 0;
+				.line{
+					background:#F3F3F3;
+					width: 1px;
+					height: 100%;
+				}
 				.text_info{
-					width: 200rem;
-					padding-left: 30rem;
-					padding-right: 30rem;
+					width: 150rem;
+					padding-left: 20rem;
+					padding-right: 20rem;
 					display: flex;
 					flex-direction: column;
 					align-items: flex-start;
@@ -178,13 +192,13 @@
 					display: flex;
 					.image_item{
 						margin-right: 20rem;
-						width: 202rem;
-						height: 202rem;
+						width: 180rem;
+						height: 180rem;
 						cursor: pointer;
 					}
 				}
 				.detail_box{
-					width: 108rem;
+					width: 88rem;
 					display: flex;
 					align-items: center;
 					justify-content: center;
@@ -192,7 +206,7 @@
 						border:1px solid var(--color);
 						border-radius:4rem;
 						background: #FEEDDD;
-						width: 72rem;
+						width: 64rem;
 						text-align: center;
 						height: 32rem;
 						line-height: 32rem;

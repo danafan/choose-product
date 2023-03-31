@@ -11,6 +11,8 @@
 					<el-select v-model="type" clearable placeholder="全部">
 						<el-option label="爆款" :value="1"></el-option>
 						<el-option label="主推款" :value="2"></el-option>
+						<el-option label="深度库存" :value="3"></el-option>
+						<el-option label="视频款" :value="4"></el-option>
 					</el-select>
 				</el-form-item>
 				<el-form-item>
