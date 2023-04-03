@@ -728,7 +728,7 @@
 				}else if(type == '3'){	//删除
 					title = '确认批量删除？'
 					let unset_list = this.multiple_selection.filter(item => {
-						return item.check_status == 2;
+						return item.check_status == 3 || item.check_status == 5;
 					})
 					unset_list.map(item => {
 						style_id.push(item.style_id)

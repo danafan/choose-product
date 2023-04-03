@@ -65,11 +65,11 @@
 							</div>
 							<div class="info_item">
 								<div class="info_lable">发货率：</div>
-								<div class="info_value">{{supplier_info.grade_name}}</div>
+								<div class="info_value">{{supplier_info.delivery_rate}}</div>
 							</div>
 							<div class="info_item">
 								<div class="info_lable">退货率：</div>
-								<div class="info_value">{{supplier_info.grade_name}}</div>
+								<div class="info_value">{{supplier_info.refund_rate}}</div>
 							</div>
 						</div>
 					</div>

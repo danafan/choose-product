@@ -107,11 +107,11 @@
 				&nbsp
 				<el-button size="mini" type="primary" @click="searchPrice">查询</el-button>
 			</div>
-			<el-radio-group v-model="up_type">
-				<el-radio :label="1">今日上新</el-radio>
-				<el-radio :label="3">三日上新</el-radio>
-				<el-radio :label="7">七日上新</el-radio>
-			</el-radio-group>
+			<el-checkbox-group v-model="up_type" @change="upTypeChange">
+				<el-checkbox :label="1">今日上新</el-checkbox>
+				<el-checkbox :label="3">三日上新</el-checkbox>
+				<el-checkbox :label="7">七日上新</el-checkbox>
+			</el-checkbox-group>
 			<div class="date_row">
 				<el-date-picker v-model="date" size="mini" type="daterange" unlink-panels value-format="yyyy-MM-dd" range-separator="至" start-placeholder="上新时间" end-placeholder="上新时间" @change="changeDate">
 				</el-date-picker>
@@ -183,7 +183,7 @@
 					name:'自主款',
 					is_selected:0
 				}],								//款式列表
-				up_type:null,					//上新类型
+				up_type:[],					//上新类型
 				date:[],						//上新日期 
 				start_price:"",
 				end_price:"",
@@ -231,31 +231,40 @@
 				}else{
 
 				}
-			},
-			//上新类型
-			up_type:function(n,o){
-				switch(n){
-					case 1:
-					this.date = [getNowDate(),getNowDate()];
-					//获取当前条件并传递
-					this.callbackFn();
-					break;
-					case 3:
-					this.date = [getCurrentDate(3),getNowDate()];
-					//获取当前条件并传递
-					this.callbackFn();
-					break;
-					case 7:
-					this.date = [getCurrentDate(7),getNowDate()];
-					//获取当前条件并传递
-					this.callbackFn();
-					break;
-					default:
-					return
-				}
 			}
 		},
 		methods:{
+			//切换上新类型
+			upTypeChange(value){
+				if(this.up_type.length > 1){
+					this.up_type.splice(0,1)
+				}
+				if(this.up_type.length > 0){
+					switch(this.up_type[0]){
+						case 1:
+						this.date = [getNowDate(),getNowDate()];
+						//获取当前条件并传递
+						this.callbackFn();
+						break;
+						case 3:
+						this.date = [getCurrentDate(3),getNowDate()];
+						//获取当前条件并传递
+						this.callbackFn();
+						break;
+						case 7:
+						this.date = [getCurrentDate(7),getNowDate()];
+						//获取当前条件并传递
+						this.callbackFn();
+						break;
+						default:
+						return
+					}
+				}else{
+					this.date = [];
+					//获取当前条件并传递
+					this.callbackFn();
+				}
+			},
 			//获取筛选条件列表
 			getScreenList(){
 				commonResource.getScreenList().then(res => {
@@ -291,7 +300,6 @@
         				}
         				this.cityjson = cityJson;
         				this.supplier_list = this.cityjson["全部"];
-        				console.log(this.cityjson)
 
         				let market_list = data.market;
         				market_list.unshift({
@@ -444,7 +452,7 @@
 			},
 			//切换上新时间筛选器
 			changeDate(){
-				this.up_type = null;
+				this.up_type = [];
 				//获取当前条件并传递
 				this.callbackFn();
 			},

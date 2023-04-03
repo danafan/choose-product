@@ -113,6 +113,7 @@
 				isIndeterminate: false,		//当前半全选状态（店铺）
 				checkAllDept: false,			//当前全选状态（部门）
 				checkAll: false,			//当前全选状态（店铺）
+				arr:[]
 			}
 		},
 		created(){
@@ -215,7 +216,7 @@
 						this.isIndeterminateDept =
 						this.dept_ids.length > 0 &&
 						this.dept_ids.length < this.dept_list.length;
-						this.checkAllDept = this.dept_ids.length == this.dept_list.length;
+						this.checkAllDept = this.dept_ids.length == this.arr.length;
 						this.view_type = data.view_type;
 						//获取店铺列表
 						this.ajaxViewShop(this.dept_ids,data.selected_shops);
@@ -232,10 +233,12 @@
 			},
 			//切换选中部门
 			ajaxViewShop(dept_ids,selected_shops) {
+				this.arr = [];
+				this.getDeptIds(this.dept_list);
 				this.isIndeterminateDept =
 				dept_ids.length > 0 &&
-				dept_ids.length < this.dept_list.length;
-				this.checkAllDept = dept_ids.length == this.dept_list.length;
+				dept_ids.length < this.arr.length;
+				this.checkAllDept = dept_ids.length == this.arr.length;
 				let arg = {
 					type: 2,
 					dept_ids: dept_ids.join(","),
@@ -270,16 +273,25 @@
 			checkAllDeptFn(val) {
 				this.isIndeterminateDept = false;
 				if (val) {
-					let arr = [];
-					this.dept_list.map((item) => {
-						arr.push(item.dept_name);
-					});
-					this.dept_ids = arr;
+					this.dept_ids = this.arr;
 				} else {
-					this.dept_ids = [];
+					this.dept_ids.splice(0,this.dept_ids.length);
+					this.arr.map(item => {
+						this.$refs.tree.setChecked(item,false);
+					})
 				}
     			//获取店铺列表
     			this.ajaxViewShop(this.dept_ids);
+    		},
+    		getDeptIds(list){
+    			list.map((item) => {
+    				if(item.list){
+    					this.arr.push(item.dept_id);
+    					this.getDeptIds(item.list)
+    				}else{
+    					this.arr.push(item.dept_id);
+    				}
+    			});
     		},
     		//切换是否全选店铺
     		checkAllStore(val) {

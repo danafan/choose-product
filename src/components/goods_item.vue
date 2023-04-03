@@ -71,7 +71,10 @@
 				<div class="yjr" v-else @click.stop>已加入</div>
 				<div class="xk" :class="{'drak_back':info.cost_price == ''}" @click.stop="selectStyle(info.style_id)">选款</div>
 			</div>
-			<div class="store_name">{{info.supplier_name}}</div>
+			<div class="flex ac">
+				<div class="grade_name">{{info.grade_name}}</div>
+				<div class="store_name">{{info.supplier_name}}</div>
+			</div>
 		</div>
 		<div class="line mt-6"></div>
 		<div class="num_row">
@@ -80,7 +83,7 @@
 			<div>30天销量：{{info.sales_num_all}}</div>
 		</div>
 		<div class="num_row">
-			<div>7天销量：{{info.sales_num_all}}</div>
+			<div>7天销量：{{info.sales_num_7}}</div>
 		</div>
 		<div class="line mt-6"></div>
 		<div class="img_back">
@@ -404,8 +407,13 @@
 					background-color: #999999;
 				}
 			}
+			.grade_name{
+				font-weight: normal;
+				color:#F35005;
+				font-size: 12rem;
+			}
 			.store_name{
-				margin-left: 10rem;
+				margin-left: 4rem;
 				font-size: 12rem;
 				color: var(--color);
 				word-break: break-all;
