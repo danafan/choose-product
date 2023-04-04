@@ -144,11 +144,6 @@
 				season_index:0,			//选中的季节下标
 				season_list:[],			//季节列表
 				sort_list:[{
-					name:'7天销量',
-					key:'sales_seven',
-					val:'sales_seven',
-					sort:'default'
-				},{
 					name:'30天销量',
 					key:'sales',
 					val:'sales_num_all',
@@ -210,6 +205,13 @@
 				//获取筛选条件列表
 				this.supplierScreenList();
 			}else{
+				let o = {
+					name:'7天销量',
+					key:'sales_seven',
+					val:'sales_seven',
+					sort:'default'
+				}
+				this.sort_list.unshift(o);
 				//获取筛选条件列表
 				this.getScreenList();
 			}

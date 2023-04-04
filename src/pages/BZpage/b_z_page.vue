@@ -11,6 +11,8 @@
 					<el-select v-model="type" clearable placeholder="全部">
 						<el-option label="爆款" :value="1"></el-option>
 						<el-option label="主推款" :value="2"></el-option>
+						<el-option label="深度库存" :value="3"></el-option>
+						<el-option label="视频款" :value="4"></el-option>
 					</el-select>
 				</el-form-item>
 				<el-form-item>
@@ -39,7 +41,7 @@
 				<el-table-column label="成本价" prop="cost_price"></el-table-column>
 				<el-table-column label="款式" prop="style_name">
 					<template slot-scope="scope">
-						<div>{{scope.row.type == 1?'爆款':'主推款'}}</div>
+						<div>{{scope.row.type | filterType}}</div>
 					</template>
 				</el-table-column>
 				<el-table-column label="供应商" show-overflow-tooltip prop="supplier_name"></el-table-column>
@@ -235,6 +237,20 @@
 					return item.id == v;
 				})
 				return arr.length > 0?arr[0].name:"-";
+			},
+			filterType(v){
+				switch(v){
+					case 1:
+						return '爆款';
+					case 2:
+						return '主推款';
+					case 3:
+						return '深度库存';
+					case 4:
+						return '视频款';
+					default:
+					return;
+				}
 			}
 		},
 		components:{

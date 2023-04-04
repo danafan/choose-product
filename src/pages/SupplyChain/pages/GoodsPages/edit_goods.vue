@@ -247,6 +247,8 @@
 				default_data_style:0,		//默认是否主推款
 				hot_status:10,				//爆款审核状态
 				data_status:10,				//主推款审核状态
+				depth_inventory_status:10,	//深度库存审核状态
+				video_style_status:10,		//视频款审核状态
 				link_urls: [],				//已填写的爆款链接列表
 				inputVisible: false,		//是否显示新建链接的输入框
 				inputValue: '',				//新建链接的输入框内容
@@ -393,6 +395,8 @@
 				this.default_data_style = data_info.data_style;	//默认是否主推款
 				this.hot_status = data_info.hot_status; //爆款审核状态
 				this.data_status = data_info.data_status; //主推款审核状态
+				this.depth_inventory_status = data_info.depth_inventory_status;	//深度库存审核状态
+				this.video_style_status = data_info.video_style_status;	//视频款审核状态
 
 				this.link_urls = data_info.hot_url;
 				data_info.hot_img.map(item => {
