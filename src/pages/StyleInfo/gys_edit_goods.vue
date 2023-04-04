@@ -140,13 +140,13 @@
 							</el-radio-group>
 						</el-form-item>
 						<el-form-item label="深度库存 ：">
-							<el-radio-group v-model="arg.depth_inventory" :disabled="is_detail || data_status === 0">
+							<el-radio-group v-model="arg.depth_inventory" :disabled="is_detail || depth_inventory_status === 0">
 								<el-radio :label="1">是</el-radio>
 								<el-radio :label="0">否</el-radio>
 							</el-radio-group>
 						</el-form-item>
 						<el-form-item label="视频款：">
-							<el-radio-group v-model="arg.video_style" :disabled="is_detail || data_status === 0">
+							<el-radio-group v-model="arg.video_style" :disabled="is_detail || video_style_status === 0">
 								<el-radio :label="1">是</el-radio>
 								<el-radio :label="0">否</el-radio>
 							</el-radio-group>
