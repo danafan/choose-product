@@ -1,5 +1,6 @@
 import http from "./request.js";
 let path = {
+  dingLogin:'ding_login',
   showNotice:'api/index/show_notice',                     //页面顶部公告列表
   loginOut:'api/loginquit',                               //退出登录
   supplierLogin:'api/supplier_login',                     //供应商登录
@@ -32,6 +33,10 @@ let path = {
   getUserName:'api/selected/getusername',                 //获取需求人
 } 
 export default {
+  //钉钉登陆
+  dingLogin(params) {
+    return http.get(path.dingLogin, params);
+  },
   //页面顶部公告列表
   showNotice(params) {
     return http.get(path.showNotice, params);

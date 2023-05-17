@@ -70,7 +70,7 @@
 				</el-table-column>
 				<el-table-column label="审核备注" prop="status_remark"></el-table-column>
 			</el-table>
-			<PaginationWidget id="bottom_row" :total="data.total" :page="page" :pagesize="20" @checkPage="checkPage"/>
+			<PaginationWidget id="bottom_row" :total="total" :page="page" :pagesize="20" @checkPage="checkPage"/>
 		</el-card>
 	</div>
 </template>
@@ -128,7 +128,8 @@
 				max_height:0,	
 				page:1,
 				table_data:[],				//数据列表
-				data:{},					//获取的数据
+				total:0,
+				// data:{},					//获取的数据
 			}
 		},
 		created(){
@@ -204,7 +205,7 @@
 
     					})
     					this.table_data = table_data;
-
+    					this.total = data.total;
     					this.button_list =  res.data.data.button_list;
     				}else{
     					this.$message.warning(res.data.msg);
