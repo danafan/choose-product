@@ -98,8 +98,9 @@
 
             this.$store.commit("setMenuList", menu_list);
             sessionStorage.setItem("menu_list",JSON.stringify(menu_list))
-
-            this.$router.replace('tab_menu');
+            if(window.location.hash.split('#/')[1] == ''){
+              this.$router.replace('/tab_menu')
+            }
           }else{
             this.$message.warning(res.data.msg);
           }
