@@ -12,8 +12,9 @@
       // this.getUserInfo();
       // return;
 
-      let user_type = localStorage.getItem("user_type");
-      if(!localStorage.getItem("cache") && user_type != '2'){
+      let user_type = sessionStorage.getItem("user_type");
+      // if(!sessionStorage.getItem("cache") && user_type != '2'){
+      if(user_type != '2'){
         if(dd.env.platform != 'notInDingTalk'){ //是钉钉环境
           //获取code
           this.getCode();
@@ -23,9 +24,9 @@
         
       }
       
-      if(window.location.hash.split('#/')[1] == ''){
-        this.$router.replace('/tab_menu')
-      }
+      // if(window.location.hash.split('#/')[1] == ''){
+      //   this.$router.replace('/tab_menu')
+      // }
 
     },
     watch:{
@@ -64,13 +65,13 @@
       getUserInfo() {
         resource.getUserInfo().then((res) => {
           if (res.data.code == 1) {
-            localStorage.setItem("cache",true);
+            sessionStorage.setItem("cache",true);
             let data = res.data.data;
-            localStorage.setItem("user_type", data.user_type);
-            localStorage.setItem("ding_user_id", data.ding_user_id);
-            localStorage.setItem("ding_user_name", data.ding_user_name);
-            localStorage.setItem("secret_key", data.secret_key);
-            localStorage.setItem("login_token", data.login_token);
+            sessionStorage.setItem("user_type", data.user_type);
+            sessionStorage.setItem("ding_user_id", data.ding_user_id);
+            sessionStorage.setItem("ding_user_name", data.ding_user_name);
+            sessionStorage.setItem("secret_key", data.secret_key);
+            sessionStorage.setItem("login_token", data.login_token);
             let user_info = {
               user_type:data.user_type,
               ding_user_id:data.ding_user_id,
@@ -80,7 +81,7 @@
             this.$store.commit('setToken',user_info);
             let domain = data.img_domain;
             this.$store.commit('setDomain',domain);
-            localStorage.setItem("domain",domain);
+            sessionStorage.setItem("domain",domain);
               //获取导航
             this.getMenuNotice();
           } else {
@@ -96,7 +97,7 @@
             let menu_list = data.menu_list;
 
             this.$store.commit("setMenuList", menu_list);
-            localStorage.setItem("menu_list",JSON.stringify(menu_list))
+            sessionStorage.setItem("menu_list",JSON.stringify(menu_list))
 
             this.$router.replace('tab_menu');
           }else{

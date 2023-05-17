@@ -137,7 +137,7 @@
 			//每次打开历史列表都重新获取最新
 			show_history:function(n,o){
 				if(n){
-					let storage_data = localStorage.getItem(this.page_path);
+					let storage_data = sessionStorage.getItem(this.page_path);
 					let history_list = storage_data?JSON.parse(storage_data):[];
 					this.history_list = history_list.slice(0,10);
 				}
@@ -160,19 +160,19 @@
 			//点击删除
 			deleteHistory(index){
 				if(index == -1){	//全部删除
-					localStorage.removeItem(this.page_path);
+					sessionStorage.removeItem(this.page_path);
 					this.history_list = [];
 				}else{	// 单条删除
-					let storage_data = localStorage.getItem(this.page_path);
+					let storage_data = sessionStorage.getItem(this.page_path);
 					let history_list = JSON.parse(storage_data);
 					history_list.splice(index,1);
 					this.history_list = history_list;
-					localStorage.setItem(this.page_path,JSON.stringify(history_list));
+					sessionStorage.setItem(this.page_path,JSON.stringify(history_list));
 				}
 			},
 			//点击搜索或回车
 			searchFn(){
-				let storage_data = localStorage.getItem(this.page_path);
+				let storage_data = sessionStorage.getItem(this.page_path);
 				let history_list = storage_data?JSON.parse(storage_data):[];
 				let current_index = null;
 				history_list.map((item,index) => {
@@ -183,11 +183,11 @@
 				if(current_index !== null){
 					history_list.splice(current_index,1);
 					history_list.unshift(this.search_value);
-					localStorage.setItem(this.page_path,JSON.stringify(history_list));
+					sessionStorage.setItem(this.page_path,JSON.stringify(history_list));
 				}else{
 					if(this.search_value != ''){
 						history_list.unshift(this.search_value);
-						localStorage.setItem(this.page_path,JSON.stringify(history_list));
+						sessionStorage.setItem(this.page_path,JSON.stringify(history_list));
 					}
 				}
 				this.show_history = false;

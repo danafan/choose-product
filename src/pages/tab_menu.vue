@@ -243,7 +243,7 @@
     },
     created() {
       this.getNotice();
-      this.username = localStorage.getItem("ding_user_name");
+      this.username = sessionStorage.getItem("ding_user_name");
       let path = window.location.hash.split('#/')[1].indexOf('?') > -1?window.location.hash.split('#/')[1].split('?')[0]:window.location.hash.split('#/')[1];
       if(path == 'tab_menu'){
         this.active_index = 0;
@@ -331,8 +331,6 @@
             //获取公告列表
             this.getNotice();
             let active_path = `/notice_page?notice_id=${row.notice_id}`;
-            // localStorage.setItem("active_path",active_path);
-            // this.$store.commit("setPath", active_path);
             const routeData = this.$router.resolve(active_path);
             window.open(routeData.href);
           }else{
@@ -370,7 +368,7 @@
           if(res.data.code == 1){
             this.edit_dialog = false;
             this.$message.success(res.data.msg);
-            localStorage.clear();
+            sessionStorage.clear();
             this.$router.replace('/login');
           }else{
             this.$message.warning(res.data.msg);
@@ -379,14 +377,14 @@
       },
       //退出
       loginOut(){
-        let user_id = localStorage.getItem("ding_user_id");
+        let user_id = sessionStorage.getItem("ding_user_id");
         let arg = {
           user_id:user_id
         }
         resource.loginOut(arg).then(res => {
           if(res.data.code == 1){
             this.$message.success(res.data.msg);
-            localStorage.clear();
+            sessionStorage.clear();
             this.$router.replace('/login');
           }else{
             this.$message.warning(res.data.msg);

@@ -7,16 +7,16 @@ Vue.use(Vuex);
 
 const store = new Vuex.Store({
   state: {
-    user_type:localStorage.getItem("user_type")?localStorage.getItem("user_type"):'',
-    supplier_name:localStorage.getItem("supplier_name")?localStorage.getItem("supplier_name"):'',
-    ding_user_id: localStorage.getItem("ding_user_id")?localStorage.getItem("ding_user_id"):'',
-    login_token: localStorage.getItem("login_token")?localStorage.getItem("login_token"):'',
-    secret_key: localStorage.getItem("secret_key")?localStorage.getItem("secret_key"):'',
-    menu_list:localStorage.getItem("menu_list")?JSON.parse(localStorage.getItem("menu_list")):[],             //导航列表
+    user_type:sessionStorage.getItem("user_type")?sessionStorage.getItem("user_type"):'',
+    supplier_name:sessionStorage.getItem("supplier_name")?sessionStorage.getItem("supplier_name"):'',
+    ding_user_id: sessionStorage.getItem("ding_user_id")?sessionStorage.getItem("ding_user_id"):'',
+    login_token: sessionStorage.getItem("login_token")?sessionStorage.getItem("login_token"):'',
+    secret_key: sessionStorage.getItem("secret_key")?sessionStorage.getItem("secret_key"):'',
+    menu_list:sessionStorage.getItem("menu_list")?JSON.parse(sessionStorage.getItem("menu_list")):[],             //导航列表
     car_goods_num:0,     //购物车商品数量
-    domain:localStorage.getItem("domain")?localStorage.getItem("domain"):"",
-    active_path:localStorage.getItem("active_path")?localStorage.getItem("active_path"):"",       //当前的导航地址
-    active_index:localStorage.getItem("active_index")?localStorage.getItem("active_index"):"",       //当前的导航地址
+    domain:sessionStorage.getItem("domain")?sessionStorage.getItem("domain"):"",
+    active_path:sessionStorage.getItem("active_path")?sessionStorage.getItem("active_path"):"",       //当前的导航地址
+    active_index:sessionStorage.getItem("active_index")?sessionStorage.getItem("active_index"):"",       //当前的导航地址
     screen_open:false,    //查询条件下拉框是否展开
     notice_list:[],       //公告列表
     nuread_num:0,         //未读公告数量

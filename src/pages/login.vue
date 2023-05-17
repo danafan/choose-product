@@ -233,14 +233,14 @@
     }
     resource.supplierLogin(arg).then(res => {
       if (res.data.code == "1") {
-        localStorage.setItem("cache",true);
+        sessionStorage.setItem("cache",true);
         let data = res.data.data;
-        localStorage.setItem("user_type", data.user_type);
-        localStorage.setItem("ding_user_id", data.ding_user_id);
-        localStorage.setItem("ding_user_name", data.ding_user_name);
-        localStorage.setItem("secret_key", data.secret_key);
-        localStorage.setItem("login_token", data.login_token);
-        localStorage.setItem("supplier_name", data.supplier_name);
+        sessionStorage.setItem("user_type", data.user_type);
+        sessionStorage.setItem("ding_user_id", data.ding_user_id);
+        sessionStorage.setItem("ding_user_name", data.ding_user_name);
+        sessionStorage.setItem("secret_key", data.secret_key);
+        sessionStorage.setItem("login_token", data.login_token);
+        sessionStorage.setItem("supplier_name", data.supplier_name);
         let user_info = {
           user_type:data.user_type,
           ding_user_id:data.ding_user_id,
@@ -251,7 +251,7 @@
         this.$store.commit('setToken',user_info);
         let domain = data.img_domain;
         this.$store.commit('setDomain',domain);
-        localStorage.setItem("domain",domain);
+        sessionStorage.setItem("domain",domain);
 
         let menu_list = [{
           menu_name:'首页',
@@ -268,12 +268,7 @@
         }]
 
         this.$store.commit("setMenuList", menu_list);
-        localStorage.setItem("menu_list",JSON.stringify(menu_list))
-
-          // this.$store.commit("setPath", menu_list[0].web_url);
-          // localStorage.setItem("active_path",menu_list[0].web_url);
-          // this.$store.commit("setIndex", 0);
-          // localStorage.setItem("active_index",0);
+        sessionStorage.setItem("menu_list",JSON.stringify(menu_list))
 
         this.$router.replace('tab_menu');
       } else {

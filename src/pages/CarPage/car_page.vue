@@ -370,7 +370,7 @@
 					demand_type:this.demand_type,
 					send_type:this.send_type
 				}
-				localStorage.setItem("selectedForm",JSON.stringify(form))
+				sessionStorage.setItem("selectedForm",JSON.stringify(form))
 			},
 			//获取店铺列表
 			ajaxViewShop(){
@@ -380,9 +380,9 @@
 				commonResource.ajaxViewShop(arg).then(res => {
 					if(res.data.code == 1){
 						this.store_list = res.data.data;
-						let selectedForm = localStorage.getItem("selectedForm");
+						let selectedForm = sessionStorage.getItem("selectedForm");
 						if(selectedForm){
-							let new_selected_form = JSON.parse(localStorage.getItem("selectedForm"));
+							let new_selected_form = JSON.parse(sessionStorage.getItem("selectedForm"));
 							this.shop_code = [];
 							new_selected_form.shop_code.map(item => {
 								let arr = this.store_list.filter(i => {
@@ -415,9 +415,9 @@
 						this.demand_type = [];
 						this.send_type = [];
 
-						let selectedForm = localStorage.getItem("selectedForm");
+						let selectedForm = sessionStorage.getItem("selectedForm");
 						if(selectedForm){
-							let new_selected_form = JSON.parse(localStorage.getItem("selectedForm"));
+							let new_selected_form = JSON.parse(sessionStorage.getItem("selectedForm"));
 
 							new_selected_form.demand_type.map(item => {
 								let arr = this.need_type.filter(i => {

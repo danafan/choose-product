@@ -34,8 +34,6 @@
 			//点击跳转供应商详情
 			supplierDetail(){
 				let active_path = `/supplier_detail?supplier_id=${this.goods_info.supplier_id}`;
-    			// localStorage.setItem("active_path",active_path);
-    			// this.$store.commit("setPath", active_path);
 				const routeData = this.$router.resolve(active_path);
 				window.open(routeData.href);
 			}

@@ -35,7 +35,7 @@ instance.interceptors.response.use(
       case 1:
       return response;
       case 9999:
-      localStorage.clear();
+      sessionStorage.clear();
       Message({
         type: "warning",
         message: response.data.msg,
@@ -43,7 +43,7 @@ instance.interceptors.response.use(
       router.replace("/login");
       return;
       case 10000:
-      localStorage.clear();
+      sessionStorage.clear();
       //除了获取用户信息其他接口都提示
       if(response.config.url.indexOf('scancodes/getuserinfo') == -1){
         Message({
