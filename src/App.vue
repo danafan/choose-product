@@ -14,7 +14,7 @@
 
       let user_type = sessionStorage.getItem("user_type");
       // if(!sessionStorage.getItem("cache") && user_type != '2'){
-      if(user_type != '2'){
+      if(user_type != '2'){ //内部
         if(dd.env.platform != 'notInDingTalk'){ //是钉钉环境
           //获取code
           this.getCode();
