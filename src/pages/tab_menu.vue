@@ -31,7 +31,7 @@
           <el-dropdown @command="edit_dialog = true">
             <div style="display: flex;align-items: center">
              <img class="user_img" src="../static/user_img.png">
-             <div class="user_name">{{username}}</div>
+             <div class="user_name">{{ding_user_name}}</div>
            </div>
            <el-dropdown-menu slot="dropdown">
             <el-dropdown-item>修改密码</el-dropdown-item>
@@ -40,7 +40,7 @@
       </div>
       <div style="display: flex;align-items: center" v-else>
         <img class="user_img" src="../static/user_img.png">
-        <div class="user_name">{{username}}</div>
+        <div class="user_name">{{ding_user_name}}</div>
       </div>
       <div class="line"></div>
       <el-popconfirm
@@ -71,7 +71,7 @@
         {{supplier_name}}
       </el-form-item>
       <el-form-item label="用户名：">
-        <div>{{username}}</div>
+        <div>{{ding_user_name}}</div>
       </el-form-item>
       <el-form-item label="旧密码：" required>
         <el-input style="width: 200px" v-model="old_password" maxlength="20" placeholder="请输入旧密码">
@@ -234,7 +234,7 @@
     data() {
       return {
         active_index:0,
-        username: "",           //用户名
+        // username: "",           //用户名
         edit_dialog:false,      //修改密码弹窗
         old_password:"",        //旧密码
         password:"",            //新密码
@@ -243,10 +243,16 @@
     },
     created() {
       this.getNotice();
-      this.username = sessionStorage.getItem("ding_user_name");
+      // this.username = sessionStorage.getItem("ding_user_name");
       let path = window.location.hash.split('#/')[1].indexOf('?') > -1?window.location.hash.split('#/')[1].split('?')[0]:window.location.hash.split('#/')[1];
-      if(path == 'tab_menu' || path == 'tab-menu'){
+      if(path == 'tab_menu'){
         this.active_index = 0;
+      }else if(path == 'goods_detail'){
+        if(this.$route.query.page_path == 'supplier'){
+          this.active_index = 2;
+        }else{
+          this.active_index = 0;
+        }
       }else if(this.user_type == '1' && this.getActiveIndex(path) == -1){
         if(path == 'supplier_detail'){  //供应商详情
           this.active_index = 2;
@@ -257,7 +263,7 @@
         this.active_index = this.getActiveIndex(path);
       }
       //判断是刚登录进来的直接进入首页
-      if(path == 'tab_menu' || path == 'tab-menu'){
+      if(path == 'tab_menu'){
        if(this.user_type == '2'){
         this.$router.push('/gys_index')
       }else{
@@ -290,10 +296,10 @@
     active_path() {
       return this.$store.state.active_path;
     },
-      //当前高亮下标
-      // active_index() {
-      //   return this.$store.state.active_index;
-      // },
+      //用户名称
+    ding_user_name() {
+      return this.$store.state.ding_user_name;
+    },
   },
   methods: {
       //获取当前选中的下标

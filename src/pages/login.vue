@@ -244,6 +244,7 @@
         let user_info = {
           user_type:data.user_type,
           ding_user_id:data.ding_user_id,
+          ding_user_name:data.ding_user_name,
           login_token:data.login_token,
           secret_key:data.secret_key,
           supplier_name:data.supplier_name,

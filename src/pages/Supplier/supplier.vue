@@ -123,7 +123,7 @@
 			},
 			//点击跳转商品详情
 			getDetail(style_id){
-				let active_path = `/goods_detail?style_id=${style_id}`;
+				let active_path = `/goods_detail?style_id=${style_id}&page_path=supplier`;
 				const routeData = this.$router.resolve(active_path);
 				window.open(routeData.href);
 			},

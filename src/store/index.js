@@ -10,6 +10,7 @@ const store = new Vuex.Store({
     user_type:sessionStorage.getItem("user_type")?sessionStorage.getItem("user_type"):'',
     supplier_name:sessionStorage.getItem("supplier_name")?sessionStorage.getItem("supplier_name"):'',
     ding_user_id: sessionStorage.getItem("ding_user_id")?sessionStorage.getItem("ding_user_id"):'',
+    ding_user_name:sessionStorage.getItem("ding_user_name")?sessionStorage.getItem("ding_user_name"):'',
     login_token: sessionStorage.getItem("login_token")?sessionStorage.getItem("login_token"):'',
     secret_key: sessionStorage.getItem("secret_key")?sessionStorage.getItem("secret_key"):'',
     menu_list:sessionStorage.getItem("menu_list")?JSON.parse(sessionStorage.getItem("menu_list")):[],             //导航列表
@@ -27,6 +28,7 @@ const store = new Vuex.Store({
       state.user_type = user_info.user_type;
       state.supplier_name = user_info.supplier_name;
       state.ding_user_id = user_info.ding_user_id;
+      state.ding_user_name = user_info.ding_user_name;
       state.login_token = user_info.login_token;
       state.secret_key = user_info.secret_key;
     },

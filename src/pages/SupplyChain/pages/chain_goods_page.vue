@@ -121,6 +121,7 @@
 						<div v-if="scope.row.price_status == '1'">调后成本价：{{scope.row.edit_price}}</div>
 					</template>
 				</el-table-column>
+				<el-table-column label="控价" prop="price_control"></el-table-column>
 				<el-table-column label="颜色" prop="color"></el-table-column>
 				<el-table-column label="尺码" prop="size"></el-table-column>
 				<el-table-column label="面料" width="120" show-overflow-tooltip prop="fabric"></el-table-column>

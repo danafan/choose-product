@@ -13,7 +13,6 @@
       // return;
 
       let user_type = sessionStorage.getItem("user_type");
-      // if(!sessionStorage.getItem("cache") && user_type != '2'){
       if(user_type != '2'){ //内部
         if(dd.env.platform != 'notInDingTalk'){ //是钉钉环境
           //获取code
@@ -21,13 +20,7 @@
         }else{                                  //不是钉钉环境
           this.getUserInfo();
         }
-        
       }
-      
-      // if(window.location.hash.split('#/')[1] == ''){
-      //   this.$router.replace('/tab_menu')
-      // }
-
     },
     watch:{
       $route:function(n,o){
@@ -75,6 +68,7 @@
             let user_info = {
               user_type:data.user_type,
               ding_user_id:data.ding_user_id,
+              ding_user_name:data.ding_user_name,
               login_token:data.login_token,
               secret_key:data.secret_key
             }
