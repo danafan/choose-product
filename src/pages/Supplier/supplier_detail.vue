@@ -64,12 +64,16 @@
 								<div class="info_value">{{supplier_info.sales_num_30}}</div>
 							</div>
 							<div class="info_item">
-								<div class="info_lable">发货率：</div>
+								<div class="info_lable">7天发货率：</div>
 								<div class="info_value">{{supplier_info.delivery_rate}}</div>
 							</div>
 							<div class="info_item">
-								<div class="info_lable">退货率：</div>
+								<div class="info_lable">7天退货率：</div>
 								<div class="info_value">{{supplier_info.refund_rate}}</div>
+							</div>
+							<div class="info_item">
+								<div class="info_lable">30天退货率：</div>
+								<div class="info_value">{{supplier_info.refund_rate_30}}</div>
 							</div>
 						</div>
 					</div>

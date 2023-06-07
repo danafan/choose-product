@@ -2,7 +2,7 @@
 	<div class="chain_page_content">
 		<el-card class="card_box">
 			<div class="form_row">
-				<el-form size="small" label-width="120px">
+				<el-form size="small" label-width="140px">
 					<el-form-item label="供应商名称：" required>
 						<el-input clearable v-model="supplier_name" placeholder="供应商名称"></el-input>
 					</el-form-item>
@@ -42,8 +42,6 @@
 							<el-radio :label="1">是</el-radio>
 						</el-radio-group>
 					</el-form-item>
-				</el-form>
-				<el-form size="small" label-width="140px">
 					<el-form-item label="供应商编码：">
 						<el-input clearable v-model="supplier_code" placeholder="供应商编码"></el-input>
 					</el-form-item>
@@ -56,6 +54,8 @@
 					<el-form-item label="供应商微信：">
 						<el-input clearable v-model="weixin" placeholder="供应商微信"></el-input>
 					</el-form-item>
+				</el-form>
+				<el-form size="small" label-width="140px">
 					<el-form-item label="结算方式："required>
 						<el-select v-model="supply_monthly_settlement" clearable placeholder="请选择结算方式">
 							<el-option v-for="item in payment_method" :key="item.id" :label="item.name" :value="item.id">
@@ -80,6 +80,18 @@
 					</el-form-item>
 					<el-form-item label="营业执照：">
 						<UploadFile :img_list="img_list" @callbackFn="callbackFn"/>
+					</el-form-item>
+					<el-form-item label="公司名称：">
+						<el-input clearable v-model="company_name" placeholder="公司名称"></el-input>
+					</el-form-item>
+					<el-form-item label="公司照片：">
+						<UploadFile :img_list="company_img_list" @callbackFn="companyCallbackFn"/>
+					</el-form-item>
+					<el-form-item label="供应商维护人：">
+						<el-select v-model="maintainer_id" clearable filterable placeholder="全部" @change="changeUser">
+							<el-option v-for="item in user_list" :key="item.ding_user_id" :label="item.ding_user_name" :value="item.ding_user_id">
+							</el-option>
+						</el-select>
 					</el-form-item>
 				</el-form>
 			</div>
@@ -122,7 +134,13 @@
 				grade_list:[],			//供应商等级列表
 				grade_id:"",			//选中的供应商等级
 				business_license:"",	//营业执照
-				img_list:[],			//
+				img_list:[],			//营业执照图片列表
+				company_name:'',		//公司名称
+				company_img:"",			//公司图片
+				company_img_list:[],	//公司图片列表
+				user_list:[],			//所有用户列表
+				maintainer_id:"",		//供应商维护人钉钉ID
+				maintainer:"",			//供应商维护人姓名
 			}
 		},
 		created(){
@@ -135,6 +153,8 @@
 			}
 			//获取供应商等级列表
 			this.ajaxSupplierGradeList();
+			//获取用户列表
+			this.getUserList();
 		},
 		methods:{
 			//获取供应商等级列表
@@ -146,6 +166,22 @@
 						this.$message.warning(res.data.msg);
 					}
 				})
+			},
+			//获取用户列表
+			getUserList(){
+				commonResource.getUserList().then(res => {
+					if(res.data.code == 1){
+						this.user_list = res.data.data;
+					}else{
+						this.$message.warning(res.data.msg);
+					}
+				})
+			},
+			changeUser(e){
+				let maintainer_arr = this.user_list.filter(item => {
+					return item.ding_user_id == e
+				})
+				this.maintainer = maintainer_arr.length > 0?maintainer_arr[0].ding_user_name:"";
 			},
 			//获取详情
 			supplierManagerInfo(){
@@ -168,6 +204,9 @@
 						this.supply_replace_send = data.supply_replace_send;
 						this.supply_warehousing = data.supply_warehousing;
 						this.supply_monthly_settlement = data.supply_monthly_settlement;
+						this.company_name = data.company_name;
+						this.maintainer = data.maintainer;
+						this.maintainer_id = data.maintainer_id;
 						this.weixin = data.weixin?data.weixin:"";
 						this.grade_id = data.grade_id?data.grade_id:'';
 						this.business_license = data.business_license?data.business_license:'';
@@ -178,7 +217,15 @@
 						if(this.business_license != ""){
 							this.img_list.push(img_obj);
 						}
-						
+
+						this.company_img = data.company_img?data.company_img:'';
+						let company_img_obj = {
+							urls:this.company_img,
+							show_icon:false
+						}
+						if(this.company_img != ""){
+							this.company_img_list.push(company_img_obj);
+						}
 					}else{
 						this.$message.warning(res.data.msg);
 					}
@@ -204,6 +251,8 @@
 						contactor:this.contactor,
 						description:this.description,
 						business_license:this.business_license,
+						company_name:this.company_name,
+						company_img:this.company_img,
 						main_business:this.main_business,
 						supplier_code:this.supplier_code,
 						supply_photograph:this.supply_photograph,
@@ -214,7 +263,9 @@
 						supply_monthly_settlement:this.supply_monthly_settlement,
 						is_core:this.is_core,
 						weixin:this.weixin,
-						grade_id:this.grade_id
+						grade_id:this.grade_id,
+						maintainer:this.maintainer,
+						maintainer_id:this.maintainer_id
 					}
 					this.$confirm('确认提交?', '提示', {
 						confirmButtonText: '确定',
@@ -253,6 +304,10 @@
 			callbackFn(img_arr) {
 				this.business_license = img_arr.length > 0?img_arr[0]:'';
 			},
+			//监听公司图片列表回调
+			companyCallbackFn(img_arr) {
+				this.company_img = img_arr.length > 0?img_arr[0]:'';
+			},
 		},
 		components:{
 			UploadFile
@@ -260,59 +315,59 @@
 	}
 </script>
 <style lang="less" scoped>
-.chain_page_content{
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	padding: 24rem;
-	display: flex;
-	flex-direction: column;
-	.card_box{
-		flex:1;
+	.chain_page_content{
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		padding: 24rem;
 		display: flex;
 		flex-direction: column;
-		align-items: center;
-		position: relative;
-		.form_row{
-			position: absolute;
-			top: 0;
-			left: 0;
-			width: 100%;
+		.card_box{
+			flex:1;
 			display: flex;
-			justify-content: space-evenly;
-			padding-top: 40rem;
-			.view_card_img {
-				margin-right: 40rem;
-				margin-bottom: 20rem;
-				border-radius: 2rem;
-				position: relative;
-				width: 160rem;
-				height: 160rem;
-				.card_img,
-				.delete_img {
+			flex-direction: column;
+			align-items: center;
+			position: relative;
+			.form_row{
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 100%;
+				display: flex;
+				justify-content: space-evenly;
+				padding-top: 40rem;
+				.view_card_img {
+					margin-right: 40rem;
+					margin-bottom: 20rem;
 					border-radius: 2rem;
-					position: absolute;
-					width: 100%;
-					height: 100%;
-				}
-				.delete_img {
-					background: rgba(0, 0, 0, 0.4);
-					display: flex;
-					align-items: center;
-					justify-content: center;
-					.delete_icon {
-						width: 40rem;
-						height: 40rem;
+					position: relative;
+					width: 160rem;
+					height: 160rem;
+					.card_img,
+					.delete_img {
+						border-radius: 2rem;
+						position: absolute;
+						width: 100%;
+						height: 100%;
+					}
+					.delete_img {
+						background: rgba(0, 0, 0, 0.4);
+						display: flex;
+						align-items: center;
+						justify-content: center;
+						.delete_icon {
+							width: 40rem;
+							height: 40rem;
+						}
 					}
 				}
 			}
-		}
-		.commit_but{
-			position: absolute;
-			bottom: 40rem;
+			.commit_but{
+				position: absolute;
+				bottom: 40rem;
+			}
 		}
 	}
-}
 </style>

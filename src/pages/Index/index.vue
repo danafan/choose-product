@@ -1,5 +1,5 @@
 <template>
-	<div class="padding_page ddd">
+	<div class="padding_page scroll-y">
 		<div class="index_container">
 			<div class="padding_page_content">
 				<SearchWidget page_path="index_history" @callback="searchFn" placeholder="搜索款式编码、标题、款号、供应商"/>
@@ -7,7 +7,7 @@
 					<ScreeningWidget id="screen_widget" v-if="show_screen" :total_num="total" @callback="screenFn"/>
 					<div class="scroll_view" v-if="goods_list.length > 0">
 						<div class="goods_list">
-							<GoodsItem :info="item" @setStatus="setStatus" v-for="item in goods_list" @callback="getList"/>
+							<GoodsItem :info="item" @setStatus="setStatus" v-for="item in goods_list" @callback="getList" @enlargeFn="enlargeFn"/>
 							<div class="padding_item" v-for="i in 6-(goods_list.length%6) == 6?0:6-(goods_list.length%6)"></div>
 						</div>
 						<PaginationWidget :total="total" :page="page" :pagesize="pagesize" @checkPage="checkPage"/>
@@ -17,6 +17,13 @@
 			</div>
 			<CarWidget :is_fixed="true"/>
 		</div>
+		<!-- 点击放大 -->
+		<el-dialog :visible.sync="enlarge_dialog" :show-close="false" custom-class="custom_class">
+			<div slot="title" class="dialog_title" style="justify-content: flex-end;">
+				<img class="close_icon" src="../../static/close_icon.png" @click="enlarge_dialog = false">
+			</div>
+			<GoodsItem :info="enlarge_item" :is_enlarge="true"/>
+		</el-dialog>
 	</div>
 </template>
 <script>
@@ -38,8 +45,9 @@
 				page:1,			//页码
 				pagesize:30,			//页码
 				search:"",
-				arg:{}
-				
+				arg:{},
+				enlarge_dialog:false,
+				enlarge_item:{}
 			}
 		},
 		created(){
@@ -103,6 +111,11 @@
 						item.in_cart = 1; 
 					}
 				})
+			},
+			//点击放大
+			enlargeFn(info){
+				this.enlarge_item = info;
+				this.enlarge_dialog = true;
 			}
 		},
 		components:{
@@ -115,36 +128,39 @@
 		}
 	}
 </script>
+<style type="text/css" lang="less">
+	.custom_class{
+		width: 460rem!important;
+	}
+</style>
 <style lang="less" scoped>
-.ddd{
-	overflow-y: scroll;
-}
-.index_container{
-	position: relative;
-	width: 1725rem;
-	height: 100%;
-}
-.index_container::-webkit-scrollbar{display:none}
-.padding_page_content{
-	position: absolute;
-	top:0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	.card_box{
-		.scroll_view{
-			.goods_list{
-				display: flex;
-				flex-wrap: wrap;
-				justify-content: space-between;
-				.padding_item{
-					width: 265rem;
+
+	.index_container{
+		position: relative;
+		width: 1725rem;
+		height: 100%;
+	}
+	.index_container::-webkit-scrollbar{display:none}
+	.padding_page_content{
+		position: absolute;
+		top:0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		.card_box{
+			.scroll_view{
+				.goods_list{
+					display: flex;
+					flex-wrap: wrap;
+					justify-content: space-between;
+					.padding_item{
+						width: 265rem;
+					}
 				}
 			}
 		}
 	}
-}
-.padding_page_content::-webkit-scrollbar{display:none}
+	.padding_page_content::-webkit-scrollbar{display:none}
 </style>
 
 

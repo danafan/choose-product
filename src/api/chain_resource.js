@@ -63,6 +63,7 @@ let path = {
   noticeInfo:'api/notice/info',							//公告详情
   editNotice:'api/notice/edit',							//编辑公告
   noticeDel:'api/notice/del',							//删除公告
+  auditNotice:'api/notice/audit',       // 审核公告
   batchAdd:'api/supplier_manager/batch_add',
   supplierManagerList:'api/supplier_manager/index',		//供应商列表
   supplierExport:'api/supplier_manager/supplier_export',  //导出供应商
@@ -377,6 +378,10 @@ export default {
   //删除公告
   noticeDel(params) {
     return http.post(path.noticeDel, params);
+  },
+  //审核公告
+  auditNotice(params) {
+    return http.post(path.auditNotice, params);
   },
   //导入供应商
   batchAdd(params) {

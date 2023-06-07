@@ -1,7 +1,7 @@
 <template>
 	<div class="image_list">
 		<draggable
-		style="display: flex"
+		style="display: flex;flex-wrap:wrap;"
 		v-model="preview_images"
 		@end="emitFn"
 		>

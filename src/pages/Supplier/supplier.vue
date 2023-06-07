@@ -17,10 +17,9 @@
 						<div class="text_info">
 							<div class="info_item">30天销量：{{item.sales_num_30}}</div>
 							<div class="info_item">7天销量：{{item.sales_num_7}}</div>
-							<div class="info_item">发货率：{{item.delivery_rate}}</div>
-							<div class="info_item">退货率：{{item.refund_rate}}</div>
-							<div class="info_item">&nbsp</div>
-							<div class="info_item">&nbsp</div>
+							<div class="info_item">7天发货率：{{item.delivery_rate}}</div>
+							<div class="info_item">7天退货率：{{item.refund_rate}}</div>
+							<div class="info_item">30天退货率：{{item.refund_rate_30}}</div>
 						</div>
 						<div class="image_list">
 							<div v-for="i in item.goods_list" @click="getDetail(i.style_id)">

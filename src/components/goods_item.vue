@@ -1,6 +1,6 @@
 <template>
-	<div class="goods_item">
-		<div class="image_box" @click="getMoreImage" v-if="info.img != ''">
+	<div class="goods_item" :class="[{'default_width':!is_enlarge},{'enlarge_width':is_enlarge}]">
+		<div class="image_box" :class="[{'default_img_width':!is_enlarge},{'enlarge_img_width':is_enlarge}]" @click="getMoreImage" v-if="info.img != ''">
 			<el-popover
 			:open-delay="500"
 			:close-delay="0"
@@ -11,7 +11,7 @@
 			<el-image class="goods_img" :src="domain + info.img" slot="reference" fit="scale-down"></el-image>
 		</el-popover>
 	</div>
-	<img class="image_box" src="../static/load_failure.png" @click="getMoreImage" v-else>
+	<img class="image_box" :class="[{'default_img_width':!is_enlarge},{'enlarge_img_width':is_enlarge}]" src="../static/load_failure.png" @click="getMoreImage" v-else>
 	<div class="goods_info" @click="getDetail" @mousedown="mouseDownFn" @mouseup="mouseUpFn">
 		<div class="price_cate">
 			<div class="price">
@@ -79,11 +79,13 @@
 		<div class="line mt-6"></div>
 		<div class="num_row">
 			<div>浏览：{{info.views_num}}</div>
-			<div>选中：{{info.select_num}}</div>
+			<div>7天发货率：{{info.fhl_7}}</div>
 			<div>30天销量：{{info.sales_num_all}}</div>
 		</div>
 		<div class="num_row">
+			<div>选中：{{info.select_num}}</div>
 			<div>7天销量：{{info.sales_num_7}}</div>
+			<div>30天退货率：{{info.thl_30}}</div>
 		</div>
 		<div class="line mt-6"></div>
 		<div class="img_back">
@@ -96,11 +98,15 @@
 				<img class="info_icon" src="../static/xian_icon.png" v-if="info.supply_monthly_settlement == 0">
 				<img class="info_icon" src="../static/yue_icon.png" v-if="info.supply_monthly_settlement == 1">
 			</div>
-			<div class="feek_back" @click.stop="feekback_dialog = true">反馈</div>
+			<div class="flex ac">
+				<img class="enlarge_icon" src="../static/enlarge_icon.png" @click.stop="$emit('enlargeFn',info)" v-if="!is_enlarge">
+				<div class="feek_back" @click.stop="feekback_dialog = true">反馈</div>
+			</div>
+			
 		</div>
 	</div>
 	<!-- 选款弹窗 -->
-	<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" @close="closeSelectDialog" destroy-on-close :visible.sync="show_select">
+	<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" @close="closeSelectDialog" destroy-on-close :visible.sync="show_select" :modal-append-to-body="false">
 		<div slot="title" class="dialog_title">
 			<div>选款</div>
 			<img class="close_icon" src="../static/close_icon.png" @click="show_select = false">
@@ -203,7 +209,7 @@
 		</div>
 	</el-dialog>
 	<!-- 反馈弹窗 -->
-	<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" @close="closeFeekDialog" destroy-on-close :visible.sync="feekback_dialog">
+	<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" @close="closeFeekDialog" destroy-on-close :visible.sync="feekback_dialog" :modal-append-to-body="false">
 		<div slot="title" class="dialog_title">
 			<div>意见反馈</div>
 			<img class="close_icon" src="../static/close_icon.png" @click="feekback_dialog = false">
@@ -222,7 +228,7 @@
 		</div>
 	</el-dialog>
 	<!-- 更多图片 -->
-	<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" :visible.sync="more_image_dialog">
+	<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" :visible.sync="more_image_dialog" :modal-append-to-body="false">
 		<div slot="title" class="dialog_title">
 			<div>更多图片</div>
 			<img class="close_icon" src="../static/close_icon.png" @click="more_image_dialog = false">
@@ -248,7 +254,6 @@
 			<el-button type="primary" size="small" @click="more_image_dialog = false">关闭</el-button>
 		</div>
 	</el-dialog>
-	
 </div>
 </template>
 <style type="text/css">
@@ -258,15 +263,18 @@
 }
 </style>
 <style lang="less" scoped>
+.default_width{
+	width: 265rem;
+}
+.enlarge_width{
+	width: 424rem;
+}
 .goods_item{
 	margin-bottom: 20rem;
 	border:1px solid #EDEDED;
-	width: 265rem;
 	cursor:pointer;
 	.image_box{
 		position: relative;
-		width: 263rem;
-		height: 263rem;
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -277,6 +285,14 @@
 			width: 100%;
 			height: 100%;
 		}
+	}
+	.default_img_width{
+		width: 263rem;
+		height: 263rem;
+	}
+	.enlarge_img_width{
+		width: 420rem;
+		height: 420rem;
 	}
 	.goods_info{
 		padding: 8rem 10rem;
@@ -444,6 +460,11 @@
 					width: 20rem;
 					height: 20rem;
 				}
+			}
+			.enlarge_icon{
+				margin-right: 8rem;
+				width: 11rem;
+				height: 11rem;
 			}
 			.feek_back{
 				font-size: 12rem;
@@ -627,7 +648,12 @@
 			info:{
 				type:Object,
 				default:{}
-			}
+			},
+			//是否是放大	
+			is_enlarge:{
+				type:Boolean,
+				default:false
+			},
 		},
 		watch:{
 			active_tab_index:function(n,o){

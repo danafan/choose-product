@@ -27,8 +27,6 @@
 					<el-form-item label="提供入仓：">
 						{{data_info.supply_warehousing==1?'是':'否'}}
 					</el-form-item>
-				</el-form>
-				<el-form size="small" label-width="140px">
 					<el-form-item label="供应商编码：">
 						{{data_info.supplier_code}}
 					</el-form-item>
@@ -41,6 +39,8 @@
 					<el-form-item label="供应商微信：">
 						{{data_info.weixin}}
 					</el-form-item>
+				</el-form>
+				<el-form size="small" label-width="140px">
 					<el-form-item label="结算方式：">
 						{{data_info.supply_monthly_settlement==1?'月结':'现结'}}
 					</el-form-item>
@@ -56,6 +56,15 @@
 					<el-form-item label="营业执照：">
 						<el-image class="card_img" :src="img_list[0]" fit="scale-down" :preview-src-list="img_list" v-if="img_list.length > 0"></el-image>
 					</el-form-item>
+					<el-form-item label="公司名称：">
+						{{data_info.company_name}}
+					</el-form-item>
+					<el-form-item label="公司图片：">
+						<el-image class="card_img" :src="company_list[0]" fit="scale-down" :preview-src-list="company_list" v-if="company_list.length > 0"></el-image>
+					</el-form-item>
+					<el-form-item label="供应商维护人：">
+						{{data_info.maintainer}}
+					</el-form-item>
 				</el-form>
 			</div>
 		</el-card>
@@ -68,6 +77,7 @@
 			return{
 				data_info:{},		//详情
 				img_list:[],		//营业执照
+				company_list:[],	//公司图片
 			}
 		},
 		created(){
@@ -91,6 +101,9 @@
 						this.data_info = res.data.data;
 						if(this.data_info.business_license){
 							this.img_list.push(this.domain + this.data_info.business_license);
+						}
+						if(this.data_info.company_img){
+							this.company_list.push(this.domain + this.data_info.company_img);
 						}
 					}else{
 						this.$message.warning(res.data.msg);

@@ -17,15 +17,33 @@
 			<el-table size="mini" :data="data.data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" v-loading="loading">
 				<el-table-column label="公告标题" prop="notice_title"></el-table-column>
 				<el-table-column label="公告内容" prop="notice_content"></el-table-column>
+				<el-table-column label="图片" width="150">
+					<template slot-scope="scope">
+						<div v-if="scope.row.images.length == 0">暂无</div>
+						<el-carousel trigger="hover" indicator-position="none" :autoplay="false" height="50px" v-else>
+							<el-carousel-item v-for="(item,index) in scope.row.images" :key="index">
+								<el-image :z-index="2006" class="image" :src="item" fit="scale-down" :preview-src-list="scope.row.images"></el-image>
+							</el-carousel-item>
+						</el-carousel>
+					</template>
+				</el-table-column>
 				<el-table-column label="发布日期" prop="add_time"></el-table-column>
 				<el-table-column label="开始时间" prop="start_day"></el-table-column>
 				<el-table-column label="结束时间" prop="end_day"></el-table-column>
 				<el-table-column label="发布人" prop="add_user_name"></el-table-column>
+				<el-table-column label="审核状态">
+					<template slot-scope="scope">
+						<div>{{scope.row.status | status}}</div>
+					</template>
+				</el-table-column>
+				<el-table-column label="审核人" prop="check_user"></el-table-column>
 				<el-table-column label="操作" width="140" fixed="right">
 					<template slot-scope="scope">
 						<el-button type="text" size="small" disabled v-if="scope.row.is_online">已发布</el-button>
-						<el-button type="text" size="small" @click="addFn('2',scope.row.notice_id)" v-if="!scope.row.is_online || button_list.edit == 1">编辑</el-button>
-						<el-button type="text" size="small" @click="deleteFn(scope.row.notice_id)" v-if="button_list.del == 1">删除</el-button>
+						<el-button type="text" size="small" @click="auditFn('1',scope.row.notice_id)" v-if="button_list.check == 1 && scope.row.status == 0">同意发布</el-button>
+						<el-button type="text" size="small" @click="auditFn('2',scope.row.notice_id)" v-if="button_list.check == 1 && scope.row.status == 0">拒绝发布</el-button>
+						<el-button type="text" size="small" @click="addFn('2',scope.row.notice_id)" v-if="!scope.row.is_online && button_list.edit == 1 && scope.row.status != 0">编辑</el-button>
+						<el-button type="text" size="small" @click="deleteFn(scope.row.notice_id)" v-if="button_list.del == 1 && scope.row.status != 0">删除</el-button>
 					</template>
 				</el-table-column>
 			</el-table>
@@ -58,6 +76,9 @@
 						<el-checkbox :label="2">供应商</el-checkbox>
 					</el-checkbox-group>
 				</el-form-item>
+				<el-form-item label="公告图片：">
+					<UploadFile :img_list="img_list" :is_multiple="true" :current_num="img_list.length" :max_num="6" @callbackFn="callbackFn"/>
+				</el-form-item>
 			</el-form>
 		</div>
 		<div slot="footer" class="dialog_footer">
@@ -68,34 +89,39 @@
 </div>
 </template>
 <style lang="less" scoped>
-.chain_page_content{
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	padding: 24rem;
-	display: flex;
-	flex-direction: column;
-	.form_card{
-		margin-bottom: 16rem;
-		.form_item{
-			margin-bottom:0 !important;
+	.chain_page_content{
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		padding: 24rem;
+		display: flex;
+		flex-direction: column;
+		.form_card{
+			margin-bottom: 16rem;
+			.form_item{
+				margin-bottom:0 !important;
+			}
+		}
+		.card_box{
+			flex:1;
 		}
 	}
-	.card_box{
-		flex:1;
+	.dialog_content{
+		padding: 20rem;
 	}
-}
-.dialog_content{
-	padding: 20rem;
-}
+	.image{
+		width: 100px;
+		height: 50px;
+	}
 </style>
 <script>
 	import resource from '../../../api/chain_resource.js'
 
 	import TableTitle from '../components/table_title.vue'
 	import PaginationWidget from '../../../components/pagination_widget.vue'
+	import UploadFile from '../../../components/upload_file.vue'
 	export default{
 		data(){
 			return{
@@ -118,6 +144,7 @@
 					},
 				},
 				arg_view_type:[1],			//添加或编辑可见范围
+				img_list:[],				//公告图片
 			}
 		},
 		created(){
@@ -127,55 +154,76 @@
 		destroyed() {
 			window.removeEventListener("resize", () => {});
 		},
+		computed:{
+			//图片前缀
+			domain(){
+				return this.$store.state.domain;
+			}
+		},
 		mounted() {
     		//获取表格最大高度
-    		this.onResize();
-    		window.addEventListener("resize", this.onResize());
-    	},
-    	methods: {
+			this.onResize();
+			window.addEventListener("resize", this.onResize());
+		},
+		methods: {
     		//监听屏幕大小变化
-    		onResize() {
-    			this.$nextTick(() => {
-    				let card_box_height = document.getElementById("card_box").offsetHeight;
-    				let table_title_height = document.getElementById("table_title").offsetHeight;
-    				let bottom_row_height = document.getElementById("bottom_row").offsetHeight;
-    				this.max_height =
-    				card_box_height -
-    				table_title_height -
-    				bottom_row_height -
-    				50 +
-    				"px";
-    			});
-    		},
+			onResize() {
+				this.$nextTick(() => {
+					let card_box_height = document.getElementById("card_box").offsetHeight;
+					let table_title_height = document.getElementById("table_title").offsetHeight;
+					let bottom_row_height = document.getElementById("bottom_row").offsetHeight;
+					this.max_height =
+					card_box_height -
+					table_title_height -
+					bottom_row_height -
+					50 +
+					"px";
+				});
+			},
+			//监听图片列表回调
+			callbackFn(img_arr) {
+				this.img_list = img_arr;
+			},
     		//公告列表
-    		noticeList(){
-    			let arg = {
-    				page:this.page,
-    				pagesize:20,
-    				title:this.keyword
-    			}
-    			this.loading = true;
-    			resource.noticeList(arg).then(res => {
-    				if(res.data.code == 1){
-    					this.loading = false;
-    					let data = res.data.data;
-    					data.data.map(item => {
-    						var start_day = new Date(item.start_day).getTime();
-    						var end_day = new Date(item.end_day).getTime();
-    						var current_time = new Date().valueOf();
-    						let is_online = false;
-    						if((current_time > start_day && current_time < end_day)  || current_time > end_day){
-    							is_online = true
-    						}
-    						item.is_online = is_online;
-    					})
-    					this.data = data;
-    					this.button_list = data.button_list;
-    				}else{
-    					this.$message.warning(res.data.msg);
-    				}
-    			})
-    		},
+			noticeList(){
+				let arg = {
+					page:this.page,
+					pagesize:20,
+					title:this.keyword
+				}
+				this.loading = true;
+				resource.noticeList(arg).then(res => {
+					if(res.data.code == 1){
+						this.loading = false;
+						let data = res.data.data;
+						data.data.map(item => {
+							var start_day = new Date(item.start_day).getTime();
+							var end_day = new Date(item.end_day).getTime();
+							var current_time = new Date().valueOf();
+							let is_online = false;
+							if((current_time > start_day && current_time < end_day)  || current_time > end_day){
+								is_online = true
+							}
+							item.is_online = is_online;
+							console.log(item.img);
+
+							let images = [];
+							if(item.img){
+								item.img.split(',').map(i => {
+									images.push(this.domain + i);
+								})
+							}
+							
+							item['images'] = images;
+						})
+
+						this.data = data;
+						this.button_list = data.button_list;
+					}else{
+						this.$message.warning(res.data.msg);
+					}
+				})
+			},
 			//切换页码
 			checkPage(v){
 				this.page = v;
@@ -204,6 +252,14 @@
 						this.notice_title = data.notice_title;
 						this.notice_content = data.notice_content;
 						this.arg_view_type = data.view_type;
+						let img_list = data.img.split(',');
+						img_list.map(item => {
+							let img_obj = {
+								urls:item,
+								show_icon:false
+							}
+							this.img_list.push(img_obj)
+						})
 						let info_date = [];
 						info_date[0] = data.start_day;
 						info_date[1] = data.end_day;
@@ -229,7 +285,8 @@
 						notice_content:this.notice_content,
 						start_date:this.date && this.date.length > 0?this.date[0]:"",
 						end_date:this.date && this.date.length > 0?this.date[1]:"",
-						view_type:this.arg_view_type
+						view_type:this.arg_view_type,
+						img:this.img_list.join(',')
 					}
 					if(this.type == '1'){		//创建
 						resource.addNotice(arg).then(res => {
@@ -287,15 +344,57 @@
 			},
 			//关闭弹窗
 			closeDialog(){
+				this.img_list = [];
 				this.notice_title = '';
 				this.notice_content = '';
 				this.date = [];
 				this.arg_view_type = [1];
+			},
+			//公告审核
+			auditFn(status,notice_id){
+				this.$confirm(`${status == '1'?'同意发布':'拒绝发布'}?`, '提示', {
+					confirmButtonText: '确定',
+					cancelButtonText: '取消',
+					type: 'warning'
+				}).then(() => {
+					let arg = {
+						notice_id:notice_id,
+						status:status
+					}
+					resource.auditNotice(arg).then(res => {
+						if(res.data.code == 1){
+							this.$message.success(res.data.msg);
+							//公告列表
+							this.noticeList();
+						}else{
+							this.$message.warning(res.data.msg);
+						}
+					})
+				}).catch(() => {
+					this.$message({
+						type: 'info',
+						message: '取消审核'
+					});          
+				});
+			}
+		},
+		filters:{
+			//审核状态
+			status:function(v){
+				switch(v){
+				case 0:
+					return '待审核';
+				case 1:
+					return '审核通过';
+				case 2:
+					return '审核拒绝';
+				}	
 			}
 		},
 		components:{
 			TableTitle,
-			PaginationWidget
+			PaginationWidget,
+			UploadFile
 		}
 	}
 </script>
