@@ -72,4 +72,5 @@ export default {
   getDeptList(params) {
     return http.get(path.getDeptList, params);
   },
+  
 };

@@ -24,6 +24,7 @@ const b_z_promotion_page = (resolve) => require(["@/pages/SupplyChain/pages/b_z_
 const edit_goods = (resolve) => require(["@/pages/SupplyChain/pages/GoodsPages/edit_goods"], resolve);
 const image_setting = (resolve) => require(["@/pages/SupplyChain/pages/GoodsPages/image_setting"], resolve);
 const chain_supplier_page = (resolve) => require(["@/pages/SupplyChain/pages/chain_supplier_page"], resolve);
+const gysybk_page = (resolve) => require(["@/pages/SupplyChain/pages/gysybk_page"], resolve);
 const add_edit_supplier = (resolve) => require(["@/pages/SupplyChain/pages/SupplierPages/add_edit_supplier"], resolve);
 const chain_supplier_detail = (resolve) => require(["@/pages/SupplyChain/pages/SupplierPages/supplier_detail"], resolve);
 const account_list = (resolve) => require(["@/pages/SupplyChain/pages/SupplierPages/account_list"], resolve);
@@ -169,6 +170,15 @@ const router = new Router({
      use_cache:false
    },
    component: chain_supplier_page
+ },
+ {
+    path: "/gysybk_page",
+    name: "供应商预备库",
+    meta:{
+     keep_alive:true,
+     use_cache:false
+   },
+   component: gysybk_page
  },
  {
   path: "/add_edit_supplier",

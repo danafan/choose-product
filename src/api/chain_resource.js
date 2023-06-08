@@ -89,6 +89,11 @@ let path = {
   editGoodsIid:'api/productstyle/editgoodsiid',           //批量编辑款式编码
   hotDataList:'api/productstyle/hotdatalist',             //爆款主推款审核列表
   hotDataInfo:'api/productstyle/showhotdatainfo',             //获取爆款详情/审核
+  reserveIndex:'api/supplier_manager/reserve_index',            //预备库供应商列表
+  reserveEdit:'api/supplier_manager/reserve_edit',        //编辑供应商(填报阶段)
+  reserveAdd:'api/supplier_manager/reserve_add',          //创建预备库供应商
+  checkInfo:'api/supplier_manager/check_info',            //填报阶段审核
+  reserveInfo:'api/supplier_manager/reserve_info',        //获取供应商详情
 };  
 export default {
   //类目列表接口
@@ -486,5 +491,29 @@ export default {
   //爆款主推款审核
   hotDataInfoPost(params) {
     return http.post(path.hotDataInfo, params);
+  },
+  //预备库供应商列表
+  reserveIndex(params) {
+    return http.get(path.reserveIndex, params);
+  },
+  //编辑供应商-GET（填报阶段）
+  reserveEditGet(params) {
+    return http.get(path.reserveEdit, params);
+  },
+  //编辑供应商-Post（填报阶段）
+  reserveEditPost(params) {
+    return http.post(path.reserveEdit, params);
+  },
+  //创建预备库供应商
+  reserveAdd(params) {
+    return http.post(path.reserveAdd, params);
+  },
+  //填报阶段审核
+  checkInfo(params) {
+    return http.post(path.checkInfo, params);
+  },
+  //供应商详情
+  reserveInfo(params) {
+    return http.get(path.reserveInfo, params);
   },
 };
