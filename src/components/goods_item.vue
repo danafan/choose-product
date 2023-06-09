@@ -68,7 +68,7 @@
 					<img class="add_car" src="../static/add_car.png">
 					<div>待选</div>
 				</div>
-				<div class="yjr" v-else @click.stop>已加入11</div>
+				<div class="yjr" v-else @click.stop>已加入</div>
 				<div class="xk" :class="{'drak_back':info.cost_price == ''}" @click.stop="selectStyle(info.style_id)">选款</div>
 			</div>
 			<div class="flex ac">
