@@ -98,6 +98,8 @@ let path = {
   selectionMap:'api/supplier_manager/selection_map',      //预备库获取下拉筛选条件
   reserveDel:'api/supplier_manager/reserve_del',          //删除预备库供应商
   qualified:'api/supplier_manager/qualified',             //申请转合格
+  checkQualified:'api/supplier_manager/check_qualified',  //转合格审核
+  reserveQualifiedEdit:'api/supplier_manager/reserve_qualified_edit', //编辑供应商（转合格阶段）
 };  
 export default {
   //类目列表接口
@@ -535,5 +537,17 @@ export default {
   //申请转合格
   qualified(params) {
     return http.post(path.qualified, params);
+  },
+  //转合格审核
+  checkQualified(params) {
+    return http.post(path.checkQualified, params);
+  },
+  //编辑供应商-GET（转合格阶段）
+  reserveQualifiedEditGet(params) {
+    return http.get(path.reserveQualifiedEdit, params);
+  },
+  //编辑供应商-POST（转合格阶段）
+  reserveQualifiedEditPost(params) {
+    return http.post(path.reserveQualifiedEdit, params);
   },
 };

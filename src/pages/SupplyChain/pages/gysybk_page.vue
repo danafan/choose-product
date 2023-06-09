@@ -136,7 +136,7 @@
 				<el-table-column label="是否合格" width="120">
 					<template slot-scope="scope">
 						<el-button type="text" size="small" v-if="scope.row.status == 1 && button_list.apply_qualified == 1" @click="zhuanFn('1','218')">待转合格</el-button>
-						<el-button type="text" size="small" v-if="scope.row.status == 3 && button_list.qualified_check == 1">合格待审核</el-button>
+						<el-button type="text" size="small" v-if="scope.row.status == 3 && button_list.qualified_check == 1" @click="hgAuditFn('218')">合格待审核</el-button>
 					</template>
 				</el-table-column>
 				<el-table-column label="操作" width="180" fixed="right">
@@ -323,7 +323,7 @@
 						</el-form-item>
 					</el-form>
 				</div>
-				<!-- 审核 -->
+				<!-- 填报审核 -->
 				<el-form size="mini" v-if="add_type == '4'">
 					<el-form-item>
 						<el-radio-group v-model="check_status">
@@ -336,13 +336,39 @@
 						</el-input>
 					</el-form-item>
 				</el-form>
+				<!-- 转合格审核 -->
+				<el-form size="mini" v-if="add_type == '5'">
+					<el-form-item label="公司名称：">
+						<div>{{company_name}}</div>
+					</el-form-item>
+					<el-form-item label="工商营业执照：">
+						<el-image style="width: 80px;height: 80px;margin-right: 10px;" :z-index="99999" :src="item" :initial-index="index" :preview-src-list="business_license_img" v-for="(item,index) in business_license_img">
+						</el-image>
+					</el-form-item>
+					<el-form-item label="公司照片：">
+						<el-image style="width: 80px;height: 80px;margin-right: 10px;" :z-index="99999" :src="item" :initial-index="index" :preview-src-list="company_img" v-for="(item,index) in company_img">
+						</el-image>
+					</el-form-item>
+					<el-form-item>
+						<el-radio-group v-model="audit_status">
+							<el-radio :label="1">同意</el-radio>
+							<el-radio :label="0">拒绝</el-radio>
+						</el-radio-group>
+					</el-form-item>
+					<el-form-item label="拒绝原因：" v-if="audit_status == 0" required>
+						<el-input type="textarea" :rows="3" placeholder="拒绝原因" v-model="audit_remark">
+						</el-input>
+					</el-form-item>
+				</el-form>
 			</div>
 			<div slot="footer" class="dialog_footer">
 				<el-button size="small" @click="edit_dialog = false">取消</el-button>
 				<!-- 添加/编辑 -->
 				<el-button type="primary" size="small" @click="submitAddEdit" v-if="add_type == '1' || add_type == '2'">提交</el-button>
-				<!-- 审核 -->
+				<!-- 填报审核 -->
 				<el-button type="primary" size="small" @click="submitCheck" v-if="add_type == '4'">保存</el-button>
+				<!-- 转合格审核 -->
+				<el-button type="primary" size="small" @click="zhgAudit" v-if="add_type == '5'">保存</el-button>
 			</div>
 		</el-dialog>
 		<!-- 转合格 -->
@@ -451,7 +477,7 @@
 				import_dialog:false,			//导入弹窗
 				edit_dialog:false,				//填报添加/编辑/审核/详情弹窗
 				reserve_id:"",					//点击的供应商ID
-				add_type:'1',			//填报弹窗类型（1:添加；2:编辑；3:查看；4:填报审核）
+				add_type:'1',	//填报弹窗类型（1:添加；2:编辑；3:查看；4:填报审核；5:合格审核）
 				add_title:'',					//填报弹窗标题
 				info_arg:{
 					supplier_name:"",
@@ -489,6 +515,8 @@
 				company_name:"",				//公司名称
 				business_license_img:[],		//工商营业执照
 				company_img:[],					//公司照片
+				audit_status:1,					//转合格审核（1:同意；2:拒绝）
+				audit_remark:"",				//转合格审核拒绝原因
 			}
 		},
 		// beforeRouteLeave(to,from,next){
@@ -517,6 +545,12 @@
 			this.selectionMap();
 			//获取供应商列表
 			this.supplierManagerList();
+		},
+		computed:{
+			//图片前缀
+			domain(){
+				return this.$store.state.domain;
+			}
 		},
 		mounted() {
     		//获取表格最大高度
@@ -671,6 +705,9 @@
 				}
 				this.check_status = 1;					//审核状态
 				this.remark = "";						//拒绝原因
+				this.company_name = ""				//公司名称
+				this.business_license_img = [];		//工商营业执照
+				this.company_img = [];					//公司照片
 			},
 			//点击填报编辑或添加的提交
 			submitAddEdit(){
@@ -768,7 +805,44 @@
 				if(type == '1'){				//填写
 					this.zhuan_dialog = true;
 				}else{							//编辑
-
+					let arg = {
+						reserve_id:this.reserve_id
+					}
+					resource.reserveQualifiedEditGet(arg).then(res => {
+						if(res.data.code == 1){
+							let data = res.data.data;
+							this.company_name = data.company_name;				//公司名称
+							//工商营业执照
+							this.business_license_img = [];
+							if(data.business_license){
+								let business_license_img = data.business_license.split(',');
+								business_license_img.map(item => {
+									let business_img = {
+										urls:item,
+										show_icon:false
+									}
+									this.business_license_img.push(business_img);
+								})
+							}
+							
+							//公司照片
+							this.company_img = [];
+							if(data.company_img){
+								let company_img = data.company_img.split(',');
+								company_img.map(item => {
+									let company_img = {
+										urls:item,
+										show_icon:false
+									}
+									this.company_img.push(company_img);
+								})
+							}
+							
+							this.zhuan_dialog = true;
+						}else{
+							this.$message.warning(res.data.msg);
+						}
+					})
 				}
 			},
 			//监听工商营业执照图片列表回调
@@ -791,13 +865,14 @@
 					this.$message.warning('请上传公司图片');
 					return;
 				}
-				let arg = {
-					reserve_id:this.reserve_id,
-					company_name:this.company_name,
-					company_img:this.company_img.join(','),
-					business_license:this.business_license_img.join(',')
-				}
+				
 				if(this.zhuan_type == '1'){			//添加
+					let arg = {
+						reserve_id:this.reserve_id,
+						company_name:this.company_name,
+						company_img:this.company_img.join(','),
+						business_license:this.business_license_img.join(',')
+					}
 					resource.qualified(arg).then(res => {
 						if(res.data.code == 1){
 							this.$message.success(res.data.msg);
@@ -809,9 +884,32 @@
 						}
 					})
 				}else{						//编辑
-					arg['reserve_id'] = this.reserve_id;
+					let arg = {
+						reserve_id:this.reserve_id,
+						company_name:this.company_name
+					}
+					let company_img = [];
+					this.company_img.map(item => {
+						company_img.push(item.urls?item.urls:item);
+					})
+					arg['company_img'] = company_img.join(',');
+
+					let business_license = [];
+					this.business_license_img.map(item => {
+						business_license.push(item.urls?item.urls:item);
+					})
+					arg['business_license'] = business_license.join(',');
+					resource.reserveQualifiedEditPost(arg).then(res => {
+						if(res.data.code == 1){
+							this.$message.success(res.data.msg);
+							this.zhuan_dialog = false;
+							//获取供应商列表
+							this.supplierManagerList();
+						}else{
+							this.$message.warning(res.data.msg);
+						}
+					})
 				}
-				console.log(arg)
 			},
 			//关闭转合格弹窗
 			closeZhuan(){
@@ -845,6 +943,62 @@
 					});          
 				});
 			},
+			//点击合格待审核
+			hgAuditFn(reserve_id){
+				this.add_type = '5';
+				this.add_title = '转合格审核';
+				this.reserve_id = reserve_id;
+				resource.reserveInfo({reserve_id:this.reserve_id}).then(res => {
+					if(res.data.code == 1){
+						let data = res.data.data;
+						for(let k in this.info_arg){
+							this.info_arg[k] = data[k];
+						}
+						let price_range = data.price_range.split('~');
+						this.info_arg.start_price = price_range[0];
+						this.info_arg.end_price = price_range[1];
+						this.company_name = data.company_name;				//公司名称
+
+						//工商营业执照
+						this.business_license_img = [];
+						let business_license_img = data.business_license.split(',');
+						business_license_img.map(item => {
+							this.business_license_img.push(this.domain + item);
+						})
+						//公司照片
+						this.company_img = [];
+						let company_img = data.company_img.split(',');
+						company_img.map(item => {
+							this.company_img.push(this.domain + item);
+						})
+					}else{
+						this.$message.warning(res.data.msg);
+					}
+				})
+				this.edit_dialog = true;
+			},
+			//转合格审核提交
+			zhgAudit(){
+				if(this.audit_status == 0 && this.audit_remark == ''){
+					this.$message.warning('请输入拒绝原因');
+					return;
+				}
+				let arg = {
+					reserve_id:this.reserve_id,
+					status:this.audit_status,
+					remark:this.audit_remark
+				}
+				resource.checkQualified(arg).then(res => {
+					if(res.data.code == 1){
+						this.$message.success(res.data.msg);
+						this.edit_dialog = false;
+						//获取供应商列表
+						this.supplierManagerList();
+					}else{
+						this.$message.warning(res.data.msg);
+					}
+				})
+			}
 		},
 		filters:{
 			status:function(v){
