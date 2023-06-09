@@ -7,7 +7,7 @@
 				</el-form-item>
 				<el-form-item label="开发员：">
 					<el-select v-model="developer" clearable filterable placeholder="全部">
-						<el-option v-for="item in user_list" :key="item.ding_user_id" :label="item.ding_user_name" :value="item.ding_user_name">
+						<el-option v-for="item in user_list" :key="item.user_id" :label="item.real_name" :value="item.real_name">
 						</el-option>
 					</el-select>
 				</el-form-item>
@@ -133,21 +133,21 @@
 						<div>{{scope.row.status | status}}</div>
 					</template>
 				</el-table-column>
-				<el-table-column label="是否合格" prop="weixin">
+				<el-table-column label="是否合格" width="120">
 					<template slot-scope="scope">
-						<el-button type="text" size="small" v-if="scope.row.status == 1 && button_list.apply_qualified == 1">待转合格</el-button>
+						<el-button type="text" size="small" v-if="scope.row.status == 1 && button_list.apply_qualified == 1" @click="zhuanFn('1','218')">待转合格</el-button>
 						<el-button type="text" size="small" v-if="scope.row.status == 3 && button_list.qualified_check == 1">合格待审核</el-button>
 					</template>
 				</el-table-column>
 				<el-table-column label="操作" width="180" fixed="right">
 					<template slot-scope="scope">
-						<el-button type="text" size="small" @click="getDetail(scope.row.supplier_id)" v-if="button_list.detail == 1">查看</el-button>
+						<el-button type="text" size="small" @click="checkInfo('3','218')" v-if="button_list.detail == 1">查看</el-button>
 						<!-- 填报编辑 -->
-						<el-button type="text" size="small" @click="addFn('2','216')" v-if="scope.row.status == 2 && button_list.info_edit == 1">编辑</el-button>
+						<el-button type="text" size="small" @click="addFn('2','218')" v-if="scope.row.status == 2 && button_list.info_edit == 1">编辑</el-button>
 						<!-- 转合格编辑 -->
-						<el-button type="text" size="small" @click="zhuanFn('2',scope.row.supplier_id)" v-if="scope.row.status == 5 && button_list.qualified_edit == 1">编辑</el-button>
-						<el-button type="text" size="small" v-if="scope.row.status != 0 && scope.row.status != 3" @click="deleteFn(scope.row.supplier_id)">删除</el-button>
-						<el-button type="text" size="small" v-if="scope.row.status == 0 && button_list.info_check == 1" @click="checkInfo('216')">填报审核</el-button>
+						<el-button type="text" size="small" @click="zhuanFn('2','218')" v-if="scope.row.status == 5 && button_list.qualified_edit == 1">编辑</el-button>
+						<el-button type="text" size="small" v-if="scope.row.status != 0 && scope.row.status != 3" @click="deleteFn('218')">删除</el-button>
+						<el-button type="text" size="small" v-if="scope.row.status == 0 && button_list.info_check == 1" @click="checkInfo('4','218')">填报审核</el-button>
 					</template>
 				</el-table-column>
 			</el-table>
@@ -194,7 +194,7 @@
 						</el-form-item>
 						<el-form-item label="开发员：">
 							<el-select v-model="info_arg.developer" style="width: 120px;" clearable filterable placeholder="全部" @change="changeUser" v-if="add_type == '1' || add_type == '2'">
-								<el-option v-for="item in user_list" :key="item.ding_user_id" :label="item.ding_user_name" :value="item.ding_user_id">
+								<el-option v-for="item in user_list" :key="item.user_id" :label="item.real_name" :value="item.user_id">
 								</el-option>
 							</el-select>
 							<div v-else>{{info_arg.developer}}</div>
@@ -345,6 +345,31 @@
 				<el-button type="primary" size="small" @click="submitCheck" v-if="add_type == '4'">保存</el-button>
 			</div>
 		</el-dialog>
+		<!-- 转合格 -->
+		<el-dialog :visible.sync="zhuan_dialog" @close="closeZhuan">
+			<div slot="title" class="dialog_title">
+				<div>请{{zhuan_type == '1'?'填写':'编辑'}}转正资料</div>
+				<img class="close_icon" src="../../../static/close_icon.png" @click="zhuan_dialog = false">
+			</div>
+			<!-- 内容 -->
+			<div>
+				<el-form size="mini">
+					<el-form-item label="公司名称：">
+						<el-input clearable v-model="company_name" style="width: 120px;" placeholder="公司名称"></el-input>
+					</el-form-item>
+					<el-form-item label="工商营业执照：">
+						<UploadFile :img_list="business_license_img" :is_multiple="true" :current_num="business_license_img.length" :max_num="6" @callbackFn="businessCallbackFn"/>
+					</el-form-item>
+					<el-form-item label="公司照片：">
+						<UploadFile :img_list="company_img" :is_multiple="true" :current_num="company_img.length" :max_num="6" @callbackFn="companyCallbackFn"/>
+					</el-form-item>
+				</el-form>
+			</div>
+			<div slot="footer" class="dialog_footer">
+				<el-button size="small" @click="zhuan_dialog = false">取消</el-button>
+				<el-button type="primary" size="small" @click="commitZhuan">提交</el-button>
+			</div>
+		</el-dialog>
 	</div>
 </template>
 <style lang="less" scoped>
@@ -395,6 +420,7 @@
 
 	import TableTitle from '../components/table_title.vue'
 	import PaginationWidget from '../../../components/pagination_widget.vue'
+	import UploadFile from '../../../components/upload_file.vue'
 	export default{
 		data(){
 			return{
@@ -458,6 +484,11 @@
 				},				  //填报阶段的详情
 				check_status:1,					//审核状态
 				remark:"",						//拒绝原因
+				zhuan_dialog:false,				//申请转合格
+				zhuan_type:"",					//申请转合格弹窗(1:填写；2:编辑)
+				company_name:"",				//公司名称
+				business_license_img:[],		//工商营业执照
+				company_img:[],					//公司照片
 			}
 		},
 		// beforeRouteLeave(to,from,next){
@@ -482,6 +513,8 @@
 		created(){
 			//获取用户列表
 			this.getUserList();
+			//预备库下拉框筛选项
+			this.selectionMap();
 			//获取供应商列表
 			this.supplierManagerList();
 		},
@@ -507,9 +540,19 @@
 			},
 			//获取用户列表
 			getUserList(){
-				commonResource.getUserList().then(res => {
+				resource.supplierAjaxUser().then(res => {
 					if(res.data.code == 1){
 						this.user_list = res.data.data;
+					}else{
+						this.$message.warning(res.data.msg);
+					}
+				})
+			},
+			//预备库下拉框筛选项
+			selectionMap(){
+				resource.selectionMap().then(res => {
+					if(res.data.code == 1){
+						let data = res.data.data;
 					}else{
 						this.$message.warning(res.data.msg);
 					}
@@ -567,9 +610,9 @@
 			//切换开发人员
 			changeUser(e){
 				let maintainer_arr = this.user_list.filter(item => {
-					return item.ding_user_id == e
+					return item.user_id == e
 				})
-				this.info_arg.developer = maintainer_arr.length > 0?maintainer_arr[0].ding_user_name:"";
+				this.info_arg.developer = maintainer_arr.length > 0?maintainer_arr[0].real_name:"";
 			},
     		//下载模版
 			downTemplate(){
@@ -598,10 +641,6 @@
 				this.page = v;
 				//获取供应商列表
 				this.supplierManagerList();
-			},
-			//点击查看
-			getDetail(supplier_id){
-				this.$router.push(`/chain_supplier_detail?supplier_id=${supplier_id}`);
 			},
 			//填报点击添加或编辑
 			addFn(type,reserve_id){
@@ -680,10 +719,10 @@
 					})
 				}
 			},
-			//点击填报阶段审核
-			checkInfo(reserve_id){
-				this.add_type = '4';
-				this.add_title = '审核';
+			//点击填报阶段审核/查看
+			checkInfo(type,reserve_id){
+				this.add_type = type;
+				this.add_title = this.add_type == '3'?'详情':'审核';
 				this.reserve_id = reserve_id;
 				resource.reserveInfo({reserve_id:this.reserve_id}).then(res => {
 					if(res.data.code == 1){
@@ -714,7 +753,7 @@
 				resource.checkInfo(arg).then(res => {
 					if(res.data.code == 1){
 						this.$message.success(res.data.msg);
-						this.check_dialog = false;
+						this.edit_dialog = false;
 						//获取供应商列表
 						this.supplierManagerList();
 					}else{
@@ -723,20 +762,74 @@
 				})
 			},
 			//点击转合格编辑或添加
-			zhuanFn(){
+			zhuanFn(type,reserve_id){
+				this.reserve_id = reserve_id;
+				this.zhuan_type = type;
+				if(type == '1'){				//填写
+					this.zhuan_dialog = true;
+				}else{							//编辑
 
+				}
+			},
+			//监听工商营业执照图片列表回调
+			businessCallbackFn(img_arr) {
+				this.business_license_img = img_arr;
+			},
+			//监听公司图片列表回调
+			companyCallbackFn(img_arr) {
+				this.company_img = img_arr;
+			},
+			//提交/编辑转合格
+			commitZhuan(){
+				if(this.company_name == ''){
+					this.$message.warning('请输入公司名称');
+					return;
+				}else if(this.business_license_img.length == 0){
+					this.$message.warning('请上传营业执照');
+					return;
+				}else if(this.company_img.length == 0){
+					this.$message.warning('请上传公司图片');
+					return;
+				}
+				let arg = {
+					reserve_id:this.reserve_id,
+					company_name:this.company_name,
+					company_img:this.company_img.join(','),
+					business_license:this.business_license_img.join(',')
+				}
+				if(this.zhuan_type == '1'){			//添加
+					resource.qualified(arg).then(res => {
+						if(res.data.code == 1){
+							this.$message.success(res.data.msg);
+							this.zhuan_dialog = false;
+							//获取供应商列表
+							this.supplierManagerList();
+						}else{
+							this.$message.warning(res.data.msg);
+						}
+					})
+				}else{						//编辑
+					arg['reserve_id'] = this.reserve_id;
+				}
+				console.log(arg)
+			},
+			//关闭转合格弹窗
+			closeZhuan(){
+				this.company_name = "";
+				this.company_img = [];
+				this.business_license_img = [];
 			},
 			//点击删除
-			deleteFn(supplier_id){
+			deleteFn(reserve_id){
 				this.$confirm('确认删除该供应商?', '提示', {
 					confirmButtonText: '确定',
 					cancelButtonText: '取消',
 					type: 'warning'
 				}).then(() => {
 					let arg = {
-						supplier_id:supplier_id
+						reserve_id:reserve_id
 					}
-					resource.supplierManagerDel(arg).then(res => {
+					resource.reserveDel(arg).then(res => {
 						if(res.data.code == 1){
 							this.$message.success(res.data.msg);
 							//获取供应商列表
@@ -773,7 +866,8 @@
 		},
 		components:{
 			TableTitle,
-			PaginationWidget
+			PaginationWidget,
+			UploadFile
 		}
 	}
 </script>

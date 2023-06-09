@@ -94,6 +94,10 @@ let path = {
   reserveAdd:'api/supplier_manager/reserve_add',          //创建预备库供应商
   checkInfo:'api/supplier_manager/check_info',            //填报阶段审核
   reserveInfo:'api/supplier_manager/reserve_info',        //获取供应商详情
+  supplierAjaxUser:'api/supplier_manager/ajaxUser',       //获取用户列表
+  selectionMap:'api/supplier_manager/selection_map',      //预备库获取下拉筛选条件
+  reserveDel:'api/supplier_manager/reserve_del',          //删除预备库供应商
+  qualified:'api/supplier_manager/qualified',             //申请转合格
 };  
 export default {
   //类目列表接口
@@ -515,5 +519,21 @@ export default {
   //供应商详情
   reserveInfo(params) {
     return http.get(path.reserveInfo, params);
+  },
+  //获取用户列表
+  supplierAjaxUser(params) {
+    return http.get(path.supplierAjaxUser, params);
+  },
+  //预备库下拉框筛选项
+  selectionMap(params) {
+    return http.get(path.selectionMap, params);
+  },
+  //删除预备库供应商
+  reserveDel(params) {
+    return http.post(path.reserveDel, params);
+  },
+  //申请转合格
+  qualified(params) {
+    return http.post(path.qualified, params);
   },
 };
