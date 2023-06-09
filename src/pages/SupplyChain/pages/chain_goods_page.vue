@@ -86,14 +86,20 @@
 				<el-table-column label="款式编码" width="140">
 					<template slot-scope="scope">
 						<div class="item_row">
+							<div class="item_label">供应商：</div>
+							<div class="item_value">
+								<div v-for="item in scope.row.new_supplier_ksbm">{{item}}</div>
+							</div>
+						</div>
+						<div class="item_row">
 							<div class="item_label">普通：</div>
-							<div>
+							<div class="item_value">
 								<div v-for="item in scope.row.new_i_id">{{item}}</div>
 							</div>
 						</div>
 						<div class="item_row">
 							<div class="item_label">BD：</div>
-							<div>
+							<div class="item_value">
 								<div v-for="item in scope.row.new_bd_i_id">{{item}}</div>
 							</div>
 						</div>
@@ -279,8 +285,11 @@
 		.item_row{
 			display: flex;
 			.item_label{
-				width: 36px;
+				width: 56px;
 				text-align:end;
+			}
+			.item_value{
+				flex: 1;
 			}
 		}
 	}
@@ -673,6 +682,9 @@
 							}
 							if(item.bd_i_id){
 								item.new_bd_i_id = item.bd_i_id.split(',')
+							}
+							if(item.supplier_ksbm){
+								item.new_supplier_ksbm = item.supplier_ksbm.split(',')
 							}
 						})
 						this.data = data;
