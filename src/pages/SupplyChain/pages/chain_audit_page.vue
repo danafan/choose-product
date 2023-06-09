@@ -171,7 +171,7 @@
 			<el-table-column label="操作" width="160" fixed="right">
 				<template slot-scope="scope">
 					<el-button type="text" size="small" v-if="button_list.info == 1" @click="selectedInfo(scope.row.select_id)">查看</el-button>
-					<el-button type="text" size="small" v-if="button_list.edit_i_id == 1" @click="editInfo(scope.row.select_id,scope.row.i_id,scope.row.bd_i_id)">编辑</el-button>
+					<el-button type="text" size="small" v-if="button_list.edit_i_id == 1" @click="editInfo(scope.row.select_id,scope.row.i_id,scope.row.bd_i_id,scope.row.supplier_ksbm)">编辑</el-button>
 					<el-button type="text" size="small" v-if="scope.row.audit_status == 1 && button_list.aff == 1" @click="auditFn('1',scope.row.select_id)">确认需求</el-button>
 					<el-button type="text" size="small" v-if="(scope.row.audit_status == 1 || scope.row.audit_status == 2) && button_list.ref == 1" @click="auditFn('2',scope.row.select_id)">拒绝需求</el-button>
 					<el-button type="text" size="small" v-if="button_list.addre == 1" @click="addRemark(scope.row.select_id,scope.row.select_remark)">备注</el-button>
@@ -375,6 +375,10 @@
 	</div>
 	<div class="down_box">
 		<el-form :inline="true" size="mini">
+			<el-form-item label="供应商款式编码：">
+				<el-input type="textarea" autosize placeholder="多个请用分号间隔" v-model="edit_arg.supplier_ksbm">
+				</el-input>
+			</el-form-item>
 			<el-form-item label="款式编码：">
 				<el-input type="textarea" autosize placeholder="多个请用分号间隔" v-model="edit_arg.i_id">
 				</el-input>
@@ -567,6 +571,7 @@
 				edit_dialog:false,		//编辑款式编码弹窗
 				edit_arg:{
 					select_id:"",
+					supplier_ksbm:"",
 					i_id:"",
 					bd_i_id:""
 				},						//编辑信息
@@ -989,22 +994,27 @@
 				}
 			},
 			//点击编辑
-			editInfo(select_id,i_id,bd_i_id){
+			editInfo(select_id,i_id,bd_i_id,supplier_ksbm){
 				this.edit_arg.select_id = select_id;
 				this.edit_arg.i_id = i_id?i_id.replaceAll(",", ";"):"";
 				this.edit_arg.bd_i_id = bd_i_id?bd_i_id.replaceAll(",", ";"):'';
+				this.edit_arg.supplier_ksbm = supplier_ksbm?supplier_ksbm.replaceAll(",", ";"):'';
 				this.edit_dialog = true;
 			},
 			//关闭编辑
 			closeEdit(){
 				this.edit_arg = {
 					select_id:"",
+					supplier_ksbm:"",
 					i_id:"",
 					bd_i_id:""
 				}
 			},
 			//提交编辑
 			commitEdit(){
+				if (this.edit_arg.supplier_ksbm.indexOf(";") > -1) {
+					this.edit_arg.supplier_ksbm = this.edit_arg.supplier_ksbm.replaceAll(";", ",");
+				}
 				if (this.edit_arg.i_id.indexOf(";") > -1) {
 					this.edit_arg.i_id = this.edit_arg.i_id.replaceAll(";", ",");
 				}
