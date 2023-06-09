@@ -2,7 +2,7 @@
 	<div class="chain_page_content">
 		<el-card class="card_box">
 			<div class="form_row">
-				<el-form size="small" style="width: 50%" label-width="120px">
+				<el-form size="small" style="width: 50%" label-width="130px">
 					<el-form-item label="提交人：" v-if="is_detail">
 						<div>{{add_admin_name}}</div>
 					</el-form-item>
@@ -12,6 +12,10 @@
 					</el-form-item>
 					<el-form-item label="BD款式编码：">
 						<el-input type="textarea" autosize :placeholder="is_detail?'':'多个请用分号间隔'" v-model="arg.bd_i_id" :disabled="is_detail">
+						</el-input>
+					</el-form-item>
+					<el-form-item label="供应商款式编码：">
+						<el-input type="textarea" autosize :placeholder="is_detail?'':'多个请用分号间隔'" v-model="arg.supplier_ksbm" :disabled="is_detail">
 						</el-input>
 					</el-form-item>
 					<el-form-item label="供应商：" required>
@@ -220,6 +224,7 @@
 				arg:{
 					i_id:"",				//款式编码
 					bd_i_id:"",				//bd款式编码
+					supplier_ksbm:"",		//供应商款式编码
 					style_name:"",			//商品款号
 					supplier_id:"",			//选中的供应商
 					title:"",				//标题
@@ -361,7 +366,7 @@
 								for(let k in data_info){
 									if(key == k){
 										//款式编码逗号转分号
-										if((k == 'i_id' || k == 'bd_i_id') && data_info[k].indexOf(',') > -1){
+										if((k == 'i_id' || k == 'bd_i_id' || k == 'supplier_ksbm') && data_info[k].indexOf(',') > -1){
 											data_info[k] = data_info[k].replaceAll(",", ";");
 										}
 										this.arg[key] = data_info[k];
@@ -423,7 +428,7 @@
 					for(let k in data_info){
 						if(key == k){
 							//款式编码逗号转分号
-							if((k == 'i_id' || k == 'bd_i_id') && data_info[k].indexOf(',') > -1){
+							if((k == 'i_id' || k == 'bd_i_id' || k == 'supplier_ksbm') && data_info[k].indexOf(',') > -1){
 								data_info[k] = data_info[k].replaceAll(",", ";");
 							}
 							this.arg[key] = data_info[k];
@@ -540,6 +545,9 @@
 					}
 					if (arg.bd_i_id.indexOf(";") > -1) {
 						arg.bd_i_id = arg.bd_i_id.replaceAll(";", ",");
+					}
+					if (arg.supplier_ksbm.indexOf(";") > -1) {
+						arg.supplier_ksbm = arg.supplier_ksbm.replaceAll(";", ",");
 					}
 					arg.shooting_style_id = this.shooting_style_ids.join(',');
 

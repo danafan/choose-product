@@ -7,6 +7,10 @@
 				<div class="row_price">¥{{goods_info.cost_price}}</div>
 			</div>
 			<div class="content_row">
+				<div class="row_lable">供应商款式编码</div>
+				<div class="row_value">{{goods_info.supplier_ksbm}}</div>
+			</div>
+			<div class="content_row">
 				<div class="row_lable">款式编码</div>
 				<div class="row_value">{{goods_info.i_id}}</div>
 			</div>
@@ -457,7 +461,7 @@
 			margin-bottom: 16rem;
 			display: flex;
 			.row_lable{
-				width: 100rem;
+				width: 135rem;
 				font-size:12rem;
 				color: #666666;
 			}
