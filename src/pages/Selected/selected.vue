@@ -124,6 +124,7 @@
 			<div class="detail_row">
 				<div class="lable">款式编码</div>
 				<div class="value">
+					<div>供应商：{{goods_info.supplier_ksbm}}</div>
 					<div>普通：{{goods_info.i_id}}</div>
 					<div>BD：{{goods_info.bd_i_id}}</div>
 				</div>
