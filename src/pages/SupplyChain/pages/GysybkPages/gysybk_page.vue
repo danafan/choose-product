@@ -16,10 +16,14 @@
 					</el-date-picker>
 				</el-form-item>
 				<el-form-item label="分类：">
-					<el-input clearable v-model="classification" placeholder="分类"></el-input>
+					<el-select v-model="classification" clearable placeholder="全部">
+						<el-option :label="item" :value="item" v-for="item in classification_list"></el-option>
+					</el-select>
 				</el-form-item>
 				<el-form-item label="区域：">
-					<el-input clearable v-model="area" placeholder="区域"></el-input>
+					<el-select v-model="area" clearable placeholder="全部">
+						<el-option :label="item" :value="item" v-for="item in area_list"></el-option>
+					</el-select>
 				</el-form-item>
 				<el-form-item label="主营：">
 					<el-input clearable v-model="main_business" placeholder="主营"></el-input>
@@ -41,8 +45,7 @@
 				</el-form-item>
 				<el-form-item label="结算方式：">
 					<el-select v-model="settlement_method" clearable placeholder="全部">
-						<el-option label="月结" :value="1"></el-option>
-						<el-option label="现结" :value="0"></el-option>
+						<el-option :label="item" :value="item" v-for="item in settlement_method_list"></el-option>
 					</el-select>
 				</el-form-item>
 				<el-form-item label="产品价位段：">
@@ -63,9 +66,7 @@
 				</el-form-item>
 				<el-form-item label="性价比：">
 					<el-select v-model="cost_performance" clearable placeholder="全部">
-						<el-option label="高" :value="1"></el-option>
-						<el-option label="中" :value="2"></el-option>
-						<el-option label="低" :value="3"></el-option>
+						<el-option :label="item.name" :value="item.id" v-for="item in cost_performance_list"></el-option>
 					</el-select>
 				</el-form-item>
 				<el-form-item label="填报状态：">
@@ -77,9 +78,7 @@
 				</el-form-item>
 				<el-form-item label="合作程度：">
 					<el-select v-model="cooperativeness" clearable placeholder="全部">
-						<el-option label="重度" :value="1"></el-option>
-						<el-option label="深度" :value="2"></el-option>
-						<el-option label="轻度" :value="3"></el-option>
+						<el-option :label="item.name" :value="item.id" v-for="item in cooperativeness_list"></el-option>
 					</el-select>
 				</el-form-item>
 				<el-form-item label="合格状态：">
@@ -135,19 +134,19 @@
 				</el-table-column>
 				<el-table-column label="是否合格" width="120">
 					<template slot-scope="scope">
-						<el-button type="text" size="small" v-if="scope.row.status == 1 && button_list.apply_qualified == 1" @click="zhuanFn('1','218')">待转合格</el-button>
-						<el-button type="text" size="small" v-if="scope.row.status == 3 && button_list.qualified_check == 1" @click="hgAuditFn('218')">合格待审核</el-button>
+						<el-button type="text" size="small" v-if="scope.row.status == 1 && button_list.apply_qualified == 1" @click="zhuanFn('1',scope.row.reserve_id)">待转合格</el-button>
+						<el-button type="text" size="small" v-if="scope.row.status == 3 && button_list.qualified_check == 1" @click="hgAuditFn(scope.row.reserve_id)">合格待审核</el-button>
 					</template>
 				</el-table-column>
 				<el-table-column label="操作" width="180" fixed="right">
 					<template slot-scope="scope">
-						<el-button type="text" size="small" @click="checkInfo('3','218')" v-if="button_list.detail == 1">查看</el-button>
+						<el-button type="text" size="small" @click="checkInfo('3',scope.row.reserve_id)" v-if="button_list.detail == 1">查看</el-button>
 						<!-- 填报编辑 -->
-						<el-button type="text" size="small" @click="addFn('2','218')" v-if="scope.row.status == 2 && button_list.info_edit == 1">编辑</el-button>
+						<el-button type="text" size="small" @click="addFn('2',scope.row.reserve_id)" v-if="scope.row.status == 2 && button_list.info_edit == 1">编辑</el-button>
 						<!-- 转合格编辑 -->
-						<el-button type="text" size="small" @click="zhuanFn('2','218')" v-if="scope.row.status == 5 && button_list.qualified_edit == 1">编辑</el-button>
-						<el-button type="text" size="small" v-if="scope.row.status != 0 && scope.row.status != 3" @click="deleteFn('218')">删除</el-button>
-						<el-button type="text" size="small" v-if="scope.row.status == 0 && button_list.info_check == 1" @click="checkInfo('4','218')">填报审核</el-button>
+						<el-button type="text" size="small" @click="zhuanFn('2',scope.row.reserve_id)" v-if="scope.row.status == 5 && button_list.qualified_edit == 1">编辑</el-button>
+						<el-button type="text" size="small" v-if="scope.row.status != 0 && scope.row.status != 3" @click="deleteFn(scope.row.reserve_id)">删除</el-button>
+						<el-button type="text" size="small" v-if="scope.row.status == 0 && button_list.info_check == 1" @click="checkInfo('4',scope.row.reserve_id)">填报审核</el-button>
 					</template>
 				</el-table-column>
 			</el-table>
@@ -157,7 +156,7 @@
 		<el-dialog :visible.sync="import_dialog" width="30%">
 			<div slot="title" class="dialog_title">
 				<div>导入</div>
-				<img class="close_icon" src="../../../static/close_icon.png" @click="import_dialog = false">
+				<img class="close_icon" src="../../../../static/close_icon.png" @click="import_dialog = false">
 			</div>
 			<div class="down_box">
 				<el-button type="primary" plain size="small" @click="downTemplate">下载模版<i class="el-icon-download el-icon--right"></i></el-button>
@@ -177,7 +176,7 @@
 		<el-dialog :visible.sync="edit_dialog" @close="closeEdit" width="80%">
 			<div slot="title" class="dialog_title">
 				<div>{{add_title}}</div>
-				<img class="close_icon" src="../../../static/close_icon.png" @click="edit_dialog = false">
+				<img class="close_icon" src="../../../../static/close_icon.png" @click="edit_dialog = false">
 			</div>
 			<!-- 内容 -->
 			<div>
@@ -209,19 +208,23 @@
 							<div v-else>{{info_arg.introducer}}</div>
 						</el-form-item>
 						<el-form-item label="分类：">
-							<el-input clearable v-model="info_arg.classification" style="width: 120px;" placeholder="分类" v-if="add_type == '1' || add_type == '2'"></el-input>
+							<el-select v-model="info_arg.classification" clearable placeholder="全部" v-if="add_type == '1' || add_type == '2'">
+								<el-option :label="item" :value="item" v-for="item in classification_list"></el-option>
+							</el-select>
 							<div v-else>{{info_arg.classification}}</div>
 						</el-form-item>
 						<el-form-item label="区域：">
-							<el-input clearable v-model="info_arg.area" style="width: 120px;" placeholder="区域" v-if="add_type == '1' || add_type == '2'"></el-input>
+							<el-select v-model="info_arg.area" clearable placeholder="全部" v-if="add_type == '1' || add_type == '2'">
+								<el-option :label="item" :value="item" v-for="item in area_list"></el-option>
+							</el-select>
 							<div v-else>{{info_arg.area}}</div>
 						</el-form-item>
 						<el-form-item label="主营：">
-							<el-input clearable v-model="info_arg.main_business" style="width: 120px;" placeholder="主营" v-if="add_type == '1' || add_type == '2'"></el-input>
+							<el-input clearable v-model="info_arg.main_business" placeholder="主营" v-if="add_type == '1' || add_type == '2'"></el-input>
 							<div v-else>{{info_arg.main_business}}</div>
 						</el-form-item>
 						<el-form-item label="擅长品类：">
-							<el-input clearable v-model="info_arg.scpl" style="width: 120px;" placeholder="擅长品类" v-if="add_type == '1' || add_type == '2'"></el-input>
+							<el-input clearable v-model="info_arg.scpl" placeholder="擅长品类" v-if="add_type == '1' || add_type == '2'"></el-input>
 							<div v-else>{{info_arg.scpl}}</div>
 						</el-form-item>
 					</el-form>
@@ -262,9 +265,8 @@
 							<div v-else>{{info_arg.supply_replace_send}}</div>
 						</el-form-item>
 						<el-form-item label="结算方式：">
-							<el-select v-model="info_arg.settlement_method" style="width: 120px;" clearable placeholder="全部" v-if="add_type == '1' || add_type == '2'">
-								<el-option label="月结" :value="1"></el-option>
-								<el-option label="现结" :value="0"></el-option>
+							<el-select v-model="info_arg.settlement_method" clearable placeholder="全部" v-if="add_type == '1' || add_type == '2'">
+								<el-option :label="item" :value="item" v-for="item in settlement_method_list"></el-option>
 							</el-select>
 							<div v-else>{{info_arg.settlement_method}}</div>
 						</el-form-item>
@@ -294,18 +296,14 @@
 							<div v-else>{{info_arg.start_price}}~{{info_arg.end_price}}</div>
 						</el-form-item>
 						<el-form-item label="性价比：">
-							<el-select v-model="info_arg.cost_performance" style="width: 120px;" clearable placeholder="全部" v-if="add_type == '1' || add_type == '2'">
-								<el-option label="高" :value="1"></el-option>
-								<el-option label="中" :value="2"></el-option>
-								<el-option label="低" :value="3"></el-option>
+							<el-select v-model="info_arg.cost_performance" clearable placeholder="全部" v-if="add_type == '1' || add_type == '2'">
+								<el-option :label="item.name" :value="item.id" v-for="item in cost_performance_list"></el-option>
 							</el-select>
 							<div v-else>{{info_arg.cost_performance}}</div>
 						</el-form-item>
 						<el-form-item label="合作程度：">
-							<el-select v-model="info_arg.cooperativeness" style="width: 120px;" clearable placeholder="全部" v-if="add_type == '1' || add_type == '2'">
-								<el-option label="重度" :value="1"></el-option>
-								<el-option label="深度" :value="2"></el-option>
-								<el-option label="轻度" :value="3"></el-option>
+							<el-select v-model="info_arg.cooperativeness" clearable placeholder="全部" v-if="add_type == '1' || add_type == '2'">
+								<el-option :label="item.name" :value="item.id" v-for="item in cooperativeness_list"></el-option>
 							</el-select>
 							<div v-else>{{info_arg.cooperativeness}}</div>
 						</el-form-item>
@@ -375,7 +373,7 @@
 		<el-dialog :visible.sync="zhuan_dialog" @close="closeZhuan">
 			<div slot="title" class="dialog_title">
 				<div>请{{zhuan_type == '1'?'填写':'编辑'}}转正资料</div>
-				<img class="close_icon" src="../../../static/close_icon.png" @click="zhuan_dialog = false">
+				<img class="close_icon" src="../../../../static/close_icon.png" @click="zhuan_dialog = false">
 			</div>
 			<!-- 内容 -->
 			<div>
@@ -438,15 +436,15 @@
 	}
 </style>
 <script>
-	import { exportPost } from "../../../api/export.js";
+	import { exportPost } from "../../../../api/export.js";
 
 	import { MessageBox, Message } from "element-ui";
-	import resource from '../../../api/chain_resource.js'
-	import commonResource from '../../../api/common_resource.js'
+	import resource from '../../../../api/chain_resource.js'
+	import commonResource from '../../../../api/common_resource.js'
 
-	import TableTitle from '../components/table_title.vue'
-	import PaginationWidget from '../../../components/pagination_widget.vue'
-	import UploadFile from '../../../components/upload_file.vue'
+	import TableTitle from '../../components/table_title.vue'
+	import PaginationWidget from '../../../../components/pagination_widget.vue'
+	import UploadFile from '../../../../components/upload_file.vue'
 	export default{
 		data(){
 			return{
@@ -455,20 +453,25 @@
 				user_list:[],					//所有用户列表
 				developer:"",					//开发人员姓名
 				develop_date:[],				//开发日期
-				classification:"",				//分类
-				area:"",						//区域
-				main_business:"",				//主营
-				scpl:"",						//擅长品类
+				classification_list:[],				//分类
+				classification:"",					//选中的分类
+				area_list:[],						//区域
+				area:"",							//选中的区域
+				main_business:"",					//选中的主营
+				scpl:"",							//选中的擅长品类
+				settlement_method_list:[],			//结算方式
+				settlement_method:"",				//选中的结算方式
+				cost_performance_list:[],			//性价比
+				cost_performance:"",				//选中的性价比
+				cooperativeness_list:[],			//合作程度
+				cooperativeness:"",					//选中的合作程度
 				supply_free_factory:"",			//是否自有工厂
 				supply_design:"",				//是否自有设计能力
-				settlement_method:"",			//结算方式
 				start_price:"",					//价格段开始
 				end_price:"",					//价格段结束
 				supply_return_exchange:"",		//是否可退换货
 				supply_replace_send:"",			//是否可代发
-				cost_performance:"",			//性价比
 				filling_status:"",				//填报状态
-				cooperativeness:"",				//合作程度
 				qualified_status:"",			//合格状态
 				max_height:0,	
 				page:1,
@@ -587,6 +590,11 @@
 				resource.selectionMap().then(res => {
 					if(res.data.code == 1){
 						let data = res.data.data;
+						this.classification_list = data.classification;	//分类
+						this.area_list = data.area;						//区域
+						this.settlement_method_list = data.settlement_method;//结算方式
+						this.cost_performance_list = data.cost_performance;//性价比
+						this.cooperativeness_list = data.cooperativeness;//合作程度
 					}else{
 						this.$message.warning(res.data.msg);
 					}

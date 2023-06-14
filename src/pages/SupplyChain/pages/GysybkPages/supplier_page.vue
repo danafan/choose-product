@@ -111,7 +111,7 @@
 		<el-dialog :visible.sync="import_dialog" width="30%">
 			<div slot="title" class="dialog_title">
 				<div>导入</div>
-				<img class="close_icon" src="../../../static/close_icon.png" @click="import_dialog = false">
+				<img class="close_icon" src="../../../../static/close_icon.png" @click="import_dialog = false">
 			</div>
 			<div class="down_box">
 				<el-button type="primary" plain size="small" @click="downTemplate">下载模版<i class="el-icon-download el-icon--right"></i></el-button>
@@ -169,14 +169,14 @@
 }
 </style>
 <script>
-	import { exportPost } from "../../../api/export.js";
+	import { exportPost } from "../../../../api/export.js";
 
 	import { MessageBox, Message } from "element-ui";
-	import resource from '../../../api/chain_resource.js'
-	import commonResource from '../../../api/common_resource.js'
+	import resource from '../../../../api/chain_resource.js'
+	import commonResource from '../../../../api/common_resource.js'
 
-	import TableTitle from '../components/table_title.vue'
-	import PaginationWidget from '../../../components/pagination_widget.vue'
+	import TableTitle from '../../components/table_title.vue'
+	import PaginationWidget from '../../../../components/pagination_widget.vue'
 	export default{
 		data(){
 			return{
