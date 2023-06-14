@@ -18,8 +18,9 @@ Vue.use(ElementUI);
 Vue.use(VueQuillEditor);
 
 Vue.prototype.isPrice = /^(([0-9]+)|([0-9]+\.[0-9]{0,2}))$/;	//正数且最多两位小数
-Vue.prototype.isZzs = /^[+]{0,1}(\d+)$/;						//正整数
-Vue.prototype.downLoadUrl = 'http://selectiontest.92nu.com';	//下载模版前缀
+Vue.prototype.isZzs = /^[+]{0,1}(\d+)$/;						          //正整数
+Vue.prototype.downLoadUrl = `${location.origin}`;	            //下载模版前缀
+
 
 new Vue({
   render: h => h(App),

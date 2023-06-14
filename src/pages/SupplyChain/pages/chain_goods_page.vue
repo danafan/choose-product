@@ -419,6 +419,7 @@
 			}
 		},
 		activated(){
+			console.log(this.downLoadUrl)
 			if(!this.$route.meta.use_cache){
 				//获取供应商列表
 				this.ajaxSupplierList();
