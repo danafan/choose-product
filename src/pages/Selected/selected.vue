@@ -59,15 +59,21 @@
 				<el-table-column label="款号" prop="style_name"></el-table-column>
 				<el-table-column label="款式编码" width="140">
 					<template slot-scope="scope">
-						<div class="item_row">
+						<div class="item_row" v-if="scope.row.new_supplier_ksbm">
+							<div class="item_label">供应商：</div>
+							<div class="item_value">
+								<div v-for="item in scope.row.new_supplier_ksbm">{{item}}</div>
+							</div>
+						</div>
+						<div class="item_row" v-if="scope.row.new_i_id">
 							<div class="item_label">普通：</div>
-							<div>
+							<div class="flex-1">
 								<div v-for="item in scope.row.new_i_id">{{item}}</div>
 							</div>
 						</div>
-						<div class="item_row">
+						<div class="item_row" v-if="scope.row.new_bd_i_id">
 							<div class="item_label">BD：</div>
-							<div>
+							<div class="flex-1">
 								<div v-for="item in scope.row.new_bd_i_id">{{item}}</div>
 							</div>
 						</div>
@@ -124,6 +130,7 @@
 			<div class="detail_row">
 				<div class="lable">款式编码</div>
 				<div class="value">
+					<div>供应商：{{goods_info.supplier_ksbm}}</div>
 					<div>普通：{{goods_info.i_id}}</div>
 					<div>BD：{{goods_info.bd_i_id}}</div>
 				</div>
@@ -300,10 +307,10 @@
 		},
 		mounted() {
     		//获取表格最大高度
-    		this.onResize();
-    		window.addEventListener("resize", this.onResize());
-    	},
-    	computed:{
+			this.onResize();
+			window.addEventListener("resize", this.onResize());
+		},
+		computed:{
 			//图片前缀
 			domain(){
 				return this.$store.state.domain;
@@ -318,41 +325,41 @@
 				})
 			},
     		//监听屏幕大小变化
-    		onResize() {
-    			this.$nextTick(() => {
-    				let card_box_height = document.getElementById("card_box").offsetHeight;
-    				let all_title_height = document.getElementById("tab_row").offsetHeight;
-    				let table_title_height = document.getElementById('table_title').offsetHeight;
-    				let bottom_row_height = document.getElementById("bottom_row").offsetHeight;
-    				this.max_height =
-    				card_box_height -
-    				all_title_height -
-    				table_title_height - 
-    				bottom_row_height -
-    				110 +
-    				"px";
-    			});
-    		},
+			onResize() {
+				this.$nextTick(() => {
+					let card_box_height = document.getElementById("card_box").offsetHeight;
+					let all_title_height = document.getElementById("tab_row").offsetHeight;
+					let table_title_height = document.getElementById('table_title').offsetHeight;
+					let bottom_row_height = document.getElementById("bottom_row").offsetHeight;
+					this.max_height =
+					card_box_height -
+					all_title_height -
+					table_title_height - 
+					bottom_row_height -
+					110 +
+					"px";
+				});
+			},
     		//获取所有店铺列表
-    		ajaxViewShop(){
-    			commonResource.ajaxViewShop().then(res => {
-    				if(res.data.code == 1){
-    					this.store_list = res.data.data;
-    				}else{
-    					this.$message.warning(res.data.msg);
-    				}
-    			})
-    		},
+			ajaxViewShop(){
+				commonResource.ajaxViewShop().then(res => {
+					if(res.data.code == 1){
+						this.store_list = res.data.data;
+					}else{
+						this.$message.warning(res.data.msg);
+					}
+				})
+			},
     		//获取所有需求人
-    		getUserName(){
-    			resource.getUserName().then(res => {
-    				if(res.data.code == 1){
-    					this.user_list = res.data.data;
-    				}else{
-    					this.$message.warning(res.data.msg);
-    				}
-    			})
-    		},
+			getUserName(){
+				resource.getUserName().then(res => {
+					if(res.data.code == 1){
+						this.user_list = res.data.data;
+					}else{
+						this.$message.warning(res.data.msg);
+					}
+				})
+			},
 			//搜索
 			searchFn(value){
 				this.page = 1;
@@ -420,6 +427,9 @@
 							}
 							if(item.bd_i_id){
 								item.new_bd_i_id = item.bd_i_id.split(',')
+							}
+							if(item.supplier_ksbm){
+								item.new_supplier_ksbm = item.supplier_ksbm.split(',')
 							}
 						})
 						this.data = data_list;
@@ -514,82 +524,82 @@
 	}
 </script>
 <style type="text/css">
-.el-dialog__body{
-	padding: 0!important;
-}
+	.el-dialog__body{
+		padding: 0!important;
+	}
 </style>
 <style lang="less" scoped>
-.padding_page_content{
-	width: 1440rem;
-	height: 100%;
-	display: flex;
-	flex-direction: column;
-	position: relative;
-	.card_box{
-		flex:1;
-		.tab_row{
-			border:1px solid var(--color);
-			border-radius: 4rem;
-			background: #FFFCFA;
-			height: 64rem;
-			display: flex;
-			padding-left: 30rem;
-			margin-bottom: 15rem;
-			.tab_item{
-				cursor:pointer;
-				margin-right: 80rem;
-				position: relative;
+	.padding_page_content{
+		width: 1440rem;
+		height: 100%;
+		display: flex;
+		flex-direction: column;
+		position: relative;
+		.card_box{
+			flex:1;
+			.tab_row{
+				border:1px solid var(--color);
+				border-radius: 4rem;
+				background: #FFFCFA;
 				height: 64rem;
-				line-height: 64rem;
-				color: #333333;
-				font-size: 14rem;
-				font-weight: bold;
-				.active_line{
-					background: var(--color);
-					position: absolute;
-					bottom: 2rem;
-					width: 100%;
-					height: 2rem;
+				display: flex;
+				padding-left: 30rem;
+				margin-bottom: 15rem;
+				.tab_item{
+					cursor:pointer;
+					margin-right: 80rem;
+					position: relative;
+					height: 64rem;
+					line-height: 64rem;
+					color: #333333;
+					font-size: 14rem;
+					font-weight: bold;
+					.active_line{
+						background: var(--color);
+						position: absolute;
+						bottom: 2rem;
+						width: 100%;
+						height: 2rem;
+					}
+				}
+				.active_item{
+					color: var(--color);
 				}
 			}
-			.active_item{
-				color: var(--color);
+			.image{
+				width: 100px;
+				height: 100px;
 			}
-		}
-		.image{
-			width: 100px;
-			height: 100px;
-		}
-		.item_row{
-			display: flex;
-			.item_label{
-				width: 36px;
-				text-align:end;
+			.item_row{
+				display: flex;
+				.item_label{
+					width: 48px;
+					text-align:end;
+				}
 			}
 		}
 	}
-}
-.dialog_content{
-	max-height: 450px;
-	overflow-y: scroll;
-	.detail_row{
-		border-bottom:1px solid #F0F0F0;
-		display: flex;
-		font-size:14rem;
-		color: #333333;
-		.lable{
-			border-right:1px solid #F0F0F0;
-			width: 120rem;
-			padding:12rem 20rem;
+	.dialog_content{
+		max-height: 450px;
+		overflow-y: scroll;
+		.detail_row{
+			border-bottom:1px solid #F0F0F0;
 			display: flex;
-			align-items: center;
-		}
-		.value{
-			flex:1;
-			padding: 12rem 20rem;
+			font-size:14rem;
+			color: #333333;
+			.lable{
+				border-right:1px solid #F0F0F0;
+				width: 120rem;
+				padding:12rem 20rem;
+				display: flex;
+				align-items: center;
+			}
+			.value{
+				flex:1;
+				padding: 12rem 20rem;
+			}
 		}
 	}
-}
 </style>
 
 

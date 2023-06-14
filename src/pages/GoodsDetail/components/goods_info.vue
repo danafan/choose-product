@@ -46,6 +46,10 @@
 				<div class="row_lable">网盘地址</div>
 				<div class="link" @click="windowOpen(goods_info.net_disk_address)">{{goods_info.or_net_disk_address}}</div>
 			</div>
+			<div class="content_row">
+				<div class="row_lable">备注</div>
+				<div class="row_value">{{goods_info.remark}}</div>
+			</div>
 		</div>
 		<div class="button_row">
 			<div class="button_item add" @click="addCar">

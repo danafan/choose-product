@@ -28,18 +28,23 @@
 					<el-table-column label="上新时间" prop="new_time_name" width="150">
 					</el-table-column>
 					<el-table-column label="款号" prop="style_name"></el-table-column>
-					<!-- <el-table-column label="款式编码" prop="i_id"></el-table-column> -->
 					<el-table-column label="款式编码" width="140">
 						<template slot-scope="scope">
-							<div class="item_row">
+							<div class="item_row" v-if="scope.row.new_supplier_ksbm">
+								<div class="item_label">供应商：</div>
+								<div class="flex-1">
+									<div v-for="item in scope.row.new_supplier_ksbm">{{item}}</div>
+								</div>
+							</div>
+							<div class="item_row" v-if="scope.row.new_i_id">
 								<div class="item_label">普通：</div>
-								<div>
+								<div class="flex-1">
 									<div v-for="item in scope.row.new_i_id">{{item}}</div>
 								</div>
 							</div>
-							<div class="item_row">
+							<div class="item_row" v-if="scope.row.new_bd_i_id">
 								<div class="item_label">BD：</div>
-								<div>
+								<div class="flex-1">
 									<div v-for="item in scope.row.new_bd_i_id">{{item}}</div>
 								</div>
 							</div>
@@ -206,82 +211,88 @@
 		},
 		mounted() {
     		//获取表格最大高度
-    		this.onResize();
-    		window.addEventListener("resize", this.onResize());
-    	},
-    	methods: {
-    		addTableIndex() {
-    			let table = document.querySelector(".el-table__body-wrapper");
-    			let tableSelect = table.getElementsByClassName(
-    				"el-table-column--selection"
-    				);
+			this.onResize();
+			window.addEventListener("resize", this.onResize());
+		},
+		methods: {
+			addTableIndex() {
+				let table = document.querySelector(".el-table__body-wrapper");
+				let tableSelect = table.getElementsByClassName(
+					"el-table-column--selection"
+					);
 
-    			var arr = Array.from(tableSelect);
-    			arr.forEach((item, index) => {
-    				if (item.childNodes.length == 2) {
-    					item.removeChild(item.lastChild);
-    				}
-    				let span = document.createElement("span");
-    				span.innerText = index + 1;
-    				item.appendChild(span);
-    			});
-    		},
+				var arr = Array.from(tableSelect);
+				arr.forEach((item, index) => {
+					if (item.childNodes.length == 2) {
+						item.removeChild(item.lastChild);
+					}
+					let span = document.createElement("span");
+					span.innerText = index + 1;
+					item.appendChild(span);
+				});
+			},
     		//切换24小时内不提示
-    		checkToast(type){
-    			resource.twoFourTitle({type:type}).then(res => {
-    				if(res.data.code != 1){
-    					this.$message.warning(res.data.msg);
-    				}
-    			})
-    		},
+			checkToast(type){
+				resource.twoFourTitle({type:type}).then(res => {
+					if(res.data.code != 1){
+						this.$message.warning(res.data.msg);
+					}
+				})
+			},
     		//监听屏幕大小变化
-    		onResize() {
-    			this.$nextTick(() => {
-    				let card_box_height = document.getElementById("card_box").offsetHeight;
-    				let all_title_height = document.getElementById("all_title").offsetHeight;
-    				let bottom_row_height = document.getElementById("bottom_row").offsetHeight;
-    				this.max_height =
-    				card_box_height -
-    				all_title_height -
-    				bottom_row_height -
-    				30 +
-    				"px";
-    			});
-    		},
+			onResize() {
+				this.$nextTick(() => {
+					let card_box_height = document.getElementById("card_box").offsetHeight;
+					let all_title_height = document.getElementById("all_title").offsetHeight;
+					let bottom_row_height = document.getElementById("bottom_row").offsetHeight;
+					this.max_height =
+					card_box_height -
+					all_title_height -
+					bottom_row_height -
+					30 +
+					"px";
+				});
+			},
     		//获取购物车列表数量
-    		getCarList(){
-    			this.loading = true;
-    			resource.getCarList().then(res => {
-    				if(res.data.code == 1){
-    					this.loading = false;
-    					let car_goods = res.data.data.data;
-    					car_goods.map(item => {
-    						let images = [];
-    						item.img.map(i => {
-    							images.push(this.domain + i);
-    						})
-    						item.images = images;
-    						if(item.i_id){
-    							item.new_i_id = item.i_id.split(',')
-    						}
-    						if(item.bd_i_id){
-    							item.new_bd_i_id = item.bd_i_id.split(',')
-    						}
-    					})
-    					this.car_goods = car_goods;
-    				}else{
-    					this.$message,warning(res.data.msg);
-    				}
-    			})
-    		},
+			getCarList(){
+				this.loading = true;
+				resource.getCarList().then(res => {
+					if(res.data.code == 1){
+						this.loading = false;
+						let car_goods = res.data.data.data;
+						console.log(car_goods)
+						car_goods.map(item => {
+							let images = [];
+							if(item.img){
+								item.img.map(i => {
+									images.push(this.domain + i);
+								})
+							}
+							item.images = images;
+							if(item.i_id){
+								item.new_i_id = item.i_id.split(',')
+							}
+							if(item.bd_i_id){
+								item.new_bd_i_id = item.bd_i_id.split(',')
+							}
+							if(item.supplier_ksbm){
+								item.new_supplier_ksbm = item.supplier_ksbm.split(',')
+							}
+						})
+						this.car_goods = car_goods;
+					}else{
+						this.$message,warning(res.data.msg);
+					}
+				})
+			},
     		//判断是否可以选中
-    		setStatus(row){
-    			if (row.status == '0') { 
-    				return true;  
-    			}else{
-    				return false;
-    			}
-    		},
+			setStatus(row){
+				if (row.status == '0') { 
+					return true;  
+				}else{
+					return false;
+				}
+			},
 			//切换选中
 			changeSelected(val) {
 				this.selected_list = val;
@@ -494,96 +505,96 @@
 	}
 </script>
 <style lang="less" scoped>
-.padding_page_content{
-	width: 1440rem;
-	height: 100%;
-	display: flex;
-	flex-direction: column;
-	.card_box{
-		flex:1;
-		.all_title{
-			padding-bottom: 8rem;
-			font-size: 14rem;
-			color: #333333;
-		}
-		.sx{
-			background: #D8D8D8;
-			border:1px solid #979797;
-			width: 40px;
-			text-align: center;
-			height: 16px;
-			line-height: 16px;
-			border-radius: 8px;
-			position: absolute;
-			left: -12px;
-			top: 45%;
-			transform: translate(-50%,0);
-			z-index: 999;
-			font-size: 12px;
-			color: #333333;
-		}
-		.image{
-			width: 100px;
-			height: 100px;
-		}
-		.item_row{
-			display: flex;
-			.item_label{
-				width: 36px;
-				text-align:end;
+	.padding_page_content{
+		width: 1440rem;
+		height: 100%;
+		display: flex;
+		flex-direction: column;
+		.card_box{
+			flex:1;
+			.all_title{
+				padding-bottom: 8rem;
+				font-size: 14rem;
+				color: #333333;
+			}
+			.sx{
+				background: #D8D8D8;
+				border:1px solid #979797;
+				width: 40px;
+				text-align: center;
+				height: 16px;
+				line-height: 16px;
+				border-radius: 8px;
+				position: absolute;
+				left: -12px;
+				top: 45%;
+				transform: translate(-50%,0);
+				z-index: 999;
+				font-size: 12px;
+				color: #333333;
+			}
+			.image{
+				width: 100px;
+				height: 100px;
+			}
+			.item_row{
+				display: flex;
+				.item_label{
+					width: 48px;
+					text-align:end;
+				}
 			}
 		}
-	}
 
-	.record_title{
-		font-size:12rem;
-		color: var(--color);
-	}
-	.bottom_row{
-		padding-top: 18rem;
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		.all_selected{
+		.record_title{
+			font-size:12rem;
+			color: var(--color);
+		}
+		.bottom_row{
+			padding-top: 18rem;
 			display: flex;
 			align-items: center;
-			.selcted_num{
-				margin-right: 12rem;
+			justify-content: space-between;
+			.all_selected{
+				display: flex;
+				align-items: center;
+				.selcted_num{
+					margin-right: 12rem;
+				}
 			}
 		}
 	}
-}
-.select_content{
-	padding: 18rem 20rem;
-	.info_title{
-		margin-bottom: 14rem;
-		font-size:14rem;
-		color: #333333;
-	}
-	.form_box{
-		display: flex;
-		justify-content: space-between;
-		.form_content{
-			.form_item{
-				margin-bottom: 20rem;
-				display: flex;
-				align-items: center;
-				.lable{
-					width: 80rem;
-					font-size:14rem;
-					color: #333333;
-					span{
-						color: red;
+	.select_content{
+		padding: 18rem 20rem;
+		.info_title{
+			margin-bottom: 14rem;
+			font-size:14rem;
+			color: #333333;
+		}
+		.form_box{
+			display: flex;
+			justify-content: space-between;
+			.form_content{
+				.form_item{
+					margin-bottom: 20rem;
+					display: flex;
+					align-items: center;
+					.lable{
+						width: 80rem;
+						font-size:14rem;
+						color: #333333;
+						span{
+							color: red;
+						}
 					}
 				}
 			}
 		}
 	}
-}
-.toast_content{
-	padding: 10rem 20rem;
-	.toast_text{
-		margin-bottom: 15rem;
+	.toast_content{
+		padding: 10rem 20rem;
+		.toast_text{
+			margin-bottom: 15rem;
+		}
 	}
-}
 </style>
