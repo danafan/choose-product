@@ -1,5 +1,5 @@
 <template>
-	<div class="chain_page_content">
+	<div class="flex-1 flex fc height-100">
 		<el-card class="form_card">
 			<el-form :inline="true" size="mini">
 				<el-form-item label="供应商名称：">
@@ -397,15 +397,15 @@
 	</div>
 </template>
 <style lang="less" scoped>
-	.chain_page_content{
-		position: absolute;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100%;
-		padding: 24rem;
-		display: flex;
-		flex-direction: column;
+	// .chain_page_content{
+	// 	position: absolute;
+	// 	top: 0;
+	// 	left: 0;
+	// 	width: 100%;
+	// 	height: 100%;
+	// 	padding: 24rem;
+	// 	display: flex;
+	// 	flex-direction: column;
 		.form_card{
 			margin-bottom: 16rem;
 			.form_item{
@@ -433,7 +433,7 @@
 				}
 			}
 		}
-	}
+	// }
 </style>
 <script>
 	import { exportPost } from "../../../../api/export.js";
@@ -658,7 +658,7 @@
 			},
     		//下载模版
 			downTemplate(){
-				window.open(`${this.downLoadUrl}/template/供应商上传模板.xlsx`);
+				window.open(`${this.downLoadUrl}/template/预备库供应商导入模板.xlsx`);
 			},
     		//导入
 			uploadCsv(){

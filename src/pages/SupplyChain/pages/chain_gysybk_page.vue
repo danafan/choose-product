@@ -6,8 +6,11 @@
 				<div class="active_line" v-if="active_index == index"></div>
 			</div>
 		</div>
-		<SupplierPage v-if="web_url == 'supplier_page'"/>
-		<GysybkPage v-if="web_url == 'gysybk_page'"/>
+		<div class="flex-1">
+			<SupplierPage v-if="web_url == 'supplier_page'"/>
+			<GysybkPage v-if="web_url == 'gysybk_page'"/>
+		</div>
+		
 	</div>
 </template>
 <script>
@@ -40,6 +43,7 @@
 			let child_arr = child_list.filter(item => {
 				return item.web_url == 'chain_gysybk_page';
 			});
+
 			// let tab_list = child_arr[0].list;
 			// tab_list.some((item, i) => {
 			// 	if (item.web_url == 'edit_record') {
@@ -79,7 +83,7 @@
 			position: relative;
 			height: 64rem;
 			line-height: 64rem;
-			width: 50rem;
+			width: 120rem;
 			text-align: center;
 			font-size: 16rem;
 			color: #333333;
