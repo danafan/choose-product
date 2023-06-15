@@ -10,7 +10,6 @@
 			<SupplierPage v-if="web_url == 'supplier_page'"/>
 			<GysybkPage v-if="web_url == 'gysybk_page'"/>
 		</div>
-		
 	</div>
 </template>
 <script>

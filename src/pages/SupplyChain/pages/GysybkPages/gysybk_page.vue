@@ -664,7 +664,7 @@
 			uploadCsv(){
 				if (this.$refs.csvUpload.files.length > 0) {
 					let files = this.$refs.csvUpload.files;
-					resource.batchAdd({file:files[0]}).then(res => {
+					resource.reserveImport({file:files[0]}).then(res => {
 						this.$refs.csvUpload.value = null;
 						this.import_dialog = false;
 						if(res.data.code == 1){

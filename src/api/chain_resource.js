@@ -90,6 +90,7 @@ let path = {
   hotDataList:'api/productstyle/hotdatalist',             //爆款主推款审核列表
   hotDataInfo:'api/productstyle/showhotdatainfo',             //获取爆款详情/审核
   reserveIndex:'api/supplier_manager/reserve_index',            //预备库供应商列表
+  reserveImport:'api/supplier_manager/reserve_import',        //预备库供应商导入
   reserveEdit:'api/supplier_manager/reserve_edit',        //编辑供应商(填报阶段)
   reserveAdd:'api/supplier_manager/reserve_add',          //创建预备库供应商
   checkInfo:'api/supplier_manager/check_info',            //填报阶段审核
@@ -501,6 +502,10 @@ export default {
   //预备库供应商列表
   reserveIndex(params) {
     return http.get(path.reserveIndex, params);
+  },
+  //批量导入预备库供应商
+  reserveImport(params) {
+    return http.post(path.reserveImport, params);
   },
   //编辑供应商-GET（填报阶段）
   reserveEditGet(params) {
