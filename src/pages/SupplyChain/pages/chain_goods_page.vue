@@ -179,7 +179,10 @@
 					</template>
 				</el-table-column>
 			</el-table>
-			<PaginationWidget id="bottom_row" :total="total" :page="page" :pagesize="100" @checkPage="checkPage"/>
+			<div class="flex ac jsb">
+				<div class="selection_length">已勾选 {{multiple_selection.length}} 项记录</div>
+				<PaginationWidget id="bottom_row" :total="total" :page="page" :pagesize="100" @checkPage="checkPage"/>
+			</div>
 		</el-card>
 		<el-dialog :visible.sync="import_dialog" width="30%">
 			<div slot="title" class="dialog_title">
@@ -234,51 +237,51 @@
 	</div>
 </template>
 <style lang="less" scoped>
-.chain_page_content{
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	padding: 24rem;
-	display: flex;
-	flex-direction: column;
-	.form_card{
-		margin-bottom: 16rem;
-		.up_down_row{
-			display: flex;
-			justify-content: flex-end;
-			align-items: center;
-			.search_title{
-				font-size: 14px;
-				font-weight: bold;
-			}
-			.selected_right{
+	.chain_page_content{
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		padding: 24rem;
+		display: flex;
+		flex-direction: column;
+		.form_card{
+			margin-bottom: 16rem;
+			.up_down_row{
 				display: flex;
+				justify-content: flex-end;
 				align-items: center;
-				cursor: pointer;
-				.down_arrow{
-					margin-left: 5rem;
-					transform: rotate(-90deg);
-					width: 14rem;
-					height: 8rem;
+				.search_title{
+					font-size: 14px;
+					font-weight: bold;
 				}
-				.rotate{
-					transform: rotate(0deg);
+				.selected_right{
+					display: flex;
+					align-items: center;
+					cursor: pointer;
+					.down_arrow{
+						margin-left: 5rem;
+						transform: rotate(-90deg);
+						width: 14rem;
+						height: 8rem;
+					}
+					.rotate{
+						transform: rotate(0deg);
+					}
 				}
+
 			}
-			
+			.between{
+				justify-content:space-between;
+			}
+			.form_item{
+				margin-bottom:0 !important;
+			}
 		}
-		.between{
-			justify-content:space-between;
-		}
-		.form_item{
-			margin-bottom:0 !important;
-		}
-	}
-	.card_box{
-		flex:1;
-		.image{
+		.card_box{
+			flex:1;
+			.image{
 			// width: 100px;
 			height: 100px;
 		}
@@ -293,6 +296,10 @@
 			}
 		}
 	}
+	.selection_length{
+		font-weight: bold;
+        color: var(--color);
+    }
 	.down_box{
 		display:flex;
 		padding:30rem;
@@ -424,24 +431,24 @@
 				//获取供应商列表
 				this.ajaxSupplierList();
     			//获取类目列表
-    			this.ajaxCateList();
+				this.ajaxCateList();
     			//市场列表
-    			this.ajaxMarketList();
+				this.ajaxMarketList();
     			//拍摄风格列表
-    			this.ajaxStyleList();
+				this.ajaxStyleList();
     			//分类列表
-    			this.ajaxClassList();
-    			this.supplier_ids = [];
-    			this.category_ids = [];
-    			this.market_ids = [];
-    			this.classification_ids = [];
-    			this.shooting_style_ids = [];
-    			this.date = [];
-    			this.check_status_id = "";
-    			this.price_status = "";
-    			this.search = "";
-    			this.page = 1;
-    		}
+				this.ajaxClassList();
+				this.supplier_ids = [];
+				this.category_ids = [];
+				this.market_ids = [];
+				this.classification_ids = [];
+				this.shooting_style_ids = [];
+				this.date = [];
+				this.check_status_id = "";
+				this.price_status = "";
+				this.search = "";
+				this.page = 1;
+			}
 			//获取列表
 			this.getGoodsList();
 		},
@@ -450,10 +457,10 @@
 		},
 		mounted() {
     		//获取表格最大高度
-    		this.onResize();
-    		window.addEventListener("resize", this.onResize());
-    	},
-    	computed:{
+			this.onResize();
+			window.addEventListener("resize", this.onResize());
+		},
+		computed:{
 			//图片前缀
 			domain(){
 				return this.$store.state.domain;
@@ -466,34 +473,34 @@
 			},
 			is_up:function(n,o){
     			//获取表格最大高度
-    			this.onResize();
-    		}
-    	},
-    	methods: {
+				this.onResize();
+			}
+		},
+		methods: {
     		//监听屏幕大小变化
-    		onResize() {
-    			this.$nextTick(() => {
-    				let card_box_height = document.getElementById("card_box").offsetHeight;
-    				let table_title_height = document.getElementById("table_title").offsetHeight;
-    				let bottom_row_height = document.getElementById("bottom_row").offsetHeight;
-    				this.max_height =
-    				card_box_height -
-    				table_title_height -
-    				bottom_row_height -
-    				60 +
-    				"px";
-    			});
-    		},
+			onResize() {
+				this.$nextTick(() => {
+					let card_box_height = document.getElementById("card_box").offsetHeight;
+					let table_title_height = document.getElementById("table_title").offsetHeight;
+					let bottom_row_height = document.getElementById("bottom_row").offsetHeight;
+					this.max_height =
+					card_box_height -
+					table_title_height -
+					bottom_row_height -
+					60 +
+					"px";
+				});
+			},
     		//获取供应商列表
-    		ajaxSupplierList(){
-    			commonResource.ajaxSupplierList().then(res => {
-    				if(res.data.code == 1){
-    					this.supplier_list = res.data.data;
-    				}else{
-    					this.$message.warning(res.data.msg);
-    				}
-    			})
-    		},
+			ajaxSupplierList(){
+				commonResource.ajaxSupplierList().then(res => {
+					if(res.data.code == 1){
+						this.supplier_list = res.data.data;
+					}else{
+						this.$message.warning(res.data.msg);
+					}
+				})
+			},
 			//获取类目列表
 			ajaxCateList(){
 				commonResource.ajaxCateList().then(res => {
@@ -930,11 +937,11 @@
 						if(res.data.code == 1){
 							this.$message.success(res.data.msg);
 								//获取列表
-								this.getGoodsList();
-							}else{
-								this.$message.warning(res.data.msg);
-							}
-						})
+							this.getGoodsList();
+						}else{
+							this.$message.warning(res.data.msg);
+						}
+					})
 				}).catch(() => {
 					this.$message({
 						type: 'info',

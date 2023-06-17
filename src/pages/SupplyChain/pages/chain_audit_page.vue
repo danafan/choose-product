@@ -69,6 +69,12 @@
 						</el-option>
 					</el-select>
 				</el-form-item>
+				<!-- <el-form-item label="是否外部商家：">
+					<el-select v-model="is_outer_user" clearable placeholder="全部">
+						<el-option label="是" :value="1"></el-option>
+						<el-option label="否" :value="0"></el-option>
+					</el-select>
+				</el-form-item> -->
 				<el-form-item label="需求店铺：">
 					<el-select style="width: 330px" v-model="shop_code" clearable multiple filterable collapse-tags placeholder="全部">
 						<el-option v-for="item in store_list" :key="item.shop_code" :label="item.shop_name" :value="item.shop_code">
@@ -178,7 +184,10 @@
 				</template>
 			</el-table-column>
 		</el-table>
-		<PaginationWidget id="bottom_row" :total="total" :page="page" :pagesize="100" @checkPage="checkPage"/>
+		<div class="flex ac jsb">
+			<div class="selection_length">已勾选 {{multiple_selection.length}} 项记录</div>
+			<PaginationWidget id="bottom_row" :total="total" :page="page" :pagesize="100" @checkPage="checkPage"/>
+		</div>
 	</el-card>
 	<!-- 详情弹窗 -->
 	<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" destroy-on-close :visible.sync="detail_dialog">
@@ -397,108 +406,112 @@
 </div>
 </template>
 <style lang="less" scoped>
-.chain_page_content{
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	padding: 24rem;
-	display: flex;
-	flex-direction: column;
-	.form_card{
-		margin-bottom: 16rem;
-		.up_down_row{
-			display: flex;
-			justify-content: flex-end;
-			align-items: center;
-			.search_title{
-				font-size: 14px;
-				font-weight: bold;
-			}
-			.selected_right{
+	.chain_page_content{
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		padding: 24rem;
+		display: flex;
+		flex-direction: column;
+		.form_card{
+			margin-bottom: 16rem;
+			.up_down_row{
 				display: flex;
+				justify-content: flex-end;
 				align-items: center;
-				cursor: pointer;
-				.down_arrow{
-					margin-left: 5rem;
-					transform: rotate(-90deg);
-					width: 14rem;
-					height: 8rem;
+				.search_title{
+					font-size: 14px;
+					font-weight: bold;
 				}
-				.rotate{
-					transform: rotate(0deg);
+				.selected_right{
+					display: flex;
+					align-items: center;
+					cursor: pointer;
+					.down_arrow{
+						margin-left: 5rem;
+						transform: rotate(-90deg);
+						width: 14rem;
+						height: 8rem;
+					}
+					.rotate{
+						transform: rotate(0deg);
+					}
 				}
+
 			}
-			
-		}
-		.between{
-			justify-content:space-between;
-		}
-		.form_item{
-			margin-bottom:0 !important;
-		}
-	}
-	.card_box{
-		flex:1;
-		.image{
-			width: 100px;
-			height: 100px;
-		}
-		.item_row{
-			display: flex;
-			.item_label{
-				width: 56px;
-				text-align:end;
+			.between{
+				justify-content:space-between;
 			}
-			.item_value{
-				flex:1;
+			.form_item{
+				margin-bottom:0 !important;
 			}
 		}
-	}
-	.down_box{
-		display:flex;
-		padding:30rem 0;
-		.upload_box{
-			margin-left: 10px;
-			position: relative;
-			.upload_file{
-				position: absolute;
-				top: 0;
-				bottom: 0;
-				left: 0;
-				right: 0;
-				width: 100%;
-				height: 100%;
-				opacity: 0;
+		.card_box{
+			flex:1;
+			.image{
+				width: 100px;
+				height: 100px;
 			}
-		}
-	}
-	.dialog_content{
-		max-height: 450px;
-		overflow-y: scroll;
-		.detail_row{
-			border-bottom:1px solid #F0F0F0;
-			display: flex;
-			font-size:14rem;
-			color: #333333;
-			.lable{
-				border-right:1px solid #F0F0F0;
-				width: 120rem;
-				padding:12rem 20rem;
+			.item_row{
 				display: flex;
-				align-items: center;
-			}
-			.value{
-				flex:1;
-				padding: 12rem 20rem;
+				.item_label{
+					width: 56px;
+					text-align:end;
+				}
+				.item_value{
+					flex:1;
+				}
 			}
 		}
+		.down_box{
+			display:flex;
+			padding:30rem 0;
+			.upload_box{
+				margin-left: 10px;
+				position: relative;
+				.upload_file{
+					position: absolute;
+					top: 0;
+					bottom: 0;
+					left: 0;
+					right: 0;
+					width: 100%;
+					height: 100%;
+					opacity: 0;
+				}
+			}
+		}
+		.dialog_content{
+			max-height: 450px;
+			overflow-y: scroll;
+			.detail_row{
+				border-bottom:1px solid #F0F0F0;
+				display: flex;
+				font-size:14rem;
+				color: #333333;
+				.lable{
+					border-right:1px solid #F0F0F0;
+					width: 120rem;
+					padding:12rem 20rem;
+					display: flex;
+					align-items: center;
+				}
+				.value{
+					flex:1;
+					padding: 12rem 20rem;
+				}
+			}
+		}
+		.remark_content{
+			padding:20rem;
+		}
+		.selection_length{
+			font-weight: bold;
+			color: var(--color);
+		}
 	}
-	.remark_content{
-		padding:20rem;
-	}
-}
 </style>
 <script>
 	import commonResource from '../../../api/common_resource.js'
@@ -534,6 +547,7 @@
 				select_main_dept_id:[], //所有部门列表
 				user_list:[],			//所有用户列表
 				select_userid:[],		//选中的用户列表
+				// is_outer_user:"",		//是否外部商家
 				store_list:[],			//店铺列表
 				shop_code:[],			//选中的店铺
 				supplier_list:[],		//供应商列表
@@ -589,47 +603,47 @@
 			//获取供应商列表
 			this.ajaxSupplierList();
     		//获取类目列表
-    		this.ajaxCateList();
+			this.ajaxCateList();
     		//市场列表
-    		this.ajaxMarketList();
+			this.ajaxMarketList();
     		//拍摄风格列表
-    		this.ajaxStyleList();
+			this.ajaxStyleList();
     		//分类列表
-    		this.ajaxClassList();
+			this.ajaxClassList();
     		//获取列表
-    		this.getGoodsList();
-    	},
-    	watch:{
-    		is_up:function(n,o){
+			this.getGoodsList();
+		},
+		watch:{
+			is_up:function(n,o){
     			//获取表格最大高度
-    			this.onResize();
-    		},
+				this.onResize();
+			},
     		//上新类型
-    		up_type:function(n,o){
-    			switch(n){
-    				case 1:
-    				this.date = [getNowDate(),getNowDate()];
-    				break;
-    				case 3:
-    				this.date = [getCurrentDate(3),getNowDate()];
-    				break;
-    				case 7:
-    				this.date = [getCurrentDate(7),getNowDate()];
-    				break;
-    				default:
-    				return
-    			}
-    		}
-    	},
-    	destroyed() {
-    		window.removeEventListener("resize", () => {});
-    	},
-    	mounted() {
+			up_type:function(n,o){
+				switch(n){
+				case 1:
+					this.date = [getNowDate(),getNowDate()];
+					break;
+				case 3:
+					this.date = [getCurrentDate(3),getNowDate()];
+					break;
+				case 7:
+					this.date = [getCurrentDate(7),getNowDate()];
+					break;
+				default:
+					return
+				}
+			}
+		},
+		destroyed() {
+			window.removeEventListener("resize", () => {});
+		},
+		mounted() {
     		//获取表格最大高度
-    		this.onResize();
-    		window.addEventListener("resize", this.onResize());
-    	},
-    	computed:{
+			this.onResize();
+			window.addEventListener("resize", this.onResize());
+		},
+		computed:{
 			//图片前缀
 			domain(){
 				return this.$store.state.domain;
@@ -637,75 +651,75 @@
 		},
 		methods: {
     		//监听屏幕大小变化
-    		onResize() {
-    			this.$nextTick(() => {
-    				let card_box_height = document.getElementById("card_box").offsetHeight;
-    				let table_title_height = document.getElementById("table_title").offsetHeight;
-    				let bottom_row_height = document.getElementById("bottom_row").offsetHeight;
-    				this.max_height =
-    				card_box_height -
-    				table_title_height -
-    				bottom_row_height -
-    				60 +
-    				"px";
-    			});
-    		},
+			onResize() {
+				this.$nextTick(() => {
+					let card_box_height = document.getElementById("card_box").offsetHeight;
+					let table_title_height = document.getElementById("table_title").offsetHeight;
+					let bottom_row_height = document.getElementById("bottom_row").offsetHeight;
+					this.max_height =
+					card_box_height -
+					table_title_height -
+					bottom_row_height -
+					60 +
+					"px";
+				});
+			},
     		//获取需求类型列表
-    		getAllDemandSendType(){
-    			commonResource.getAllDemandSendType().then(res => {
-    				if(res.data.code == 1){
-    					let data = res.data.data;
-    					this.demand_list = data.filter(item => {
-    						return item.type == 1;
-    					})
-    					this.send_type_list = data.filter(item => {
-    						return item.type == 2
-    					});
-    				}else{
-    					this.$message.warning(res.data.msg);
-    				}
-    			})
-    		},
+			getAllDemandSendType(){
+				commonResource.getAllDemandSendType().then(res => {
+					if(res.data.code == 1){
+						let data = res.data.data;
+						this.demand_list = data.filter(item => {
+							return item.type == 1;
+						})
+						this.send_type_list = data.filter(item => {
+							return item.type == 2
+						});
+					}else{
+						this.$message.warning(res.data.msg);
+					}
+				})
+			},
     		//获取部门列表
-    		getDeptList(){
-    			commonResource.getDeptList().then(res => {
-    				if(res.data.code == 1){
-    					this.dept_list = res.data.data;
-    				}else{
-    					this.$message.warning(res.data.msg);
-    				}
-    			})
-    		},
+			getDeptList(){
+				commonResource.getDeptList().then(res => {
+					if(res.data.code == 1){
+						this.dept_list = res.data.data;
+					}else{
+						this.$message.warning(res.data.msg);
+					}
+				})
+			},
     		//获取用户列表
-    		getUserList(){
-    			commonResource.getUserList().then(res => {
-    				if(res.data.code == 1){
-    					this.user_list = res.data.data;
-    				}else{
-    					this.$message.warning(res.data.msg);
-    				}
-    			})
-    		},
+			getUserList(){
+				commonResource.getUserList().then(res => {
+					if(res.data.code == 1){
+						this.user_list = res.data.data;
+					}else{
+						this.$message.warning(res.data.msg);
+					}
+				})
+			},
     		//获取所有店铺列表
-    		ajaxViewShop(){
-    			commonResource.ajaxViewShop().then(res => {
-    				if(res.data.code == 1){
-    					this.store_list = res.data.data;
-    				}else{
-    					this.$message.warning(res.data.msg);
-    				}
-    			})
-    		},
+			ajaxViewShop(){
+				commonResource.ajaxViewShop().then(res => {
+					if(res.data.code == 1){
+						this.store_list = res.data.data;
+					}else{
+						this.$message.warning(res.data.msg);
+					}
+				})
+			},
     		//获取供应商列表
-    		ajaxSupplierList(){
-    			commonResource.ajaxSupplierList().then(res => {
-    				if(res.data.code == 1){
-    					this.supplier_list = res.data.data;
-    				}else{
-    					this.$message.warning(res.data.msg);
-    				}
-    			})
-    		},
+			ajaxSupplierList(){
+				commonResource.ajaxSupplierList().then(res => {
+					if(res.data.code == 1){
+						this.supplier_list = res.data.data;
+					}else{
+						this.$message.warning(res.data.msg);
+					}
+				})
+			},
 			//获取类目列表
 			ajaxCateList(){
 				commonResource.ajaxCateList().then(res => {
@@ -759,26 +773,26 @@
 				}
 			},
 		    //批量审批
-		    allCommitFn(){
-		    	if(this.multiple_selection.length == 0){
-		    		this.$message.warning('至少选择一条!');
-		    		return;
-		    	}
-		    	this.allAuditDialog = true;
-		    },
+			allCommitFn(){
+				if(this.multiple_selection.length == 0){
+					this.$message.warning('至少选择一条!');
+					return;
+				}
+				this.allAuditDialog = true;
+			},
 		    //关闭批量审批
-		    allClose(){
-		    	this.audit_type = 1;
-		    	this.refuse_remark = "";
-		    	this.msg = "";
-		    	this.err_msg = "";
-		    },
+			allClose(){
+				this.audit_type = 1;
+				this.refuse_remark = "";
+				this.msg = "";
+				this.err_msg = "";
+			},
 		    //提价批量审批
-		    commitAllAudit(){
-		    	let ids = [];
-		    	this.multiple_selection.map(item => {
-		    		ids.push(item.select_id);
-		    	})
+			commitAllAudit(){
+				let ids = [];
+				this.multiple_selection.map(item => {
+					ids.push(item.select_id);
+				})
 		    	if(this.audit_type == 1){	//同意
 		    		if(this.msg == ''){
 		    			this.$message.warning('请输入同意备注!');
@@ -789,7 +803,7 @@
 		    			msg:this.msg
 		    		}
 					//同意
-					this.agreeAudit(arg)
+		    		this.agreeAudit(arg)
 				}else{	//拒绝
 					if(this.refuse_remark == ''){
 						this.$message.warning('请输入拒绝原因!');
@@ -810,6 +824,7 @@
 					status:this.status_id,
 					select_userid:this.select_userid.join(','),
 					select_main_dept_id:this.select_main_dept_id.join(','),
+					// is_outer_user:this.is_outer_user,
 					shop_code:this.shop_code.join(','),
 					supplier_id:this.supplier_ids.join(','),
 					category_id:this.category_ids.join(','),
@@ -924,11 +939,11 @@
 						this.$message.success(res.data.msg);
 						this.remark_dialog = false;
 							//获取列表
-							this.getGoodsList();
-						}else{
-							this.$message.warning(res.data.msg);
-						}
-					})
+						this.getGoodsList();
+					}else{
+						this.$message.warning(res.data.msg);
+					}
+				})
 			},
 			//导出
 			exportFn() {
@@ -943,6 +958,7 @@
 						status:this.status_id,
 						select_userid:this.select_userid.join(','),
 						select_main_dept_id:this.select_main_dept_id.join(','),
+						// is_outer_user:this.is_outer_user,
 						shop_code:this.shop_code.join(','),
 						supplier_id:this.supplier_ids.join(','),
 						category_id:this.category_ids.join(','),
