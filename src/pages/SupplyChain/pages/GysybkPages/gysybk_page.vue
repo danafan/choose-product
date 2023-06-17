@@ -105,6 +105,7 @@
 				<el-table-column label="开发日期" prop="develop_date"></el-table-column>
 				<el-table-column label="分类" prop="classification"></el-table-column>
 				<el-table-column label="区域" prop="area"></el-table-column>
+				<el-table-column label="主营" prop="main_business"></el-table-column>
 				<el-table-column label="擅长品类" prop="scpl"></el-table-column>
 				<el-table-column label="是否自有工厂" prop="supply_free_factory"></el-table-column>
 				<el-table-column label="是否自有设计能力" prop="supply_design"></el-table-column>
@@ -179,11 +180,11 @@
 				<img class="close_icon" src="../../../../static/close_icon.png" @click="edit_dialog = false">
 			</div>
 			<!-- 内容 -->
-			<div>
+			<div class="pt-15">
 				<!-- 内容信息 -->
 				<div class="flex jsa">
 					<el-form size="mini" style="width: 360px;" >
-						<el-form-item label="供应商名称：">
+						<el-form-item label="供应商名称：" required>
 							<el-input clearable v-model="info_arg.supplier_name" style="width: 120px;" placeholder="供应商名称" v-if="add_type == '1' || add_type == '2'"></el-input>
 							<div v-else>{{info_arg.supplier_name}}</div>
 						</el-form-item>
@@ -191,14 +192,14 @@
 							<el-input clearable v-model="info_arg.supplier_code" style="width: 120px;" placeholder="供应商简称" v-if="add_type == '1' || add_type == '2'"></el-input>
 							<div v-else>{{info_arg.supplier_code}}</div>
 						</el-form-item>
-						<el-form-item label="开发员：">
+						<el-form-item label="开发员：" required>
 							<el-select v-model="info_arg.developer" style="width: 120px;" clearable filterable placeholder="全部" @change="changeUser" v-if="add_type == '1' || add_type == '2'">
 								<el-option v-for="item in user_list" :key="item.user_id" :label="item.real_name" :value="item.user_id">
 								</el-option>
 							</el-select>
 							<div v-else>{{info_arg.developer}}</div>
 						</el-form-item>
-						<el-form-item label="开发日期：">
+						<el-form-item label="开发日期：" required>
 							<el-date-picker v-model="info_arg.develop_date" type="date" clearable value-format="yyyy-MM-dd" placeholder="选择日期" v-if="add_type == '1' || add_type == '2'">
 							</el-date-picker>
 							<div v-else>{{info_arg.develop_date}}</div>
@@ -207,19 +208,19 @@
 							<el-input clearable v-model="info_arg.introducer" style="width: 120px;" placeholder="介绍人" v-if="add_type == '1' || add_type == '2'"></el-input>
 							<div v-else>{{info_arg.introducer}}</div>
 						</el-form-item>
-						<el-form-item label="分类：">
+						<el-form-item label="分类：" required>
 							<el-select v-model="info_arg.classification" clearable placeholder="全部" v-if="add_type == '1' || add_type == '2'">
 								<el-option :label="item" :value="item" v-for="item in classification_list"></el-option>
 							</el-select>
 							<div v-else>{{info_arg.classification}}</div>
 						</el-form-item>
-						<el-form-item label="区域：">
+						<el-form-item label="区域：" required>
 							<el-select v-model="info_arg.area" clearable placeholder="全部" v-if="add_type == '1' || add_type == '2'">
 								<el-option :label="item" :value="item" v-for="item in area_list"></el-option>
 							</el-select>
 							<div v-else>{{info_arg.area}}</div>
 						</el-form-item>
-						<el-form-item label="主营：">
+						<el-form-item label="主营：" required>
 							<el-input clearable v-model="info_arg.main_business" placeholder="主营" v-if="add_type == '1' || add_type == '2'"></el-input>
 							<div v-else>{{info_arg.main_business}}</div>
 						</el-form-item>
@@ -229,42 +230,42 @@
 						</el-form-item>
 					</el-form>
 					<el-form size="mini" style="width: 360px;">
-						<el-form-item label="是否自有工厂：">
+						<el-form-item label="是否自有工厂：" required>
 							<el-select v-model="info_arg.supply_free_factory" style="width: 120px;" clearable placeholder="全部" v-if="add_type == '1' || add_type == '2'">
 								<el-option label="是" :value="1"></el-option>
 								<el-option label="否" :value="0"></el-option>
 							</el-select>
 							<div v-else>{{info_arg.supply_free_factory}}</div>
 						</el-form-item>
-						<el-form-item label="是否自有设计能力：">
+						<el-form-item label="是否自有设计能力：" required>
 							<el-select v-model="info_arg.supply_design" style="width: 120px;" clearable placeholder="全部" v-if="add_type == '1' || add_type == '2'">
 								<el-option label="是" :value="1"></el-option>
 								<el-option label="否" :value="0"></el-option>
 							</el-select>
 							<div v-else>{{info_arg.supply_design}}</div>
 						</el-form-item>
-						<el-form-item label="是否有外发能力：">
+						<el-form-item label="是否有外发能力：" required>
 							<el-select v-model="info_arg.supply_out_send" style="width: 120px;" clearable placeholder="全部" v-if="add_type == '1' || add_type == '2'">
 								<el-option label="是" :value="1"></el-option>
 								<el-option label="否" :value="0"></el-option>
 							</el-select>
 							<div v-else>{{info_arg.supply_out_send}}</div>
 						</el-form-item>
-						<el-form-item label="是否可退换货：">
+						<el-form-item label="是否可退换货：" required>
 							<el-select v-model="info_arg.supply_return_exchange" style="width: 120px;" clearable placeholder="全部" v-if="add_type == '1' || add_type == '2'">
 								<el-option label="是" :value="1"></el-option>
 								<el-option label="否" :value="0"></el-option>
 							</el-select>
 							<div v-else>{{info_arg.supply_return_exchange}}</div>
 						</el-form-item>
-						<el-form-item label="是否可代发：">
+						<el-form-item label="是否可代发：" required>
 							<el-select v-model="info_arg.supply_replace_send" style="width: 120px;" clearable placeholder="全部" v-if="add_type == '1' || add_type == '2'">
 								<el-option label="是" :value="1"></el-option>
 								<el-option label="否" :value="0"></el-option>
 							</el-select>
 							<div v-else>{{info_arg.supply_replace_send}}</div>
 						</el-form-item>
-						<el-form-item label="结算方式：">
+						<el-form-item label="结算方式：" required>
 							<el-select v-model="info_arg.settlement_method" clearable placeholder="全部" v-if="add_type == '1' || add_type == '2'">
 								<el-option :label="item" :value="item" v-for="item in settlement_method_list"></el-option>
 							</el-select>
@@ -288,36 +289,42 @@
 							<el-input clearable v-model="info_arg.weixin" style="width: 120px;" placeholder="联系人微信" v-if="add_type == '1' || add_type == '2'"></el-input>
 							<div v-else>{{info_arg.weixin}}</div>
 						</el-form-item>
-						<el-form-item label="产品价位段：">
+						<el-form-item label="产品价位段：" required>
 							<div v-if="add_type == '1' || add_type == '2'">
 								<el-input style="width: 80px;" size="mini" type="number" v-model="info_arg.start_price"></el-input>&nbsp~&nbsp
 								<el-input style="width: 80px;" size="mini" type="number" v-model="info_arg.end_price"></el-input>
 							</div>
 							<div v-else>{{info_arg.start_price}}~{{info_arg.end_price}}</div>
 						</el-form-item>
-						<el-form-item label="性价比：">
+						<el-form-item label="性价比：" required>
 							<el-select v-model="info_arg.cost_performance" clearable placeholder="全部" v-if="add_type == '1' || add_type == '2'">
 								<el-option :label="item.name" :value="item.id" v-for="item in cost_performance_list"></el-option>
 							</el-select>
 							<div v-else>{{info_arg.cost_performance}}</div>
 						</el-form-item>
-						<el-form-item label="合作程度：">
+						<el-form-item label="合作程度：" required>
 							<el-select v-model="info_arg.cooperativeness" clearable placeholder="全部" v-if="add_type == '1' || add_type == '2'">
 								<el-option :label="item.name" :value="item.id" v-for="item in cooperativeness_list"></el-option>
 							</el-select>
 							<div v-else>{{info_arg.cooperativeness}}</div>
 						</el-form-item>
-						<el-form-item label="地址：">
+						<el-form-item label="地址：" required>
 							<el-input clearable v-model="info_arg.address" style="width: 120px;" placeholder="地址" v-if="add_type == '1' || add_type == '2'"></el-input>
 							<div v-else>{{info_arg.address}}</div>
 						</el-form-item>
-						<el-form-item label="供应商合作客户：">
+						<el-form-item label="供应商合作客户：" required>
 							<el-input clearable v-model="info_arg.supplier_cooperate_custom" style="width: 120px;" placeholder="供应商合作客户" v-if="add_type == '1' || add_type == '2'"></el-input>
 							<div v-else>{{info_arg.supplier_cooperate_custom}}</div>
 						</el-form-item>
 						<el-form-item label="备注：">
 							<el-input clearable v-model="info_arg.description" style="width: 120px;" placeholder="备注" v-if="add_type == '1' || add_type == '2'"></el-input>
 							<div v-else>{{info_arg.description}}</div>
+						</el-form-item>
+						<el-form-item label="填报状态：" v-if="add_type != '1' && add_type != '2'">
+							<div>{{info_arg.status | status}}</div>
+						</el-form-item>
+						<el-form-item label="拒绝原因：" v-if="info_arg.remark">
+							<div>{{info_arg.remark}}</div>
 						</el-form-item>
 					</el-form>
 				</div>
@@ -376,7 +383,7 @@
 				<img class="close_icon" src="../../../../static/close_icon.png" @click="zhuan_dialog = false">
 			</div>
 			<!-- 内容 -->
-			<div>
+			<div class="pt-15">
 				<el-form size="mini">
 					<el-form-item label="公司名称：">
 						<el-input clearable v-model="company_name" style="width: 120px;" placeholder="公司名称"></el-input>
@@ -397,43 +404,36 @@
 	</div>
 </template>
 <style lang="less" scoped>
-	// .chain_page_content{
-	// 	position: absolute;
-	// 	top: 0;
-	// 	left: 0;
-	// 	width: 100%;
-	// 	height: 100%;
-	// 	padding: 24rem;
-	// 	display: flex;
-	// 	flex-direction: column;
-		.form_card{
-			margin-bottom: 16rem;
-			.form_item{
-				margin-bottom:0 !important;
+	.form_card{
+		margin-bottom: 16rem;
+		.form_item{
+			margin-bottom:0 !important;
+		}
+	}
+	.card_box{
+		flex:1;
+	}
+	.down_box{
+		display:flex;
+		padding:30rem;
+		.upload_box{
+			margin-left: 10px;
+			position: relative;
+			.upload_file{
+				position: absolute;
+				top: 0;
+				bottom: 0;
+				left: 0;
+				right: 0;
+				width: 100%;
+				height: 100%;
+				opacity: 0;
 			}
 		}
-		.card_box{
-			flex:1;
-		}
-		.down_box{
-			display:flex;
-			padding:30rem;
-			.upload_box{
-				margin-left: 10px;
-				position: relative;
-				.upload_file{
-					position: absolute;
-					top: 0;
-					bottom: 0;
-					left: 0;
-					right: 0;
-					width: 100%;
-					height: 100%;
-					opacity: 0;
-				}
-			}
-		}
-	// }
+	}
+	.pt-15{
+		padding-top:15rem;
+	}
 </style>
 <script>
 	import { exportPost } from "../../../../api/export.js";
@@ -491,15 +491,15 @@
 					area:"",
 					main_business:"",
 					scpl:"",
-					supply_free_factory:"",
-					supply_design:"",
+					supply_free_factory:1,
+					supply_design:1,
 					settlement_method:"",
 					start_price:"",
 					end_price:"",
-					supply_replace_send:"",
+					supply_replace_send:1,
 					cost_performance:"",
 					cooperativeness:"",
-					supply_return_exchange:"",
+					supply_return_exchange:1,
 					contactor:"",
 					address:"",
 					contact_information:"",
@@ -508,8 +508,10 @@
 					description:"",
 					supplier_cooperate_custom:"",
 					introducer:"",
-					supply_out_send:"",
-					develop_date:""
+					supply_out_send:1,
+					develop_date:"",
+					status:"",
+					remark:""
 				},				  //填报阶段的详情
 				check_status:1,					//审核状态
 				remark:"",						//拒绝原因
@@ -719,7 +721,25 @@
 			},
 			//点击填报编辑或添加的提交
 			submitAddEdit(){
-				if(this.info_arg.start_price != '' && !this.isPrice.test(parseFloat(this.info_arg.start_price))){
+				if(this.info_arg.supplier_name == ''){
+					this.$message.warning('请输入供应商名称');
+					return;
+				}else if(this.info_arg.developer == ''){
+					this.$message.warning('请选择开发员');
+					return;
+				}else if(this.info_arg.classification == ''){
+					this.$message.warning('请选择分类');
+					return;
+				}else if(this.info_arg.area == ''){
+					this.$message.warning('请选择区域');
+					return;
+				}else if(this.info_arg.main_business == ''){
+					this.$message.warning('请选择主营');
+					return;
+				}else if(this.info_arg.settlement_method == ''){
+					this.$message.warning('请选择结算方式');
+					return;
+				}else if(this.info_arg.start_price != '' && !this.isPrice.test(parseFloat(this.info_arg.start_price))){
 					this.$message.warning('价格必须大于0且最多两位小数');
 					return;
 				}else if(this.info_arg.end_price != '' && !this.isPrice.test(parseFloat(this.info_arg.end_price))){
@@ -727,6 +747,18 @@
 					return;
 				}else if(parseFloat(this.info_arg.start_price) > parseFloat(this.info_arg.end_price)){
 					this.$message.warning('起始价格不能高于结束金额');
+					return;
+				}else if(this.info_arg.cost_performance == ''){
+					this.$message.warning('请选择性价比');
+					return;
+				}else if(this.info_arg.cooperativeness == ''){
+					this.$message.warning('请选择合作程度');
+					return;
+				}else if(this.info_arg.address == ''){
+					this.$message.warning('请选择填写地址');
+					return;
+				}else if(this.info_arg.supplier_cooperate_custom == ''){
+					this.$message.warning('请选择填写供应商合作商户');
 					return;
 				}
 
