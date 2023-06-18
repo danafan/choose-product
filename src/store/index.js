@@ -18,7 +18,7 @@ const store = new Vuex.Store({
     domain:sessionStorage.getItem("domain")?sessionStorage.getItem("domain"):"",
     active_path:sessionStorage.getItem("active_path")?sessionStorage.getItem("active_path"):"",       //当前的导航地址
     active_index:sessionStorage.getItem("active_index")?sessionStorage.getItem("active_index"):"",       //当前的导航地址
-    screen_open:false,    //查询条件下拉框是否展开
+    screen_open:true,    //查询条件下拉框是否展开
     notice_list:[],       //公告列表
     nuread_num:0,         //未读公告数量
   },
