@@ -74,18 +74,21 @@
 							</el-option>
 						</el-select>
 					</el-form-item>
+					<el-form-item label="合作模式：">
+						<el-input clearable v-model="mode" placeholder="合作模式"></el-input>
+					</el-form-item>
 					<el-form-item label="供应商介绍：">
 						<el-input type="textarea" maxlength="100"
 						show-word-limit :rows="3" clearable v-model="description" placeholder="供应商介绍"></el-input>
 					</el-form-item>
 					<el-form-item label="营业执照：">
-						<UploadFile :img_list="img_list" @callbackFn="callbackFn"/>
+						<UploadFile v-if="loading" :img_list="business_license" :is_multiple="true" :current_num="business_license.length" :max_num="3" @callbackFn="callbackFn"/>
 					</el-form-item>
 					<el-form-item label="公司名称：">
 						<el-input clearable v-model="company_name" placeholder="公司名称"></el-input>
 					</el-form-item>
 					<el-form-item label="公司照片：">
-						<UploadFile :img_list="company_img_list" @callbackFn="companyCallbackFn"/>
+						<UploadFile v-if="loading" :img_list="company_img" :is_multiple="true" :current_num="company_img.length" :max_num="6" @callbackFn="companyCallbackFn"/>
 					</el-form-item>
 					<el-form-item label="供应商维护人：">
 						<el-select v-model="maintainer_id" clearable filterable placeholder="全部" @change="changeUser">
@@ -107,6 +110,7 @@
 	export default{
 		data(){
 			return{
+				loading:true,
 				type:"",				//页面类型（1:添加；2:编辑）
 				supplier_id:"",			//供应商id
 				supplier_name:"",		//供应商名称
@@ -133,11 +137,10 @@
 				is_core:0,				//核心供应商
 				grade_list:[],			//供应商等级列表
 				grade_id:"",			//选中的供应商等级
-				business_license:"",	//营业执照
-				img_list:[],			//营业执照图片列表
+				mode:"",				//合作模式
+				business_license:[],	//营业执照图片列表
 				company_name:'',		//公司名称
-				company_img:"",			//公司图片
-				company_img_list:[],	//公司图片列表
+				company_img:[],			//公司图片
 				user_list:[],			//所有用户列表
 				maintainer_id:"",		//供应商维护人钉钉ID
 				maintainer:"",			//供应商维护人姓名
@@ -155,6 +158,12 @@
 			this.ajaxSupplierGradeList();
 			//获取用户列表
 			this.getUserList();
+		},
+		computed:{
+			//图片前缀
+			domain(){
+				return this.$store.state.domain;
+			}
 		},
 		methods:{
 			//获取供应商等级列表
@@ -188,8 +197,10 @@
 				let arg = {
 					supplier_id:this.supplier_id
 				}
+				this.loading = false;
 				resource.supplierManagerInfo(arg).then(res => {
 					if(res.data.code == 1){
+						this.loading = true;
 						let data = res.data.data;
 						this.supplier_name = data.supplier_name;
 						this.address = data.address;
@@ -209,23 +220,29 @@
 						this.maintainer_id = data.maintainer_id;
 						this.weixin = data.weixin?data.weixin:"";
 						this.grade_id = data.grade_id?data.grade_id:'';
-						this.business_license = data.business_license?data.business_license:'';
-						let img_obj = {
-							urls:this.business_license,
-							show_icon:false
-						}
-						if(this.business_license != ""){
-							this.img_list.push(img_obj);
-						}
+						this.mode = data.mode?data.mode:'';
 
-						this.company_img = data.company_img?data.company_img:'';
-						let company_img_obj = {
-							urls:this.company_img,
-							show_icon:false
-						}
-						if(this.company_img != ""){
-							this.company_img_list.push(company_img_obj);
-						}
+						//工商营业执照
+						this.business_license = [];
+						let business_license = data.business_license.split(',');
+						business_license.map(item => {
+							let img_obj = {
+								urls:item,
+								show_icon:false
+							}
+							this.business_license.push(img_obj);
+						})
+
+						//公司照片
+						this.company_img = [];
+						let company_img = data.company_img.split(',');
+						company_img.map(item => {
+							let img_obj = {
+								urls:item,
+								show_icon:false
+							}
+							this.company_img.push(img_obj);
+						})
 					}else{
 						this.$message.warning(res.data.msg);
 					}
@@ -250,9 +267,9 @@
 						contact_information:this.contact_information,
 						contactor:this.contactor,
 						description:this.description,
-						business_license:this.business_license,
+						business_license:this.business_license.join(','),
 						company_name:this.company_name,
-						company_img:this.company_img,
+						company_img:this.company_img.join(','),
 						main_business:this.main_business,
 						supplier_code:this.supplier_code,
 						supply_photograph:this.supply_photograph,
@@ -264,6 +281,7 @@
 						is_core:this.is_core,
 						weixin:this.weixin,
 						grade_id:this.grade_id,
+						mode:this.mode,
 						maintainer:this.maintainer,
 						maintainer_id:this.maintainer_id
 					}
@@ -302,11 +320,13 @@
 			},
 			//监听图片列表回调
 			callbackFn(img_arr) {
-				this.business_license = img_arr.length > 0?img_arr[0]:'';
+				this.business_license = img_arr;
+				// this.business_license = img_arr.length > 0?img_arr[0]:'';
 			},
 			//监听公司图片列表回调
 			companyCallbackFn(img_arr) {
-				this.company_img = img_arr.length > 0?img_arr[0]:'';
+				this.company_img = img_arr;
+				// this.company_img = img_arr.length > 0?img_arr[0]:'';
 			},
 		},
 		components:{

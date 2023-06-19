@@ -71,9 +71,9 @@
 				</el-form-item>
 				<el-form-item label="填报状态：">
 					<el-select v-model="filling_status" clearable placeholder="全部">
-						<el-option label="待处理" :value="0"></el-option>
-						<el-option label="已通过" :value="1"></el-option>
-						<el-option label="已拒绝" :value="2"></el-option>
+						<el-option label="待审核" :value="0"></el-option>
+						<el-option label="审核通过" :value="1"></el-option>
+						<el-option label="审核拒绝" :value="2"></el-option>
 					</el-select>
 				</el-form-item>
 				<el-form-item label="合作程度：">
@@ -84,8 +84,8 @@
 				<el-form-item label="合格状态：">
 					<el-select v-model="qualified_status" clearable placeholder="全部">
 						<el-option label="待审核" :value="3"></el-option>
-						<el-option label="已同意" :value="4"></el-option>
-						<el-option label="已拒绝" :value="5"></el-option>
+						<el-option label="审核通过" :value="4"></el-option>
+						<el-option label="审核拒绝" :value="5"></el-option>
 					</el-select>
 				</el-form-item>
 				<el-form-item class="form_item">
@@ -130,325 +130,332 @@
 				<el-table-column label="介绍人" prop="introducer"></el-table-column>
 				<el-table-column label="填报状态">
 					<template slot-scope="scope">
-						<div>{{scope.row.status | status}}</div>
-					</template>
-				</el-table-column>
-				<el-table-column label="是否合格" width="120">
-					<template slot-scope="scope">
-						<el-button type="text" size="small" v-if="scope.row.status == 1 && button_list.apply_qualified == 1" @click="zhuanFn('1',scope.row.reserve_id)">待转合格</el-button>
-						<el-button type="text" size="small" v-if="scope.row.status == 3 && button_list.qualified_check == 1" @click="hgAuditFn(scope.row.reserve_id)">合格待审核</el-button>
-					</template>
-				</el-table-column>
-				<el-table-column label="操作" width="180" fixed="right">
-					<template slot-scope="scope">
-						<el-button type="text" size="small" @click="checkInfo('3',scope.row.reserve_id)" v-if="button_list.detail == 1">查看</el-button>
-						<!-- 填报编辑 -->
-						<el-button type="text" size="small" @click="addFn('2',scope.row.reserve_id)" v-if="scope.row.status == 2 && button_list.info_edit == 1">编辑</el-button>
-						<!-- 转合格编辑 -->
-						<el-button type="text" size="small" @click="zhuanFn('2',scope.row.reserve_id)" v-if="scope.row.status == 5 && button_list.qualified_edit == 1">编辑</el-button>
-						<el-button type="text" size="small" v-if="scope.row.status != 0 && scope.row.status != 3" @click="deleteFn(scope.row.reserve_id)">删除</el-button>
-						<el-button type="text" size="small" v-if="scope.row.status == 0 && button_list.info_check == 1" @click="checkInfo('4',scope.row.reserve_id)">填报审核</el-button>
-					</template>
-				</el-table-column>
-			</el-table>
-			<PaginationWidget id="bottom_row" :total="data.total" :page="page" :pagesize="20" @checkPage="checkPage"/>
-		</el-card>
-		<!-- 导入 -->
-		<el-dialog :visible.sync="import_dialog" width="30%">
-			<div slot="title" class="dialog_title">
-				<div>导入</div>
-				<img class="close_icon" src="../../../../static/close_icon.png" @click="import_dialog = false">
-			</div>
-			<div class="down_box">
-				<el-button type="primary" plain size="small" @click="downTemplate">下载模版<i class="el-icon-download el-icon--right"></i></el-button>
-				<div class="upload_box">
-					<el-button type="primary" size="small">
-						导入
-						<i class="el-icon-upload el-icon--right"></i>
-					</el-button>
-					<input type="file" ref="csvUpload" class="upload_file" accept=".csv, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" @change="uploadCsv">
+						<div v-if="scope.row.status <= 2">{{scope.row.status | info_refund_status}}</div>
+							<div v-else>填报后审核通过</div>
+						</template>
+					</el-table-column>
+					<el-table-column label="合格状态" width="120">
+						<template slot-scope="scope">
+							<el-button type="text" size="small" v-if="scope.row.status == 1 && button_list.apply_qualified == 1" @click="zhuanFn('1',scope.row.reserve_id)">待转合格</el-button>
+							<el-button type="text" size="small" v-if="scope.row.status == 3 && button_list.qualified_check == 1" @click="hgAuditFn(scope.row.reserve_id)">合格待审核</el-button>
+							<div v-if="scope.row.status > 3">{{scope.row.status | qualified_refund_status}}</div>
+						</template>
+					</el-table-column>
+					<el-table-column label="操作" width="180" fixed="right">
+						<template slot-scope="scope">
+							<el-button type="text" size="small" @click="checkInfo('3',scope.row.reserve_id)" v-if="button_list.detail == 1">查看</el-button>
+							<!-- 填报编辑 -->
+							<el-button type="text" size="small" @click="addFn('2',scope.row.reserve_id)" v-if="scope.row.status == 2 && button_list.info_edit == 1">编辑</el-button>
+							<!-- 转合格编辑 -->
+							<el-button type="text" size="small" @click="zhuanFn('2',scope.row.reserve_id)" v-if="scope.row.status == 5 && button_list.qualified_edit == 1">编辑</el-button>
+							<el-button type="text" size="small" v-if="scope.row.status != 0 && scope.row.status != 3" @click="deleteFn(scope.row.reserve_id)">删除</el-button>
+							<el-button type="text" size="small" v-if="scope.row.status == 0 && button_list.info_check == 1" @click="checkInfo('4',scope.row.reserve_id)">填报审核</el-button>
+						</template>
+					</el-table-column>
+				</el-table>
+				<PaginationWidget id="bottom_row" :total="data.total" :page="page" :pagesize="20" @checkPage="checkPage"/>
+			</el-card>
+			<!-- 导入 -->
+			<el-dialog :visible.sync="import_dialog" width="30%">
+				<div slot="title" class="dialog_title">
+					<div>导入</div>
+					<img class="close_icon" src="../../../../static/close_icon.png" @click="import_dialog = false">
 				</div>
-			</div>
-			<div slot="footer" class="dialog_footer">
-				<el-button size="small" @click="import_dialog = false">取消</el-button>
-			</div>
-		</el-dialog>
-		<!-- 添加/编辑/审核/详情 -->
-		<el-dialog :visible.sync="edit_dialog" @close="closeEdit" width="80%">
-			<div slot="title" class="dialog_title">
-				<div>{{add_title}}</div>
-				<img class="close_icon" src="../../../../static/close_icon.png" @click="edit_dialog = false">
-			</div>
-			<!-- 内容 -->
-			<div class="pt-15">
-				<!-- 内容信息 -->
-				<div class="flex jsa">
-					<el-form size="mini" style="width: 360px;" >
-						<el-form-item label="供应商名称：" required>
-							<el-input clearable v-model="info_arg.supplier_name" style="width: 120px;" placeholder="供应商名称" v-if="add_type == '1' || add_type == '2'"></el-input>
-							<div v-else>{{info_arg.supplier_name}}</div>
-						</el-form-item>
-						<el-form-item label="供应商简称：">
-							<el-input clearable v-model="info_arg.supplier_code" style="width: 120px;" placeholder="供应商简称" v-if="add_type == '1' || add_type == '2'"></el-input>
-							<div v-else>{{info_arg.supplier_code}}</div>
-						</el-form-item>
-						<el-form-item label="开发员：" required>
-							<el-select v-model="info_arg.developer" style="width: 120px;" clearable filterable placeholder="全部" @change="changeUser" v-if="add_type == '1' || add_type == '2'">
-								<el-option v-for="item in user_list" :key="item.user_id" :label="item.real_name" :value="item.user_id">
-								</el-option>
-							</el-select>
-							<div v-else>{{info_arg.developer}}</div>
-						</el-form-item>
-						<el-form-item label="开发日期：" required>
-							<el-date-picker v-model="info_arg.develop_date" type="date" clearable value-format="yyyy-MM-dd" placeholder="选择日期" v-if="add_type == '1' || add_type == '2'">
-							</el-date-picker>
-							<div v-else>{{info_arg.develop_date}}</div>
-						</el-form-item>
-						<el-form-item label="介绍人：">
-							<el-input clearable v-model="info_arg.introducer" style="width: 120px;" placeholder="介绍人" v-if="add_type == '1' || add_type == '2'"></el-input>
-							<div v-else>{{info_arg.introducer}}</div>
-						</el-form-item>
-						<el-form-item label="分类：" required>
-							<el-select v-model="info_arg.classification" clearable placeholder="全部" v-if="add_type == '1' || add_type == '2'">
-								<el-option :label="item" :value="item" v-for="item in classification_list"></el-option>
-							</el-select>
-							<div v-else>{{info_arg.classification}}</div>
-						</el-form-item>
-						<el-form-item label="区域：" required>
-							<el-select v-model="info_arg.area" clearable placeholder="全部" v-if="add_type == '1' || add_type == '2'">
-								<el-option :label="item" :value="item" v-for="item in area_list"></el-option>
-							</el-select>
-							<div v-else>{{info_arg.area}}</div>
-						</el-form-item>
-						<el-form-item label="主营：" required>
-							<el-input clearable v-model="info_arg.main_business" placeholder="主营" v-if="add_type == '1' || add_type == '2'"></el-input>
-							<div v-else>{{info_arg.main_business}}</div>
-						</el-form-item>
-						<el-form-item label="擅长品类：">
-							<el-input clearable v-model="info_arg.scpl" placeholder="擅长品类" v-if="add_type == '1' || add_type == '2'"></el-input>
-							<div v-else>{{info_arg.scpl}}</div>
-						</el-form-item>
-					</el-form>
-					<el-form size="mini" style="width: 360px;">
-						<el-form-item label="是否自有工厂：" required>
-							<el-select v-model="info_arg.supply_free_factory" style="width: 120px;" clearable placeholder="全部" v-if="add_type == '1' || add_type == '2'">
-								<el-option label="是" :value="1"></el-option>
-								<el-option label="否" :value="0"></el-option>
-							</el-select>
-							<div v-else>{{info_arg.supply_free_factory}}</div>
-						</el-form-item>
-						<el-form-item label="是否自有设计能力：" required>
-							<el-select v-model="info_arg.supply_design" style="width: 120px;" clearable placeholder="全部" v-if="add_type == '1' || add_type == '2'">
-								<el-option label="是" :value="1"></el-option>
-								<el-option label="否" :value="0"></el-option>
-							</el-select>
-							<div v-else>{{info_arg.supply_design}}</div>
-						</el-form-item>
-						<el-form-item label="是否有外发能力：" required>
-							<el-select v-model="info_arg.supply_out_send" style="width: 120px;" clearable placeholder="全部" v-if="add_type == '1' || add_type == '2'">
-								<el-option label="是" :value="1"></el-option>
-								<el-option label="否" :value="0"></el-option>
-							</el-select>
-							<div v-else>{{info_arg.supply_out_send}}</div>
-						</el-form-item>
-						<el-form-item label="是否可退换货：" required>
-							<el-select v-model="info_arg.supply_return_exchange" style="width: 120px;" clearable placeholder="全部" v-if="add_type == '1' || add_type == '2'">
-								<el-option label="是" :value="1"></el-option>
-								<el-option label="否" :value="0"></el-option>
-							</el-select>
-							<div v-else>{{info_arg.supply_return_exchange}}</div>
-						</el-form-item>
-						<el-form-item label="是否可代发：" required>
-							<el-select v-model="info_arg.supply_replace_send" style="width: 120px;" clearable placeholder="全部" v-if="add_type == '1' || add_type == '2'">
-								<el-option label="是" :value="1"></el-option>
-								<el-option label="否" :value="0"></el-option>
-							</el-select>
-							<div v-else>{{info_arg.supply_replace_send}}</div>
-						</el-form-item>
-						<el-form-item label="结算方式：" required>
-							<el-select v-model="info_arg.settlement_method" clearable placeholder="全部" v-if="add_type == '1' || add_type == '2'">
-								<el-option :label="item" :value="item" v-for="item in settlement_method_list"></el-option>
-							</el-select>
-							<div v-else>{{info_arg.settlement_method}}</div>
-						</el-form-item>
-						<el-form-item label="联系人：">
-							<el-input clearable v-model="info_arg.contactor" style="width: 120px;" placeholder="联系人" v-if="add_type == '1' || add_type == '2'"></el-input>
-							<div v-else>{{info_arg.contactor}}</div>
-						</el-form-item>
-						<el-form-item label="联系电话：">
-							<el-input clearable v-model="info_arg.contact_information" style="width: 120px;" placeholder="联系电话" v-if="add_type == '1' || add_type == '2'"></el-input>
-							<div v-else>{{info_arg.contact_information}}</div>
-						</el-form-item>
-						<el-form-item label="联系人职位：">
-							<el-input clearable v-model="info_arg.contactor_position" style="width: 120px;" placeholder="联系人职位" v-if="add_type == '1' || add_type == '2'"></el-input>
-							<div v-else>{{info_arg.contactor_position}}</div>
-						</el-form-item>
-					</el-form>
-					<el-form size="mini" style="width: 360px;">
-						<el-form-item label="联系人微信：">
-							<el-input clearable v-model="info_arg.weixin" style="width: 120px;" placeholder="联系人微信" v-if="add_type == '1' || add_type == '2'"></el-input>
-							<div v-else>{{info_arg.weixin}}</div>
-						</el-form-item>
-						<el-form-item label="产品价位段：" required>
-							<div v-if="add_type == '1' || add_type == '2'">
-								<el-input style="width: 80px;" size="mini" type="number" v-model="info_arg.start_price"></el-input>&nbsp~&nbsp
-								<el-input style="width: 80px;" size="mini" type="number" v-model="info_arg.end_price"></el-input>
-							</div>
-							<div v-else>{{info_arg.start_price}}~{{info_arg.end_price}}</div>
-						</el-form-item>
-						<el-form-item label="性价比：" required>
-							<el-select v-model="info_arg.cost_performance" clearable placeholder="全部" v-if="add_type == '1' || add_type == '2'">
-								<el-option :label="item.name" :value="item.id" v-for="item in cost_performance_list"></el-option>
-							</el-select>
-							<div v-else>{{info_arg.cost_performance}}</div>
-						</el-form-item>
-						<el-form-item label="合作程度：" required>
-							<el-select v-model="info_arg.cooperativeness" clearable placeholder="全部" v-if="add_type == '1' || add_type == '2'">
-								<el-option :label="item.name" :value="item.id" v-for="item in cooperativeness_list"></el-option>
-							</el-select>
-							<div v-else>{{info_arg.cooperativeness}}</div>
-						</el-form-item>
-						<el-form-item label="地址：" required>
-							<el-input clearable v-model="info_arg.address" style="width: 120px;" placeholder="地址" v-if="add_type == '1' || add_type == '2'"></el-input>
-							<div v-else>{{info_arg.address}}</div>
-						</el-form-item>
-						<el-form-item label="供应商合作客户：" required>
-							<el-input clearable v-model="info_arg.supplier_cooperate_custom" style="width: 120px;" placeholder="供应商合作客户" v-if="add_type == '1' || add_type == '2'"></el-input>
-							<div v-else>{{info_arg.supplier_cooperate_custom}}</div>
-						</el-form-item>
-						<el-form-item label="备注：">
-							<el-input clearable v-model="info_arg.description" style="width: 120px;" placeholder="备注" v-if="add_type == '1' || add_type == '2'"></el-input>
-							<div v-else>{{info_arg.description}}</div>
-						</el-form-item>
-						<el-form-item label="填报状态：" v-if="add_type != '1' && add_type != '2'">
-							<div>{{info_arg.status | status}}</div>
-						</el-form-item>
-						<el-form-item label="拒绝原因：" v-if="info_arg.remark">
-							<div>{{info_arg.remark}}</div>
-						</el-form-item>
-					</el-form>
+				<div class="down_box">
+					<el-button type="primary" plain size="small" @click="downTemplate">下载模版<i class="el-icon-download el-icon--right"></i></el-button>
+					<div class="upload_box">
+						<el-button type="primary" size="small">
+							导入
+							<i class="el-icon-upload el-icon--right"></i>
+						</el-button>
+						<input type="file" ref="csvUpload" class="upload_file" accept=".csv, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" @change="uploadCsv">
+					</div>
 				</div>
-				<!-- 填报审核 -->
-				<el-form size="mini" v-if="add_type == '4'">
-					<el-form-item>
-						<el-radio-group v-model="check_status">
-							<el-radio :label="1">同意</el-radio>
-							<el-radio :label="0">拒绝</el-radio>
-						</el-radio-group>
-					</el-form-item>
-					<el-form-item label="拒绝原因：" v-if="check_status == 0" required>
-						<el-input type="textarea" :rows="3" placeholder="拒绝原因" v-model="remark">
-						</el-input>
-					</el-form-item>
-				</el-form>
-				<!-- 转合格审核 -->
-				<el-form size="mini" v-if="add_type == '5'">
-					<el-form-item label="公司名称：">
-						<div>{{company_name}}</div>
-					</el-form-item>
-					<el-form-item label="工商营业执照：">
-						<el-image style="width: 80px;height: 80px;margin-right: 10px;" :z-index="99999" :src="item" :initial-index="index" :preview-src-list="business_license_img" v-for="(item,index) in business_license_img">
-						</el-image>
-					</el-form-item>
-					<el-form-item label="公司照片：">
-						<el-image style="width: 80px;height: 80px;margin-right: 10px;" :z-index="99999" :src="item" :initial-index="index" :preview-src-list="company_img" v-for="(item,index) in company_img">
-						</el-image>
-					</el-form-item>
-					<el-form-item>
-						<el-radio-group v-model="audit_status">
-							<el-radio :label="1">同意</el-radio>
-							<el-radio :label="0">拒绝</el-radio>
-						</el-radio-group>
-					</el-form-item>
-					<el-form-item label="拒绝原因：" v-if="audit_status == 0" required>
-						<el-input type="textarea" :rows="3" placeholder="拒绝原因" v-model="audit_remark">
-						</el-input>
-					</el-form-item>
-				</el-form>
+				<div slot="footer" class="dialog_footer">
+					<el-button size="small" @click="import_dialog = false">取消</el-button>
+				</div>
+			</el-dialog>
+			<!-- 添加/编辑/审核/详情 -->
+			<el-dialog :visible.sync="edit_dialog" @close="closeEdit" width="80%">
+				<div slot="title" class="dialog_title">
+					<div>{{add_title}}</div>
+					<img class="close_icon" src="../../../../static/close_icon.png" @click="edit_dialog = false">
+				</div>
+				<!-- 内容 -->
+				<div class="pt-15">
+					<!-- 内容信息 -->
+					<div class="flex jsa">
+						<el-form size="mini" style="width: 360px;" >
+							<el-form-item label="供应商名称：" required>
+								<el-input clearable v-model="info_arg.supplier_name" style="width: 120px;" placeholder="供应商名称" v-if="add_type == '1' || add_type == '2'"></el-input>
+								<div v-else>{{info_arg.supplier_name}}</div>
+							</el-form-item>
+							<el-form-item label="供应商简称：">
+								<el-input clearable v-model="info_arg.supplier_code" style="width: 120px;" placeholder="供应商简称" v-if="add_type == '1' || add_type == '2'"></el-input>
+								<div v-else>{{info_arg.supplier_code}}</div>
+							</el-form-item>
+							<el-form-item label="开发员：" required>
+								<el-select v-model="info_arg.developer" style="width: 120px;" clearable filterable placeholder="全部" @change="changeUser" v-if="add_type == '1' || add_type == '2'">
+									<el-option v-for="item in user_list" :key="item.user_id" :label="item.real_name" :value="item.user_id">
+									</el-option>
+								</el-select>
+								<div v-else>{{info_arg.developer}}</div>
+							</el-form-item>
+							<el-form-item label="开发日期：" required>
+								<el-date-picker v-model="info_arg.develop_date" type="date" clearable value-format="yyyy-MM-dd" placeholder="选择日期" v-if="add_type == '1' || add_type == '2'">
+								</el-date-picker>
+								<div v-else>{{info_arg.develop_date}}</div>
+							</el-form-item>
+							<el-form-item label="介绍人：">
+								<el-input clearable v-model="info_arg.introducer" style="width: 120px;" placeholder="介绍人" v-if="add_type == '1' || add_type == '2'"></el-input>
+								<div v-else>{{info_arg.introducer}}</div>
+							</el-form-item>
+							<el-form-item label="分类：" required>
+								<el-select v-model="info_arg.classification" clearable placeholder="全部" v-if="add_type == '1' || add_type == '2'">
+									<el-option :label="item" :value="item" v-for="item in classification_list"></el-option>
+								</el-select>
+								<div v-else>{{info_arg.classification}}</div>
+							</el-form-item>
+							<el-form-item label="区域：" required>
+								<el-select v-model="info_arg.area" clearable placeholder="全部" v-if="add_type == '1' || add_type == '2'">
+									<el-option :label="item" :value="item" v-for="item in area_list"></el-option>
+								</el-select>
+								<div v-else>{{info_arg.area}}</div>
+							</el-form-item>
+							<el-form-item label="主营：" required>
+								<el-input clearable v-model="info_arg.main_business" placeholder="主营" v-if="add_type == '1' || add_type == '2'"></el-input>
+								<div v-else>{{info_arg.main_business}}</div>
+							</el-form-item>
+							<el-form-item label="擅长品类：">
+								<el-input clearable v-model="info_arg.scpl" placeholder="擅长品类" v-if="add_type == '1' || add_type == '2'"></el-input>
+								<div v-else>{{info_arg.scpl}}</div>
+							</el-form-item>
+						</el-form>
+						<el-form size="mini" style="width: 360px;">
+							<el-form-item label="是否自有工厂：" required>
+								<el-select v-model="info_arg.supply_free_factory" style="width: 120px;" placeholder="全部" v-if="add_type == '1' || add_type == '2'">
+									<el-option label="是" :value="1"></el-option>
+									<el-option label="否" :value="0"></el-option>
+								</el-select>
+								<div v-else>{{info_arg.supply_free_factory}}</div>
+							</el-form-item>
+							<el-form-item label="是否自有设计能力：" required>
+								<el-select v-model="info_arg.supply_design" style="width: 120px;" placeholder="全部" v-if="add_type == '1' || add_type == '2'">
+									<el-option label="是" :value="1"></el-option>
+									<el-option label="否" :value="0"></el-option>
+								</el-select>
+								<div v-else>{{info_arg.supply_design}}</div>
+							</el-form-item>
+							<el-form-item label="是否有外发能力：" required>
+								<el-select v-model="info_arg.supply_out_send" style="width: 120px;" placeholder="全部" v-if="add_type == '1' || add_type == '2'">
+									<el-option label="是" :value="1"></el-option>
+									<el-option label="否" :value="0"></el-option>
+								</el-select>
+								<div v-else>{{info_arg.supply_out_send}}</div>
+							</el-form-item>
+							<el-form-item label="是否可退换货：" required>
+								<el-select v-model="info_arg.supply_return_exchange" style="width: 120px;" placeholder="全部" v-if="add_type == '1' || add_type == '2'">
+									<el-option label="是" :value="1"></el-option>
+									<el-option label="否" :value="0"></el-option>
+								</el-select>
+								<div v-else>{{info_arg.supply_return_exchange}}</div>
+							</el-form-item>
+							<el-form-item label="是否可代发：" required>
+								<el-select v-model="info_arg.supply_replace_send" style="width: 120px;" placeholder="全部" v-if="add_type == '1' || add_type == '2'">
+									<el-option label="是" :value="1"></el-option>
+									<el-option label="否" :value="0"></el-option>
+								</el-select>
+								<div v-else>{{info_arg.supply_replace_send}}</div>
+							</el-form-item>
+							<el-form-item label="结算方式：" required>
+								<el-select v-model="info_arg.settlement_method" clearable placeholder="全部" v-if="add_type == '1' || add_type == '2'">
+									<el-option :label="item" :value="item" v-for="item in settlement_method_list"></el-option>
+								</el-select>
+								<div v-else>{{info_arg.settlement_method}}</div>
+							</el-form-item>
+							<el-form-item label="联系人：">
+								<el-input clearable v-model="info_arg.contactor" style="width: 120px;" placeholder="联系人" v-if="add_type == '1' || add_type == '2'"></el-input>
+								<div v-else>{{info_arg.contactor}}</div>
+							</el-form-item>
+							<el-form-item label="联系电话：">
+								<el-input clearable v-model="info_arg.contact_information" style="width: 120px;" placeholder="联系电话" v-if="add_type == '1' || add_type == '2'"></el-input>
+								<div v-else>{{info_arg.contact_information}}</div>
+							</el-form-item>
+							<el-form-item label="联系人职位：">
+								<el-input clearable v-model="info_arg.contactor_position" style="width: 120px;" placeholder="联系人职位" v-if="add_type == '1' || add_type == '2'"></el-input>
+								<div v-else>{{info_arg.contactor_position}}</div>
+							</el-form-item>
+						</el-form>
+						<el-form size="mini" style="width: 360px;">
+							<el-form-item label="联系人微信：">
+								<el-input clearable v-model="info_arg.weixin" style="width: 120px;" placeholder="联系人微信" v-if="add_type == '1' || add_type == '2'"></el-input>
+								<div v-else>{{info_arg.weixin}}</div>
+							</el-form-item>
+							<el-form-item label="产品价位段：" required>
+								<div v-if="add_type == '1' || add_type == '2'">
+									<el-input style="width: 80px;" size="mini" type="number" v-model="info_arg.start_price"></el-input>&nbsp~&nbsp
+									<el-input style="width: 80px;" size="mini" type="number" v-model="info_arg.end_price"></el-input>
+								</div>
+								<div v-else>{{info_arg.start_price}}~{{info_arg.end_price}}</div>
+							</el-form-item>
+							<el-form-item label="性价比：" required>
+								<el-select v-model="info_arg.cost_performance" clearable placeholder="全部" v-if="add_type == '1' || add_type == '2'">
+									<el-option :label="item.name" :value="item.id" v-for="item in cost_performance_list"></el-option>
+								</el-select>
+								<div v-else>{{info_arg.cost_performance}}</div>
+							</el-form-item>
+							<el-form-item label="合作程度：" required>
+								<el-select v-model="info_arg.cooperativeness" clearable placeholder="全部" v-if="add_type == '1' || add_type == '2'">
+									<el-option :label="item.name" :value="item.id" v-for="item in cooperativeness_list"></el-option>
+								</el-select>
+								<div v-else>{{info_arg.cooperativeness}}</div>
+							</el-form-item>
+							<el-form-item label="地址：" required>
+								<el-input clearable v-model="info_arg.address" style="width: 120px;" placeholder="地址" v-if="add_type == '1' || add_type == '2'"></el-input>
+								<div v-else>{{info_arg.address}}</div>
+							</el-form-item>
+							<el-form-item label="供应商合作客户：" required>
+								<el-input clearable v-model="info_arg.supplier_cooperate_custom" style="width: 120px;" placeholder="供应商合作客户" v-if="add_type == '1' || add_type == '2'"></el-input>
+								<div v-else>{{info_arg.supplier_cooperate_custom}}</div>
+							</el-form-item>
+							<el-form-item label="备注：">
+								<el-input clearable v-model="info_arg.description" style="width: 120px;" placeholder="备注" v-if="add_type == '1' || add_type == '2'"></el-input>
+								<div v-else>{{info_arg.description}}</div>
+							</el-form-item>
+							<el-form-item label="填报状态：" v-if="add_type != '1' && add_type != '2'">
+								<div v-if="info_arg.status <= 2">{{info_arg.status | info_refund_status}}</div>
+									<div v-else>填报后审核通过</div>
+								</el-form-item>
+								<el-form-item label="拒绝原因：" v-if="info_arg.status == 2">
+									<div>{{info_arg.info_refund_remark}}</div>
+								</el-form-item>
+							</el-form>
+						</div>
+						<el-divider v-if="info_arg.status >= 3"></el-divider>
+						<!-- 填报审核 -->
+						<el-form size="mini" v-if="add_type == '4'">
+							<el-form-item>
+								<el-radio-group v-model="check_status">
+									<el-radio :label="1">同意</el-radio>
+									<el-radio :label="0">拒绝</el-radio>
+								</el-radio-group>
+							</el-form-item>
+							<el-form-item label="拒绝原因：" v-if="check_status == 0" required>
+								<el-input type="textarea" :rows="3" placeholder="拒绝原因" v-model="remark">
+								</el-input>
+							</el-form-item>
+						</el-form>
+						<!-- 转合格审核 -->
+						<el-form size="mini" v-if="(add_type == '3' && info_arg.status >= 3) || add_type == '5'">
+							<el-form-item label="合格状态：">
+								<div>{{info_arg.status | qualified_refund_status}}</div>
+							</el-form-item>
+							<el-form-item label="公司名称：">
+								<div>{{company_name}}</div>
+							</el-form-item>
+							<el-form-item label="工商营业执照：">
+								<el-image style="width: 80px;height: 80px;margin-right: 10px;" :z-index="99999" :src="item" :initial-index="index" :preview-src-list="business_license_img" v-for="(item,index) in business_license_img">
+								</el-image>
+							</el-form-item>
+							<el-form-item label="公司照片：">
+								<el-image style="width: 80px;height: 80px;margin-right: 10px;" :z-index="99999" :src="item" :initial-index="index" :preview-src-list="company_img" v-for="(item,index) in company_img">
+								</el-image>
+							</el-form-item>
+							<el-form-item v-if="add_type == '5'">
+								<el-radio-group v-model="audit_status">
+									<el-radio :label="1">同意</el-radio>
+									<el-radio :label="0">拒绝</el-radio>
+								</el-radio-group>
+							</el-form-item>
+							<el-form-item label="拒绝原因：" v-if="audit_status == 0 && add_type == '5'" required>
+								<el-input type="textarea" :rows="3" placeholder="拒绝原因" v-model="audit_remark">
+								</el-input>
+							</el-form-item>
+						</el-form>
+					</div>
+					<div slot="footer" class="dialog_footer">
+						<el-button size="small" @click="edit_dialog = false">取消</el-button>
+						<!-- 添加/编辑 -->
+						<el-button type="primary" size="small" @click="submitAddEdit" v-if="add_type == '1' || add_type == '2'">提交</el-button>
+						<!-- 填报审核 -->
+						<el-button type="primary" size="small" @click="submitCheck" v-if="add_type == '4'">保存</el-button>
+						<!-- 转合格审核 -->
+						<el-button type="primary" size="small" @click="zhgAudit" v-if="add_type == '5'">保存</el-button>
+					</div>
+				</el-dialog>
+				<!-- 转合格 -->
+				<el-dialog :visible.sync="zhuan_dialog" @close="closeZhuan">
+					<div slot="title" class="dialog_title">
+						<div>请{{zhuan_type == '1'?'填写':'编辑'}}转正资料</div>
+						<img class="close_icon" src="../../../../static/close_icon.png" @click="zhuan_dialog = false">
+					</div>
+					<!-- 内容 -->
+					<div class="pt-15">
+						<el-form size="mini">
+							<el-form-item label="公司名称：" required>
+								<el-input clearable v-model="company_name" style="width: 120px;" placeholder="公司名称"></el-input>
+							</el-form-item>
+							<el-form-item label="工商营业执照：" required>
+								<UploadFile :img_list="business_license_img" :is_multiple="true" :current_num="business_license_img.length" :max_num="3" @callbackFn="businessCallbackFn"/>
+							</el-form-item>
+							<el-form-item label="公司照片：" required>
+								<UploadFile :img_list="company_img" :is_multiple="true" :current_num="company_img.length" :max_num="6" @callbackFn="companyCallbackFn"/>
+							</el-form-item>
+						</el-form>
+					</div>
+					<div slot="footer" class="dialog_footer">
+						<el-button size="small" @click="zhuan_dialog = false">取消</el-button>
+						<el-button type="primary" size="small" @click="commitZhuan">提交</el-button>
+					</div>
+				</el-dialog>
 			</div>
-			<div slot="footer" class="dialog_footer">
-				<el-button size="small" @click="edit_dialog = false">取消</el-button>
-				<!-- 添加/编辑 -->
-				<el-button type="primary" size="small" @click="submitAddEdit" v-if="add_type == '1' || add_type == '2'">提交</el-button>
-				<!-- 填报审核 -->
-				<el-button type="primary" size="small" @click="submitCheck" v-if="add_type == '4'">保存</el-button>
-				<!-- 转合格审核 -->
-				<el-button type="primary" size="small" @click="zhgAudit" v-if="add_type == '5'">保存</el-button>
-			</div>
-		</el-dialog>
-		<!-- 转合格 -->
-		<el-dialog :visible.sync="zhuan_dialog" @close="closeZhuan">
-			<div slot="title" class="dialog_title">
-				<div>请{{zhuan_type == '1'?'填写':'编辑'}}转正资料</div>
-				<img class="close_icon" src="../../../../static/close_icon.png" @click="zhuan_dialog = false">
-			</div>
-			<!-- 内容 -->
-			<div class="pt-15">
-				<el-form size="mini">
-					<el-form-item label="公司名称：">
-						<el-input clearable v-model="company_name" style="width: 120px;" placeholder="公司名称"></el-input>
-					</el-form-item>
-					<el-form-item label="工商营业执照：">
-						<UploadFile :img_list="business_license_img" :is_multiple="true" :current_num="business_license_img.length" :max_num="6" @callbackFn="businessCallbackFn"/>
-					</el-form-item>
-					<el-form-item label="公司照片：">
-						<UploadFile :img_list="company_img" :is_multiple="true" :current_num="company_img.length" :max_num="6" @callbackFn="companyCallbackFn"/>
-					</el-form-item>
-				</el-form>
-			</div>
-			<div slot="footer" class="dialog_footer">
-				<el-button size="small" @click="zhuan_dialog = false">取消</el-button>
-				<el-button type="primary" size="small" @click="commitZhuan">提交</el-button>
-			</div>
-		</el-dialog>
-	</div>
-</template>
-<style lang="less" scoped>
-	.form_card{
-		margin-bottom: 16rem;
-		.form_item{
-			margin-bottom:0 !important;
-		}
-	}
-	.card_box{
-		flex:1;
-	}
-	.down_box{
-		display:flex;
-		padding:30rem;
-		.upload_box{
-			margin-left: 10px;
-			position: relative;
-			.upload_file{
-				position: absolute;
-				top: 0;
-				bottom: 0;
-				left: 0;
-				right: 0;
-				width: 100%;
-				height: 100%;
-				opacity: 0;
+		</template>
+		<style lang="less" scoped>
+			.form_card{
+				margin-bottom: 16rem;
+				.form_item{
+					margin-bottom:0 !important;
+				}
 			}
-		}
-	}
-	.pt-15{
-		padding-top:15rem;
-	}
-</style>
-<script>
-	import { exportPost } from "../../../../api/export.js";
+			.card_box{
+				flex:1;
+			}
+			.down_box{
+				display:flex;
+				padding:30rem;
+				.upload_box{
+					margin-left: 10px;
+					position: relative;
+					.upload_file{
+						position: absolute;
+						top: 0;
+						bottom: 0;
+						left: 0;
+						right: 0;
+						width: 100%;
+						height: 100%;
+						opacity: 0;
+					}
+				}
+			}
+			.pt-15{
+				padding-top:15rem;
+			}
+		</style>
+		<script>
+			import { exportPost } from "../../../../api/export.js";
 
-	import { MessageBox, Message } from "element-ui";
-	import resource from '../../../../api/chain_resource.js'
-	import commonResource from '../../../../api/common_resource.js'
+			import { MessageBox, Message } from "element-ui";
+			import resource from '../../../../api/chain_resource.js'
+			import commonResource from '../../../../api/common_resource.js'
 
-	import TableTitle from '../../components/table_title.vue'
-	import PaginationWidget from '../../../../components/pagination_widget.vue'
-	import UploadFile from '../../../../components/upload_file.vue'
-	export default{
-		data(){
-			return{
-				loading:false,
+			import TableTitle from '../../components/table_title.vue'
+			import PaginationWidget from '../../../../components/pagination_widget.vue'
+			import UploadFile from '../../../../components/upload_file.vue'
+			export default{
+				data(){
+					return{
+						loading:false,
 				supplier_name:"",				//供应商名称
 				user_list:[],					//所有用户列表
 				developer:"",					//开发人员姓名
@@ -511,7 +518,7 @@
 					supply_out_send:1,
 					develop_date:"",
 					status:"",
-					remark:""
+					info_refund_remark:""
 				},				  //填报阶段的详情
 				check_status:1,					//审核状态
 				remark:"",						//拒绝原因
@@ -711,18 +718,28 @@
 			//填报弹窗关闭
 			closeEdit(){
 				for(let k in this.info_arg){
-					this.info_arg[k] = "";
+					if(k == 'supply_free_factory' || k == 'supply_design' || k == 'supply_replace_send' || k == 'supply_return_exchange' || k == 'supply_out_send'){
+						this.info_arg[k] = 1;
+					}else{
+						this.info_arg[k] = "";
+					}
+					
 				}
-				this.check_status = 1;					//审核状态
-				this.remark = "";						//拒绝原因
-				this.company_name = ""				//公司名称
-				this.business_license_img = [];		//工商营业执照
+				this.check_status = 1;					//填报审核状态
+				this.remark = "";						//填报拒绝原因
+				this.company_name = ""					//公司名称
+				this.business_license_img = [];			//工商营业执照
 				this.company_img = [];					//公司照片
+				this.audit_status = 1;					//转合格审核状态
+				this.audit_remark = '';					//转合格审核原因
 			},
 			//点击填报编辑或添加的提交
 			submitAddEdit(){
 				if(this.info_arg.supplier_name == ''){
 					this.$message.warning('请输入供应商名称');
+					return;
+				}else if(this.info_arg.develop_date == ''){
+					this.$message.warning('请选择开发日期');
 					return;
 				}else if(this.info_arg.developer == ''){
 					this.$message.warning('请选择开发员');
@@ -734,10 +751,13 @@
 					this.$message.warning('请选择区域');
 					return;
 				}else if(this.info_arg.main_business == ''){
-					this.$message.warning('请选择主营');
+					this.$message.warning('请填写主营');
 					return;
 				}else if(this.info_arg.settlement_method == ''){
 					this.$message.warning('请选择结算方式');
+					return;
+				}else if(this.info_arg.start_price == '' && this.info_arg.end_price == ''){
+					this.$message.warning('请输入产品价位段');
 					return;
 				}else if(this.info_arg.start_price != '' && !this.isPrice.test(parseFloat(this.info_arg.start_price))){
 					this.$message.warning('价格必须大于0且最多两位小数');
@@ -758,7 +778,7 @@
 					this.$message.warning('请选择填写地址');
 					return;
 				}else if(this.info_arg.supplier_cooperate_custom == ''){
-					this.$message.warning('请选择填写供应商合作商户');
+					this.$message.warning('请填写供应商合作商户');
 					return;
 				}
 
@@ -767,7 +787,7 @@
 					arg['price_range'] = `${arg.start_price}_${arg.end_price}`;
 					delete arg.start_price;
 					delete arg.end_price;
-					resource.reserveAdd(this.info_arg).then(res => {
+					resource.reserveAdd(arg).then(res => {
 						if(res.data.code == 1){
 							this.$message.success(res.data.msg);
 							this.edit_dialog = false;
@@ -810,6 +830,21 @@
 						let price_range = data.price_range.split('~');
 						this.info_arg.start_price = price_range[0];
 						this.info_arg.end_price = price_range[1];
+
+						this.company_name = data.company_name;				//公司名称
+
+						//工商营业执照
+						this.business_license_img = [];
+						let business_license_img = data.business_license.split(',');
+						business_license_img.map(item => {
+							this.business_license_img.push(this.domain + item);
+						})
+						//公司照片
+						this.company_img = [];
+						let company_img = data.company_img.split(',');
+						company_img.map(item => {
+							this.company_img.push(this.domain + item);
+						})
 					}else{
 						this.$message.warning(res.data.msg);
 					}
@@ -1041,14 +1076,20 @@
 			}
 		},
 		filters:{
-			status:function(v){
+			//填报状态
+			info_refund_status:function(v){
 				switch(v){
 				case 0:
 					return '填报后待审核';
 				case 1:
-					return '填报后审核通过(待转合格) '
+					return '填报审核通过'
 				case 2:
-					return '填报后审核拒绝'
+					return '填报审核拒绝'
+				}
+			},
+			//合格状态
+			qualified_refund_status:function(v){
+				switch(v){
 				case 3:
 					return '转合格待审核'
 				case 4:
