@@ -2,15 +2,15 @@
 	<div class="chain_page_content">
 		<el-card class="card_box flex-scroll-y">
 			<div class="form_row">
-				<el-form style="width: 50%;" size="small" label-width="140px">
+				<el-form style="width: 50%" size="small" label-width="140px">
 					<el-form-item label="供应商名称：" required>
-						<el-input clearable v-model="supplier_name" placeholder="供应商名称"></el-input>
+						<el-input clearable v-model="supplier_name" style="width: 192px;" placeholder="供应商名称"></el-input>
 					</el-form-item>
 					<el-form-item label="供应商地址：" required>
-						<el-input clearable v-model="address" placeholder="供应商地址"></el-input>
+						<el-input clearable v-model="address" placeholder="供应商地址" style="width: 192px;"></el-input>
 					</el-form-item>
 					<el-form-item label="主营：" required>
-						<el-input clearable v-model="main_business" placeholder="主营"></el-input>
+						<el-input clearable v-model="main_business" placeholder="主营" style="width: 192px;"></el-input>
 					</el-form-item>
 					<el-form-item label="提供拍照：">
 						<el-radio-group v-model="supply_photograph">
@@ -43,19 +43,19 @@
 						</el-radio-group>
 					</el-form-item>
 					<el-form-item label="供应商编码：">
-						<el-input clearable v-model="supplier_code" placeholder="供应商编码"></el-input>
+						<el-input clearable v-model="supplier_code" placeholder="供应商编码" style="width: 192px;"></el-input>
 					</el-form-item>
 					<el-form-item label="供应商联系方式：" required>
-						<el-input clearable v-model="contact_information" placeholder="供应商联系方式"></el-input>
+						<el-input clearable v-model="contact_information" placeholder="供应商联系方式" style="width: 192px;"></el-input>
 					</el-form-item>
 					<el-form-item label="联系人：">
-						<el-input clearable v-model="contactor" placeholder="联系人"></el-input>
+						<el-input clearable v-model="contactor" placeholder="联系人" style="width: 192px;"></el-input>
 					</el-form-item>
 					<el-form-item label="供应商微信：">
-						<el-input clearable v-model="weixin" placeholder="供应商微信"></el-input>
+						<el-input clearable v-model="weixin" placeholder="供应商微信" style="width: 192px;"></el-input>
 					</el-form-item>
 				</el-form>
-				<el-form size="small" label-width="140px">
+				<el-form style="width: 50%" size="small" label-width="140px">
 					<el-form-item label="结算方式："required>
 						<el-select v-model="supply_monthly_settlement" clearable placeholder="请选择结算方式">
 							<el-option v-for="item in payment_method" :key="item.id" :label="item.name" :value="item.id">
@@ -75,17 +75,17 @@
 						</el-select>
 					</el-form-item>
 					<el-form-item label="合作模式：">
-						<el-input clearable v-model="mode" placeholder="合作模式"></el-input>
+						<el-input clearable v-model="mode" placeholder="合作模式" style="width: 192px;"></el-input>
 					</el-form-item>
 					<el-form-item label="供应商介绍：">
 						<el-input type="textarea" maxlength="100"
-						show-word-limit :rows="3" clearable v-model="description" placeholder="供应商介绍"></el-input>
+						show-word-limit :rows="3" clearable v-model="description" placeholder="供应商介绍" style="width: 260px;"></el-input>
 					</el-form-item>
 					<el-form-item label="营业执照：">
 						<UploadFile v-if="loading" :img_list="business_license" :is_multiple="true" :current_num="business_license.length" :max_num="3" @callbackFn="callbackFn"/>
 					</el-form-item>
 					<el-form-item label="公司名称：">
-						<el-input clearable v-model="company_name" placeholder="公司名称"></el-input>
+						<el-input clearable v-model="company_name" placeholder="公司名称" style="width: 192px;"></el-input>
 					</el-form-item>
 					<el-form-item label="公司照片：">
 						<UploadFile v-if="loading" :img_list="company_img" :is_multiple="true" :current_num="company_img.length" :max_num="6" @callbackFn="companyCallbackFn"/>

@@ -2,7 +2,7 @@
 	<div class="chain_page_content">
 		<el-card class="card_box">
 			<div class="form_row">
-				<el-form size="small" label-width="120px">
+				<el-form style="width: 50%" size="small" label-width="120px">
 					<el-form-item label="供应商名称：">
 						{{data_info.supplier_name}}
 					</el-form-item>
@@ -40,7 +40,7 @@
 						{{data_info.weixin}}
 					</el-form-item>
 				</el-form>
-				<el-form size="small" label-width="140px">
+				<el-form style="width: 50%" size="small" label-width="140px">
 					<el-form-item label="结算方式：">
 						{{data_info.supply_monthly_settlement==1?'月结':'现结'}}
 					</el-form-item>

@@ -73,6 +73,7 @@
 			flex-direction: column;
 			align-items: center;
 			padding: 0 470rem;
+			overflow-y: scroll;
 			.title{
 				width: 100%;
 				text-align: center;
