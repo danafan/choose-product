@@ -66,6 +66,11 @@
   .scroll-y{
     overflow-y: scroll;
   }
+  .flex-scroll-y{
+      flex:1 1 auto;
+      height: 0;
+      overflow-y: auto;
+    }
   .padding_page::-webkit-scrollbar{display:none}
   .el-dialog__header {
     border-bottom:1px solid rgba(0,0,0,0.06) !important;
@@ -151,10 +156,13 @@
       };
       //修改适配
       function autoWidth(){
+        // html.style.fontSize ='0.01px';
+        // return;
         var html = document.documentElement;
         var windowWidth = parseInt(html.clientWidth);       //html宽度
         var availwidth = parseInt(screen.availWidth);       //屏幕实际宽度
         html.style.fontSize = windowWidth /1920 + 'px';
+        // html.style.fontSize = '1px';
       } 
     })();
   </script>

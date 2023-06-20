@@ -90,10 +90,6 @@
 							</el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item label="合作模式：">
-						<el-input :placeholder="is_detail?'':'合作模式'" v-model="arg.mode" :disabled="is_detail">
-						</el-input>
-					</el-form-item>
 					<el-form-item label="尺码：">
 						<el-input :placeholder="is_detail?'':'尺码'" v-model="arg.size" :disabled="is_detail">
 						</el-input>
@@ -232,7 +228,6 @@
 					market_id:"",			//选中的市场
 					classification_id:"",	//选中的分类
 					fabric:"",				//面料
-					mode:"",				//合作模式
 					cost_price:"",			//成本价
 					price_control:"",		//控价
 					size:"",				//尺码

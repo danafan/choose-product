@@ -201,11 +201,10 @@
 							var end_day = new Date(item.end_day).getTime();
 							var current_time = new Date().valueOf();
 							let is_online = false;
-							if((current_time > start_day && current_time < end_day)  || current_time > end_day){
+							if(((current_time > start_day && current_time < end_day)  || current_time > end_day) && item.status == 1){
 								is_online = true
 							}
 							item.is_online = is_online;
-							console.log(item.img);
 
 							let images = [];
 							if(item.img){

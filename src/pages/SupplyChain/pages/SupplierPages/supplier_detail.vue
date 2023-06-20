@@ -50,6 +50,9 @@
 					<el-form-item label="供应商等级：">
 						{{data_info.grade_name}}
 					</el-form-item>
+					<el-form-item label="合作模式：">
+						{{data_info.mode}}
+					</el-form-item>
 					<el-form-item label="供应商介绍：">
 						{{data_info.description}}
 					</el-form-item>

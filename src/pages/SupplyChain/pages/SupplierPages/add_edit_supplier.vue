@@ -1,8 +1,8 @@
 <template>
 	<div class="chain_page_content">
-		<el-card class="card_box">
+		<el-card class="card_box flex-scroll-y">
 			<div class="form_row">
-				<el-form size="small" label-width="140px">
+				<el-form style="width: 50%;" size="small" label-width="140px">
 					<el-form-item label="供应商名称：" required>
 						<el-input clearable v-model="supplier_name" placeholder="供应商名称"></el-input>
 					</el-form-item>
@@ -345,10 +345,10 @@
 		display: flex;
 		flex-direction: column;
 		.card_box{
-			flex:1;
 			display: flex;
 			flex-direction: column;
 			align-items: center;
+			overflow-y: scroll;
 			position: relative;
 			.form_row{
 				position: absolute;
@@ -358,6 +358,7 @@
 				display: flex;
 				justify-content: space-evenly;
 				padding-top: 40rem;
+				padding-bottom: 60rem;
 				.view_card_img {
 					margin-right: 40rem;
 					margin-bottom: 20rem;
@@ -385,8 +386,8 @@
 				}
 			}
 			.commit_but{
-				position: absolute;
-				bottom: 40rem;
+				position: fixed;
+				bottom: 90rem;
 			}
 		}
 	}

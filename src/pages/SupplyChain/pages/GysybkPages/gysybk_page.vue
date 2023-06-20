@@ -69,23 +69,19 @@
 						<el-option :label="item.name" :value="item.id" v-for="item in cost_performance_list"></el-option>
 					</el-select>
 				</el-form-item>
-				<el-form-item label="填报状态：">
-					<el-select v-model="filling_status" clearable placeholder="全部">
-						<el-option label="待审核" :value="0"></el-option>
-						<el-option label="审核通过" :value="1"></el-option>
-						<el-option label="审核拒绝" :value="2"></el-option>
-					</el-select>
-				</el-form-item>
 				<el-form-item label="合作程度：">
 					<el-select v-model="cooperativeness" clearable placeholder="全部">
 						<el-option :label="item.name" :value="item.id" v-for="item in cooperativeness_list"></el-option>
 					</el-select>
 				</el-form-item>
-				<el-form-item label="合格状态：">
-					<el-select v-model="qualified_status" clearable placeholder="全部">
-						<el-option label="待审核" :value="3"></el-option>
-						<el-option label="审核通过" :value="4"></el-option>
-						<el-option label="审核拒绝" :value="5"></el-option>
+				<el-form-item label="状态：">
+					<el-select v-model="status" clearable placeholder="全部">
+						<el-option label="报后待审核" :value="0"></el-option>
+						<el-option label="填报后审核通过" :value="1"></el-option>
+						<el-option label="填报后审核拒绝" :value="2"></el-option>
+						<el-option label="转合格待审核" :value="3"></el-option>
+						<el-option label="转合格同意" :value="4"></el-option>
+						<el-option label="转合格拒绝" :value="5"></el-option>
 					</el-select>
 				</el-form-item>
 				<el-form-item class="form_item">
@@ -112,7 +108,7 @@
 				<el-table-column label="是否有外发能力" prop="supply_out_send"></el-table-column>
 				<el-table-column label="结算方式">
 					<template slot-scope="scope">
-						{{scope.row.supply_monthly_settlement == 1?'月结':'现结'}}
+						{{scope.row.settlement_method}}
 					</template>
 				</el-table-column>
 				<el-table-column label="联系人" width="120" prop="contactor"></el-table-column>
@@ -384,7 +380,7 @@
 					</div>
 				</el-dialog>
 				<!-- 转合格 -->
-				<el-dialog :visible.sync="zhuan_dialog" @close="closeZhuan">
+				<el-dialog :visible.sync="zhuan_dialog" destroy-on-close @close="closeZhuan">
 					<div slot="title" class="dialog_title">
 						<div>请{{zhuan_type == '1'?'填写':'编辑'}}转正资料</div>
 						<img class="close_icon" src="../../../../static/close_icon.png" @click="zhuan_dialog = false">
@@ -478,8 +474,7 @@
 				end_price:"",					//价格段结束
 				supply_return_exchange:"",		//是否可退换货
 				supply_replace_send:"",			//是否可代发
-				filling_status:"",				//填报状态
-				qualified_status:"",			//合格状态
+				status:"",						//状态
 				max_height:0,	
 				page:1,
 				data:{},						//获取的数据
@@ -638,9 +633,8 @@
 					supply_return_exchange:this.supply_return_exchange,		//是否可退换货
 					supply_replace_send:this.supply_replace_send,			//是否可代发
 					cost_performance:this.cost_performance,			//性价比
-					filling_status:this.filling_status,				//填报状态
 					cooperativeness:this.cooperativeness,				//合作程度
-					qualified_status:this.qualified_status,			//合格状态
+					status:this.status,			//合格状态
 					pagesize:20,
 					page:this.page
 				}

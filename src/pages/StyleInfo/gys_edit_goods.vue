@@ -78,11 +78,6 @@
 								</el-option>
 							</el-select>
 						</el-form-item>
-						<el-form-item label="合作模式：" required>
-							<el-input :placeholder="is_detail?'':'合作模式'" style="width:190px" v-model="arg.mode" :disabled="is_detail">
-							</el-input>
-						</el-form-item>
-						
 						<el-form-item label="爆款：">
 							<el-radio-group v-model="arg.hot_style" :disabled="is_detail || hot_status === 0">
 								<el-radio :label="1">是</el-radio>
@@ -202,7 +197,6 @@
 					market_id:"",			//选中的市场
 					classification_id:"",	//选中的分类
 					fabric:"",				//面料
-					mode:"",				//合作模式
 					cost_price:"",			//成本价
 					price_control:"",		//控价
 					size:"",				//尺码
@@ -475,8 +469,6 @@
 					this.$message.warning('请选择类目!');
 				}else if(!this.arg.market_id){
 					this.$message.warning('请选择市场!');
-				}else if(!this.arg.mode){
-					this.$message.warning('请填写合作模式!');
 				}else if(!this.arg.classification_id){
 					this.$message.warning('请选择分类!');
 				}else if(!this.arg.fabric){
