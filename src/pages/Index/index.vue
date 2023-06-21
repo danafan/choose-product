@@ -70,6 +70,9 @@
 			} 
 			//获取列表
 			this.getList(arg);
+			if(this.notice_list.length > 0){
+				this.new_notice_list = this.group_notice_list(this.notice_list);
+			}
 		},
 		watch:{
 			notice_list:function(n,o){

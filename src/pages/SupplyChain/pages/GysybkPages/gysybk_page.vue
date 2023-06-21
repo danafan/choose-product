@@ -76,7 +76,7 @@
 				</el-form-item>
 				<el-form-item label="状态：">
 					<el-select v-model="status" clearable placeholder="全部">
-						<el-option label="报后待审核" :value="0"></el-option>
+						<el-option label="填报后待审核" :value="0"></el-option>
 						<el-option label="填报后审核通过" :value="1"></el-option>
 						<el-option label="填报后审核拒绝" :value="2"></el-option>
 						<el-option label="转合格待审核" :value="3"></el-option>
@@ -346,6 +346,9 @@
 							<el-form-item label="合格状态：">
 								<div>{{info_arg.status | qualified_refund_status}}</div>
 							</el-form-item>
+							<el-form-item label="拒绝原因：" v-if="info_arg.status == 5">
+								<div>{{info_arg.qualified_refund_remark}}</div>
+							</el-form-item>
 							<el-form-item label="公司名称：">
 								<div>{{company_name}}</div>
 							</el-form-item>
@@ -380,7 +383,7 @@
 					</div>
 				</el-dialog>
 				<!-- 转合格 -->
-				<el-dialog :visible.sync="zhuan_dialog" destroy-on-close @close="closeZhuan">
+				<el-dialog :visible.sync="zhuan_dialog" @close="closeZhuan">
 					<div slot="title" class="dialog_title">
 						<div>请{{zhuan_type == '1'?'填写':'编辑'}}转正资料</div>
 						<img class="close_icon" src="../../../../static/close_icon.png" @click="zhuan_dialog = false">
@@ -392,10 +395,10 @@
 								<el-input clearable v-model="company_name" style="width: 120px;" placeholder="公司名称"></el-input>
 							</el-form-item>
 							<el-form-item label="工商营业执照：" required>
-								<UploadFile :img_list="business_license_img" :is_multiple="true" :current_num="business_license_img.length" :max_num="3" @callbackFn="businessCallbackFn"/>
+								<UploadFile v-if="show_upload_file" :img_list="business_license_img" :is_multiple="true" :current_num="business_license_img.length" :max_num="3" @callbackFn="businessCallbackFn"/>
 							</el-form-item>
 							<el-form-item label="公司照片：" required>
-								<UploadFile :img_list="company_img" :is_multiple="true" :current_num="company_img.length" :max_num="6" @callbackFn="companyCallbackFn"/>
+								<UploadFile v-if="show_upload_file" :img_list="company_img" :is_multiple="true" :current_num="company_img.length" :max_num="6" @callbackFn="companyCallbackFn"/>
 							</el-form-item>
 						</el-form>
 					</div>
@@ -513,7 +516,8 @@
 					supply_out_send:1,
 					develop_date:"",
 					status:"",
-					info_refund_remark:""
+					info_refund_remark:"",
+					qualified_refund_remark:""
 				},				  //填报阶段的详情
 				check_status:1,					//审核状态
 				remark:"",						//拒绝原因
@@ -524,6 +528,7 @@
 				company_img:[],					//公司照片
 				audit_status:1,					//转合格审核（1:同意；2:拒绝）
 				audit_remark:"",				//转合格审核拒绝原因
+				show_upload_file:true
 			}
 		},
 		// beforeRouteLeave(to,from,next){
@@ -732,7 +737,7 @@
 				if(this.info_arg.supplier_name == ''){
 					this.$message.warning('请输入供应商名称');
 					return;
-				}else if(this.info_arg.develop_date == ''){
+				}else if(!this.info_arg.develop_date){
 					this.$message.warning('请选择开发日期');
 					return;
 				}else if(this.info_arg.developer == ''){
@@ -872,6 +877,7 @@
 				this.reserve_id = reserve_id;
 				this.zhuan_type = type;
 				if(type == '1'){				//填写
+					this.show_upload_file = true;
 					this.zhuan_dialog = true;
 				}else{							//编辑
 					let arg = {
@@ -880,6 +886,7 @@
 					resource.reserveQualifiedEditGet(arg).then(res => {
 						if(res.data.code == 1){
 							let data = res.data.data;
+							this.show_upload_file = true;
 							this.company_name = data.company_name;				//公司名称
 							//工商营业执照
 							this.business_license_img = [];
@@ -985,6 +992,7 @@
 				this.company_name = "";
 				this.company_img = [];
 				this.business_license_img = [];
+				this.show_upload_file = false;
 			},
 			//点击删除
 			deleteFn(reserve_id){
