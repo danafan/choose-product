@@ -4,7 +4,7 @@
 			<div class="padding_page_content">
 				<div class="flex ac">
 					<SearchWidget page_path="index_history" @callback="searchFn" placeholder="搜索款式编码、标题、款号、供应商"/>
-					<div class="carousel_box">
+					<div class="carousel_box" v-if="new_notice_list.length > 0">
 						<img class="top_line" src="../../static/notice_top_line.png">
 						<el-carousel class="custom_carousel" direction="vertical" indicator-position="none">
 							<el-carousel-item v-for="(item,i) in new_notice_list" :key="i">
@@ -73,7 +73,9 @@
 		},
 		watch:{
 			notice_list:function(n,o){
-				this.new_notice_list = this.group_notice_list(n);
+				if(n.length > 0){
+					this.new_notice_list = this.group_notice_list(n);
+				}
 			}
 		},
 		computed: {
