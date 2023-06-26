@@ -11,10 +11,10 @@
 						</el-option>
 					</el-select>
 				</el-form-item>
-				<el-form-item label="开发日期：">
+				<!-- <el-form-item label="开发日期：">
 					<el-date-picker v-model="develop_date" size="mini" type="daterange" unlink-panels value-format="yyyy-MM-dd" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期">
 					</el-date-picker>
-				</el-form-item>
+				</el-form-item> -->
 				<el-form-item label="分类：">
 					<el-select v-model="classification" clearable placeholder="全部">
 						<el-option :label="item" :value="item" v-for="item in classification_list"></el-option>
@@ -91,7 +91,7 @@
 		</el-card>
 		<el-card class="card_box" id="card_box">
 			<TableTitle title="数据列表" id="table_title">
-				<el-button size="mini" type="primary" @click="import_dialog = true">导入</el-button>
+				<el-button size="mini" type="primary" @click="import_dialog = true" v-if="button_list.import == 1">导入</el-button>
 				<el-button size="mini" type="primary" @click="addFn('1')" v-if="button_list.add == 1">添加</el-button>
 			</TableTitle>
 			<el-table size="mini" :data="data.data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" v-loading="loading">
@@ -144,7 +144,7 @@
 							<el-button type="text" size="small" @click="addFn('2',scope.row.reserve_id)" v-if="scope.row.status == 2 && button_list.info_edit == 1">编辑</el-button>
 							<!-- 转合格编辑 -->
 							<el-button type="text" size="small" @click="zhuanFn('2',scope.row.reserve_id)" v-if="scope.row.status == 5 && button_list.qualified_edit == 1">编辑</el-button>
-							<el-button type="text" size="small" v-if="scope.row.status != 0 && scope.row.status != 3" @click="deleteFn(scope.row.reserve_id)">删除</el-button>
+							<el-button type="text" size="small" v-if="scope.row.status != 0 && scope.row.status != 3 && button_list.del == 1" @click="deleteFn(scope.row.reserve_id)">删除</el-button>
 							<el-button type="text" size="small" v-if="scope.row.status == 0 && button_list.info_check == 1" @click="checkInfo('4',scope.row.reserve_id)">填报审核</el-button>
 						</template>
 					</el-table-column>
@@ -458,7 +458,7 @@
 				supplier_name:"",				//供应商名称
 				user_list:[],					//所有用户列表
 				developer:"",					//开发人员姓名
-				develop_date:[],				//开发日期
+				// develop_date:[],				//开发日期
 				classification_list:[],				//分类
 				classification:"",					//选中的分类
 				area_list:[],						//区域
@@ -626,8 +626,8 @@
 				let arg = {
 					supplier_name:this.supplier_name,				//供应商名称
 					developer:this.developer,					//开发人员姓名
-					start_time:this.develop_date && this.develop_date.length > 0?this.develop_date[0]:"",
-					end_time:this.develop_date && this.develop_date.length > 0?this.develop_date[1]:"",
+					// start_time:this.develop_date && this.develop_date.length > 0?this.develop_date[0]:"",
+					// end_time:this.develop_date && this.develop_date.length > 0?this.develop_date[1]:"",
 					classification:this.classification,				//分类
 					area:this.area,						//区域
 					main_business:this.main_business,				//主营

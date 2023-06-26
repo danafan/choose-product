@@ -101,7 +101,7 @@
 						<el-button type="text" size="small" @click="getDetail(scope.row.supplier_id)" v-if="button_list.view == 1">查看</el-button>
 						<el-button type="text" size="small" @click="addFn('2',scope.row.supplier_id)" v-if="button_list.edit == 1">编辑</el-button>
 						<el-button type="text" size="small" @click="deleteFn(scope.row.supplier_id)" v-if="button_list.del == 1">删除</el-button>
-						<el-button type="text" size="small" @click="$router.push(`/account_list?supplier_id=${scope.row.supplier_id}&supplier_name=${scope.row.supplier_name}`)">账号管理</el-button>
+						<el-button type="text" size="small" @click="$router.push(`/account_list?supplier_id=${scope.row.supplier_id}&supplier_name=${scope.row.supplier_name}`)" v-if="button_list.add_account == 1">账号管理</el-button>
 					</template>
 				</el-table-column>
 			</el-table>
