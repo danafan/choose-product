@@ -9,8 +9,8 @@
   export default {
     created() {
 
-      // this.getUserInfo();
-      // return;
+      this.getUserInfo();
+      return;
 
       let user_type = sessionStorage.getItem("user_type");
       if(user_type != '2'){ //内部

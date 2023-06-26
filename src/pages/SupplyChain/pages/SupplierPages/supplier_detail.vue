@@ -57,13 +57,13 @@
 						{{data_info.description}}
 					</el-form-item>
 					<el-form-item label="营业执照：">
-						<el-image class="card_img" :src="img_list[0]" fit="scale-down" :preview-src-list="img_list" v-if="img_list.length > 0"></el-image>
+						<el-image class="card_img" :src="item" fit="scale-down" :preview-src-list="img_list" v-for="item in img_list"></el-image>
 					</el-form-item>
 					<el-form-item label="公司名称：">
 						{{data_info.company_name}}
 					</el-form-item>
 					<el-form-item label="公司图片：">
-						<el-image class="card_img" :src="company_list[0]" fit="scale-down" :preview-src-list="company_list" v-if="company_list.length > 0"></el-image>
+						<el-image class="card_img" :src="item" fit="scale-down" :preview-src-list="company_list" v-for="item in company_list"></el-image>
 					</el-form-item>
 					<el-form-item label="供应商维护人：">
 						{{data_info.maintainer}}
@@ -103,11 +103,25 @@
 					if(res.data.code == 1){
 						this.data_info = res.data.data;
 						if(this.data_info.business_license){
-							this.img_list.push(this.domain + this.data_info.business_license);
+							//工商营业执照
+							this.img_list = [];
+							let business_license = this.data_info.business_license.split(',');
+							business_license.map(item => {
+								this.img_list.push(this.domain + item);
+							})
 						}
 						if(this.data_info.company_img){
-							this.company_list.push(this.domain + this.data_info.company_img);
+							//公司照片
+							this.company_list = [];
+							let company_img = this.data_info.company_img.split(',');
+							company_img.map(item => {
+								this.company_list.push(this.domain + item);
+							})
 						}
+
+						
+
+						
 					}else{
 						this.$message.warning(res.data.msg);
 					}
@@ -121,26 +135,26 @@
 	}
 </script>
 <style lang="less" scoped>
-.chain_page_content{
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	padding: 24rem;
-	display: flex;
-	flex-direction: column;
-	.card_box{
-		flex:1;
-		.form_row{
-			display: flex;
-			justify-content: space-evenly;
-			padding-top: 40rem;
-			.card_img{
-				width: 160rem;
-				height: 160rem;
+	.chain_page_content{
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		padding: 24rem;
+		display: flex;
+		flex-direction: column;
+		.card_box{
+			flex:1;
+			.form_row{
+				display: flex;
+				justify-content: space-evenly;
+				padding-top: 40rem;
+				.card_img{
+					width: 160rem;
+					height: 160rem;
+				}
 			}
 		}
 	}
-}
 </style>
