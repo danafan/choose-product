@@ -48,6 +48,10 @@
 						<el-input type="number" v-model="arg.price_control" :disabled="is_detail">
 						</el-input>
 					</el-form-item>
+					<el-form-item label="档口批价：">
+						<el-input type="number" v-model="arg.wholesale_price" :disabled="is_detail">
+						</el-input>
+					</el-form-item>
 					<el-form-item label="调价状态：" v-if="!!price_status">
 						{{price_status | priceStatus}}
 					</el-form-item>
@@ -230,6 +234,7 @@
 					fabric:"",				//面料
 					cost_price:"",			//成本价
 					price_control:"",		//控价
+					wholesale_price:"",		//档口批价
 					size:"",				//尺码
 					color:"",				//颜色
 					hot_style:0,			//爆款

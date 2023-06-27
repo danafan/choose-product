@@ -140,6 +140,10 @@
 				<div class="value">{{goods_info.supplier_name}}</div>
 			</div>
 			<div class="detail_row">
+				<div class="lable">对接人</div>
+				<div class="value">{{goods_info.maintainer}}</div>
+			</div>
+			<div class="detail_row">
 				<div class="lable">市场</div>
 				<div class="value">{{goods_info.market_name}}</div>
 			</div>
@@ -194,6 +198,10 @@
 			<div class="detail_row">
 				<div class="lable">成本价</div>
 				<div class="value">{{goods_info.cost_price}}</div>
+			</div>
+			<div class="detail_row">
+				<div class="lable">档口批价</div>
+				<div class="value">{{goods_info.wholesale_price}}</div>
 			</div>
 			<div class="detail_row">
 				<div class="lable">百度网盘</div>
