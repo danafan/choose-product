@@ -79,6 +79,7 @@
 						</div>
 					</template>
 				</el-table-column>
+				<el-table-column label="档口批价" prop="wholesale_price"></el-table-column>
 				<el-table-column label="成本价" prop="cost_price"></el-table-column>
 				<el-table-column label="售卖价" prop="selling_price"></el-table-column>
 				<el-table-column label="需求部门" prop="select_main_dept_name"></el-table-column>

@@ -145,7 +145,8 @@
 		display: flex;
 		flex-direction: column;
 		.card_box{
-			flex:1;
+			height: 100%;
+			overflow-y: scroll;
 			.form_row{
 				display: flex;
 				justify-content: space-evenly;
