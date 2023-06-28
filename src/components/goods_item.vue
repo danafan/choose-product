@@ -26,7 +26,9 @@
 				<img class="goods_tag" src="../static/shen_icon.png" v-if="info.depth_inventory == 1">
 				<img class="goods_tag" src="../static/shi_icon.png" v-if="info.video_style == 1">
 			</div>
-			<div class="cate">{{info.style_name}}</div>
+			<el-tooltip class="item" effect="dark" :content="info.style_name" placement="top-start">
+				<div class="cate">{{info.style_name}}</div>
+			</el-tooltip>
 		</div>
 		<div class="desc">&nbsp{{info.title}}</div>
 		<div class="code_time">
@@ -61,7 +63,7 @@
 		<div class="flex jsb mt-6 f12">
 			<div class="flex ac">
 				<div class="dark">控价：</div>
-			<div class="primary_color">¥{{info.price_control}}</div>
+				<div class="primary_color">¥{{info.price_control}}</div>
 			</div>
 			<div class="flex ac">
 				<div class="dark">档口批价：</div>
@@ -356,6 +358,8 @@
 					}
 				}
 				.cate{
+					width: 80rem;
+					text-align: right;
 					font-size: 12rem;
 					color: #333333;
 					word-break: break-all;
