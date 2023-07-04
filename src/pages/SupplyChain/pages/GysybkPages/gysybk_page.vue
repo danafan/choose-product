@@ -219,11 +219,15 @@
 								<div v-else>{{info_arg.area}}</div>
 							</el-form-item>
 							<el-form-item label="主营：" required>
-								<el-input clearable v-model="info_arg.main_business" placeholder="主营" v-if="add_type == '1' || add_type == '2'"></el-input>
+								<el-select v-model="info_arg.main_business" clearable placeholder="全部" v-if="add_type == '1' || add_type == '2'">
+									<el-option :label="item.name" :value="item.id" v-for="item in main_business_list"></el-option>
+								</el-select>
 								<div v-else>{{info_arg.main_business}}</div>
 							</el-form-item>
 							<el-form-item label="擅长品类：">
-								<el-input clearable v-model="info_arg.scpl" placeholder="擅长品类" v-if="add_type == '1' || add_type == '2'"></el-input>
+								<el-select v-model="info_arg.scpl" clearable placeholder="全部" v-if="add_type == '1' || add_type == '2'">
+									<el-option :label="item.name" :value="item.id" v-for="item in scpl_list"></el-option>
+								</el-select>
 								<div v-else>{{info_arg.scpl}}</div>
 							</el-form-item>
 						</el-form>
@@ -471,6 +475,8 @@
 				cost_performance:"",				//选中的性价比
 				cooperativeness_list:[],			//合作程度
 				cooperativeness:"",					//选中的合作程度
+				main_business_list:[],				//主营列表
+				scpl_list:[],						//擅长品类
 				supply_free_factory:"",			//是否自有工厂
 				supply_design:"",				//是否自有设计能力
 				start_price:"",					//价格段开始
@@ -604,6 +610,8 @@
 						this.settlement_method_list = data.settlement_method;//结算方式
 						this.cost_performance_list = data.cost_performance;//性价比
 						this.cooperativeness_list = data.cooperativeness;//合作程度
+						this.main_business_list = data.main_business;//主营
+						this.scpl_list = data.scpl;//擅长品类
 					}else{
 						this.$message.warning(res.data.msg);
 					}
