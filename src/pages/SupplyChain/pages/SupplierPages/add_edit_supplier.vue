@@ -78,7 +78,7 @@
 						<el-input clearable v-model="mode" placeholder="合作模式" style="width: 192px;"></el-input>
 					</el-form-item>
 					<el-form-item label="供应商介绍：">
-						<el-input type="textarea" maxlength="100"
+						<el-input type="textarea" maxlength="500"
 						show-word-limit :rows="3" clearable v-model="description" placeholder="供应商介绍" style="width: 260px;"></el-input>
 					</el-form-item>
 					<el-form-item label="营业执照：">

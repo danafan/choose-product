@@ -59,20 +59,20 @@
 				<el-table-column label="款号" prop="style_name"></el-table-column>
 				<el-table-column label="款式编码" width="140">
 					<template slot-scope="scope">
-						<div class="item_row" v-if="scope.row.new_supplier_ksbm">
-							<div class="item_label">供应商：</div>
+						<div class="item_row">
+							<div class="item_label">供应商款式编码：</div>
 							<div class="item_value">
 								<div v-for="item in scope.row.new_supplier_ksbm">{{item}}</div>
 							</div>
 						</div>
-						<div class="item_row" v-if="scope.row.new_i_id">
-							<div class="item_label">普通：</div>
+						<div class="item_row" >
+							<div class="item_label">内部款式编码：</div>
 							<div class="flex-1">
 								<div v-for="item in scope.row.new_i_id">{{item}}</div>
 							</div>
 						</div>
-						<div class="item_row" v-if="scope.row.new_bd_i_id">
-							<div class="item_label">BD：</div>
+						<div class="item_row">
+							<div class="item_label">BD款式编码：</div>
 							<div class="flex-1">
 								<div v-for="item in scope.row.new_bd_i_id">{{item}}</div>
 							</div>
@@ -125,15 +125,15 @@
 				<div class="value">{{goods_info.title}}</div>
 			</div>
 			<div class="detail_row">
-				<div class="lable">款号</div>
+				<div class="lable">供应商款号</div>
 				<div class="value">{{goods_info.style_name}}</div>
 			</div>
 			<div class="detail_row">
 				<div class="lable">款式编码</div>
 				<div class="value">
-					<div>供应商：{{goods_info.supplier_ksbm}}</div>
-					<div>普通：{{goods_info.i_id}}</div>
-					<div>BD：{{goods_info.bd_i_id}}</div>
+					<div>供应商款式编码：{{goods_info.supplier_ksbm}}</div>
+					<div>内部款式编码：{{goods_info.i_id}}</div>
+					<div>BD款式编码：{{goods_info.bd_i_id}}</div>
 				</div>
 			</div>
 			<div class="detail_row">

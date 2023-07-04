@@ -10,20 +10,20 @@
 				<div class="row_lable">档口批价</div>
 				<div class="row_value">{{goods_info.wholesale_price}}</div>
 			</div>
-			<div class="content_row" v-if="goods_info.supplier_ksbm != ''">
+			<div class="content_row">
 				<div class="row_lable">供应商款式编码</div>
 				<div class="row_value">{{goods_info.supplier_ksbm}}</div>
 			</div>
-			<div class="content_row" v-if="goods_info.i_id != ''">
-				<div class="row_lable">款式编码</div>
+			<div class="content_row">
+				<div class="row_lable">内部款式编码</div>
 				<div class="row_value">{{goods_info.i_id}}</div>
 			</div>
-			<div class="content_row" v-if="goods_info.bd_i_id != ''">
+			<div class="content_row">
 				<div class="row_lable">BD款式编码</div>
 				<div class="row_value">{{goods_info.bd_i_id}}</div>
 			</div>
 			<div class="content_row">
-				<div class="row_lable">款号</div>
+				<div class="row_lable">供应商款号</div>
 				<div class="row_value">{{goods_info.style_name}}</div>
 			</div>
 			<div class="content_row">

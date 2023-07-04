@@ -104,23 +104,23 @@
 		<el-table size="mini" :data="data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" @selection-change="handleSelectionChange" v-loading="loading">
 			<el-table-column type="selection" width="55" fixed :selectable="checkboxInit">
 			</el-table-column>
-			<el-table-column label="款号" prop="style_name"></el-table-column>
+			<el-table-column label="供应商款号" prop="style_name"></el-table-column>
 			<el-table-column label="款式编码" width="140">
 				<template slot-scope="scope">
-					<div class="item_row" v-if="scope.row.new_supplier_ksbm">
-						<div class="item_label">供应商：</div>
+					<div class="item_row">
+						<div class="item_label">供应商款式编码：</div>
 						<div class="item_value">
 							<div v-for="item in scope.row.new_supplier_ksbm">{{item}}</div>
 						</div>
 					</div>
-					<div class="item_row" v-if="scope.row.new_i_id">
-						<div class="item_label">普通：</div>
+					<div class="item_row">
+						<div class="item_label">内部款式编码：</div>
 						<div class="item_value">
 							<div v-for="item in scope.row.new_i_id">{{item}}</div>
 						</div>
 					</div>
-					<div class="item_row" v-if="scope.row.new_bd_i_id">
-						<div class="item_label">BD：</div>
+					<div class="item_row">
+						<div class="item_label">BD款式编码：</div>
 						<div class="item_value">
 							<div v-for="item in scope.row.new_bd_i_id">{{item}}</div>
 						</div>
@@ -192,14 +192,14 @@
 				<div class="value">{{goods_info.title}}</div>
 			</div>
 			<div class="detail_row">
-				<div class="lable">款号</div>
+				<div class="lable">供应商款号</div>
 				<div class="value">{{goods_info.style_name}}</div>
 			</div>
 			<div class="detail_row">
 				<div class="lable">款式编码</div>
 				<div class="value">
-					<div>普通：{{goods_info.i_id}}</div>
-					<div>BD：{{goods_info.bd_i_id}}</div>
+					<div>内部款式编码：{{goods_info.i_id}}</div>
+					<div>BD款式编码：{{goods_info.bd_i_id}}</div>
 				</div>
 			</div>
 			<div class="detail_row">
@@ -387,7 +387,7 @@
 				<el-input type="textarea" autosize placeholder="多个请用分号间隔" v-model="edit_arg.supplier_ksbm">
 				</el-input>
 			</el-form-item>
-			<el-form-item label="款式编码：">
+			<el-form-item label="内部款式编码：">
 				<el-input type="textarea" autosize placeholder="多个请用分号间隔" v-model="edit_arg.i_id">
 				</el-input>
 			</el-form-item>
@@ -466,7 +466,7 @@
 	}
 	.down_box{
 		display:flex;
-		padding:30rem 0;
+		padding:30rem 15rem;
 		.upload_box{
 			margin-left: 10px;
 			position: relative;

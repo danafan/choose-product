@@ -6,7 +6,7 @@
 					<el-form-item label="提交人：" v-if="is_detail">
 						<div>{{add_admin_name}}</div>
 					</el-form-item>
-					<el-form-item label="款式编码：">
+					<el-form-item label="内部款式编码：">
 						<el-input type="textarea" autosize :placeholder="is_detail?'':'多个请用分号间隔'" v-model="arg.i_id" :disabled="is_detail">
 						</el-input>
 					</el-form-item>
