@@ -57,7 +57,7 @@
 					</template>
 				</el-table-column>
 				<el-table-column label="款号" prop="style_name"></el-table-column>
-				<el-table-column label="款式编码" width="140">
+				<el-table-column label="款式编码" width="180">
 					<template slot-scope="scope">
 						<div class="item_row">
 							<div class="item_label">供应商款式编码：</div>
@@ -539,7 +539,7 @@
 </style>
 <style lang="less" scoped>
 	.padding_page_content{
-		width: 1440rem;
+		width: 1680rem;
 		height: 100%;
 		display: flex;
 		flex-direction: column;
@@ -582,7 +582,7 @@
 			.item_row{
 				display: flex;
 				.item_label{
-					width: 48px;
+					width: 96px;
 					text-align:end;
 				}
 			}

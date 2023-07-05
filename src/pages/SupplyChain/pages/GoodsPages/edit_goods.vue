@@ -19,7 +19,7 @@
 						</el-input>
 					</el-form-item>
 					<el-form-item label="供应商：" required>
-						<el-select v-model="arg.supplier_id" clearable placeholder="请选择供应商" :disabled="is_detail">
+						<el-select v-model="arg.supplier_id" filterable clearable placeholder="请选择供应商" :disabled="is_detail">
 							<el-option v-for="item in supplier_list" :key="item.supplier_id" :label="item.supplier_name" :value="item.supplier_id">
 							</el-option>
 						</el-select>

@@ -11,10 +11,6 @@
 						</el-option>
 					</el-select>
 				</el-form-item>
-				<!-- <el-form-item label="开发日期：">
-					<el-date-picker v-model="develop_date" size="mini" type="daterange" unlink-panels value-format="yyyy-MM-dd" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期">
-					</el-date-picker>
-				</el-form-item> -->
 				<el-form-item label="分类：">
 					<el-select v-model="classification" clearable placeholder="全部">
 						<el-option :label="item" :value="item" v-for="item in classification_list"></el-option>
@@ -25,11 +21,15 @@
 						<el-option :label="item" :value="item" v-for="item in area_list"></el-option>
 					</el-select>
 				</el-form-item>
-				<el-form-item label="主营：">
-					<el-input clearable v-model="main_business" placeholder="主营"></el-input>
+				<el-form-item label="主营：" required>
+					<el-select v-model="main_business" filterable clearable placeholder="全部">
+						<el-option :label="item.name" :value="item.id" v-for="item in main_business_list"></el-option>
+					</el-select>
 				</el-form-item>
 				<el-form-item label="擅长品类：">
-					<el-input clearable v-model="scpl" placeholder="擅长品类"></el-input>
+					<el-select v-model="scpl" filterable clearable placeholder="全部">
+						<el-option :label="item.name" :value="item.id" v-for="item in scpl_list"></el-option>
+					</el-select>
 				</el-form-item>
 				<el-form-item label="是否自有工厂：">
 					<el-select v-model="supply_free_factory" clearable placeholder="全部">
@@ -219,13 +219,13 @@
 								<div v-else>{{info_arg.area}}</div>
 							</el-form-item>
 							<el-form-item label="主营：" required>
-								<el-select v-model="info_arg.main_business" clearable placeholder="全部" v-if="add_type == '1' || add_type == '2'">
+								<el-select v-model="info_arg.main_business" filterable clearable placeholder="全部" v-if="add_type == '1' || add_type == '2'">
 									<el-option :label="item.name" :value="item.id" v-for="item in main_business_list"></el-option>
 								</el-select>
 								<div v-else>{{info_arg.main_business}}</div>
 							</el-form-item>
 							<el-form-item label="擅长品类：">
-								<el-select v-model="info_arg.scpl" clearable placeholder="全部" v-if="add_type == '1' || add_type == '2'">
+								<el-select v-model="info_arg.scpl" filterable clearable placeholder="全部" v-if="add_type == '1' || add_type == '2'">
 									<el-option :label="item.name" :value="item.id" v-for="item in scpl_list"></el-option>
 								</el-select>
 								<div v-else>{{info_arg.scpl}}</div>
