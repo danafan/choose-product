@@ -1,97 +1,98 @@
 <template>
 	<div class="chain_page_content">
-		<el-card class="form_card">
-			<el-form :inline="true" size="mini">
-				<el-form-item label="审核状态：">
-					<el-select v-model="status" clearable placeholder="全部">
-						<el-option :label="item.name" :value="item.id" v-for="item in status_list"></el-option>
-					</el-select>
-				</el-form-item>
-				<el-form-item label="类型：">
-					<el-select v-model="type" clearable placeholder="全部">
-						<el-option label="爆款" :value="1"></el-option>
-						<el-option label="主推款" :value="2"></el-option>
-						<el-option label="深度库存" :value="3"></el-option>
-						<el-option label="视频款" :value="4"></el-option>
-					</el-select>
-				</el-form-item>
-				<el-form-item>
-					<el-input clearable v-model="search" placeholder="款号/款式编码"></el-input>
-				</el-form-item>
-				<el-form-item class="form_item">
-					<el-button type="primary" @click="checkPage(1)">查询</el-button>
-				</el-form-item>
-			</el-form>
-		</el-card>
-		<el-card class="card_box" id="card_box">
-			<TableTitle title="数据列表" id="table_title">
-			</TableTitle>
-			<el-table size="mini" :data="table_data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" v-loading="loading">
-				<el-table-column label="款号" prop="style_name"></el-table-column>
-				<el-table-column label="款式编码" prop="i_id" width="140">
-					<template slot-scope="scope">
-						<div class="item_row">
-							<div class="item_label">普通：</div>
-							<div>
-								<div v-for="item in scope.row.new_i_id">{{item}}</div>
+		<el-card class="card_box height-100 flex fc">
+			<div class="scroll_box flex-1 scroll-y" id="scroll_box">
+				<el-form style="padding-top: 20px;" :inline="true" size="mini" id="form_height">
+					<el-form-item label="审核状态：">
+						<el-select v-model="status" clearable placeholder="全部">
+							<el-option :label="item.name" :value="item.id" v-for="item in status_list"></el-option>
+						</el-select>
+					</el-form-item>
+					<el-form-item label="类型：">
+						<el-select v-model="type" clearable placeholder="全部">
+							<el-option label="爆款" :value="1"></el-option>
+							<el-option label="主推款" :value="2"></el-option>
+							<el-option label="深度库存" :value="3"></el-option>
+							<el-option label="视频款" :value="4"></el-option>
+						</el-select>
+					</el-form-item>
+					<el-form-item>
+						<el-input clearable v-model="search" placeholder="款号/款式编码"></el-input>
+					</el-form-item>
+					<el-form-item class="form_item">
+						<el-button type="primary" @click="checkPage(1)">查询</el-button>
+					</el-form-item>
+				</el-form>
+				<el-divider></el-divider>
+				<TableTitle title="数据列表" id="table_title">
+				</TableTitle>
+				<el-table size="mini" :data="table_data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" v-loading="loading">
+					<el-table-column label="供应商款号" prop="style_name"></el-table-column>
+					<el-table-column label="款式编码" prop="i_id" width="240">
+						<template slot-scope="scope">
+							<div class="item_row">
+								<div class="item_label">内部款式编码：</div>
+								<div class="flex-1 flex fc as">
+									<div v-for="item in scope.row.new_i_id">{{item}}</div>
+								</div>
 							</div>
-						</div>
-						<div class="item_row">
-							<div class="item_label">BD：</div>
-							<div>
-								<div v-for="item in scope.row.new_bd_i_id">{{item}}</div>
+							<div class="item_row">
+								<div class="item_label">BD款式编码：</div>
+								<div class="flex-1 flex fc as">
+									<div v-for="item in scope.row.new_bd_i_id">{{item}}</div>
+								</div>
 							</div>
-						</div>
-					</template>
-				</el-table-column>
-				<el-table-column label="图片" width="150">
-					<template slot-scope="scope">
-						<div v-if="scope.row.images.length == 0"></div>
-						<el-carousel trigger="hover" indicator-position="none" :autoplay="false" height="100px" v-else>
-							<el-carousel-item v-for="item in scope.row.images" :key="item">
-								<el-image :z-index="2006" class="image" :src="item" fit="scale-down" :preview-src-list="scope.row.images"></el-image>
-							</el-carousel-item>
-						</el-carousel>
-					</template>
-				</el-table-column>
-				<el-table-column label="成本价" prop="cost_price"></el-table-column>
-				<el-table-column label="款式" prop="style_name">
-					<template slot-scope="scope">
-						<div>{{scope.row.type | filterType}}</div>
-					</template>
-				</el-table-column>
-				<el-table-column label="供应商" show-overflow-tooltip prop="supplier_name"></el-table-column>
-				<el-table-column label="爆款图片" width="150">
-					<template slot-scope="scope">
-						<div v-if="scope.row.hot_images.length == 0"></div>
-						<el-carousel trigger="hover" indicator-position="none" :autoplay="false" height="100px" v-else>
-							<el-carousel-item v-for="item in scope.row.hot_images" :key="item">
-								<el-image :z-index="2006" class="image" :src="item" fit="scale-down" :preview-src-list="scope.row.hot_images"></el-image>
-							</el-carousel-item>
-						</el-carousel>
-					</template>
-				</el-table-column>
-				<el-table-column label="链接" prop="hot_url">
-					<template slot-scope="scope">
-						<el-button type="text" size="small" v-for="item in scope.row.new_hot_url" @click="openWindow(item.url)">{{item.name}}</el-button>
-					</template>
-				</el-table-column>
-				<el-table-column label="库存" prop="data_num"></el-table-column>
-				<el-table-column label="调价" prop="data_price"></el-table-column>
-				<el-table-column label="主推款备注" prop="remark"></el-table-column>
-				<el-table-column label="当前状态" prop="status">
-					<template slot-scope="scope">
-						{{scope.row.status | status(status_list)}}
-					</template>
-				</el-table-column>
-				<el-table-column label="审核备注" prop="status_remark"></el-table-column>
-				<el-table-column label="操作" width="80" fixed="right">
-					<template slot-scope="scope">
-						<el-button type="text" size="small" @click="auditFn(scope.row.id)" v-if="scope.row.status == 0 && button_list.is_ex == 1">审核</el-button>
-					</template>
-				</el-table-column>
-			</el-table>
-			<PaginationWidget id="bottom_row" :total="total" :page="page" :pagesize="20" @checkPage="checkPage"/>
+						</template>
+					</el-table-column>
+					<el-table-column label="图片" width="150">
+						<template slot-scope="scope">
+							<div v-if="scope.row.images.length == 0"></div>
+							<el-carousel trigger="hover" indicator-position="none" :autoplay="false" height="100px" v-else>
+								<el-carousel-item v-for="item in scope.row.images" :key="item">
+									<el-image :z-index="2006" class="image" :src="item" fit="scale-down" :preview-src-list="scope.row.images"></el-image>
+								</el-carousel-item>
+							</el-carousel>
+						</template>
+					</el-table-column>
+					<el-table-column label="成本价" prop="cost_price"></el-table-column>
+					<el-table-column label="款式" prop="style_name">
+						<template slot-scope="scope">
+							<div>{{scope.row.type | filterType}}</div>
+						</template>
+					</el-table-column>
+					<el-table-column label="供应商" show-overflow-tooltip prop="supplier_name"></el-table-column>
+					<el-table-column label="爆款图片" width="150">
+						<template slot-scope="scope">
+							<div v-if="scope.row.hot_images.length == 0"></div>
+							<el-carousel trigger="hover" indicator-position="none" :autoplay="false" height="100px" v-else>
+								<el-carousel-item v-for="item in scope.row.hot_images" :key="item">
+									<el-image :z-index="2006" class="image" :src="item" fit="scale-down" :preview-src-list="scope.row.hot_images"></el-image>
+								</el-carousel-item>
+							</el-carousel>
+						</template>
+					</el-table-column>
+					<el-table-column label="链接" prop="hot_url">
+						<template slot-scope="scope">
+							<el-button type="text" size="small" v-for="item in scope.row.new_hot_url" @click="openWindow(item.url)">{{item.name}}</el-button>
+						</template>
+					</el-table-column>
+					<el-table-column label="库存" prop="data_num"></el-table-column>
+					<el-table-column label="调价" prop="data_price"></el-table-column>
+					<el-table-column label="主推款备注" prop="remark"></el-table-column>
+					<el-table-column label="当前状态" prop="status">
+						<template slot-scope="scope">
+							{{scope.row.status | status(status_list)}}
+						</template>
+					</el-table-column>
+					<el-table-column label="审核备注" prop="status_remark"></el-table-column>
+					<el-table-column label="操作" width="80" fixed="right">
+						<template slot-scope="scope">
+							<el-button type="text" size="small" @click="auditFn(scope.row.id)" v-if="scope.row.status == 0 && button_list.is_ex == 1">审核</el-button>
+						</template>
+					</el-table-column>
+				</el-table>
+			</div>
+			<PaginationWidget :total="total" :page="page" :show_multiple="false" :pagesize="20" @checkPage="checkPage"/>
 		</el-card>
 		<!-- 审核详情 -->
 		<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" destroy-on-close @close="closeDialog" :visible.sync="audit_dialog" width="45%">
@@ -138,35 +139,48 @@
 		</el-dialog>
 	</div>
 </template>
-<style lang="less" scoped>
-.chain_page_content{
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	padding: 24rem;
-	display: flex;
-	flex-direction: column;
-	.form_card{
-		margin-bottom: 16rem;
-		.form_item{
-			margin-bottom:0 !important;
-		}
+<style type="text/css">
+	.card_box .el-card__body{
+		height: 100%!important;
+		display: flex!important;
+		flex-direction: column!important;
+		padding-top: 0!important;
+		padding-bottom: 0!important;
 	}
-	.card_box{
-		flex:1;
-		.image{
-			width: 100px;
-			height: 100px;
-		}
-		.item_row{
-			display: flex;
-			.item_label{
-				width: 36px;
-				text-align:end;
+</style>
+<style lang="less" scoped>
+	.chain_page_content{
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		padding: 24rem;
+		.card_box{
+			.scroll_box{
+				.image{
+					width: 100px;
+					height: 100px;
+				}
+				.item_row{
+					display: flex;
+					.item_label{
+						width: 96px;
+					}
+				}
 			}
-		}
+		// 	flex:1;
+		// 	.image{
+		// 		width: 100px;
+		// 		height: 100px;
+		// 	}
+		// 	.item_row{
+		// 		display: flex;
+		// 		.item_label{
+		// 			width: 96px;
+		// 		// text-align:end;
+		// 	}
+		// }
 	}
 	.card_img{
 		width: 120rem;
@@ -222,78 +236,83 @@
 		},
 		mounted() {
     		//获取表格最大高度
-    		this.onResize();
-    		window.addEventListener("resize", this.onResize());
-    	},
-    	methods: {
+			this.onResize();
+			window.addEventListener("resize", this.onResize());
+		},
+		methods: {
     		//监听屏幕大小变化
-    		onResize() {
-    			this.$nextTick(() => {
-    				let card_box_height = document.getElementById("card_box").offsetHeight;
-    				let table_title_height = document.getElementById("table_title").offsetHeight;
-    				let bottom_row_height = document.getElementById("bottom_row").offsetHeight;
-    				this.max_height =
-    				card_box_height -
-    				table_title_height -
-    				bottom_row_height -
-    				60 +
-    				"px";
-    			});
-    		},
+			onResize() {
+				this.$nextTick(() => {
+					let card_box_height = document.getElementById("scroll_box").offsetHeight;
+					let form_height = document.getElementById("form_height").offsetHeight;
+					this.max_height = card_box_height - form_height + 30 + "px";
+				});
+				// this.$nextTick(() => {
+				// 	let card_box_height = document.getElementById("card_box").offsetHeight;
+				// 	let table_title_height = document.getElementById("table_title").offsetHeight;
+				// 	let bottom_row_height = document.getElementById("bottom_row").offsetHeight;
+				// 	this.max_height =
+				// 	card_box_height -
+				// 	table_title_height -
+				// 	bottom_row_height -
+				// 	60 +
+				// 	"px";
+				// });
+			},
     		//获取列表
-    		hotDataList(){
-    			let arg = {
-    				status:this.status,
-    				type:this.type,
-    				search:this.search,
-    				pagesize:20,
-    				page:this.page
-    			}
-    			this.loading = true;
-    			resource.hotDataList(arg).then(res => {
-    				if(res.data.code == 1){
-    					this.loading = false;
-    					let data = res.data.data;
-    					let table_data = data.data;
-    					table_data.map(item => {
-    						let images = [];
-    						item.img.map(i => {
-    							images.push(this.domain + i);
-    						})
-    						item.images = images;
+			hotDataList(){
+				let arg = {
+					status:this.status,
+					type:this.type,
+					search:this.search,
+					pagesize:20,
+					page:this.page
+				}
+				this.loading = true;
+				resource.hotDataList(arg).then(res => {
+					if(res.data.code == 1){
+						this.loading = false;
+						let data = res.data.data;
+						let table_data = data.data;
+						table_data.map(item => {
+							let images = [];
+							item.img.map(i => {
+								images.push(this.domain + i);
+							})
+							item.images = images;
 
-    						let hot_images = [];
-    						item.hot_img.map(i => {
-    							hot_images.push(this.domain + i);
-    						})
-    						item.hot_images = hot_images;
+							let hot_images = [];
+							item.hot_img.map(i => {
+								hot_images.push(this.domain + i);
+							})
+							item.hot_images = hot_images;
 
-    						let new_hot_url = [];
-    						item.hot_url.map((i,index) => {
-    							let new_obj = {
-    								name:`链接${index + 1}`,
-    								url:i
-    							}
-    							new_hot_url.push(new_obj);
-    						})
-    						item.new_hot_url = new_hot_url;
+							let new_hot_url = [];
+							item.hot_url.map((i,index) => {
+								let new_obj = {
+									name:`链接${index + 1}`,
+									url:i
+								}
+								new_hot_url.push(new_obj);
+							})
+							item.new_hot_url = new_hot_url;
 
-    						if(item.i_id){
+							if(item.i_id){
 								item.new_i_id = item.i_id.split(',')
 							}
 							if(item.bd_i_id){
 								item.new_bd_i_id = item.bd_i_id.split(',')
 							}
 
-    					})
-    					this.table_data = table_data;
-    					this.total =  res.data.data.total;
-    					this.button_list =  res.data.data.button_list;
-    				}else{
-    					this.$message.warning(res.data.msg);
-    				}
-    			})
-    		},
+						})
+						this.table_data = table_data;
+						this.total =  res.data.data.total;
+						this.button_list =  res.data.data.button_list;
+					}else{
+						this.$message.warning(res.data.msg);
+					}
+				})
+			},
 			//切换页码
 			checkPage(v){
 				this.page = v;
@@ -372,15 +391,15 @@
 			},
 			filterType(v){
 				switch(v){
-					case 1:
-						return '爆款';
-					case 2:
-						return '主推款';
-					case 3:
-						return '深度库存';
-					case 4:
-						return '视频款';
-					default:
+				case 1:
+					return '爆款';
+				case 2:
+					return '主推款';
+				case 3:
+					return '深度库存';
+				case 4:
+					return '视频款';
+				default:
 					return;
 				}
 			}

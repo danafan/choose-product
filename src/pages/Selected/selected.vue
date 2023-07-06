@@ -57,7 +57,7 @@
 					</template>
 				</el-table-column>
 				<el-table-column label="款号" prop="style_name"></el-table-column>
-				<el-table-column label="款式编码" width="180">
+				<el-table-column label="款式编码" width="240">
 					<template slot-scope="scope">
 						<div class="item_row">
 							<div class="item_label">供应商款式编码：</div>
@@ -67,13 +67,13 @@
 						</div>
 						<div class="item_row" >
 							<div class="item_label">内部款式编码：</div>
-							<div class="flex-1">
+							<div class="item_value">
 								<div v-for="item in scope.row.new_i_id">{{item}}</div>
 							</div>
 						</div>
 						<div class="item_row">
 							<div class="item_label">BD款式编码：</div>
-							<div class="flex-1">
+							<div class="item_value">
 								<div v-for="item in scope.row.new_bd_i_id">{{item}}</div>
 							</div>
 						</div>
@@ -109,7 +109,7 @@
 					</template>
 				</el-table-column>
 			</el-table>
-			<PaginationWidget id="bottom_row" :total="total" :page="page" @checkPage="checkPage"/>
+			<PaginationWidget id="bottom_row" :total="total" :page="page" :show_multiple="false" @checkPage="checkPage"/>
 		</el-card>
 		<CarWidget/>
 	</div>
@@ -345,7 +345,7 @@
 					all_title_height -
 					table_title_height - 
 					bottom_row_height -
-					110 +
+					90 +
 					"px";
 				});
 			},
@@ -553,6 +553,7 @@
 				height: 64rem;
 				display: flex;
 				padding-left: 30rem;
+				margin-top:20px;
 				margin-bottom: 15rem;
 				.tab_item{
 					cursor:pointer;

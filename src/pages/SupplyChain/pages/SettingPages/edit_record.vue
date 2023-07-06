@@ -29,7 +29,7 @@
 				<el-table-column label="修改人" prop="add_user_name" width="120" align="center"></el-table-column>
 				<el-table-column label="修改时间" prop="add_time" width="160" align="center"></el-table-column>
 			</el-table>
-			<PaginationWidget id="bottom_row" :total="total" :page="page" @checkPage="checkPage"/>
+			<PaginationWidget id="bottom_row" :total="total" :page="page" :show_multiple="false" @checkPage="checkPage"/>
 		</el-card>
 	</div>
 </template>
@@ -85,7 +85,7 @@
     				card_box_height -
     				table_title_height -
     				bottom_row_height -
-    				55 +
+    				35 +
     				"px";
     			});
     		},
@@ -132,6 +132,7 @@
 	display: flex;
 	flex-direction: column;
 	.form_card{
+		padding-top: 20px;
 		margin-bottom: 16rem;
 		.form_item{
 			margin-bottom:0 !important;

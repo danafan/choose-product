@@ -33,7 +33,7 @@
 					</div>
 				</div>
 				<EmptyPage :style="{height:scroll_height}" toast="暂无数据～" :is_loading="loading" v-else/>
-				<PaginationWidget id="pagination" :total="total" :page="page" @checkPage="checkPage"/>
+				<PaginationWidget id="pagination" :total="total" :page="page" :show_multiple="false" @checkPage="checkPage"/>
 			</el-card>
 			<CarWidget/>
 		</div>
@@ -84,7 +84,7 @@
     				this.scroll_height =
     				card_box_height -
     				pagination_height -
-    				55 +
+    				15 +
     				"px";
     			});
     		},
@@ -149,6 +149,7 @@
 	flex-direction: column;
 	position: relative;
 	.card_box{
+		padding-top: 20px;
 		flex:1;
 		.list_content{
 			height: 200px;

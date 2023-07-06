@@ -1,155 +1,156 @@
 <template>
-	<div class="flex-1 flex fc height-100">
-		<el-card class="form_card">
-			<el-form :inline="true" size="mini">
-				<el-form-item label="供应商名称：">
-					<el-input clearable v-model="supplier_name" placeholder="名称/简称"></el-input>
-				</el-form-item>
-				<el-form-item label="开发员：">
-					<el-select v-model="developer" clearable filterable placeholder="全部">
-						<el-option v-for="item in user_list" :key="item.user_id" :label="item.real_name" :value="item.real_name">
-						</el-option>
-					</el-select>
-				</el-form-item>
-				<el-form-item label="分类：">
-					<el-select v-model="classification" clearable placeholder="全部">
-						<el-option :label="item.name" :value="item.id" v-for="item in classification_list"></el-option>
-					</el-select>
-				</el-form-item>
-				<el-form-item label="区域：">
-					<el-select v-model="area" clearable placeholder="全部">
-						<el-option :label="item" :value="item" v-for="item in area_list"></el-option>
-					</el-select>
-				</el-form-item>
-				<el-form-item label="主营：" required>
-					<el-select v-model="main_business" filterable clearable placeholder="全部">
-						<el-option :label="item.name" :value="item.id" v-for="item in main_business_list"></el-option>
-					</el-select>
-				</el-form-item>
-				<el-form-item label="擅长品类：">
-					<el-select v-model="scpl" filterable clearable placeholder="全部">
-						<el-option :label="item.name" :value="item.id" v-for="item in scpl_list"></el-option>
-					</el-select>
-				</el-form-item>
-				<el-form-item label="是否自有工厂：">
-					<el-select v-model="supply_free_factory" clearable placeholder="全部">
-						<el-option label="是" :value="1"></el-option>
-						<el-option label="否" :value="0"></el-option>
-					</el-select>
-				</el-form-item>
-				<el-form-item label="是否自有设计能力：">
-					<el-select v-model="supply_design" clearable placeholder="全部">
-						<el-option label="是" :value="1"></el-option>
-						<el-option label="否" :value="0"></el-option>
-					</el-select>
-				</el-form-item>
-				<el-form-item label="结算方式：">
-					<el-select v-model="settlement_method" clearable placeholder="全部">
-						<el-option :label="item.name" :value="item.id" v-for="item in settlement_method_list"></el-option>
-					</el-select>
-				</el-form-item>
-				<el-form-item label="产品价位段：">
-					<el-input style="width: 50px;" size="mini" type="number" v-model="start_price"></el-input>&nbsp~&nbsp
-					<el-input style="width: 50px;" size="mini" type="number" v-model="end_price"></el-input>
-				</el-form-item>
-				<el-form-item label="是否可退换货：">
-					<el-select v-model="supply_return_exchange" clearable placeholder="全部">
-						<el-option label="是" :value="1"></el-option>
-						<el-option label="否" :value="0"></el-option>
-					</el-select>
-				</el-form-item>
-				<el-form-item label="是否可代发：">
-					<el-select v-model="supply_replace_send" clearable placeholder="全部">
-						<el-option label="是" :value="1"></el-option>
-						<el-option label="否" :value="0"></el-option>
-					</el-select>
-				</el-form-item>
-				<el-form-item label="性价比：">
-					<el-select v-model="cost_performance" clearable placeholder="全部">
-						<el-option :label="item.name" :value="item.id" v-for="item in cost_performance_list"></el-option>
-					</el-select>
-				</el-form-item>
-				<el-form-item label="合作程度：">
-					<el-select v-model="cooperativeness" clearable placeholder="全部">
-						<el-option :label="item.name" :value="item.id" v-for="item in cooperativeness_list"></el-option>
-					</el-select>
-				</el-form-item>
-				<el-form-item label="状态：">
-					<el-select v-model="status" clearable placeholder="全部">
-						<el-option label="填报后待审核" :value="0"></el-option>
-						<el-option label="填报后审核通过" :value="1"></el-option>
-						<el-option label="填报后审核拒绝" :value="2"></el-option>
-						<el-option label="转合格待审核" :value="3"></el-option>
-						<el-option label="转合格同意" :value="4"></el-option>
-						<el-option label="转合格拒绝" :value="5"></el-option>
-					</el-select>
-				</el-form-item>
-				<el-form-item class="form_item">
-					<el-button type="primary" @click="searchData">查询</el-button>
-				</el-form-item>
-			</el-form>
-		</el-card>
-		<el-card class="card_box" id="card_box">
-			<TableTitle title="数据列表" id="table_title">
-				<el-button size="mini" type="primary" @click="import_dialog = true" v-if="button_list.import == 1">导入</el-button>
-				<el-button size="mini" type="primary" @click="addFn('1')" v-if="button_list.add == 1">添加</el-button>
-			</TableTitle>
-			<el-table size="mini" :data="data.data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" v-loading="loading">
-				<el-table-column label="供应商名称" prop="supplier_name"></el-table-column>
-				<el-table-column label="供应商简称" prop="supplier_code"></el-table-column>
-				<el-table-column label="开发员" prop="developer"></el-table-column>
-				<el-table-column label="开发日期" prop="develop_date"></el-table-column>
-				<el-table-column label="分类" prop="classification"></el-table-column>
-				<el-table-column label="区域" prop="area"></el-table-column>
-				<el-table-column label="主营" prop="main_business"></el-table-column>
-				<el-table-column label="擅长品类" prop="scpl"></el-table-column>
-				<el-table-column label="是否自有工厂" prop="supply_free_factory"></el-table-column>
-				<el-table-column label="是否自有设计能力" prop="supply_design"></el-table-column>
-				<el-table-column label="是否有外发能力" prop="supply_out_send"></el-table-column>
-				<el-table-column label="结算方式">
-					<template slot-scope="scope">
-						{{scope.row.settlement_method}}
-					</template>
-				</el-table-column>
-				<el-table-column label="联系人" width="120" prop="contactor"></el-table-column>
-				<el-table-column label="联系电话" width="120" prop="contact_information"></el-table-column>
-				<el-table-column label="联系人职位" width="120" prop="contactor_position"></el-table-column>
-				<el-table-column label="联系人微信" width="120" prop="weixin"></el-table-column>
-				<el-table-column label="地址" prop="address"></el-table-column>
-				<el-table-column label="供应商合作客户" prop="supplier_cooperate_custom"></el-table-column>
-				<el-table-column label="产品价段位" prop="price_range"></el-table-column>
-				<el-table-column label="是否可退换货" prop="supply_return_exchange"></el-table-column>
-				<el-table-column label="是否可代发" prop="supply_replace_send"></el-table-column>
-				<el-table-column label="性价比" prop="cost_performance"></el-table-column>
-				<el-table-column label="合作程度" prop="cooperativeness"></el-table-column>
-				<el-table-column label="备注" prop="description"></el-table-column>
-				<el-table-column label="介绍人" prop="introducer"></el-table-column>
-				<el-table-column label="填报状态">
-					<template slot-scope="scope">
-						<div v-if="scope.row.status <= 2">{{scope.row.status | info_refund_status}}</div>
-							<div v-else>填报后审核通过</div>
-						</template>
-					</el-table-column>
-					<el-table-column label="合格状态" width="120">
+	<div class="height-100">
+		<el-card class="card_box height-100" id="card_box">
+			<div class="scroll_box flex-1 flex-scroll-y" id="scroll_box">
+				<el-form style="padding-top: 20px;" :inline="true" size="mini" id="form_height">
+					<el-form-item label="供应商名称：">
+						<el-input clearable v-model="supplier_name" placeholder="名称/简称"></el-input>
+					</el-form-item>
+					<el-form-item label="开发员：">
+						<el-select v-model="developer" clearable filterable placeholder="全部">
+							<el-option v-for="item in user_list" :key="item.user_id" :label="item.real_name" :value="item.real_name">
+							</el-option>
+						</el-select>
+					</el-form-item>
+					<el-form-item label="分类：">
+						<el-select v-model="classification" clearable placeholder="全部">
+							<el-option :label="item.name" :value="item.id" v-for="item in classification_list"></el-option>
+						</el-select>
+					</el-form-item>
+					<el-form-item label="区域：">
+						<el-select v-model="area" clearable placeholder="全部">
+							<el-option :label="item" :value="item" v-for="item in area_list"></el-option>
+						</el-select>
+					</el-form-item>
+					<el-form-item label="主营：">
+						<el-select v-model="main_business" filterable clearable placeholder="全部">
+							<el-option :label="item.name" :value="item.id" v-for="item in main_business_list"></el-option>
+						</el-select>
+					</el-form-item>
+					<el-form-item label="擅长品类：">
+						<el-select v-model="scpl" filterable clearable placeholder="全部">
+							<el-option :label="item.name" :value="item.id" v-for="item in scpl_list"></el-option>
+						</el-select>
+					</el-form-item>
+					<el-form-item label="是否自有工厂：">
+						<el-select v-model="supply_free_factory" clearable placeholder="全部">
+							<el-option label="是" :value="1"></el-option>
+							<el-option label="否" :value="0"></el-option>
+						</el-select>
+					</el-form-item>
+					<el-form-item label="是否自有设计能力：">
+						<el-select v-model="supply_design" clearable placeholder="全部">
+							<el-option label="是" :value="1"></el-option>
+							<el-option label="否" :value="0"></el-option>
+						</el-select>
+					</el-form-item>
+					<el-form-item label="结算方式：">
+						<el-select v-model="settlement_method" clearable placeholder="全部">
+							<el-option :label="item.name" :value="item.id" v-for="item in settlement_method_list"></el-option>
+						</el-select>
+					</el-form-item>
+					<el-form-item label="产品价位段：">
+						<el-input style="width: 50px;" size="mini" type="number" v-model="start_price"></el-input>&nbsp~&nbsp
+						<el-input style="width: 50px;" size="mini" type="number" v-model="end_price"></el-input>
+					</el-form-item>
+					<el-form-item label="是否可退换货：">
+						<el-select v-model="supply_return_exchange" clearable placeholder="全部">
+							<el-option label="是" :value="1"></el-option>
+							<el-option label="否" :value="0"></el-option>
+						</el-select>
+					</el-form-item>
+					<el-form-item label="是否可代发：">
+						<el-select v-model="supply_replace_send" clearable placeholder="全部">
+							<el-option label="是" :value="1"></el-option>
+							<el-option label="否" :value="0"></el-option>
+						</el-select>
+					</el-form-item>
+					<el-form-item label="性价比：">
+						<el-select v-model="cost_performance" clearable placeholder="全部">
+							<el-option :label="item.name" :value="item.id" v-for="item in cost_performance_list"></el-option>
+						</el-select>
+					</el-form-item>
+					<el-form-item label="合作程度：">
+						<el-select v-model="cooperativeness" clearable placeholder="全部">
+							<el-option :label="item.name" :value="item.id" v-for="item in cooperativeness_list"></el-option>
+						</el-select>
+					</el-form-item>
+					<el-form-item label="状态：">
+						<el-select v-model="status" clearable placeholder="全部">
+							<el-option label="填报后待审核" :value="0"></el-option>
+							<el-option label="填报后审核通过" :value="1"></el-option>
+							<el-option label="填报后审核拒绝" :value="2"></el-option>
+							<el-option label="转合格待审核" :value="3"></el-option>
+							<el-option label="转合格同意" :value="4"></el-option>
+							<el-option label="转合格拒绝" :value="5"></el-option>
+						</el-select>
+					</el-form-item>
+					<el-form-item class="form_item">
+						<el-button type="primary" @click="searchData">查询</el-button>
+					</el-form-item>
+				</el-form>
+				<el-divider></el-divider>
+				<TableTitle title="数据列表" id="table_title">
+					<el-button size="mini" type="primary" @click="import_dialog = true" v-if="button_list.import == 1">导入</el-button>
+					<el-button size="mini" type="primary" @click="addFn('1')" v-if="button_list.add == 1">添加</el-button>
+				</TableTitle>
+				<el-table size="mini" :data="data.data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" v-loading="loading">
+					<el-table-column label="供应商名称" prop="supplier_name"></el-table-column>
+					<el-table-column label="供应商简称" prop="supplier_code"></el-table-column>
+					<el-table-column label="开发员" prop="developer"></el-table-column>
+					<el-table-column label="开发日期" prop="develop_date"></el-table-column>
+					<el-table-column label="分类" prop="classification"></el-table-column>
+					<el-table-column label="区域" prop="area"></el-table-column>
+					<el-table-column label="主营" prop="main_business"></el-table-column>
+					<el-table-column label="擅长品类" prop="scpl"></el-table-column>
+					<el-table-column label="是否自有工厂" prop="supply_free_factory"></el-table-column>
+					<el-table-column label="是否自有设计能力" prop="supply_design"></el-table-column>
+					<el-table-column label="是否有外发能力" prop="supply_out_send"></el-table-column>
+					<el-table-column label="结算方式">
 						<template slot-scope="scope">
-							<el-button type="text" size="small" v-if="scope.row.status == 1 && button_list.apply_qualified == 1" @click="zhuanFn('1',scope.row.reserve_id)">待转合格</el-button>
-							<el-button type="text" size="small" v-if="scope.row.status == 3 && button_list.qualified_check == 1" @click="hgAuditFn(scope.row.reserve_id)">合格待审核</el-button>
-							<div v-if="scope.row.status > 3">{{scope.row.status | qualified_refund_status}}</div>
+							{{scope.row.settlement_method}}
 						</template>
 					</el-table-column>
-					<el-table-column label="操作" width="180" fixed="right">
+					<el-table-column label="联系人" width="120" prop="contactor"></el-table-column>
+					<el-table-column label="联系电话" width="120" prop="contact_information"></el-table-column>
+					<el-table-column label="联系人职位" width="120" prop="contactor_position"></el-table-column>
+					<el-table-column label="联系人微信" width="120" prop="weixin"></el-table-column>
+					<el-table-column label="地址" prop="address"></el-table-column>
+					<el-table-column label="供应商合作客户" prop="supplier_cooperate_custom"></el-table-column>
+					<el-table-column label="产品价段位" prop="price_range"></el-table-column>
+					<el-table-column label="是否可退换货" prop="supply_return_exchange"></el-table-column>
+					<el-table-column label="是否可代发" prop="supply_replace_send"></el-table-column>
+					<el-table-column label="性价比" prop="cost_performance"></el-table-column>
+					<el-table-column label="合作程度" prop="cooperativeness"></el-table-column>
+					<el-table-column label="备注" prop="description"></el-table-column>
+					<el-table-column label="介绍人" prop="introducer"></el-table-column>
+					<el-table-column label="填报状态">
 						<template slot-scope="scope">
-							<el-button type="text" size="small" @click="checkInfo('3',scope.row.reserve_id)" v-if="button_list.detail == 1">查看</el-button>
-							<!-- 填报编辑 -->
-							<el-button type="text" size="small" @click="addFn('2',scope.row.reserve_id)" v-if="scope.row.status == 2 && button_list.info_edit == 1">编辑</el-button>
-							<!-- 转合格编辑 -->
-							<el-button type="text" size="small" @click="zhuanFn('2',scope.row.reserve_id)" v-if="scope.row.status == 5 && button_list.qualified_edit == 1">编辑</el-button>
-							<el-button type="text" size="small" v-if="scope.row.status != 0 && scope.row.status != 3 && button_list.del == 1" @click="deleteFn(scope.row.reserve_id)">删除</el-button>
-							<el-button type="text" size="small" v-if="scope.row.status == 0 && button_list.info_check == 1" @click="checkInfo('4',scope.row.reserve_id)">填报审核</el-button>
-						</template>
-					</el-table-column>
-				</el-table>
-				<PaginationWidget id="bottom_row" :total="data.total" :page="page" :pagesize="20" @checkPage="checkPage"/>
+							<div v-if="scope.row.status <= 2">{{scope.row.status | info_refund_status}}</div>
+								<div v-else>填报后审核通过</div>
+							</template>
+						</el-table-column>
+						<el-table-column label="合格状态" width="120">
+							<template slot-scope="scope">
+								<el-button type="text" size="small" v-if="scope.row.status == 1 && button_list.apply_qualified == 1" @click="zhuanFn('1',scope.row.reserve_id)">待转合格</el-button>
+								<el-button type="text" size="small" v-if="scope.row.status == 3 && button_list.qualified_check == 1" @click="hgAuditFn(scope.row.reserve_id)">合格待审核</el-button>
+								<div v-if="scope.row.status > 3">{{scope.row.status | qualified_refund_status}}</div>
+							</template>
+						</el-table-column>
+						<el-table-column label="操作" width="180" fixed="right">
+							<template slot-scope="scope">
+								<el-button type="text" size="small" @click="checkInfo('3',scope.row.reserve_id)" v-if="button_list.detail == 1">查看</el-button>
+								<!-- 填报编辑 -->
+								<el-button type="text" size="small" @click="addFn('2',scope.row.reserve_id)" v-if="scope.row.status == 2 && button_list.info_edit == 1">编辑</el-button>
+								<!-- 转合格编辑 -->
+								<el-button type="text" size="small" @click="zhuanFn('2',scope.row.reserve_id)" v-if="scope.row.status == 5 && button_list.qualified_edit == 1">编辑</el-button>
+								<el-button type="text" size="small" v-if="scope.row.status != 0 && scope.row.status != 3 && button_list.del == 1" @click="deleteFn(scope.row.reserve_id)">删除</el-button>
+								<!-- <el-button type="text" size="small" v-if="scope.row.status == 0 && button_list.info_check == 1" @click="checkInfo('4',scope.row.reserve_id)">填报审核</el-button> -->
+							</template>
+						</el-table-column>
+					</el-table>
+				</div>
+				<PaginationWidget id="bottom_row" :total="data.total" :page="page" :pagesize="20" :show_multiple="false" @checkPage="checkPage"/>
 			</el-card>
 			<!-- 导入 -->
 			<el-dialog :visible.sync="import_dialog" width="30%">
@@ -208,7 +209,7 @@
 							</el-form-item>
 							<el-form-item label="分类：" required>
 								<el-select v-model="info_arg.classification" clearable placeholder="全部" v-if="add_type == '1' || add_type == '2'">
-									<el-option :label="item" :value="item" v-for="item in classification_list"></el-option>
+									<el-option :label="item.name" :value="item.id" v-for="item in classification_list"></el-option>
 								</el-select>
 								<div v-else>{{info_arg.classification}}</div>
 							</el-form-item>
@@ -269,7 +270,7 @@
 							</el-form-item>
 							<el-form-item label="结算方式：" required>
 								<el-select v-model="info_arg.settlement_method" clearable placeholder="全部" v-if="add_type == '1' || add_type == '2'">
-									<el-option :label="item" :value="item" v-for="item in settlement_method_list"></el-option>
+									<el-option :label="item.name" :value="item.id" v-for="item in settlement_method_list"></el-option>
 								</el-select>
 								<div v-else>{{info_arg.settlement_method}}</div>
 							</el-form-item>
@@ -413,15 +414,31 @@
 				</el-dialog>
 			</div>
 		</template>
-		<style lang="less" scoped>
-			.form_card{
-				margin-bottom: 16rem;
-				.form_item{
-					margin-bottom:0 !important;
-				}
+		<style type="text/css">
+			.card_box .el-card__body{
+				height: 100%!important;
+				display: flex!important;
+				flex-direction: column!important;
+				padding-top: 0!important;
+				padding-bottom: 0!important;
 			}
+		</style>
+		<style lang="less" scoped>
 			.card_box{
-				flex:1;
+				.scroll_box{
+					.image{
+						width: 100px;
+						height: 100px;
+					}
+
+				}
+				.item_row{
+					display: flex;
+					.item_label{
+						width: 96px;
+						text-align:end;
+					}
+				}
 			}
 			.down_box{
 				display:flex;
@@ -579,15 +596,9 @@
     		//监听屏幕大小变化
 			onResize() {
 				this.$nextTick(() => {
-					let card_box_height = document.getElementById("card_box").offsetHeight;
-					let table_title_height = document.getElementById("table_title").offsetHeight;
-					let bottom_row_height = document.getElementById("bottom_row").offsetHeight;
-					this.max_height =
-					card_box_height -
-					table_title_height -
-					bottom_row_height -
-					60 +
-					"px";
+					let card_box_height = document.getElementById("scroll_box").offsetHeight;
+					let form_height = document.getElementById("form_height").offsetHeight;
+					this.max_height = card_box_height - form_height + 110 + "px";
 				});
 			},
 			//获取用户列表

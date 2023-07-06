@@ -73,9 +73,9 @@
 						<div>{{refuse_reason}}</div>
 					</el-form-item>
 				</el-form>
-				<el-form size="small" style="width: 50%" label-width="100px">
-					<el-form-item label="商品款号：" required>
-						<el-input placeholder="商品款号" v-model="arg.style_name" :disabled="is_detail">
+				<el-form size="small" style="width: 50%" label-width="120px">
+					<el-form-item label="供应商款号：" required>
+						<el-input placeholder="供应商款号" v-model="arg.style_name" :disabled="is_detail">
 						</el-input>
 					</el-form-item>
 					<el-form-item label="标题：">

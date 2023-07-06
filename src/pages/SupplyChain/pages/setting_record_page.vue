@@ -1,7 +1,8 @@
 <template>
 	<div class="chain_page_content">
-		<el-card class="form_card">
-			<el-form :inline="true" size="mini">
+		<el-card class="card_box height-100 flex fc">
+			<div class="scroll_box flex-1 scroll-y" id="scroll_box">
+				<el-form style="padding-top: 20px;" :inline="true" size="mini" id="form_height">
 				<el-form-item class="form_item" label="操作日期：">
 					<el-date-picker v-model="date" size="mini" type="daterange" unlink-panels value-format="yyyy-MM-dd" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions">
 					</el-date-picker>
@@ -19,8 +20,7 @@
 					<el-button type="primary" @click="checkPage(1)">查询</el-button>
 				</el-form-item>
 			</el-form>
-		</el-card>
-		<el-card class="card_box" id="card_box">
+			<el-divider></el-divider>
 			<TableTitle title="数据列表" id="table_title"></TableTitle>
 			<el-table size="mini" :data="data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" v-loading="loading">
 				<el-table-column label="序号" width="55">
@@ -39,7 +39,8 @@
 				<el-table-column label="IP地址" width="150" prop="ip"></el-table-column>
 				<el-table-column label="操作记录" prop="content"></el-table-column>
 			</el-table>
-			<PaginationWidget id="bottom_row" :total="total" :page="page" :pagesize="30" @checkPage="checkPage"/>
+		</div>
+			<PaginationWidget id="bottom_row" :total="total" :page="page" :pagesize="30" :show_multiple="false" @checkPage="checkPage"/>
 		</el-card>
 	</div>
 </template>
@@ -53,15 +54,22 @@
 	padding: 24rem;
 	display: flex;
 	flex-direction: column;
-	.form_card{
-		margin-bottom: 16rem;
-		.form_item{
-			margin-bottom:0 !important;
-		}
-	}
 	.card_box{
-		flex:1;
-	}
+			.scroll_box{
+				.image{
+					width: 165rem;
+					height: 68rem;
+				}
+				
+			}
+			.item_row{
+				display: flex;
+				.item_label{
+					width: 96px;
+					text-align:end;
+				}
+			}
+		}
 }
 </style>
 <script>
@@ -128,16 +136,10 @@
     		//监听屏幕大小变化
     		onResize() {
     			this.$nextTick(() => {
-    				let card_box_height = document.getElementById("card_box").offsetHeight;
-    				let table_title_height = document.getElementById("table_title").offsetHeight;
-    				let bottom_row_height = document.getElementById("bottom_row").offsetHeight;
-    				this.max_height =
-    				card_box_height -
-    				table_title_height -
-    				bottom_row_height -
-    				50 +
-    				"px";
-    			});
+					let card_box_height = document.getElementById("scroll_box").offsetHeight;
+					let form_height = document.getElementById("form_height").offsetHeight;
+					this.max_height = card_box_height - form_height + 20 + "px";
+				});
     		},
     		//公告列表
     		getData(){

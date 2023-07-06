@@ -19,7 +19,7 @@
 					</template>
 				</el-table-column>
 			</el-table>
-			<PaginationWidget id="bottom_row" :total="data.total" :page="page" @checkPage="checkPage"/>
+			<PaginationWidget id="bottom_row" :total="data.total" :page="page" :show_multiple="false" @checkPage="checkPage"/>
 		</el-card>
 		添加或编辑
 		<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" @close="closeDialog" :visible.sync="show_dialog">
@@ -110,7 +110,7 @@
     				card_box_height -
     				table_title_height -
     				bottom_row_height -
-    				55 +
+    				35 +
     				"px";
     			});
     		},
@@ -296,6 +296,7 @@
 	flex:1;
 	position: relative;
 	.card_box{
+		padding-top: 20px;
 		position: absolute;
 		top: 0;
 		left: 0;

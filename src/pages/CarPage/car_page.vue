@@ -18,33 +18,32 @@
 							</el-carousel>
 						</template>
 					</el-table-column>
-
 					<el-table-column label="标题" prop="price" width="160">
 						<template slot-scope="scope">
-							<div class="record_title">{{scope.row.title}}</div>
+							<el-button size='mini' type="text" @click="getDetail(scope.row.style_id)">{{scope.row.title}}</el-button>
 						</template>
 					</el-table-column>
 					<el-table-column label="供应商" prop="supplier_name" width="160"></el-table-column>
 					<el-table-column label="上新时间" prop="new_time_name" width="150">
 					</el-table-column>
 					<el-table-column label="供应商款号" prop="style_name"></el-table-column>
-					<el-table-column label="款式编码" width="140">
+					<el-table-column label="款式编码" width="240">
 						<template slot-scope="scope">
 							<div class="item_row">
 								<div class="item_label">供应商款式编码：</div>
-								<div class="flex-1">
+								<div class="item_value">
 									<div v-for="item in scope.row.new_supplier_ksbm">{{item}}</div>
 								</div>
 							</div>
 							<div class="item_row">
 								<div class="item_label">内部款式编码：</div>
-								<div class="flex-1">
+								<div class="item_value">
 									<div v-for="item in scope.row.new_i_id">{{item}}</div>
 								</div>
 							</div>
 							<div class="item_row" v-if="scope.row.new_bd_i_id">
 								<div class="item_label">BD款式编码：</div>
-								<div class="flex-1">
+								<div class="item_value">
 									<div v-for="item in scope.row.new_bd_i_id">{{item}}</div>
 								</div>
 							</div>
@@ -498,6 +497,12 @@
 					});          
 				});
 			},
+			//点击跳转详情
+			getDetail(style_id){
+				let active_path = `/goods_detail?style_id=${style_id}`;
+				const routeData = this.$router.resolve(active_path);
+				window.open(routeData.href);
+			},
 		},
 		components:{
 			PageTitle,
@@ -507,7 +512,7 @@
 </script>
 <style lang="less" scoped>
 	.padding_page_content{
-		width: 1440rem;
+		width: 1680rem;
 		height: 100%;
 		display: flex;
 		flex-direction: column;
@@ -541,7 +546,7 @@
 			.item_row{
 				display: flex;
 				.item_label{
-					width: 48px;
+					width: 96px;
 					text-align:end;
 				}
 			}

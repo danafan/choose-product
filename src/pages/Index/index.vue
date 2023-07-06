@@ -244,6 +244,7 @@
 		width: 100%;
 		height: 100%;
 		.card_box{
+			padding-top:20px;
 			.scroll_view{
 				.goods_list{
 					display: flex;

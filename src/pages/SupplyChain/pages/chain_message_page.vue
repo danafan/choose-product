@@ -1,53 +1,54 @@
 <template>
 	<div class="chain_page_content">
-		<el-card class="form_card">
-			<el-form :inline="true" size="mini">
-				<el-form-item class="form_item">
-					<el-input clearable v-model="keyword" placeholder="请输入关键字"></el-input>
-				</el-form-item>
-				<el-form-item class="form_item">
-					<el-button type="primary" @click="checkPage(1)">查询</el-button>
-				</el-form-item>
-			</el-form>
-		</el-card>
-		<el-card class="card_box" id="card_box">
-			<TableTitle title="数据列表" id="table_title">
-				<el-button size="mini" type="primary" @click="addFn('1')" v-if="button_list.add == 1">添加公告</el-button>
-			</TableTitle>
-			<el-table size="mini" :data="data.data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" v-loading="loading">
-				<el-table-column label="公告标题" prop="notice_title"></el-table-column>
-				<el-table-column label="公告内容" prop="notice_content"></el-table-column>
-				<el-table-column label="图片" width="150">
-					<template slot-scope="scope">
-						<div v-if="scope.row.images.length == 0">暂无</div>
-						<el-carousel trigger="hover" indicator-position="none" :autoplay="false" height="50px" v-else>
-							<el-carousel-item v-for="(item,index) in scope.row.images" :key="index">
-								<el-image :z-index="2006" class="image" :src="item" fit="scale-down" :preview-src-list="scope.row.images"></el-image>
-							</el-carousel-item>
-						</el-carousel>
-					</template>
-				</el-table-column>
-				<el-table-column label="发布日期" prop="add_time"></el-table-column>
-				<el-table-column label="开始时间" prop="start_day"></el-table-column>
-				<el-table-column label="结束时间" prop="end_day"></el-table-column>
-				<el-table-column label="发布人" prop="add_user_name"></el-table-column>
-				<el-table-column label="审核状态">
-					<template slot-scope="scope">
-						<div>{{scope.row.status | status}}</div>
-					</template>
-				</el-table-column>
-				<el-table-column label="审核人" prop="check_user"></el-table-column>
-				<el-table-column label="操作" width="140" fixed="right">
-					<template slot-scope="scope">
-						<el-button type="text" size="small" disabled v-if="scope.row.is_online">已发布</el-button>
-						<el-button type="text" size="small" @click="auditFn('1',scope.row.notice_id)" v-if="button_list.check == 1 && scope.row.status == 0">同意发布</el-button>
-						<el-button type="text" size="small" @click="auditFn('2',scope.row.notice_id)" v-if="button_list.check == 1 && scope.row.status == 0">拒绝发布</el-button>
-						<el-button type="text" size="small" @click="addFn('2',scope.row.notice_id)" v-if="!scope.row.is_online && button_list.edit == 1 && scope.row.status != 0">编辑</el-button>
-						<el-button type="text" size="small" @click="deleteFn(scope.row.notice_id)" v-if="button_list.del == 1 && scope.row.status != 0">删除</el-button>
-					</template>
-				</el-table-column>
-			</el-table>
-			<PaginationWidget id="bottom_row" :total="data.total" :page="page" :pagesize="20" @checkPage="checkPage"/>
+		<el-card class="card_box height-100 flex fc">
+			<div class="scroll_box flex-1 scroll-y" id="scroll_box">
+				<el-form style="padding-top: 20px;" :inline="true" size="mini" id="form_height">
+					<el-form-item class="form_item">
+						<el-input clearable v-model="keyword" placeholder="请输入关键字"></el-input>
+					</el-form-item>
+					<el-form-item class="form_item">
+						<el-button type="primary" @click="checkPage(1)">查询</el-button>
+					</el-form-item>
+				</el-form>
+				<el-divider></el-divider>
+				<TableTitle title="数据列表" id="table_title">
+					<el-button size="mini" type="primary" @click="addFn('1')" v-if="button_list.add == 1">添加公告</el-button>
+				</TableTitle>
+				<el-table size="mini" :data="data.data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" v-loading="loading">
+					<el-table-column label="公告标题" prop="notice_title"></el-table-column>
+					<el-table-column label="公告内容" prop="notice_content"></el-table-column>
+					<el-table-column label="图片" width="150">
+						<template slot-scope="scope">
+							<div v-if="scope.row.images.length == 0">暂无</div>
+							<el-carousel trigger="hover" indicator-position="none" :autoplay="false" height="50px" v-else>
+								<el-carousel-item v-for="(item,index) in scope.row.images" :key="index">
+									<el-image :z-index="2006" class="image" :src="item" fit="scale-down" :preview-src-list="scope.row.images"></el-image>
+								</el-carousel-item>
+							</el-carousel>
+						</template>
+					</el-table-column>
+					<el-table-column label="发布日期" prop="add_time"></el-table-column>
+					<el-table-column label="开始时间" prop="start_day"></el-table-column>
+					<el-table-column label="结束时间" prop="end_day"></el-table-column>
+					<el-table-column label="发布人" prop="add_user_name"></el-table-column>
+					<el-table-column label="审核状态">
+						<template slot-scope="scope">
+							<div>{{scope.row.status | status}}</div>
+						</template>
+					</el-table-column>
+					<el-table-column label="审核人" prop="check_user"></el-table-column>
+					<el-table-column label="操作" width="140" fixed="right">
+						<template slot-scope="scope">
+							<el-button type="text" size="small" disabled v-if="scope.row.is_online">已发布</el-button>
+							<el-button type="text" size="small" @click="auditFn('1',scope.row.notice_id)" v-if="button_list.check == 1 && scope.row.status == 0">同意发布</el-button>
+							<el-button type="text" size="small" @click="auditFn('2',scope.row.notice_id)" v-if="button_list.check == 1 && scope.row.status == 0">拒绝发布</el-button>
+							<el-button type="text" size="small" @click="addFn('2',scope.row.notice_id)" v-if="!scope.row.is_online && button_list.edit == 1 && scope.row.status != 0">编辑</el-button>
+							<el-button type="text" size="small" @click="deleteFn(scope.row.notice_id)" v-if="button_list.del == 1 && scope.row.status != 0">删除</el-button>
+						</template>
+					</el-table-column>
+				</el-table>
+			</div>
+			<PaginationWidget id="bottom_row" :total="data.total" :page="page" :pagesize="20" :show_multiple="false" @checkPage="checkPage"/>
 		</el-card>
 		<!-- 添加或编辑 -->
 		<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" destroy-on-close @close="closeDialog" :visible.sync="show_dialog">
@@ -88,6 +89,15 @@
 	</el-dialog>
 </div>
 </template>
+<style type="text/css">
+	.card_box .el-card__body{
+		height: 100%!important;
+		display: flex!important;
+		flex-direction: column!important;
+		padding-top: 0!important;
+		padding-bottom: 0!important;
+	}
+</style>
 <style lang="less" scoped>
 	.chain_page_content{
 		position: absolute;
@@ -96,16 +106,22 @@
 		width: 100%;
 		height: 100%;
 		padding: 24rem;
-		display: flex;
-		flex-direction: column;
-		.form_card{
-			margin-bottom: 16rem;
-			.form_item{
-				margin-bottom:0 !important;
-			}
-		}
+		
 		.card_box{
-			flex:1;
+			.scroll_box{
+				.image{
+					width: 100px;
+					height: 100px;
+				}
+				
+			}
+			.item_row{
+				display: flex;
+				.item_label{
+					width: 96px;
+					text-align:end;
+				}
+			}
 		}
 	}
 	.dialog_content{
@@ -169,15 +185,9 @@
     		//监听屏幕大小变化
 			onResize() {
 				this.$nextTick(() => {
-					let card_box_height = document.getElementById("card_box").offsetHeight;
-					let table_title_height = document.getElementById("table_title").offsetHeight;
-					let bottom_row_height = document.getElementById("bottom_row").offsetHeight;
-					this.max_height =
-					card_box_height -
-					table_title_height -
-					bottom_row_height -
-					50 +
-					"px";
+					let card_box_height = document.getElementById("scroll_box").offsetHeight;
+					let form_height = document.getElementById("form_height").offsetHeight;
+					this.max_height = card_box_height - form_height + 20 + "px";
 				});
 			},
 			//监听图片列表回调

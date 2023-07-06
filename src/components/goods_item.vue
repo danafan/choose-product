@@ -41,8 +41,8 @@
 				<div class="code">
 					<div>{{info.sstyle_name}}</div>
 					<span v-if="info.i_id != '' || info.bd_i_id != ''">（</span>
-					<span>{{info.i_id != ''?`内部款式编码:${info.i_id}`:""}}</span>
-					<span>{{info.bd_i_id != ''?`BD款式编码:${info.bd_i_id}`:""}}</span>
+					<span>{{info.i_id != ''?`${info.i_id}`:""}}</span>
+					<span>{{info.bd_i_id != ''?`${info.bd_i_id}`:""}}</span>
 					<span v-if="info.i_id != '' || info.bd_i_id != ''">）</span>
 				</div>
 			</el-tooltip>

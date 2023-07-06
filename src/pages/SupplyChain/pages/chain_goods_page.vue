@@ -1,185 +1,174 @@
 <template>
 	<div class="chain_page_content" v-loading.fullscreen.lock="fullscreenLoading">
-		<el-card class="form_card">
-			<div class="up_down_row" :class="{'between':!is_up}">
-				<div class="search_title" v-if="!is_up">查询条件</div>
-				<div class="selected_right" @click="is_up = !is_up">
-					<div>{{is_up?'收起':'展开'}}</div>
-					<img class="down_arrow" :class="{'rotate':is_up == true}" src="../../../static/down_arrow.png">
-				</div>
+		<el-card class="card_box height-100 flex fc">
+			<div class="scroll_box flex-1 scroll-y" id="scroll_box">
+				<el-form style="padding-top: 20px;" :inline="true" size="mini" id="form_height">
+					<el-form-item label="供应商：">
+						<el-select v-model="supplier_ids" clearable multiple filterable collapse-tags placeholder="全部">
+							<el-option v-for="item in supplier_list" :key="item.supplier_id" :label="item.supplier_name" :value="item.supplier_id">
+							</el-option>
+						</el-select>
+					</el-form-item>
+					<el-form-item label="类目：">
+						<el-select v-model="category_ids" clearable multiple filterable collapse-tags placeholder="全部">
+							<el-option v-for="item in cate_list" :key="item.category_id" :label="item.category_name" :value="item.category_id">
+							</el-option>
+						</el-select>
+					</el-form-item>
+					<el-form-item label="拍摄风格：">
+						<el-select v-model="shooting_style_ids" clearable multiple filterable collapse-tags placeholder="全部">
+							<el-option v-for="item in style_list" :key="item.shooting_style_id" :label="item.shooting_style_name" :value="item.shooting_style_id">
+							</el-option>
+						</el-select>
+					</el-form-item>
+					<el-form-item label="市场：">
+						<el-select v-model="market_ids" clearable multiple filterable collapse-tags placeholder="全部">
+							<el-option v-for="item in market_list" :key="item.market_id" :label="item.market_name" :value="item.market_id">
+							</el-option>
+						</el-select>
+					</el-form-item>
+					<el-form-item label="分类：">
+						<el-select v-model="classification_ids" clearable multiple filterable collapse-tags placeholder="全部">
+							<el-option v-for="item in class_list" :key="item.classification_id" :label="item.classification_name" :value="item.classification_id">
+							</el-option>
+						</el-select>
+					</el-form-item>
+					<el-form-item label="审核状态：">
+						<el-select v-model="check_status_id" clearable placeholder="全部">
+							<el-option v-for="item in check_status_list" :key="item.id" :label="item.name" :value="item.id">
+							</el-option>
+						</el-select>
+					</el-form-item>
+					<el-form-item label="调价审核状态：">
+						<el-select v-model="price_status" clearable placeholder="全部">
+							<el-option v-for="item in adjust_status_list" :key="item.id" :label="item.name" :value="item.id">
+							</el-option>
+						</el-select>
+					</el-form-item>
+					<el-form-item label="上新日期：">
+						<el-date-picker v-model="date" size="mini" type="daterange" unlink-panels value-format="yyyy-MM-dd" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions">
+						</el-date-picker>
+					</el-form-item>
+					<el-form-item>
+						<el-input type="textarea" :autosize="{ minRows: 1, maxRows: 4}" placeholder="款号/款式编码" v-model="search">
+						</el-input>
+					</el-form-item>
+					<el-form-item class="form_item">
+						<el-button type="primary" @click="checkPage(1)">查询</el-button>
+					</el-form-item>
+				</el-form>
+				<el-divider></el-divider>
+				<TableTitle title="数据列表" id="table_title">
+					<el-button size="mini" type="primary" v-if="button_list.edit_i_id == 1" @click="importFn('1')">修改款式编码</el-button>
+					<el-button size="mini" type="primary" @click="allSetting('adjust')" v-if="button_list.price_btn == 1">调价审批</el-button>
+					<el-button size="mini" type="primary" v-if="is_check == 1 && button_list.agree_refuse == 1" @click="allSetting('audit_1')">批量同意</el-button>
+					<el-button size="mini" type="primary" v-if="is_check == 1 && button_list.agree_refuse == 1" @click="allSetting('audit_2')">批量拒绝</el-button>
+					<el-button size="mini" type="primary" @click="allSetting('1')" v-if="button_list.in_out == 1">批量上架</el-button>
+					<el-button size="mini" type="primary" @click="allSetting('0')" v-if="button_list.in_out == 1">批量下架</el-button>
+					<el-button size="mini" type="primary" @click="allSetting('3')" v-if="button_list.del == 1">批量删除</el-button>
+					<el-button size="mini" type="primary" @click="allSetting('2')" v-if="button_list.abu == 1">批量对接推单</el-button>
+					<el-button size="mini" type="primary" @click="$router.push('/edit_goods?page_type=goods&goods_type=1')" v-if="button_list.add == 1">添加</el-button>
+					<el-button size="mini" type="primary" @click="importFn('2')" v-if="button_list.add == 1">导入</el-button>
+					<el-button size="mini" type="primary" @click="exportFn">导出</el-button>
+				</TableTitle>
+				<el-table size="mini" :data="data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" @selection-change="handleSelectionChange" v-loading="loading">
+					<el-table-column type="selection" width="55" fixed>
+					</el-table-column>
+					<el-table-column label="标题" prop="title"></el-table-column>
+					<el-table-column label="供应商款号" prop="style_name"></el-table-column>
+					<el-table-column label="款式编码" width="240">
+						<template slot-scope="scope">
+							<div class="item_row">
+								<div class="item_label">供应商款式编码：</div>
+								<div class="flex-1 flex fc as">
+									<div v-for="item in scope.row.new_supplier_ksbm">{{item}}</div>
+								</div>
+							</div>
+							<div class="item_row">
+								<div class="item_label">内部款式编码：</div>
+								<div class="flex-1 flex fc as">
+									<div v-for="item in scope.row.new_i_id">{{item}}</div>
+								</div>
+							</div>
+							<div class="item_row">
+								<div class="item_label">BD款式编码：</div>
+								<div class="flex-1 flex fc as">
+									<div v-for="item in scope.row.new_bd_i_id">{{item}}</div>
+								</div>
+							</div>
+						</template>
+					</el-table-column>
+					<el-table-column label="图片" width="150" >
+						<template slot-scope="scope">
+							<div v-if="scope.row.images.length == 0">暂无</div>
+							<el-carousel trigger="hover" indicator-position="none" :autoplay="false" height="100px" v-if="scope.row.images.length > 0 && loading == false">
+								<el-carousel-item v-for="item in scope.row.images" :key="item">
+									<el-image :z-index="2006" class="image" :src="item" fit="scale-down" :preview-src-list="scope.row.images"></el-image>
+								</el-carousel-item>
+							</el-carousel>
+						</template>
+					</el-table-column>
+					<el-table-column label="网盘地址">
+						<template slot-scope="scope">
+							<el-button class="pre_wrap" size="small" type="text" @click="windowOpen(scope.row.net_disk_address,scope.row.or_net_disk_address)" v-if="scope.row.or_net_disk_address !== ''">访问链接</el-button>
+							<div v-else></div>
+						</template>
+					</el-table-column>
+					<el-table-column label="成本价" prop="cost_price" width="150">
+						<template slot-scope="scope">
+							<div>{{scope.row.price_status == '1'?'原成本价：':''}}{{scope.row.cost_price}}</div>
+							<div v-if="scope.row.price_status == '1'">调后成本价：{{scope.row.edit_price}}</div>
+						</template>
+					</el-table-column>
+					<el-table-column label="控价" prop="price_control"></el-table-column>
+					<el-table-column label="颜色" prop="color"></el-table-column>
+					<el-table-column label="尺码" prop="size"></el-table-column>
+					<el-table-column label="面料" width="120" show-overflow-tooltip prop="fabric"></el-table-column>
+					<el-table-column label="市场" prop="market"></el-table-column>
+					<el-table-column label="供应商" prop="supplier"></el-table-column>
+					<el-table-column label="提供拍照" prop="common_text">
+						<template slot-scope="scope">
+							<div>{{scope.row.photograph == 1?'是':'否'}}</div>
+						</template>
+					</el-table-column>
+					<el-table-column label="拍摄风格" prop="shooting_style"></el-table-column>
+					<el-table-column label="类目" prop="category"></el-table-column>
+					<el-table-column label="分类" prop="classification"></el-table-column>
+					<el-table-column label="合作模式" prop="mode"></el-table-column>
+					<el-table-column label="备注" prop="remark"></el-table-column>
+					<el-table-column label="上新时间" width="160" prop="new_time_name"></el-table-column>
+					<el-table-column label="审核状态" prop="common_text">
+						<template slot-scope="scope">
+							<div v-if="scope.row.check_status == 1">上架待审核</div>
+							<div v-if="scope.row.check_status == 2">已上架</div>
+							<div v-if="scope.row.check_status == 3">拒绝上架</div>
+							<div v-if="scope.row.check_status == 4">下架待审核</div>
+							<div v-if="scope.row.check_status == 5">已下架</div>
+							<div v-if="scope.row.check_status == 6">拒绝下架</div>
+						</template>
+					</el-table-column>
+					<el-table-column label="操作" width="180" fixed="right">
+						<template slot-scope="scope">
+							<el-button type="text" size="small" v-if="(scope.row.check_status == 1 || scope.row.check_status == 4) && button_list.agree_refuse == 1" @click="$router.push('/edit_goods?page_type=goods&goods_type=4&style_id=' + scope.row.style_id)">审核</el-button>
+							<el-button type="text" size="small" v-if="(scope.row.check_status == 2 || scope.row.check_status == 5 || scope.row.check_status == 6) && button_list.in_out == 1" @click="checkStatus(scope.row.style_id,scope.row.check_status)">{{scope.row.check_status == 2 || scope.row.check_status == 6?'下架':'上架'}}</el-button>
+							<el-button size="small" type="text" @click="adjustAudit(scope.row.style_id,scope.row.cost_price,scope.row.edit_price)" v-if="scope.row.price_status == '1' && button_list.price_btn == 1">调价审批</el-button>
+							<el-button style="margin-right: 10px" type="text" size="small" v-if="scope.row.check_status != 3 && scope.row.check_status != 5 && button_list.edit == 1" @click="$router.push('/edit_goods?page_type=goods&goods_type=2&style_id=' + scope.row.style_id);">编辑</el-button>
+							<el-button type="text" size="small" v-if="(scope.row.check_status == 3 || scope.row.check_status == 5) && button_list.reset == 1" @click="$router.push('/edit_goods?page_type=goods&goods_type=5&style_id=' + scope.row.style_id)">重新提交</el-button>
+							<el-dropdown style="margin-left: 10px;" size="small" @command="handleCommand($event,scope.row.style_id,scope.row.style_id,scope.row.style_name)" v-if="scope.row.check_status != 1 && scope.row.check_status != 4 && (button_list.info == 1 || button_list.del == 1)">
+								<el-button type="text" size="small">
+									更多<i class="el-icon-arrow-down el-icon--right"></i>
+								</el-button>
+								<el-dropdown-menu slot="dropdown">
+									<el-dropdown-item command="1" v-if="button_list.info == 1">查看</el-dropdown-item>
+									<el-dropdown-item command="2" v-if="scope.row.check_status == 2 || scope.row.check_status == 6">图片管理</el-dropdown-item>
+									<el-dropdown-item command="3" v-if="(scope.row.check_status == 3 || scope.row.check_status == 5) && button_list.del == 1">删除</el-dropdown-item>
+								</el-dropdown-menu>
+							</el-dropdown>
+						</template>
+					</el-table-column>
+				</el-table>
 			</div>
-			<el-form style="margin-top: 10px;" :inline="true" size="mini" v-show="is_up">
-				<el-form-item label="供应商：">
-					<el-select v-model="supplier_ids" clearable multiple filterable collapse-tags placeholder="全部">
-						<el-option v-for="item in supplier_list" :key="item.supplier_id" :label="item.supplier_name" :value="item.supplier_id">
-						</el-option>
-					</el-select>
-				</el-form-item>
-				<el-form-item label="类目：">
-					<el-select v-model="category_ids" clearable multiple filterable collapse-tags placeholder="全部">
-						<el-option v-for="item in cate_list" :key="item.category_id" :label="item.category_name" :value="item.category_id">
-						</el-option>
-					</el-select>
-				</el-form-item>
-				<el-form-item label="拍摄风格：">
-					<el-select v-model="shooting_style_ids" clearable multiple filterable collapse-tags placeholder="全部">
-						<el-option v-for="item in style_list" :key="item.shooting_style_id" :label="item.shooting_style_name" :value="item.shooting_style_id">
-						</el-option>
-					</el-select>
-				</el-form-item>
-				<el-form-item label="市场：">
-					<el-select v-model="market_ids" clearable multiple filterable collapse-tags placeholder="全部">
-						<el-option v-for="item in market_list" :key="item.market_id" :label="item.market_name" :value="item.market_id">
-						</el-option>
-					</el-select>
-				</el-form-item>
-				<el-form-item label="分类：">
-					<el-select v-model="classification_ids" clearable multiple filterable collapse-tags placeholder="全部">
-						<el-option v-for="item in class_list" :key="item.classification_id" :label="item.classification_name" :value="item.classification_id">
-						</el-option>
-					</el-select>
-				</el-form-item>
-				<el-form-item label="审核状态：">
-					<el-select v-model="check_status_id" clearable placeholder="全部">
-						<el-option v-for="item in check_status_list" :key="item.id" :label="item.name" :value="item.id">
-						</el-option>
-					</el-select>
-				</el-form-item>
-				<el-form-item label="调价审核状态：">
-					<el-select v-model="price_status" clearable placeholder="全部">
-						<el-option v-for="item in adjust_status_list" :key="item.id" :label="item.name" :value="item.id">
-						</el-option>
-					</el-select>
-				</el-form-item>
-				<el-form-item label="上新日期：">
-					<el-date-picker v-model="date" size="mini" type="daterange" unlink-panels value-format="yyyy-MM-dd" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions">
-					</el-date-picker>
-				</el-form-item>
-				<el-form-item>
-					<el-input type="textarea" :autosize="{ minRows: 1, maxRows: 4}" placeholder="款号/款式编码" v-model="search">
-					</el-input>
-				</el-form-item>
-				<el-form-item class="form_item">
-					<el-button type="primary" @click="checkPage(1)">查询</el-button>
-				</el-form-item>
-			</el-form>
-		</el-card>
-		<el-card class="card_box" id="card_box">
-			<TableTitle title="数据列表" id="table_title">
-				<el-button size="mini" type="primary" v-if="button_list.edit_i_id == 1" @click="importFn('1')">修改款式编码</el-button>
-				<el-button size="mini" type="primary" @click="allSetting('adjust')" v-if="button_list.price_btn == 1">调价审批</el-button>
-				<el-button size="mini" type="primary" v-if="is_check == 1 && button_list.agree_refuse == 1" @click="allSetting('audit_1')">批量同意</el-button>
-				<el-button size="mini" type="primary" v-if="is_check == 1 && button_list.agree_refuse == 1" @click="allSetting('audit_2')">批量拒绝</el-button>
-				<el-button size="mini" type="primary" @click="allSetting('1')" v-if="button_list.in_out == 1">批量上架</el-button>
-				<el-button size="mini" type="primary" @click="allSetting('0')" v-if="button_list.in_out == 1">批量下架</el-button>
-				<el-button size="mini" type="primary" @click="allSetting('3')" v-if="button_list.del == 1">批量删除</el-button>
-				<el-button size="mini" type="primary" @click="allSetting('2')" v-if="button_list.abu == 1">批量对接推单</el-button>
-				<el-button size="mini" type="primary" @click="$router.push('/edit_goods?page_type=goods&goods_type=1')" v-if="button_list.add == 1">添加</el-button>
-				<el-button size="mini" type="primary" @click="importFn('2')" v-if="button_list.add == 1">导入</el-button>
-				<el-button size="mini" type="primary" @click="exportFn">导出</el-button>
-			</TableTitle>
-			<el-table size="mini" :data="data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" @selection-change="handleSelectionChange" v-loading="loading">
-				<el-table-column type="selection" width="55" fixed>
-				</el-table-column>
-				<el-table-column label="标题" prop="title"></el-table-column>
-				<el-table-column label="供应商款号" prop="style_name"></el-table-column>
-				<el-table-column label="款式编码" width="140">
-					<template slot-scope="scope">
-						<div class="item_row">
-							<div class="item_label">供应商款式编码：</div>
-							<div class="item_value">
-								<div v-for="item in scope.row.new_supplier_ksbm">{{item}}</div>
-							</div>
-						</div>
-						<div class="item_row">
-							<div class="item_label">内部款式编码：</div>
-							<div class="item_value">
-								<div v-for="item in scope.row.new_i_id">{{item}}</div>
-							</div>
-						</div>
-						<div class="item_row">
-							<div class="item_label">BD款式编码：</div>
-							<div class="item_value">
-								<div v-for="item in scope.row.new_bd_i_id">{{item}}</div>
-							</div>
-						</div>
-					</template>
-				</el-table-column>
-				<el-table-column label="图片" width="150" >
-					<template slot-scope="scope">
-						<div v-if="scope.row.images.length == 0">暂无</div>
-						<el-carousel trigger="hover" indicator-position="none" :autoplay="false" height="100px" v-if="scope.row.images.length > 0 && loading == false">
-							<el-carousel-item v-for="item in scope.row.images" :key="item">
-								<el-image :z-index="2006" class="image" :src="item" fit="scale-down" :preview-src-list="scope.row.images"></el-image>
-							</el-carousel-item>
-						</el-carousel>
-					</template>
-				</el-table-column>
-				<el-table-column label="网盘地址">
-					<template slot-scope="scope">
-						<el-button class="pre_wrap" size="small" type="text" @click="windowOpen(scope.row.net_disk_address,scope.row.or_net_disk_address)" v-if="scope.row.or_net_disk_address !== ''">访问链接</el-button>
-						<div v-else></div>
-					</template>
-				</el-table-column>
-				<el-table-column label="成本价" prop="cost_price" width="150">
-					<template slot-scope="scope">
-						<div>{{scope.row.price_status == '1'?'原成本价：':''}}{{scope.row.cost_price}}</div>
-						<div v-if="scope.row.price_status == '1'">调后成本价：{{scope.row.edit_price}}</div>
-					</template>
-				</el-table-column>
-				<el-table-column label="控价" prop="price_control"></el-table-column>
-				<el-table-column label="颜色" prop="color"></el-table-column>
-				<el-table-column label="尺码" prop="size"></el-table-column>
-				<el-table-column label="面料" width="120" show-overflow-tooltip prop="fabric"></el-table-column>
-				<el-table-column label="市场" prop="market"></el-table-column>
-				<el-table-column label="是否对接推单" width="100">
-					<template slot-scope="scope">
-						<div>{{scope.row.abutment_type == 1?'是':'否'}}</div>
-					</template>
-				</el-table-column>
-				<el-table-column label="供应商" prop="supplier"></el-table-column>
-				<el-table-column label="提供拍照" prop="common_text">
-					<template slot-scope="scope">
-						<div>{{scope.row.photograph == 1?'是':'否'}}</div>
-					</template>
-				</el-table-column>
-				<el-table-column label="拍摄风格" prop="shooting_style"></el-table-column>
-				<el-table-column label="类目" prop="category"></el-table-column>
-				<el-table-column label="分类" prop="classification"></el-table-column>
-				<el-table-column label="合作模式" prop="mode"></el-table-column>
-				<el-table-column label="备注" prop="remark"></el-table-column>
-				<el-table-column label="上新时间" width="160" prop="new_time_name"></el-table-column>
-				<el-table-column label="审核状态" prop="common_text">
-					<template slot-scope="scope">
-						<div v-if="scope.row.check_status == 1">上架待审核</div>
-						<div v-if="scope.row.check_status == 2">已上架</div>
-						<div v-if="scope.row.check_status == 3">拒绝上架</div>
-						<div v-if="scope.row.check_status == 4">下架待审核</div>
-						<div v-if="scope.row.check_status == 5">已下架</div>
-						<div v-if="scope.row.check_status == 6">拒绝下架</div>
-					</template>
-				</el-table-column>
-				<el-table-column label="操作" width="180" fixed="right">
-					<template slot-scope="scope">
-						<el-button type="text" size="small" v-if="(scope.row.check_status == 1 || scope.row.check_status == 4) && button_list.agree_refuse == 1" @click="$router.push('/edit_goods?page_type=goods&goods_type=4&style_id=' + scope.row.style_id)">审核</el-button>
-						<el-button type="text" size="small" v-if="(scope.row.check_status == 2 || scope.row.check_status == 5 || scope.row.check_status == 6) && button_list.in_out == 1" @click="checkStatus(scope.row.style_id,scope.row.check_status)">{{scope.row.check_status == 2 || scope.row.check_status == 6?'下架':'上架'}}</el-button>
-						<el-button size="small" type="text" @click="adjustAudit(scope.row.style_id,scope.row.cost_price,scope.row.edit_price)" v-if="scope.row.price_status == '1' && button_list.price_btn == 1">调价审批</el-button>
-						<el-button style="margin-right: 10px" type="text" size="small" v-if="scope.row.check_status != 3 && scope.row.check_status != 5 && button_list.edit == 1" @click="$router.push('/edit_goods?page_type=goods&goods_type=2&style_id=' + scope.row.style_id);">编辑</el-button>
-						<el-button type="text" size="small" v-if="(scope.row.check_status == 3 || scope.row.check_status == 5) && button_list.reset == 1" @click="$router.push('/edit_goods?page_type=goods&goods_type=5&style_id=' + scope.row.style_id)">重新提交</el-button>
-						<el-dropdown style="margin-left: 10px;" size="small" @command="handleCommand($event,scope.row.style_id,scope.row.style_id,scope.row.style_name)" v-if="scope.row.check_status != 1 && scope.row.check_status != 4 && (button_list.info == 1 || button_list.del == 1)">
-							<el-button type="text" size="small">
-								更多<i class="el-icon-arrow-down el-icon--right"></i>
-							</el-button>
-							<el-dropdown-menu slot="dropdown">
-								<el-dropdown-item command="1" v-if="button_list.info == 1">查看</el-dropdown-item>
-								<el-dropdown-item command="2" v-if="scope.row.check_status == 2 || scope.row.check_status == 6">图片管理</el-dropdown-item>
-								<el-dropdown-item command="3" v-if="(scope.row.check_status == 3 || scope.row.check_status == 5) && button_list.del == 1">删除</el-dropdown-item>
-							</el-dropdown-menu>
-						</el-dropdown>
-					</template>
-				</el-table-column>
-			</el-table>
-			<PaginationWidget id="bottom_row" :total="total" :page="page" :pagesize="100" @checkPage="checkPage"/>
+			<PaginationWidget :total="total" :page="page" :multiple_selection_num="multiple_selection.length" :pagesize="100" @checkPage="checkPage"/>
 		</el-card>
 		<el-dialog :visible.sync="import_dialog" width="30%">
 			<div slot="title" class="dialog_title">
@@ -233,63 +222,37 @@
 		</el-dialog>
 	</div>
 </template>
-<style lang="less" scoped>
-.chain_page_content{
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	padding: 24rem;
-	display: flex;
-	flex-direction: column;
-	.form_card{
-		margin-bottom: 16rem;
-		.up_down_row{
-			display: flex;
-			justify-content: flex-end;
-			align-items: center;
-			.search_title{
-				font-size: 14px;
-				font-weight: bold;
-			}
-			.selected_right{
-				display: flex;
-				align-items: center;
-				cursor: pointer;
-				.down_arrow{
-					margin-left: 5rem;
-					transform: rotate(-90deg);
-					width: 14rem;
-					height: 8rem;
-				}
-				.rotate{
-					transform: rotate(0deg);
-				}
-			}
-			
-		}
-		.between{
-			justify-content:space-between;
-		}
-		.form_item{
-			margin-bottom:0 !important;
-		}
+<style type="text/css">
+	.card_box .el-card__body{
+		height: 100%!important;
+		display: flex!important;
+		flex-direction: column!important;
+		padding-top: 0!important;
+		padding-bottom: 0!important;
 	}
-	.card_box{
-		flex:1;
-		.image{
-			// width: 100px;
-			height: 100px;
-		}
-		.item_row{
-			display: flex;
-			.item_label{
-				width: 56px;
-				text-align:end;
+</style>
+<style lang="less" scoped>
+	.chain_page_content{
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		padding: 24rem;
+		.card_box{
+			.scroll_box{
+				.image{
+					width: 100px;
+					height: 100px;
+				}
+				
 			}
-			.item_value{
-				flex: 1;
+			.item_row{
+				display: flex;
+				.item_label{
+					width: 96px;
+					text-align:end;
+				}
 			}
 		}
 	}
@@ -311,7 +274,6 @@
 			}
 		}
 	}
-}
 </style>
 <script>
 	import commonResource from '../../../api/common_resource.js'
@@ -419,29 +381,28 @@
 			}
 		},
 		activated(){
-			console.log(this.downLoadUrl)
 			if(!this.$route.meta.use_cache){
 				//获取供应商列表
 				this.ajaxSupplierList();
     			//获取类目列表
-    			this.ajaxCateList();
+				this.ajaxCateList();
     			//市场列表
-    			this.ajaxMarketList();
+				this.ajaxMarketList();
     			//拍摄风格列表
-    			this.ajaxStyleList();
+				this.ajaxStyleList();
     			//分类列表
-    			this.ajaxClassList();
-    			this.supplier_ids = [];
-    			this.category_ids = [];
-    			this.market_ids = [];
-    			this.classification_ids = [];
-    			this.shooting_style_ids = [];
-    			this.date = [];
-    			this.check_status_id = "";
-    			this.price_status = "";
-    			this.search = "";
-    			this.page = 1;
-    		}
+				this.ajaxClassList();
+				this.supplier_ids = [];
+				this.category_ids = [];
+				this.market_ids = [];
+				this.classification_ids = [];
+				this.shooting_style_ids = [];
+				this.date = [];
+				this.check_status_id = "";
+				this.price_status = "";
+				this.search = "";
+				this.page = 1;
+			}
 			//获取列表
 			this.getGoodsList();
 		},
@@ -450,10 +411,10 @@
 		},
 		mounted() {
     		//获取表格最大高度
-    		this.onResize();
-    		window.addEventListener("resize", this.onResize());
-    	},
-    	computed:{
+			this.onResize();
+			window.addEventListener("resize", this.onResize());
+		},
+		computed:{
 			//图片前缀
 			domain(){
 				return this.$store.state.domain;
@@ -466,34 +427,28 @@
 			},
 			is_up:function(n,o){
     			//获取表格最大高度
-    			this.onResize();
-    		}
-    	},
-    	methods: {
+				this.onResize();
+			}
+		},
+		methods: {
     		//监听屏幕大小变化
-    		onResize() {
-    			this.$nextTick(() => {
-    				let card_box_height = document.getElementById("card_box").offsetHeight;
-    				let table_title_height = document.getElementById("table_title").offsetHeight;
-    				let bottom_row_height = document.getElementById("bottom_row").offsetHeight;
-    				this.max_height =
-    				card_box_height -
-    				table_title_height -
-    				bottom_row_height -
-    				60 +
-    				"px";
-    			});
-    		},
+			onResize() {
+				this.$nextTick(() => {
+					let card_box_height = document.getElementById("scroll_box").offsetHeight;
+					let form_height = document.getElementById("form_height").offsetHeight;
+					this.max_height = card_box_height - form_height + 70 + "px";
+				});
+			},
     		//获取供应商列表
-    		ajaxSupplierList(){
-    			commonResource.ajaxSupplierList().then(res => {
-    				if(res.data.code == 1){
-    					this.supplier_list = res.data.data;
-    				}else{
-    					this.$message.warning(res.data.msg);
-    				}
-    			})
-    		},
+			ajaxSupplierList(){
+				commonResource.ajaxSupplierList().then(res => {
+					if(res.data.code == 1){
+						this.supplier_list = res.data.data;
+					}else{
+						this.$message.warning(res.data.msg);
+					}
+				})
+			},
 			//获取类目列表
 			ajaxCateList(){
 				commonResource.ajaxCateList().then(res => {
@@ -930,11 +885,11 @@
 						if(res.data.code == 1){
 							this.$message.success(res.data.msg);
 								//获取列表
-								this.getGoodsList();
-							}else{
-								this.$message.warning(res.data.msg);
-							}
-						})
+							this.getGoodsList();
+						}else{
+							this.$message.warning(res.data.msg);
+						}
+					})
 				}).catch(() => {
 					this.$message({
 						type: 'info',
