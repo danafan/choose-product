@@ -1,6 +1,6 @@
 <template>
 	<div class="chain_page">
-		<el-menu class="el-menu-vertical-demo" :collapse="is_collapse">
+		<el-menu class="el-menu-vertical-demo" :collapse-transition="false" :collapse="is_collapse">
 			<div class="collapse_row">
 				<i class="el-icon-s-unfold fold_icon" v-if="is_collapse" @click="is_collapse = !is_collapse"></i>
 				<i class="el-icon-s-fold fold_icon" v-else @click="is_collapse = !is_collapse"></i>
@@ -17,7 +17,6 @@
 						<img class="chain_icon" :src="item.icon_active" v-if="active_index == index">
 						<img class="chain_icon" :src="item.icon" v-else>
 					</div>
-
 					<div class="chain_text" v-if="!is_collapse">{{item.name}}</div>
 					<div class="active_line" v-if="active_index == index && !is_collapse"></div>
 				</div>

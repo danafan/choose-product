@@ -35,14 +35,14 @@
 			<el-tooltip class="item" effect="dark" placement="top-start">
 				<div slot="content">
 					<div>供应商款号：{{info.sstyle_name}}</div>
-					<div>{{`内部款式编码：${info.i_id}`}}</div>
-					<div>{{`BD款式编码：${info.bd_i_id}`}}</div>
+					<div v-if="info.i_id != ''">{{`内部款式编码：${info.i_id}`}}</div>
+					<div v-if="info.bd_i_id != ''">{{`BD款式编码：${info.bd_i_id}`}}</div>
 				</div>
 				<div class="code">
-					<div>{{info.sstyle_name}}</div>
+					<span>{{info.sstyle_name}}</span>
 					<span v-if="info.i_id != '' || info.bd_i_id != ''">（</span>
-					<span>{{info.i_id != ''?`${info.i_id}`:""}}</span>
-					<span>{{info.bd_i_id != ''?`${info.bd_i_id}`:""}}</span>
+					<span>{{info.i_id != ''?`内部款式编码：${info.i_id}`:""}}</span>
+					<span>{{info.bd_i_id != ''?`BD款式编码：${info.bd_i_id}`:""}}</span>
 					<span v-if="info.i_id != '' || info.bd_i_id != ''">）</span>
 				</div>
 			</el-tooltip>

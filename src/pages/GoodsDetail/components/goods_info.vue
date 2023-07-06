@@ -48,7 +48,8 @@
 			</div>
 			<div class="content_row">
 				<div class="row_lable">网盘地址</div>
-				<div class="link" @click="windowOpen(goods_info.net_disk_address)">{{goods_info.or_net_disk_address}}</div>
+				<el-button type="text" size="small" class="link" @click="windowOpen(goods_info.net_disk_address)">{{goods_info.or_net_disk_address}}</el-button>
+				<!-- <div class="link" @click="windowOpen(goods_info.net_disk_address)">{{goods_info.or_net_disk_address}}</div> -->
 			</div>
 			<div class="content_row">
 				<div class="row_lable">备注</div>
@@ -195,7 +196,7 @@
 			//商品信息
 			goods_info:{
 				type:Object,
-				default:{}
+			default:{}
 			},
 		},
 		computed:{
@@ -450,141 +451,142 @@
 	}
 </script>
 <style lang="less" scoped>
-.goods_info{
-	width: 512rem;
-	height: 546rem;
-	display: flex;
-	flex-direction: column;
-	.goods_name{
-		padding-bottom: 20rem;
-		font-size: 16rem;
-		color: #333333;
-		font-weight: bold;
-	}
-	.info_content{
-		flex:1;
-		padding: 10rem 20rem;
-		background: #FFF8F2;
-		.content_row{
-			margin-bottom: 16rem;
-			display: flex;
-			.row_lable{
-				width: 135rem;
-				font-size:12rem;
-				color: #666666;
-			}
-			.row_price{
-				color: var(--color);
-				font-size:24rem;
-				font-weight: 500;
-			}
-			.row_value{
-				flex:1;
-				font-size:12rem;
-				color: #333333;
-			}
-			.link{
-				cursor: pointer;
-				flex:1;
-				font-weight: bold;
-				color: var(--color);
+	.goods_info{
+		width: 512rem;
+		height: 546rem;
+		display: flex;
+		flex-direction: column;
+		.goods_name{
+			padding-bottom: 20rem;
+			font-size: 16rem;
+			color: #333333;
+			font-weight: bold;
+		}
+		.info_content{
+			flex:1;
+			padding: 10rem 20rem;
+			background: #FFF8F2;
+			.content_row{
+				margin-bottom: 13rem;
+				display: flex;
+				.row_lable{
+					width: 135rem;
+					font-size:12rem;
+					color: #666666;
+				}
+				.row_price{
+					color: var(--color);
+					font-size:24rem;
+					font-weight: 500;
+				}
+				.row_value{
+					flex:1;
+					font-size:12rem;
+					color: #333333;
+				}
+				.link{
+					padding-top: 0;
+					white-space:pre-wrap;
+					word-wrap: break-word;
+					word-break: normal;
+					line-height: 16px;
+				}
 			}
 		}
-	}
-	.button_row{
-		height: 88rem;
-		display: flex;
-		align-items: center;
-		.button_item{
-			border:1px solid var(--color);
-			border-radius: 4rem;
-			width: 184rem;
-			height: 42rem;
+		.button_row{
+			height: 88rem;
 			display: flex;
 			align-items: center;
-			justify-content: center;
-			font-size:12rem;
-			cursor:pointer;
-			.add_car{
-				margin-right: 8rem;
-				width: 14rem;
-				height: 14rem;
+			.button_item{
+				border:1px solid var(--color);
+				border-radius: 4rem;
+				width: 184rem;
+				height: 42rem;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				font-size:12rem;
+				cursor:pointer;
+				.add_car{
+					margin-right: 8rem;
+					width: 14rem;
+					height: 14rem;
+				}
+			}
+			.add{
+				margin-right: 22rem;
+				background: #FEEDDD;
+				color: var(--color);
+			}
+			.select{
+				background: var(--color);
+				color: #ffffff;
+			}
+			.drak_back{
+				border:1px solid #999999;
+				background-color: #999999;
 			}
 		}
-		.add{
-			margin-right: 22rem;
-			background: #FEEDDD;
-			color: var(--color);
-		}
-		.select{
-			background: var(--color);
-			color: #ffffff;
-		}
-		.drak_back{
-			border:1px solid #999999;
-			background-color: #999999;
-		}
-	}
-	.select_content{
-		padding: 18rem;
-		.content_top{
-			display: flex;
-			.top_form{
-				flex:1;
-				.form_item{
-					display: flex;
-					align-items: center;
-					margin-bottom:12rem;
-					font-size:14rem;
-					.lable{
-						color: #666666;
-						span{
-							color: red;
+		.select_content{
+			padding: 18rem;
+			.content_top{
+				display: flex;
+				.top_form{
+					flex:1;
+					.form_item{
+						display: flex;
+						align-items: center;
+						margin-bottom:12rem;
+						font-size:14rem;
+						.lable{
+							color: #666666;
+							span{
+								color: red;
+							}
+						}
+						.value{
+							color: #333333;
+							font-weight: 500;
 						}
 					}
-					.value{
-						color: #333333;
-						font-weight: 500;
-					}
 				}
-			}
-			.banner{
-				border:1px solid #D9D9D9;
-				padding: 10rem;
-				width: 260rem;
-				height: 290rem;
-				display: flex;
-				flex-direction: column;
-				.image{
-					width: 240rem;
-					height: 240rem;
-				}
-				.indicator_box{
-					flex:1;
+				.banner{
+					border:1px solid #D9D9D9;
+					padding: 10rem;
+					width: 260rem;
+					height: 290rem;
 					display: flex;
-					align-items: center;
-					justify-content: space-evenly;
-					.indicator{
-						border: 1px solid #979797;
-						background: #D8D8D8;
-						border-radius: 50%;
-						width: 16rem;
-						height: 16rem;
+					flex-direction: column;
+					.image{
+						width: 240rem;
+						height: 240rem;
 					}
-					.is_active{
-						border: 1px solid var(--color);
-						background: var(--color);
+					.indicator_box{
+						flex:1;
+						display: flex;
+						align-items: center;
+						justify-content: space-evenly;
+						.indicator{
+							border: 1px solid #979797;
+							background: #D8D8D8;
+							border-radius: 50%;
+							width: 16rem;
+							height: 16rem;
+						}
+						.is_active{
+							border: 1px solid var(--color);
+							background: var(--color);
+						}
 					}
 				}
 			}
 		}
+
 	}
-	
-}
-.toast_content{
-	padding: 10rem 20rem;
-	.toast_text{
-		margin-bottom: 15rem;
+	.toast_content{
+		padding: 10rem 20rem;
+		.toast_text{
+			margin-bottom: 15rem;
+		}
 	}
-}
 </style>
