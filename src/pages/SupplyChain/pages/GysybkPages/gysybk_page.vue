@@ -13,7 +13,7 @@
 				</el-form-item>
 				<el-form-item label="分类：">
 					<el-select v-model="classification" clearable placeholder="全部">
-						<el-option :label="item" :value="item" v-for="item in classification_list"></el-option>
+						<el-option :label="item.name" :value="item.id" v-for="item in classification_list"></el-option>
 					</el-select>
 				</el-form-item>
 				<el-form-item label="区域：">
@@ -45,7 +45,7 @@
 				</el-form-item>
 				<el-form-item label="结算方式：">
 					<el-select v-model="settlement_method" clearable placeholder="全部">
-						<el-option :label="item" :value="item" v-for="item in settlement_method_list"></el-option>
+						<el-option :label="item.name" :value="item.id" v-for="item in settlement_method_list"></el-option>
 					</el-select>
 				</el-form-item>
 				<el-form-item label="产品价位段：">
