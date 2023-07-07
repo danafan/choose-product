@@ -94,7 +94,7 @@
 				<el-button size="mini" type="primary" v-if="button_list.aff == 1" @click="allCommitFn">批量审核</el-button>
 				<el-button size="mini" type="primary" v-if="button_list.der == 1" @click="exportFn">导出</el-button>
 			</TableTitle>
-			<el-table size="mini" :data="data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" @selection-change="handleSelectionChange" v-loading="loading">
+			<el-table ref="table" size="mini" :data="data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" @selection-change="handleSelectionChange" v-loading="loading">
 				<el-table-column type="selection" width="55" fixed :selectable="checkboxInit">
 				</el-table-column>
 				<el-table-column label="供应商款号" prop="style_name"></el-table-column>
@@ -806,6 +806,7 @@
 							}
 						})
 						this.data = data;
+						this.$refs.table.bodyWrapper.scrollTop = 0;
 					}else{
 						this.$message.warning(res.data.msg);
 					}

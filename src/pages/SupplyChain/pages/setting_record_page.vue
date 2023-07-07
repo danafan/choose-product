@@ -22,7 +22,7 @@
 			</el-form>
 			<el-divider></el-divider>
 			<TableTitle title="数据列表" id="table_title"></TableTitle>
-			<el-table size="mini" :data="data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" v-loading="loading">
+			<el-table ref="table" size="mini" :data="data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" v-loading="loading">
 				<el-table-column label="序号" width="55">
 					<template slot-scope="scope">
 						<div>{{(page - 1) * 30 + scope.$index + 1}}</div>
@@ -158,6 +158,7 @@
     					let data = res.data.data;
     					this.total = data.total;
     					this.data = data.data;
+    					this.$refs.table.bodyWrapper.scrollTop = 0;
     				}else{
     					this.$message.warning(res.data.msg);
     				}

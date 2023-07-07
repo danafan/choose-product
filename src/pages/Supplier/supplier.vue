@@ -3,7 +3,7 @@
 		<div class="padding_page_content">
 			<SearchWidget @callback="searchFn" placeholder="输入供应商名称搜索"/>
 			<el-card class="card_box" id="card_box" v-loading="loading">
-				<div class="list_content" :style="{height: scroll_height}" v-if="supplier_list.length > 0">
+				<div ref="table" class="list_content" :style="{height: scroll_height}" v-if="supplier_list.length > 0">
 					<div class="supplier_item" v-for="item in supplier_list">
 						<div class="text_info">
 							<div class="info_item">供应商：{{item.supplier_name}}</div>
@@ -109,6 +109,7 @@
 						let data = res.data.data;
 						this.supplier_list = data.data;
 						this.total = data.total;
+						this.$refs.table.scrollTop = 0;
 					}else{
 						this.$message.warning(res.data.msg);
 					}

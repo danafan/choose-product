@@ -71,7 +71,7 @@
 					<el-button size="mini" type="primary" @click="importFn('2')" v-if="button_list.add == 1">导入</el-button>
 					<el-button size="mini" type="primary" @click="exportFn">导出</el-button>
 				</TableTitle>
-				<el-table size="mini" :data="data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" @selection-change="handleSelectionChange" v-loading="loading">
+				<el-table ref="table" size="mini" :data="data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" @selection-change="handleSelectionChange" v-loading="loading">
 					<el-table-column type="selection" width="55" fixed>
 					</el-table-column>
 					<el-table-column label="标题" prop="title"></el-table-column>
@@ -644,6 +644,7 @@
 							}
 						})
 						this.data = data;
+						this.$refs.table.bodyWrapper.scrollTop = 0;
 					}else{
 						this.$message.warning(res.data.msg);
 					}

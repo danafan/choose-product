@@ -94,7 +94,7 @@
 					<el-button size="mini" type="primary" @click="import_dialog = true" v-if="button_list.import == 1">导入</el-button>
 					<el-button size="mini" type="primary" @click="addFn('1')" v-if="button_list.add == 1">添加</el-button>
 				</TableTitle>
-				<el-table size="mini" :data="data.data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" v-loading="loading">
+				<el-table ref="table" size="mini" :data="data.data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" v-loading="loading">
 					<el-table-column label="供应商名称" prop="supplier_name"></el-table-column>
 					<el-table-column label="供应商简称" prop="supplier_code"></el-table-column>
 					<el-table-column label="开发员" prop="developer"></el-table-column>
@@ -133,7 +133,7 @@
 						<el-table-column label="合格状态" width="120">
 							<template slot-scope="scope">
 								<el-button type="text" size="small" v-if="scope.row.status == 1 && button_list.apply_qualified == 1" @click="zhuanFn('1',scope.row.reserve_id)">待转合格</el-button>
-								<el-button type="text" size="small" v-if="scope.row.status == 3 && button_list.qualified_check == 1" @click="hgAuditFn(scope.row.reserve_id)">合格待审核</el-button>
+								<el-button type="text" size="small" v-if="scope.row.status == 3 && button_list.qualified_ccheck == 1" @click="hgAuditFn(scope.row.reserve_id)">合格待审核</el-button>
 								<div v-if="scope.row.status > 3">{{scope.row.status | qualified_refund_status}}</div>
 							</template>
 						</el-table-column>
@@ -187,7 +187,7 @@
 								<el-input clearable v-model="info_arg.supplier_name" style="width: 120px;" placeholder="供应商名称" v-if="add_type == '1' || add_type == '2'"></el-input>
 								<div v-else>{{info_arg.supplier_name}}</div>
 							</el-form-item>
-							<el-form-item label="供应商简称：">
+							<el-form-item label="供应商简称：" required>
 								<el-input clearable v-model="info_arg.supplier_code" style="width: 120px;" placeholder="供应商简称" v-if="add_type == '1' || add_type == '2'"></el-input>
 								<div v-else>{{info_arg.supplier_code}}</div>
 							</el-form-item>
@@ -213,6 +213,13 @@
 								</el-select>
 								<div v-else>{{info_arg.classification}}</div>
 							</el-form-item>
+							<el-form-item label="是否石狮：" required>
+								<el-select v-model="info_arg.is_ss" style="width: 120px;" placeholder="全部" v-if="add_type == '1' || add_type == '2'">
+									<el-option label="是" :value="1"></el-option>
+									<el-option label="否" :value="0"></el-option>
+								</el-select>
+								<div v-else>{{info_arg.is_ss}}</div>
+							</el-form-item>
 							<el-form-item label="区域：" required>
 								<el-select v-model="info_arg.area" clearable placeholder="全部" v-if="add_type == '1' || add_type == '2'">
 									<el-option :label="item" :value="item" v-for="item in area_list"></el-option>
@@ -225,7 +232,7 @@
 								</el-select>
 								<div v-else>{{info_arg.main_business}}</div>
 							</el-form-item>
-							<el-form-item label="擅长品类：">
+							<el-form-item label="擅长品类：" required>
 								<el-select v-model="info_arg.scpl" filterable clearable placeholder="全部" v-if="add_type == '1' || add_type == '2'">
 									<el-option :label="item.name" :value="item.id" v-for="item in scpl_list"></el-option>
 								</el-select>
@@ -274,11 +281,11 @@
 								</el-select>
 								<div v-else>{{info_arg.settlement_method}}</div>
 							</el-form-item>
-							<el-form-item label="联系人：">
+							<el-form-item label="联系人：" required>
 								<el-input clearable v-model="info_arg.contactor" style="width: 120px;" placeholder="联系人" v-if="add_type == '1' || add_type == '2'"></el-input>
 								<div v-else>{{info_arg.contactor}}</div>
 							</el-form-item>
-							<el-form-item label="联系电话：">
+							<el-form-item label="联系电话：" required>
 								<el-input clearable v-model="info_arg.contact_information" style="width: 120px;" placeholder="联系电话" v-if="add_type == '1' || add_type == '2'"></el-input>
 								<div v-else>{{info_arg.contact_information}}</div>
 							</el-form-item>
@@ -286,11 +293,29 @@
 								<el-input clearable v-model="info_arg.contactor_position" style="width: 120px;" placeholder="联系人职位" v-if="add_type == '1' || add_type == '2'"></el-input>
 								<div v-else>{{info_arg.contactor_position}}</div>
 							</el-form-item>
-						</el-form>
-						<el-form size="mini" style="width: 360px;">
 							<el-form-item label="联系人微信：">
 								<el-input clearable v-model="info_arg.weixin" style="width: 120px;" placeholder="联系人微信" v-if="add_type == '1' || add_type == '2'"></el-input>
 								<div v-else>{{info_arg.weixin}}</div>
+							</el-form-item>
+						</el-form>
+						<el-form size="mini" style="width: 360px;">
+							<el-form-item label="收款人姓名：" required>
+								<el-input clearable v-model="info_arg.payee" style="width: 120px;" placeholder="收款人姓名" v-if="add_type == '1' || add_type == '2'"></el-input>
+								<div v-else>{{info_arg.payee}}</div>
+							</el-form-item>
+							<el-form-item label="收款人账号：" required>
+								<el-input clearable v-model="info_arg.payee_account" style="width: 120px;" placeholder="收款人账号" v-if="add_type == '1' || add_type == '2'"></el-input>
+								<div v-else>{{info_arg.payee_account}}</div>
+							</el-form-item>
+							<el-form-item label="收款人开户行：" required>
+								<el-input clearable v-model="info_arg.payee_bank_name" style="width: 120px;" placeholder="收款人开户行" v-if="add_type == '1' || add_type == '2'"></el-input>
+								<div v-else>{{info_arg.payee_bank_name}}</div>
+							</el-form-item>
+							<el-form-item label="创建SCM系统：" required>
+								<el-select v-model="info_arg.is_scm" clearable placeholder="全部" v-if="add_type == '1' || add_type == '2'">
+									<el-option :label="item.name" :value="item.id" v-for="item in scm_list"></el-option>
+								</el-select>
+								<div v-else>{{info_arg.is_scm}}</div>
 							</el-form-item>
 							<el-form-item label="产品价位段：" required>
 								<div v-if="add_type == '1' || add_type == '2'">
@@ -315,13 +340,16 @@
 								<el-input clearable v-model="info_arg.address" style="width: 120px;" placeholder="地址" v-if="add_type == '1' || add_type == '2'"></el-input>
 								<div v-else>{{info_arg.address}}</div>
 							</el-form-item>
-							<el-form-item label="供应商合作客户：" required>
+							<el-form-item label="供应商合作客户：">
 								<el-input clearable v-model="info_arg.supplier_cooperate_custom" style="width: 120px;" placeholder="供应商合作客户" v-if="add_type == '1' || add_type == '2'"></el-input>
 								<div v-else>{{info_arg.supplier_cooperate_custom}}</div>
 							</el-form-item>
 							<el-form-item label="备注：">
 								<el-input clearable v-model="info_arg.description" style="width: 120px;" placeholder="备注" v-if="add_type == '1' || add_type == '2'"></el-input>
 								<div v-else>{{info_arg.description}}</div>
+							</el-form-item>
+							<el-form-item label="上传附件：" v-if="add_type == '1' || add_type == '2'">
+								<UploadXlsx :attachment="attachment" @callBackXlsx="callBackXlsx"/>
 							</el-form-item>
 							<el-form-item label="填报状态：" v-if="add_type != '1' && add_type != '2'">
 								<div v-if="info_arg.status <= 2">{{info_arg.status | info_refund_status}}</div>
@@ -472,6 +500,7 @@
 			import TableTitle from '../../components/table_title.vue'
 			import PaginationWidget from '../../../../components/pagination_widget.vue'
 			import UploadFile from '../../../../components/upload_file.vue'
+			import UploadXlsx from '../../../../components/upload_xlsx.vue'
 			export default{
 				data(){
 					return{
@@ -494,6 +523,7 @@
 				cooperativeness:"",					//选中的合作程度
 				main_business_list:[],				//主营列表
 				scpl_list:[],						//擅长品类
+				scm_list:[],						//scm列表
 				supply_free_factory:"",			//是否自有工厂
 				supply_design:"",				//是否自有设计能力
 				start_price:"",					//价格段开始
@@ -516,6 +546,7 @@
 					developer:"",
 					developer_id:"",
 					classification:"",
+					is_ss:1,
 					area:"",
 					main_business:"",
 					scpl:"",
@@ -533,6 +564,10 @@
 					contact_information:"",
 					contactor_position:"",
 					weixin:"",
+					payee:"",
+					payee_account:"",
+					payee_bank_name:"",
+					is_scm:"",
 					description:"",
 					supplier_cooperate_custom:"",
 					introducer:"",
@@ -542,6 +577,7 @@
 					info_refund_remark:"",
 					qualified_refund_remark:""
 				},				  //填报阶段的详情
+				attachment:{},					//附件文件
 				check_status:1,					//审核状态
 				remark:"",						//拒绝原因
 				zhuan_dialog:false,				//申请转合格
@@ -623,6 +659,7 @@
 						this.cooperativeness_list = data.cooperativeness;//合作程度
 						this.main_business_list = data.main_business;//主营
 						this.scpl_list = data.scpl;//擅长品类
+						this.scm_list = data.scm;//scm列表
 					}else{
 						this.$message.warning(res.data.msg);
 					}
@@ -671,6 +708,7 @@
 						this.loading = false;
 						this.data = res.data.data;
 						this.button_list =  res.data.data.button_list;
+						this.$refs.table.bodyWrapper.scrollTop = 0;
 					}else{
 						this.$message.warning(res.data.msg);
 					}
@@ -726,12 +764,17 @@
 							for(let k in this.info_arg){
 								this.info_arg[k] = data[k];
 							}
+							this.attachment = data.attachment.indexOf('fileId') > -1?JSON.parse(data.attachment)[0]:{};
 						}else{
 							this.$message.warning(res.data.msg);
 						}
 					})
 					this.edit_dialog = true;
 				}
+			},
+			//上传附件回调
+			callBackXlsx(file){
+				this.attachment = file;
 			},
 			//填报弹窗关闭
 			closeEdit(){
@@ -750,11 +793,15 @@
 				this.company_img = [];					//公司照片
 				this.audit_status = 1;					//转合格审核状态
 				this.audit_remark = '';					//转合格审核原因
+				this.attachment = {};
 			},
 			//点击填报编辑或添加的提交
 			submitAddEdit(){
 				if(this.info_arg.supplier_name == ''){
 					this.$message.warning('请输入供应商名称');
+					return;
+				}else if(!this.info_arg.supplier_code){
+					this.$message.warning('请输入供应商简称');
 					return;
 				}else if(!this.info_arg.develop_date){
 					this.$message.warning('请选择开发日期');
@@ -769,10 +816,31 @@
 					this.$message.warning('请选择区域');
 					return;
 				}else if(this.info_arg.main_business == ''){
-					this.$message.warning('请填写主营');
+					this.$message.warning('请选择主营');
+					return;
+				}else if(this.info_arg.scpl == ''){
+					this.$message.warning('请选择擅长品类');
 					return;
 				}else if(this.info_arg.settlement_method == ''){
 					this.$message.warning('请选择结算方式');
+					return;
+				}else if(this.info_arg.contactor == ''){
+					this.$message.warning('请填写联系人');
+					return;
+				}else if(this.info_arg.contact_information == ''){
+					this.$message.warning('请填写联系电话');
+					return;
+				}else if(this.info_arg.payee == ''){
+					this.$message.warning('请填写收款人姓名');
+					return;
+				}else if(this.info_arg.payee_account == ''){
+					this.$message.warning('请填写收款人账号');
+					return;
+				}else if(this.info_arg.payee_bank_name == ''){
+					this.$message.warning('请填写收款人开户行');
+					return;
+				}else if(this.info_arg.is_scm == ''){
+					this.$message.warning('请选择SCM系统');
 					return;
 				}else if(this.info_arg.start_price == '' && this.info_arg.end_price == ''){
 					this.$message.warning('请输入产品价位段');
@@ -795,16 +863,19 @@
 				}else if(this.info_arg.address == ''){
 					this.$message.warning('请选择填写地址');
 					return;
-				}else if(this.info_arg.supplier_cooperate_custom == ''){
-					this.$message.warning('请填写供应商合作商户');
-					return;
 				}
 
-				if(this.add_type == '1'){
+				if(this.add_type == '1'){		//创建
 					let arg = JSON.parse(JSON.stringify(this.info_arg));
 					arg['price_range'] = `${arg.start_price}_${arg.end_price}`;
 					delete arg.start_price;
 					delete arg.end_price;
+
+					if(this.attachment.fileId){
+						let arr = [];
+						arr.push(this.attachment)
+						arg['attachment'] = JSON.stringify(arr);
+					}
 					resource.reserveAdd(arg).then(res => {
 						if(res.data.code == 1){
 							this.$message.success(res.data.msg);
@@ -815,13 +886,17 @@
 							this.$message.warning(res.data.msg);
 						}
 					})
-				}else if(this.add_type == '2'){
+				}else if(this.add_type == '2'){		//编辑
 					let arg = JSON.parse(JSON.stringify(this.info_arg));
 					arg['price_range'] = `${arg.start_price}_${arg.end_price}`;
 					delete arg.start_price;
 					delete arg.end_price;
-					
 					arg['reserve_id'] = this.reserve_id;
+					if(this.attachment.fileId){
+						let arr = [];
+						arr.push(this.attachment)
+						arg['attachment'] = JSON.stringify(arr);
+					}
 					resource.reserveEditPost(arg).then(res => {
 						if(res.data.code == 1){
 							this.$message.success(res.data.msg);
@@ -1123,7 +1198,8 @@
 		components:{
 			TableTitle,
 			PaginationWidget,
-			UploadFile
+			UploadFile,
+			UploadXlsx
 		}
 	}
 </script>

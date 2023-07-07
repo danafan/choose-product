@@ -14,7 +14,7 @@
 				<TableTitle title="数据列表" id="table_title">
 					<el-button size="mini" type="primary" @click="addFn('1')" v-if="button_list.add == 1">添加公告</el-button>
 				</TableTitle>
-				<el-table size="mini" :data="data.data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" v-loading="loading">
+				<el-table ref="table" size="mini" :data="data.data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" v-loading="loading">
 					<el-table-column label="公告标题" prop="notice_title"></el-table-column>
 					<el-table-column label="公告内容" prop="notice_content"></el-table-column>
 					<el-table-column label="图片" width="150">
@@ -228,6 +228,7 @@
 
 						this.data = data;
 						this.button_list = data.button_list;
+						this.$refs.table.bodyWrapper.scrollTop = 0;
 					}else{
 						this.$message.warning(res.data.msg);
 					}

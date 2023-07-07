@@ -45,7 +45,7 @@
 			<TableTitle id="table_title">
 				<el-button size="mini" type="primary" @click="exportFn">导出</el-button>
 			</TableTitle>
-			<el-table size="mini" :data="data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" v-loading="loading">
+			<el-table ref="table" size="mini" :data="data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" v-loading="loading">
 				<el-table-column label="图片" width="150">
 					<template slot-scope="scope">
 						<div v-if="scope.row.images.length == 0">暂无</div>
@@ -443,6 +443,7 @@
 						})
 						this.data = data_list;
 						this.total = data.total;
+						this.$refs.table.bodyWrapper.scrollTop = 0;
 					}else{
 						this.$message.warning(res.data.msg);
 					}

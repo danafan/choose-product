@@ -26,7 +26,7 @@
 				<el-divider></el-divider>
 				<TableTitle title="数据列表" id="table_title">
 				</TableTitle>
-				<el-table size="mini" :data="table_data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" v-loading="loading">
+				<el-table ref="table" size="mini" :data="table_data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" v-loading="loading">
 					<el-table-column label="供应商款号" prop="style_name"></el-table-column>
 					<el-table-column label="款式编码" prop="i_id" width="240">
 						<template slot-scope="scope">
@@ -308,6 +308,7 @@
 						this.table_data = table_data;
 						this.total =  res.data.data.total;
 						this.button_list =  res.data.data.button_list;
+						this.$refs.table.bodyWrapper.scrollTop = 0;
 					}else{
 						this.$message.warning(res.data.msg);
 					}

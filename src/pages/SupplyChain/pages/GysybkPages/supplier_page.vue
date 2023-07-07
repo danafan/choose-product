@@ -58,7 +58,7 @@
 					<el-button size="mini" type="primary" @click="import_dialog = true" v-if="button_list.import == 1">导入</el-button>
 					<el-button size="mini" type="primary" @click="addFn('1')" v-if="button_list.add == 1">添加</el-button>
 				</TableTitle>
-				<el-table size="mini" :data="data.data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" v-loading="loading">
+				<el-table ref="table" size="mini" :data="data.data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" v-loading="loading">
 					<el-table-column label="供应商名称" prop="supplier_name"></el-table-column>
 					<el-table-column label="供应商地址" prop="address"></el-table-column>
 					<el-table-column label="联系人" width="120" prop="contactor"></el-table-column>
@@ -271,6 +271,7 @@
 						this.loading = false;
 						this.data = res.data.data;
 						this.button_list =  res.data.data.button_list;
+						this.$refs.table.bodyWrapper.scrollTop = 0;
 					}else{
 						this.$message.warning(res.data.msg);
 					}
