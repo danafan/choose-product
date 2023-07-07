@@ -1,6 +1,6 @@
 <template>
 	<div class="chain_page_content">
-		<el-card class="card_box">
+		<el-card class="card_box_edit_goods">
 			<div class="form_row">
 				<el-form size="small" style="width: 50%" label-width="130px">
 					<el-form-item label="提交人：" v-if="is_detail">
@@ -740,7 +740,7 @@
 	padding: 24rem;
 	display: flex;
 	flex-direction: column;
-	.card_box{
+	.card_box_edit_goods{
 		flex:1;
 		display: flex;
 		flex-direction: column;

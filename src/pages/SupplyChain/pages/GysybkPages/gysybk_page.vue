@@ -91,7 +91,7 @@
 				</el-form>
 				<el-divider></el-divider>
 				<TableTitle title="数据列表" id="table_title">
-					<el-button size="mini" type="primary" @click="import_dialog = true" v-if="button_list.import == 1">导入</el-button>
+					<!-- <el-button size="mini" type="primary" @click="import_dialog = true" v-if="button_list.import == 1">导入</el-button> -->
 					<el-button size="mini" type="primary" @click="addFn('1')" v-if="button_list.add == 1">添加</el-button>
 				</TableTitle>
 				<el-table ref="table" size="mini" :data="data.data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" v-loading="loading">
@@ -928,16 +928,21 @@
 
 						//工商营业执照
 						this.business_license_img = [];
-						let business_license_img = data.business_license.split(',');
-						business_license_img.map(item => {
-							this.business_license_img.push(this.domain + item);
-						})
+						if(data.business_license){
+							let business_license_img = data.business_license.split(',');
+							business_license_img.map(item => {
+								this.business_license_img.push(this.domain + item);
+							})
+						}
+						
 						//公司照片
 						this.company_img = [];
-						let company_img = data.company_img.split(',');
-						company_img.map(item => {
-							this.company_img.push(this.domain + item);
-						})
+						if(data.company_img){
+							let company_img = data.company_img.split(',');
+							company_img.map(item => {
+								this.company_img.push(this.domain + item);
+							})
+						}
 					}else{
 						this.$message.warning(res.data.msg);
 					}
