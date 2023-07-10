@@ -35,8 +35,8 @@
 			<el-tooltip class="item" effect="dark" placement="top-start">
 				<div slot="content">
 					<div>供应商款号：{{info.sstyle_name}}</div>
-					<div v-if="info.i_id != ''">{{`内部款式编码：${info.i_id}`}}</div>
-					<div v-if="info.bd_i_id != ''">{{`BD款式编码：${info.bd_i_id}`}}</div>
+					<div>{{`内部款式编码：${info.i_id}`}}</div>
+					<div>{{`BD款式编码：${info.bd_i_id}`}}</div>
 				</div>
 				<div class="code">
 					<span>{{info.sstyle_name}}</span>
@@ -155,7 +155,7 @@
 						<div class="value">{{info.supplier_ksbm}}</div>
 					</div>
 					<div class="form_item" v-if="info.i_id != ''">
-						<div class="lable">款式编码：</div>
+						<div class="lable">内部款式编码：</div>
 						<div class="value">{{info.i_id}}</div>
 					</div>
 					<div class="form_item" v-if="info.bd_i_id != ''">

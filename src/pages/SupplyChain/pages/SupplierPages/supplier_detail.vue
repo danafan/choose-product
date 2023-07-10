@@ -54,7 +54,7 @@
 						{{data_info.mode}}
 					</el-form-item>
 					<el-form-item label="供应商介绍：">
-						{{data_info.description}}
+						<div class="pre-line">{{data_info.description}}</div>
 					</el-form-item>
 					<el-form-item label="营业执照：">
 						<el-image class="card_img" :src="item" fit="scale-down" :preview-src-list="img_list" v-for="item in img_list"></el-image>

@@ -133,7 +133,7 @@
 						<el-table-column label="合格状态" width="120">
 							<template slot-scope="scope">
 								<el-button type="text" size="small" v-if="scope.row.status == 1 && button_list.apply_qualified == 1" @click="zhuanFn('1',scope.row.reserve_id)">待转合格</el-button>
-								<el-button type="text" size="small" v-if="scope.row.status == 3 && button_list.qualified_ccheck == 1" @click="hgAuditFn(scope.row.reserve_id)">合格待审核</el-button>
+								<el-button type="text" size="small" v-if="scope.row.status == 3 && button_list.qualified_check == 1" @click="hgAuditFn(scope.row.reserve_id)">合格待审核</el-button>
 								<div v-if="scope.row.status > 3">{{scope.row.status | qualified_refund_status}}</div>
 							</template>
 						</el-table-column>
@@ -348,7 +348,7 @@
 								<el-input clearable v-model="info_arg.description" style="width: 120px;" placeholder="备注" v-if="add_type == '1' || add_type == '2'"></el-input>
 								<div v-else>{{info_arg.description}}</div>
 							</el-form-item>
-							<el-form-item label="上传附件：" v-if="add_type == '1' || add_type == '2'">
+							<el-form-item label="上传附件：" v-if="add_type == '1' || add_type == '2'" required>
 								<UploadXlsx :attachment="attachment" @callBackXlsx="callBackXlsx"/>
 							</el-form-item>
 							<el-form-item label="填报状态：" v-if="add_type != '1' && add_type != '2'">
@@ -863,19 +863,21 @@
 				}else if(this.info_arg.address == ''){
 					this.$message.warning('请选择填写地址');
 					return;
+				}else if(!this.attachment.fileId){
+					this.$message.warning('请上传附件');
+					return;
 				}
+
+				//处理附件
+				let arr = [];
+				arr.push(this.attachment)
+				arg['attachment'] = JSON.stringify(arr);
 
 				if(this.add_type == '1'){		//创建
 					let arg = JSON.parse(JSON.stringify(this.info_arg));
 					arg['price_range'] = `${arg.start_price}_${arg.end_price}`;
 					delete arg.start_price;
 					delete arg.end_price;
-
-					if(this.attachment.fileId){
-						let arr = [];
-						arr.push(this.attachment)
-						arg['attachment'] = JSON.stringify(arr);
-					}
 					resource.reserveAdd(arg).then(res => {
 						if(res.data.code == 1){
 							this.$message.success(res.data.msg);
@@ -892,11 +894,6 @@
 					delete arg.start_price;
 					delete arg.end_price;
 					arg['reserve_id'] = this.reserve_id;
-					if(this.attachment.fileId){
-						let arr = [];
-						arr.push(this.attachment)
-						arg['attachment'] = JSON.stringify(arr);
-					}
 					resource.reserveEditPost(arg).then(res => {
 						if(res.data.code == 1){
 							this.$message.success(res.data.msg);

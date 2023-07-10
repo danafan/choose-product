@@ -7,6 +7,7 @@ let path = {
   ajaxStyleList:'api/setting/ajax_shooting_style_list',          //拍摄风格列表
   ajaxClassList:'api/setting/ajax_class_list',                   //分类列表
   dingUpload:'api/supplier_manager/ding_upload',                 //上传表格
+  dingDel:'api/supplier_manager/ding_del',                       //删除表格
   uploadFile:'api/common/upload',                                //上传图片
   delFile:'api/common/del_file',                                 //删除图片
   ajaxSupplierGradeList:'api/supplier_manager/ajax_supplier_grade_list',  //供应商等级列表
@@ -44,6 +45,10 @@ export default {
   //上传表格
   dingUpload(params) {
     return http.post(path.dingUpload, params);
+  },
+  //删除表格
+  dingDel(params) {
+    return http.post(path.dingDel, params);
   },
   //上传图片
   uploadFile(params) {

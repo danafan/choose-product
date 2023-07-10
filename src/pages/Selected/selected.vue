@@ -345,7 +345,7 @@
 					all_title_height -
 					table_title_height - 
 					bottom_row_height -
-					90 +
+					110 +
 					"px";
 				});
 			},

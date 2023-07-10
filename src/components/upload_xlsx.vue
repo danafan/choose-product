@@ -4,7 +4,7 @@
 			<el-button icon="el-icon-plus" :loading="upload_loading">添加附件</el-button>
 			<input type="file" ref="csvUpload" class="upload_file" accept=".csv, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" @change="uploadCsv">
 		</div>
-		<el-tag size="small" closable @close="delFile(fileObj.fileName)" v-else>{{fileObj.fileName}}</el-tag>
+		<el-tag size="small" closable @close="delFile(fileObj.fileId)" v-else>{{fileObj.fileName}}</el-tag>
 	</div>
 </template>
 <style lang="less" scoped>
@@ -75,11 +75,11 @@
 				}
 			},
 			//删除文件
-			delFile(url){
+			delFile(fileId){
 				let arg = {
-					url: url,
+					file_id: fileId,
 				};
-				resource.delFile(arg).then((res) => {
+				resource.dingDel(arg).then((res) => {
 					if (res.data.code == 1) {
 						this.fileObj = {};
 						//向父组件传递已选的图片列表
