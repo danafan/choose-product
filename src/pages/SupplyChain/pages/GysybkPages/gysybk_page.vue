@@ -781,13 +781,15 @@
 							//附件
 							this.attachment = data.attachment.indexOf('fileId') > -1?JSON.parse(data.attachment)[0]:{};
 							//拜访图片
-							data.visiting_imgs.map(item => {
-								let visiting_img = {
-									urls:item,
-									show_icon:false
-								}
-								this.visiting_imgs.push(visiting_img);
-							})
+							if(data.visiting_imgs){
+								data.visiting_imgs.split(',').map(item => {
+									let visiting_img = {
+										urls:item,
+										show_icon:false
+									}
+									this.visiting_imgs.push(visiting_img);
+								})
+							}
 						}else{
 							this.$message.warning(res.data.msg);
 						}
@@ -1194,6 +1196,15 @@
 						company_img.map(item => {
 							this.company_img.push(this.domain + item);
 						})
+
+						//拜访图片
+						this.visiting_imgs = [];
+						if(data.visiting_imgs){
+							let visiting_imgs = data.visiting_imgs.split(',');
+							visiting_imgs.map(item => {
+								this.visiting_imgs.push(this.domain + item);
+							})
+						}
 					}else{
 						this.$message.warning(res.data.msg);
 					}
