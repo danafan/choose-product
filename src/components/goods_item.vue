@@ -150,15 +150,15 @@
 						<div class="lable">供应商：</div>
 						<div class="value">{{info.supplier_name}}</div>
 					</div>
-					<div class="form_item" v-if="info.supplier_ksbm != ''">
+					<div class="form_item">
 						<div class="lable">供应商款式编码：</div>
 						<div class="value">{{info.supplier_ksbm}}</div>
 					</div>
-					<div class="form_item" v-if="info.i_id != ''">
+					<div class="form_item">
 						<div class="lable">内部款式编码：</div>
 						<div class="value">{{info.i_id}}</div>
 					</div>
-					<div class="form_item" v-if="info.bd_i_id != ''">
+					<div class="form_item">
 						<div class="lable">BD款式编码：</div>
 						<div class="value">{{info.bd_i_id}}</div>
 					</div>
