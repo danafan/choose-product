@@ -223,26 +223,32 @@
 						this.mode = data.mode?data.mode:'';
 
 						//工商营业执照
-						this.business_license = [];
-						let business_license = data.business_license.split(',');
-						business_license.map(item => {
-							let img_obj = {
-								urls:item,
-								show_icon:false
-							}
-							this.business_license.push(img_obj);
-						})
+						if(data.business_license){
+							this.business_license = data.business_license.split(',');
+						}
+						
+						// business_license.map(item => {
+						// 	let img_obj = {
+						// 		urls:item,
+						// 		show_icon:false
+						// 	}
+						// 	this.business_license.push(img_obj);
+						// })
 
 						//公司照片
-						this.company_img = [];
-						let company_img = data.company_img.split(',');
-						company_img.map(item => {
-							let img_obj = {
-								urls:item,
-								show_icon:false
-							}
-							this.company_img.push(img_obj);
-						})
+						if(data.company_img){
+							this.company_img = data.company_img.split(',');
+						}
+						
+						// this.company_img = [];
+						// let company_img = data.company_img.split(',');
+						// company_img.map(item => {
+						// 	let img_obj = {
+						// 		urls:item,
+						// 		show_icon:false
+						// 	}
+						// 	this.company_img.push(img_obj);
+						// })
 					}else{
 						this.$message.warning(res.data.msg);
 					}

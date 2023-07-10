@@ -23,73 +23,73 @@
 </div>
 </template>
 <style lang="less" scoped>
-.image_list {
-	flex:1;
-	display: flex;
-	flex-wrap: wrap;
-	.view_card_img {
-		border-radius: 2rem;
-		position: relative;
-		.is_main{
-			background:#F37605;
-			position: absolute;
-			top: 0;
-			left: 0;
-			width: 36px;
-			text-align: center;
-			height: 20px;
-			line-height: 20px;
-			font-size: 12px;
-			color:#ffffff;
-			z-index: 9;
-		}
-		.card_img,
-		.delete_img {
+	.image_list {
+		flex:1;
+		display: flex;
+		flex-wrap: wrap;
+		.view_card_img {
 			border-radius: 2rem;
-			position: absolute;
-			width: 100%;
-			height: 100%;
-		}
-		.delete_img {
-			background: rgba(0, 0, 0, 0.4);
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			.set_main{
-				cursor: pointer;
+			position: relative;
+			.is_main{
+				background:#F37605;
 				position: absolute;
-				top: 0px;
-				right: 5px;
+				top: 0;
+				left: 0;
+				width: 36px;
+				text-align: center;
+				height: 20px;
+				line-height: 20px;
 				font-size: 12px;
-				font-weight: bold;
 				color:#ffffff;
+				z-index: 9;
+			}
+			.card_img,
+			.delete_img {
+				border-radius: 2rem;
+				position: absolute;
+				width: 100%;
+				height: 100%;
+			}
+			.delete_img {
+				background: rgba(0, 0, 0, 0.4);
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				.set_main{
+					cursor: pointer;
+					position: absolute;
+					top: 0px;
+					right: 5px;
+					font-size: 12px;
+					font-weight: bold;
+					color:#ffffff;
+				}
+			}
+		}
+		.upload_container{
+			border:1px solid #D9D9D9;
+			border-radius: 2rem;
+			position: relative;
+			display: flex;
+			flex-direction: column;
+			justify-content:center;
+			align-items:center;
+			color: #666666;
+			.upload_text{
+				font-size: 12px;
+			}
+			.upload_file {
+				position: absolute;
+				top: 0;
+				bottom: 0;
+				left: 0;
+				right: 0;
+				width: 100%;
+				height: 100%;
+				opacity: 0;
 			}
 		}
 	}
-	.upload_container{
-		border:1px solid #D9D9D9;
-		border-radius: 2rem;
-		position: relative;
-		display: flex;
-		flex-direction: column;
-		justify-content:center;
-		align-items:center;
-		color: #666666;
-		.upload_text{
-			font-size: 12px;
-		}
-		.upload_file {
-			position: absolute;
-			top: 0;
-			bottom: 0;
-			left: 0;
-			right: 0;
-			width: 100%;
-			height: 100%;
-			opacity: 0;
-		}
-	}
-}
 </style>
 <script>
 	import draggable from "vuedraggable";
@@ -110,37 +110,55 @@
 		props:{
 			img_list:{
 				type:Array,
-				default:[]
+			default:[]
 			},
 			//是否多选
 			is_multiple:{
 				type:Boolean,
-				default:false
+			default:false
 			},
 			//多选已上传的数量
 			current_num:{
 				type:Number,
-				default:0
+			default:0
 			},
 			//多选最多上传的数量
 			max_num:{
 				type:Number,
-				default:1
+			default:1
 			},
 			//尺寸
 			size:{
 				type:Number,
-				default:120
+			default:120
 			},
 			//是否可以设置主图
 			is_main:{
 				type:Boolean,
-				default:false
+			default:false
+			}
+		},
+		watch:{
+			img_list:function(n,o){
+				this.preview_images = [];
+				this.img_list.map(item => {
+					let img_obj = {
+						urls:item,
+						show_icon:false
+					}
+					this.preview_images.push(img_obj)
+				})
 			}
 		},
 		created(){
-			this.preview_images = this.img_list;
-			console.log(this.preview_images)
+			this.preview_images = [];
+			this.img_list.map(item => {
+				let img_obj = {
+					urls:item,
+					show_icon:false
+				}
+				this.preview_images.push(img_obj)
+			})
 		},
 		methods:{
 			//置顶
@@ -182,31 +200,31 @@
 				}
 			},
     		//删除文件
-    		deleteFile(url, index) {
-    			let arg = {
-    				url: url,
-    			};
-    			resource.delFile(arg).then((res) => {
-    				if (res.data.code == 1) {
-    					this.preview_images.splice(index, 1);
+			deleteFile(url, index) {
+				let arg = {
+					url: url,
+				};
+				resource.delFile(arg).then((res) => {
+					if (res.data.code == 1) {
+						this.preview_images.splice(index, 1);
     					//向父组件传递已选的图片列表
-    					this.emitFn();
-    				} else {
-    					this.$message.warning(res.data.msg);
-    				}
-    			});
-    		},
+						this.emitFn();
+					} else {
+						this.$message.warning(res.data.msg);
+					}
+				});
+			},
     		//向父组件传递已选的图片列表
-    		emitFn(){
-    			let image_arr = [];
-    			this.preview_images.map(item => {
-    				image_arr.push(item.urls);
-    			})
-    			this.$emit('callbackFn',image_arr);
-    		}
-    	},
-    	components:{
-    		draggable
-    	}
-    }
+			emitFn(){
+				let image_arr = [];
+				this.preview_images.map(item => {
+					image_arr.push(item.urls);
+				})
+				this.$emit('callbackFn',image_arr);
+			}
+		},
+		components:{
+			draggable
+		}
+	}
 </script>

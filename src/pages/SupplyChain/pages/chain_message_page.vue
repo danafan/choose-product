@@ -20,7 +20,7 @@
 					<el-table-column label="图片" width="150">
 						<template slot-scope="scope">
 							<div v-if="scope.row.images.length == 0">暂无</div>
-							<el-carousel trigger="hover" indicator-position="none" :autoplay="false" height="50px" v-else>
+							<el-carousel trigger="hover" indicator-position="none" :autoplay="false" height="100px" v-else>
 								<el-carousel-item v-for="(item,index) in scope.row.images" :key="index">
 									<el-image :z-index="2006" class="image" :src="item" fit="scale-down" :preview-src-list="scope.row.images"></el-image>
 								</el-carousel-item>
@@ -262,14 +262,18 @@
 						this.notice_title = data.notice_title;
 						this.notice_content = data.notice_content;
 						this.arg_view_type = data.view_type;
-						let img_list = data.img.split(',');
-						img_list.map(item => {
-							let img_obj = {
-								urls:item,
-								show_icon:false
-							}
-							this.img_list.push(img_obj)
-						})
+						if(data.img){
+							this.img_list = data.img.split(',');
+						}
+
+						// let img_list = data.img.split(',');
+						// img_list.map(item => {
+						// 	let img_obj = {
+						// 		urls:item,
+						// 		show_icon:false
+						// 	}
+						// 	this.img_list.push(img_obj)
+						// })
 						let info_date = [];
 						info_date[0] = data.start_day;
 						info_date[1] = data.end_day;

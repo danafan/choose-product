@@ -351,13 +351,16 @@
 					resource.feedBackEditGoodsGet(arg).then(res => {
 						if(res.data.code == 1){
 							let data_info = res.data.data;
-							data_info.img.map(item => {
-								let img_obj = {
-									urls:item,
-									show_icon:false
-								}
-								this.img_list.push(img_obj);
-							})
+							if(data_info.img){
+								this.img_list = data_info.img;
+							}
+							// data_info.img.map(item => {
+							// 	let img_obj = {
+							// 		urls:item,
+							// 		show_icon:false
+							// 	}
+							// 	this.img_list.push(img_obj);
+							// })
 							this.add_admin_name = data_info.add_admin_name;
 							this.check_status = data_info.check_status;
 							this.off_reason = data_info.off_reason;
@@ -381,12 +384,15 @@
 			},
 			//处理详情
 			setInfo(data_info){
+				if(data_info.img){
+					this.img_list = data_info.img;
+				}
 				data_info.img.map(item => {
-					let img_obj = {
-						urls:item,
-						show_icon:false
-					}
-					this.img_list.push(img_obj);
+					// let img_obj = {
+					// 	urls:item,
+					// 	show_icon:false
+					// }
+					// this.img_list.push(img_obj);
 					this.preview_image.push(this.domain + item);
 				})
 				this.add_admin_name = data_info.add_admin_name;
@@ -404,12 +410,15 @@
 				this.video_style_status = data_info.video_style_status;	//视频款审核状态
 
 				this.link_urls = data_info.hot_url;
+				if(data_info.hot_img){
+					this.bk_img_list = data_info.hot_img;
+				}
 				data_info.hot_img.map(item => {
-					let img_obj = {
-						urls:item,
-						show_icon:false
-					}
-					this.bk_img_list.push(img_obj);
+					// let img_obj = {
+					// 	urls:item,
+					// 	show_icon:false
+					// }
+					// this.bk_img_list.push(img_obj);
 					this.preview_bk_image.push(this.domain + item);
 				})
 				this.bk_img = data_info.hot_img;

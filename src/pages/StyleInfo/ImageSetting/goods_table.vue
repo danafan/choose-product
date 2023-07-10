@@ -63,7 +63,6 @@
 				show_dialog:false,			//弹窗
 				type:"",
 				dialog_title:"",			//弹窗标题
-				img:[],						//已上传的图片列表（参数）
 				img_list:[],				//已上传的图片列表（显示）
 			}
 		},
@@ -148,12 +147,15 @@
 					resource.editUploadImgGet(arg).then(res => {
 						if(res.data.code == 1){
 							let data = res.data.data;
-							let img_obj = {
-								urls:data.img,
-								show_icon:false
+							if(data.img){
+								this.img_list.push(data.img);
 							}
-							this.img_list.push(img_obj);
-							this.img.push(data.img);				
+							// let img_obj = {
+							// 	urls:data.img,
+							// 	show_icon:false
+							// }
+							// this.img_list.push(img_obj);
+							// this.img.push(data.img);				
 						}else{
 							this.$message.warning(res.data.msg);
 						}
@@ -163,20 +165,19 @@
 			},
 			//监听图片列表回调
 			callbackFn(img_arr) {
-				this.img = img_arr;
+				this.img_list = img_arr;
 			},
 			//关闭弹窗
 			closeDialog(){
-				this.img = [];						//已上传的图片列表（参数）
 				this.img_list = [];				//已上传的图片列表（显示）
 			},
 			//弹窗提交
 			commitFn(){
-				if(this.img.length == 0){
+				if(this.img_list.length == 0){
 					this.$message.warning('请上传商品图!');
 				}else{
 					var arg = {
-						img:this.img.join(',')
+						img:this.img_list.join(',')
 					}
 					if(this.type == '1'){	//添加
 						arg.style_id = this.style_id;

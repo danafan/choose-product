@@ -64,7 +64,6 @@
 				show_dialog:false,			//弹窗
 				dialog_title:"",			//弹窗标题
 				shooting_style_name:"",		//拍摄风格
-				img:[],						//已上传的图片列表（参数）
 				img_list:[],				//已上传的图片列表（显示）
 			}
 		},
@@ -157,15 +156,16 @@
 						if(res.data.code == 1){
 							let data = res.data.data;
 							if(data.img){
-								data.img.split(',').map(item => {
-									let img_obj = {
-										urls:item,
-										show_icon:false
-									}
-									this.img_list.push(img_obj);
-								})	
+								this.img_list = data.img.split(',');
+								// data.img.split(',').map(item => {
+								// 	let img_obj = {
+								// 		urls:item,
+								// 		show_icon:false
+								// 	}
+								// 	this.img_list.push(img_obj);
+								// })	
 							}
-							this.img = data.img;				
+							// this.img = data.img;				
 							this.show_dialog = true;		
 						}else{
 							this.$message.warning(res.data.msg);
@@ -177,20 +177,19 @@
 			},
 			//监听图片列表回调
 			callbackFn(img_arr) {
-				this.img = img_arr;
+				this.img_list = img_arr;
 			},
 			//关闭弹窗
 			closeDialog(){
-				this.img = [];						//已上传的图片列表（参数）
 				this.img_list = [];				//已上传的图片列表（显示）
 			},
 			//弹窗提交
 			commitFn(){
-				if(this.img.length == 0){
+				if(this.img_list.length == 0){
 					this.$message.warning('请上传风格图!');
 				}else{
 					var arg = {
-						img:this.img.join(',')
+						img:this.img_list.join(',')
 					}
 					if(this.type == '1'){	//添加
 						arg.style_id = this.style_id;

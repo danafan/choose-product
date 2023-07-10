@@ -134,16 +134,16 @@
 							<template slot-scope="scope">
 								<el-button type="text" size="small" v-if="scope.row.status == 1 && button_list.apply_qualified == 1" @click="zhuanFn('1',scope.row.reserve_id)">待转合格</el-button>
 								<el-button type="text" size="small" v-if="scope.row.status == 3 && button_list.qualified_check == 1" @click="hgAuditFn(scope.row.reserve_id)">合格待审核</el-button>
-								<div v-if="scope.row.status > 3">{{scope.row.status | qualified_refund_status}}</div>
+								<!-- 转合格编辑 -->
+								<el-button style="color:red" type="text" size="small" @click="zhuanFn('2',scope.row.reserve_id)" v-if="scope.row.status == 5 && button_list.qualified_edit == 1">转合格拒绝</el-button>
+								<div v-if="scope.row.status == 4">{{scope.row.status | qualified_refund_status}}</div>
 							</template>
 						</el-table-column>
 						<el-table-column label="操作" width="180" fixed="right">
 							<template slot-scope="scope">
 								<el-button type="text" size="small" @click="checkInfo('3',scope.row.reserve_id)" v-if="button_list.detail == 1">查看</el-button>
 								<!-- 填报编辑 -->
-								<el-button type="text" size="small" @click="addFn('2',scope.row.reserve_id)" v-if="scope.row.status == 2 && button_list.info_edit == 1">编辑</el-button>
-								<!-- 转合格编辑 -->
-								<el-button type="text" size="small" @click="zhuanFn('2',scope.row.reserve_id)" v-if="scope.row.status == 5 && button_list.qualified_edit == 1">编辑</el-button>
+								<el-button type="text" size="small" @click="addFn('2',scope.row.reserve_id)" v-if="scope.row.status != 0 && scope.row.status != 2 && scope.row.status != 3 && button_list.info_edit == 1">编辑</el-button>
 								<el-button type="text" size="small" v-if="scope.row.status != 0 && scope.row.status != 3 && button_list.del == 1" @click="deleteFn(scope.row.reserve_id)">删除</el-button>
 								<!-- <el-button type="text" size="small" v-if="scope.row.status == 0 && button_list.info_check == 1" @click="checkInfo('4',scope.row.reserve_id)">填报审核</el-button> -->
 							</template>
@@ -348,8 +348,7 @@
 								<el-input clearable v-model="info_arg.description" style="width: 120px;" placeholder="备注" v-if="add_type == '1' || add_type == '2'"></el-input>
 								<div v-else>{{info_arg.description}}</div>
 							</el-form-item>
-							
-							<el-form-item label="上传附件：" v-if="add_type == '1' || add_type == '2'" required>
+							<el-form-item label="上传附件：" v-if="add_type == '1'" required>
 								<UploadXlsx :attachment="attachment" @callBackXlsx="callBackXlsx"/>
 							</el-form-item>
 							<el-form-item label="填报状态：" v-if="add_type != '1' && add_type != '2'">
@@ -361,8 +360,8 @@
 								</el-form-item>
 							</el-form>
 						</div>
-						<el-form size="mini" >
-							<el-form-item label="拜访图片：">
+						<el-form size="mini" style="padding-left: 30px;width: 720px;">
+							<el-form-item label="拜访图片：" required>
 								<UploadFile v-if="show_visiting_file && (add_type == '1' || add_type == '2')" :img_list="visiting_imgs" :is_multiple="true" :current_num="visiting_imgs.length" :max_num="9" @callbackFn="visitingImgsbackFn"/>
 								<div v-else>
 									<el-image style="width: 80px;height: 80px;margin-right: 10px;" :z-index="99999" :src="item" :initial-index="index" :preview-src-list="visiting_imgs" v-for="(item,index) in visiting_imgs">
@@ -372,7 +371,7 @@
 						</el-form>
 						<el-divider v-if="info_arg.status >= 3"></el-divider>
 						<!-- 填报审核 -->
-						<el-form size="mini" v-if="add_type == '4'">
+						<!-- <el-form size="mini" v-if="add_type == '4'">
 							<el-form-item>
 								<el-radio-group v-model="check_status">
 									<el-radio :label="1">同意</el-radio>
@@ -383,7 +382,7 @@
 								<el-input type="textarea" :rows="3" placeholder="拒绝原因" v-model="remark">
 								</el-input>
 							</el-form-item>
-						</el-form>
+						</el-form> -->
 						<!-- 转合格审核 -->
 						<el-form size="mini" v-if="(add_type == '3' && info_arg.status >= 3) || add_type == '5'">
 							<el-form-item label="合格状态：">
@@ -420,7 +419,7 @@
 						<!-- 添加/编辑 -->
 						<el-button type="primary" size="small" @click="submitAddEdit" v-if="add_type == '1' || add_type == '2'">提交</el-button>
 						<!-- 填报审核 -->
-						<el-button type="primary" size="small" @click="submitCheck" v-if="add_type == '4'">保存</el-button>
+						<!-- <el-button type="primary" size="small" @click="submitCheck" v-if="add_type == '4'">保存</el-button> -->
 						<!-- 转合格审核 -->
 						<el-button type="primary" size="small" @click="zhgAudit" v-if="add_type == '5'">保存</el-button>
 					</div>
@@ -602,25 +601,6 @@
 				show_upload_file:true,
 			}
 		},
-		// beforeRouteLeave(to,from,next){
-		// 	if(to.path == '/chain_supplier_detail' || to.path == '/add_edit_supplier' || to.path == '/account_list'){	
-		// 		from.meta.use_cache = true;
-		// 	}else{
-		// 		from.meta.use_cache = false;
-		// 	}
-		// 	next();
-		// },
-		// activated(){
-		// 	if(!this.$route.meta.use_cache){
-		// 		this.page = 1;
-		// 	}
-		// 	//获取供应商列表
-		// 	this.supplierManagerList();
-		// 	this.$route.meta.use_cache = false;
-		// },
-		// destroyed() {
-		// 	window.removeEventListener("resize", () => {});
-		// },
 		created(){
 			//获取用户列表
 			this.getUserList();
@@ -773,7 +753,6 @@
 					this.reserve_id = reserve_id;
 					resource.reserveEditGet({reserve_id:this.reserve_id}).then(res => {
 						if(res.data.code == 1){
-							this.show_visiting_file = true;
 							let data = res.data.data;
 							for(let k in this.info_arg){
 								this.info_arg[k] = data[k];
@@ -782,14 +761,9 @@
 							this.attachment = data.attachment.indexOf('fileId') > -1?JSON.parse(data.attachment)[0]:{};
 							//拜访图片
 							if(data.visiting_imgs){
-								data.visiting_imgs.split(',').map(item => {
-									let visiting_img = {
-										urls:item,
-										show_icon:false
-									}
-									this.visiting_imgs.push(visiting_img);
-								})
+								this.visiting_imgs = data.visiting_imgs.split(',');
 							}
+							this.show_visiting_file = true;
 						}else{
 							this.$message.warning(res.data.msg);
 						}
@@ -894,12 +868,16 @@
 				}else if(this.info_arg.address == ''){
 					this.$message.warning('请选择填写地址');
 					return;
-				}else if(!this.attachment.fileId){
-					this.$message.warning('请上传附件');
+				}else if(this.visiting_imgs.length == 0){
+					this.$message.warning('请上传拜访图片');
 					return;
 				}
 
 				if(this.add_type == '1'){		//创建
+					if(!this.attachment.fileId){
+						this.$message.warning('请上传附件');
+						return;
+					}
 					let arg = JSON.parse(JSON.stringify(this.info_arg));
 					arg['price_range'] = `${arg.start_price}_${arg.end_price}`;
 					delete arg.start_price;
@@ -930,10 +908,6 @@
 
 					//处理拜访图片
 					arg['visiting_imgs'] = this.visiting_imgs.join(',');
-					//处理附件
-					let arr = [];
-					arr.push(this.attachment)
-					arg['attachment'] = JSON.stringify(arr);
 
 					arg['reserve_id'] = this.reserve_id;
 					resource.reserveEditPost(arg).then(res => {
@@ -999,27 +973,27 @@
 				this.edit_dialog = true;
 			},
 			//提交填报审核
-			submitCheck(){
-				if(this.check_status == 0 && this.remark == ''){
-					this.$message.warning('请输入拒绝原因');
-					return;
-				}
-				let arg = {
-					reserve_id:this.reserve_id,
-					status:this.check_status,
-					remark:this.remark
-				}
-				resource.checkInfo(arg).then(res => {
-					if(res.data.code == 1){
-						this.$message.success(res.data.msg);
-						this.edit_dialog = false;
-						//获取供应商列表
-						this.supplierManagerList();
-					}else{
-						this.$message.warning(res.data.msg);
-					}
-				})
-			},
+			// submitCheck(){
+			// 	if(this.check_status == 0 && this.remark == ''){
+			// 		this.$message.warning('请输入拒绝原因');
+			// 		return;
+			// 	}
+			// 	let arg = {
+			// 		reserve_id:this.reserve_id,
+			// 		status:this.check_status,
+			// 		remark:this.remark
+			// 	}
+			// 	resource.checkInfo(arg).then(res => {
+			// 		if(res.data.code == 1){
+			// 			this.$message.success(res.data.msg);
+			// 			this.edit_dialog = false;
+			// 			//获取供应商列表
+			// 			this.supplierManagerList();
+			// 		}else{
+			// 			this.$message.warning(res.data.msg);
+			// 		}
+			// 	})
+			// },
 			//点击转合格编辑或添加
 			zhuanFn(type,reserve_id){
 				this.reserve_id = reserve_id;
@@ -1037,30 +1011,26 @@
 							this.show_upload_file = true;
 							this.company_name = data.company_name;				//公司名称
 							//工商营业执照
-							this.business_license_img = [];
 							if(data.business_license){
-								let business_license_img = data.business_license.split(',');
-								business_license_img.map(item => {
-									let business_img = {
-										urls:item,
-										show_icon:false
-									}
-									this.business_license_img.push(business_img);
-								})
+								this.business_license_img = data.business_license.split(',');
 							}
 							
 							//公司照片
-							this.company_img = [];
 							if(data.company_img){
-								let company_img = data.company_img.split(',');
-								company_img.map(item => {
-									let company_img = {
-										urls:item,
-										show_icon:false
-									}
-									this.company_img.push(company_img);
-								})
+								this.company_img = data.company_img.split(',');
 							}
+							
+							// this.company_img = [];
+							// if(data.company_img){
+							// 	let company_img = data.company_img.split(',');
+							// 	company_img.map(item => {
+							// 		let company_img = {
+							// 			urls:item,
+							// 			show_icon:false
+							// 		}
+							// 		this.company_img.push(company_img);
+							// 	})
+							// }
 							
 							this.zhuan_dialog = true;
 						}else{

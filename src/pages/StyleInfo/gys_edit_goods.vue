@@ -343,22 +343,29 @@
 				this.depth_inventory_status = data_info.depth_inventory_status;	//深度库存审核状态
 				this.video_style_status = data_info.video_style_status;	//视频款审核状态
 
+				if(data_info.img){
+					this.img_list = data_info.img;
+				}
+
 				data_info.img.map(item => {
-					let img_obj = {
-						urls:item,
-						show_icon:false
-					}
-					this.img_list.push(img_obj);
+					// let img_obj = {
+					// 	urls:item,
+					// 	show_icon:false
+					// }
+					// this.img_list.push(img_obj);
 					this.preview_image.push(this.domain + item);
 				})
 
 				this.link_urls = data_info.hot_url;
+				if(data_info.hot_img){
+					this.bk_img_list = data_info.hot_img;
+				}
 				data_info.hot_img.map(item => {
-					let img_obj = {
-						urls:item,
-						show_icon:false
-					}
-					this.bk_img_list.push(img_obj);
+					// let img_obj = {
+					// 	urls:item,
+					// 	show_icon:false
+					// }
+					// this.bk_img_list.push(img_obj);
 					this.preview_bk_image.push(this.domain + item);
 				})
 				this.bk_img = data_info.hot_img;
