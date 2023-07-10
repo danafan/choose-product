@@ -348,6 +348,7 @@
 								<el-input clearable v-model="info_arg.description" style="width: 120px;" placeholder="备注" v-if="add_type == '1' || add_type == '2'"></el-input>
 								<div v-else>{{info_arg.description}}</div>
 							</el-form-item>
+							
 							<el-form-item label="上传附件：" v-if="add_type == '1' || add_type == '2'" required>
 								<UploadXlsx :attachment="attachment" @callBackXlsx="callBackXlsx"/>
 							</el-form-item>
@@ -360,6 +361,15 @@
 								</el-form-item>
 							</el-form>
 						</div>
+						<el-form size="mini" >
+							<el-form-item label="拜访图片：">
+								<UploadFile v-if="show_visiting_file && (add_type == '1' || add_type == '2')" :img_list="visiting_imgs" :is_multiple="true" :current_num="visiting_imgs.length" :max_num="9" @callbackFn="visitingImgsbackFn"/>
+								<div v-else>
+									<el-image style="width: 80px;height: 80px;margin-right: 10px;" :z-index="99999" :src="item" :initial-index="index" :preview-src-list="visiting_imgs" v-for="(item,index) in visiting_imgs">
+									</el-image>
+								</div>
+							</el-form-item>
+						</el-form>
 						<el-divider v-if="info_arg.status >= 3"></el-divider>
 						<!-- 填报审核 -->
 						<el-form size="mini" v-if="add_type == '4'">
@@ -577,7 +587,9 @@
 					info_refund_remark:"",
 					qualified_refund_remark:""
 				},				  //填报阶段的详情
+				show_visiting_file:true,
 				attachment:{},					//附件文件
+				visiting_imgs:[],				//拜访图片
 				check_status:1,					//审核状态
 				remark:"",						//拒绝原因
 				zhuan_dialog:false,				//申请转合格
@@ -587,7 +599,7 @@
 				company_img:[],					//公司照片
 				audit_status:1,					//转合格审核（1:同意；2:拒绝）
 				audit_remark:"",				//转合格审核拒绝原因
-				show_upload_file:true
+				show_upload_file:true,
 			}
 		},
 		// beforeRouteLeave(to,from,next){
@@ -755,22 +767,37 @@
 				if(type == '1'){
 					this.add_title = '添加';
 					this.edit_dialog = true;
+					this.show_visiting_file = true;
 				}else if(type == '2'){
 					this.add_title = '编辑';
 					this.reserve_id = reserve_id;
 					resource.reserveEditGet({reserve_id:this.reserve_id}).then(res => {
 						if(res.data.code == 1){
+							this.show_visiting_file = true;
 							let data = res.data.data;
 							for(let k in this.info_arg){
 								this.info_arg[k] = data[k];
 							}
+							//附件
 							this.attachment = data.attachment.indexOf('fileId') > -1?JSON.parse(data.attachment)[0]:{};
+							//拜访图片
+							data.visiting_imgs.map(item => {
+								let visiting_img = {
+									urls:item,
+									show_icon:false
+								}
+								this.visiting_imgs.push(visiting_img);
+							})
 						}else{
 							this.$message.warning(res.data.msg);
 						}
 					})
 					this.edit_dialog = true;
 				}
+			},
+			//拜访图片回调
+			visitingImgsbackFn(img_arr) {
+				this.visiting_imgs = img_arr;
 			},
 			//上传附件回调
 			callBackXlsx(file){
@@ -794,6 +821,8 @@
 				this.audit_status = 1;					//转合格审核状态
 				this.audit_remark = '';					//转合格审核原因
 				this.attachment = {};
+				this.visiting_imgs = [];
+				this.show_visiting_file = false;
 			},
 			//点击填报编辑或添加的提交
 			submitAddEdit(){
@@ -868,16 +897,19 @@
 					return;
 				}
 
-				//处理附件
-				let arr = [];
-				arr.push(this.attachment)
-				arg['attachment'] = JSON.stringify(arr);
-
 				if(this.add_type == '1'){		//创建
 					let arg = JSON.parse(JSON.stringify(this.info_arg));
 					arg['price_range'] = `${arg.start_price}_${arg.end_price}`;
 					delete arg.start_price;
 					delete arg.end_price;
+
+					//处理拜访图片
+					arg['visiting_imgs'] = this.visiting_imgs.join(',');
+					//处理附件
+					let arr = [];
+					arr.push(this.attachment)
+					arg['attachment'] = JSON.stringify(arr);
+
 					resource.reserveAdd(arg).then(res => {
 						if(res.data.code == 1){
 							this.$message.success(res.data.msg);
@@ -893,6 +925,14 @@
 					arg['price_range'] = `${arg.start_price}_${arg.end_price}`;
 					delete arg.start_price;
 					delete arg.end_price;
+
+					//处理拜访图片
+					arg['visiting_imgs'] = this.visiting_imgs.join(',');
+					//处理附件
+					let arr = [];
+					arr.push(this.attachment)
+					arg['attachment'] = JSON.stringify(arr);
+
 					arg['reserve_id'] = this.reserve_id;
 					resource.reserveEditPost(arg).then(res => {
 						if(res.data.code == 1){
@@ -913,6 +953,7 @@
 				this.reserve_id = reserve_id;
 				resource.reserveInfo({reserve_id:this.reserve_id}).then(res => {
 					if(res.data.code == 1){
+						this.show_visiting_file = true;
 						let data = res.data.data;
 						for(let k in this.info_arg){
 							this.info_arg[k] = data[k];
@@ -938,6 +979,15 @@
 							let company_img = data.company_img.split(',');
 							company_img.map(item => {
 								this.company_img.push(this.domain + item);
+							})
+						}
+
+						//拜访图片
+						this.visiting_imgs = [];
+						if(data.visiting_imgs){
+							let visiting_imgs = data.visiting_imgs.split(',');
+							visiting_imgs.map(item => {
+								this.visiting_imgs.push(this.domain + item);
 							})
 						}
 					}else{

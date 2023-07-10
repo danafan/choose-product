@@ -140,6 +140,7 @@
 		},
 		created(){
 			this.preview_images = this.img_list;
+			console.log(this.preview_images)
 		},
 		methods:{
 			//置顶
