@@ -232,16 +232,16 @@
 								<div v-else>{{info_arg.area}}</div>
 							</el-form-item>
 							<el-form-item label="主营：" required>
-								<el-select v-model="info_arg.main_business" filterable clearable placeholder="全部" v-if="add_type == '1' || add_type == '2'">
+								<el-select v-model="info_arg_main_business" multiple filterable clearable placeholder="全部" v-if="add_type == '1' || add_type == '2'">
 									<el-option :label="item.name" :value="item.id" v-for="item in main_business_list"></el-option>
 								</el-select>
-								<div v-else>{{info_arg.main_business}}</div>
+								<div v-else>{{info_main_business_value}}</div>
 							</el-form-item>
 							<el-form-item label="擅长品类：" required>
-								<el-select v-model="info_arg.scpl" filterable clearable placeholder="全部" v-if="add_type == '1' || add_type == '2'">
+								<el-select v-model="info_arg_scpl" multiple filterable clearable placeholder="全部" v-if="add_type == '1' || add_type == '2'">
 									<el-option :label="item.name" :value="item.id" v-for="item in scpl_list"></el-option>
 								</el-select>
-								<div v-else>{{info_arg.scpl}}</div>
+								<div v-else>{{info_scpl_value}}</div>
 							</el-form-item>
 						</el-form>
 						<el-form size="mini" style="width: 360px;">
@@ -554,8 +554,6 @@
 					classification:"",
 					is_ss:1,
 					area:"",
-					main_business:"",
-					scpl:"",
 					supply_free_factory:1,
 					supply_design:1,
 					settlement_method:"",
@@ -585,6 +583,10 @@
 					qualified_refund_remark:""
 				},				  //填报阶段的详情
 				show_visiting_file:true,
+				info_arg_main_business:[],		//主营
+				info_main_business_value:"",
+				info_arg_scpl:[],				//擅长品类
+				info_scpl_value:"",
 				attachment:{},					//附件文件
 				visiting_imgs:[],				//拜访图片
 				check_status:1,					//审核状态
@@ -754,6 +756,16 @@
 							for(let k in this.info_arg){
 								this.info_arg[k] = data[k];
 							}
+							//主营
+							this.info_arg_main_business = [];
+							data.main_business.split(',').map(item => {
+								this.info_arg_main_business.push(parseInt(item));
+							})
+							//擅长品类
+							this.info_arg_scpl = [];
+							data.scpl.split(',').map(item => {
+								this.info_arg_scpl.push(parseInt(item));
+							})
 							//附件
 							this.attachment = data.attachment.indexOf('fileId') > -1?JSON.parse(data.attachment)[0]:{};
 							//拜访图片
@@ -795,6 +807,8 @@
 				this.audit_remark = '';					//转合格审核原因
 				this.attachment = {};
 				this.visiting_imgs = [];
+				this.info_arg_main_business = [];		//主营
+				this.info_arg_scpl = [];				//擅长品类
 				this.show_visiting_file = false;
 			},
 			//点击填报编辑或添加的提交
@@ -817,10 +831,10 @@
 				}else if(this.info_arg.area == ''){
 					this.$message.warning('请选择区域');
 					return;
-				}else if(this.info_arg.main_business == ''){
+				}else if(this.info_arg_main_business.length == 0){
 					this.$message.warning('请选择主营');
 					return;
-				}else if(this.info_arg.scpl == ''){
+				}else if(this.info_arg_scpl.length == 0){
 					this.$message.warning('请选择擅长品类');
 					return;
 				}else if(this.info_arg.settlement_method == ''){
@@ -870,23 +884,28 @@
 					return;
 				}
 
+				//产品价位段
+				let arg = JSON.parse(JSON.stringify(this.info_arg));
+				arg['price_range'] = `${arg.start_price}_${arg.end_price}`;
+				delete arg.start_price;
+				delete arg.end_price;
+				//处理拜访图片
+				arg['visiting_imgs'] = this.visiting_imgs.join(',');
+				//主营
+				arg['main_business'] = this.info_arg_main_business.join(',');
+				//擅长品类
+				arg['scpl'] = this.info_arg_scpl.join(',');
+
 				if(this.add_type == '1'){		//创建
 					if(!this.attachment.fileId){
 						this.$message.warning('请上传附件');
 						return;
 					}
-					let arg = JSON.parse(JSON.stringify(this.info_arg));
-					arg['price_range'] = `${arg.start_price}_${arg.end_price}`;
-					delete arg.start_price;
-					delete arg.end_price;
-
-					//处理拜访图片
-					arg['visiting_imgs'] = this.visiting_imgs.join(',');
 					//处理附件
 					let arr = [];
 					arr.push(this.attachment)
 					arg['attachment'] = JSON.stringify(arr);
-
+					
 					resource.reserveAdd(arg).then(res => {
 						if(res.data.code == 1){
 							this.$message.success(res.data.msg);
@@ -898,13 +917,18 @@
 						}
 					})
 				}else if(this.add_type == '2'){		//编辑
-					let arg = JSON.parse(JSON.stringify(this.info_arg));
-					arg['price_range'] = `${arg.start_price}_${arg.end_price}`;
-					delete arg.start_price;
-					delete arg.end_price;
+					// let arg = JSON.parse(JSON.stringify(this.info_arg));
+					// arg['price_range'] = `${arg.start_price}_${arg.end_price}`;
+					// delete arg.start_price;
+					// delete arg.end_price;
 
-					//处理拜访图片
-					arg['visiting_imgs'] = this.visiting_imgs.join(',');
+					// //处理拜访图片
+					// arg['visiting_imgs'] = this.visiting_imgs.join(',');
+
+					// //主营
+					// arg['main_business'] = this.info_arg_main_business.join(',');
+					// //擅长品类
+					// arg['scpl'] = this.info_arg_scpl.join(',');
 
 					arg['reserve_id'] = this.reserve_id;
 					resource.reserveEditPost(arg).then(res => {
@@ -934,6 +958,11 @@
 						let price_range = data.price_range.split('~');
 						this.info_arg.start_price = price_range[0];
 						this.info_arg.end_price = price_range[1];
+
+						//主营
+						this.info_main_business_value = data.main_business;
+						//擅长品类
+						this.info_scpl_value = data.scpl;
 
 						this.company_name = data.company_name;				//公司名称
 
@@ -985,6 +1014,10 @@
 							let data = res.data.data;
 							this.show_upload_file = true;
 							this.company_name = data.company_name;				//公司名称
+							//主营
+							this.info_main_business_value = data.main_business;
+							//擅长品类
+							this.info_scpl_value = data.scpl;
 							//工商营业执照
 							if(data.business_license){
 								this.business_license_img = data.business_license.split(',');
@@ -1115,6 +1148,11 @@
 						this.info_arg.start_price = price_range[0];
 						this.info_arg.end_price = price_range[1];
 						this.company_name = data.company_name;				//公司名称
+
+						//主营
+						this.info_main_business_value = data.main_business;
+						//擅长品类
+						this.info_scpl_value = data.scpl;
 
 						//工商营业执照
 						this.business_license_img = [];
