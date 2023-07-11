@@ -101,6 +101,7 @@ let path = {
   qualified:'api/supplier_manager/qualified',             //申请转合格
   checkQualified:'api/supplier_manager/check_qualified',  //转合格审核
   reserveQualifiedEdit:'api/supplier_manager/reserve_qualified_edit', //编辑供应商（转合格阶段）
+  visitList:'api/supplier_manager/visit_list',            //拜访记录列表
 };  
 export default {
   //类目列表接口
@@ -554,5 +555,9 @@ export default {
   //编辑供应商-POST（转合格阶段）
   reserveQualifiedEditPost(params) {
     return http.post(path.reserveQualifiedEdit, params);
+  },
+  //拜访记录列表
+  visitList(params) {
+    return http.get(path.visitList, params);
   },
 };

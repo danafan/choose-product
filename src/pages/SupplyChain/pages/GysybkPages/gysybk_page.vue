@@ -145,6 +145,11 @@
 								<div v-if="scope.row.status == 4">{{scope.row.status | qualified_refund_status}}</div>
 							</template>
 						</el-table-column>
+						<el-table-column label="拜访次数">
+							<template slot-scope="scope">
+								<el-button type="text" size="small" @click="getVisit(scope.row.reserve_id)">{{scope.row.num}}</el-button>
+							</template>
+						</el-table-column>
 						<el-table-column label="操作" width="180" fixed="right">
 							<template slot-scope="scope">
 								<el-button type="text" size="small" @click="checkInfo('3',scope.row.reserve_id)" v-if="button_list.detail == 1">查看</el-button>
@@ -446,6 +451,30 @@
 						<el-button type="primary" size="small" @click="commitZhuan">提交</el-button>
 					</div>
 				</el-dialog>
+				<!-- 拜访记录详情 -->
+				<el-dialog :visible.sync="visit_dialog" width="65%">
+					<div slot="title" class="dialog_title">
+						<div>拜访记录</div>
+						<img class="close_icon" src="../../../../static/close_icon.png" @click="visit_dialog = false">
+					</div>
+					<!-- 内容 -->
+					<div class="pt-15">
+						<el-table size="mini" :data="visit_data.data" tooltip-effect="dark" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" v-loading="visit_loading">
+							<el-table-column label="供应商名称" prop="supplier_name"></el-table-column>
+							<el-table-column label="区域" prop="area"></el-table-column>
+							<el-table-column label="供应商地址" prop="address"></el-table-column>
+							<el-table-column label="拜访员" prop="visit_user_name"></el-table-column>
+							<el-table-column label="拜访时间" prop="visit_time"></el-table-column>
+							<el-table-column label="拜访目的" prop="visit_purpose"></el-table-column>
+							<el-table-column label="拜访过程描述" prop="description"></el-table-column>
+							<el-table-column label="备注" prop="remark"></el-table-column>
+						</el-table>
+						<PaginationWidget :total="visit_data.total" :page="visit_page" :pagesize="20" :show_multiple="false" @checkPage="checkVisitPage"/>
+					</div>
+					<div slot="footer" class="dialog_footer">
+						<el-button size="small" @click="visit_dialog = false">关闭</el-button>
+					</div>
+				</el-dialog>
 			</div>
 		</template>
 		<style type="text/css">
@@ -599,6 +628,10 @@
 				audit_status:1,					//转合格审核（1:同意；2:拒绝）
 				audit_remark:"",				//转合格审核拒绝原因
 				show_upload_file:true,
+				visit_dialog:false,				//供应商拜访记录弹窗
+				visit_data:{},					//拜访记录数据
+				visit_page:1,					
+				visit_loading:false,
 			}
 		},
 		created(){
@@ -1202,7 +1235,27 @@
 						this.$message.warning(res.data.msg);
 					}
 				})
-			}
+			},
+			//点击查看拜访记录
+			getVisit(reserve_id){
+				this.reserve_id = reserve_id;
+				this.visit_dialog = true;
+				this.visit_loading = true;
+				resource.visitList({reserve_id:this.reserve_id}).then(res => {
+					if(res.data.code == 1){
+						this.visit_loading = false;
+						this.visit_data = res.data.data;
+					}else{
+						this.$message.warning(res.data.msg);
+					}
+				})
+			},
+			//拜访记录分页
+			checkVisitPage(v){
+				this.visit_page = v;
+				//拜访记录列表
+				this.getVisit();
+			},
 		},
 		filters:{
 			//填报状态
