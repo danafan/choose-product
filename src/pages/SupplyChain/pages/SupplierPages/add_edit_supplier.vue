@@ -216,8 +216,8 @@
 						this.supply_warehousing = data.supply_warehousing;
 						this.supply_monthly_settlement = data.supply_monthly_settlement;
 						this.company_name = data.company_name;
-						this.maintainer = data.maintainer;
-						this.maintainer_id = data.maintainer_id;
+						this.maintainer = data.maintainer?data.maintainer:'';
+						this.maintainer_id = data.maintainer_id?data.maintainer_id:'';
 						this.weixin = data.weixin?data.weixin:"";
 						this.grade_id = data.grade_id?data.grade_id:'';
 						this.mode = data.mode?data.mode:'';
@@ -291,6 +291,8 @@
 						maintainer:this.maintainer,
 						maintainer_id:this.maintainer_id
 					}
+					console.log(arg)
+					// return;
 					this.$confirm('确认提交?', '提示', {
 						confirmButtonText: '确定',
 						cancelButtonText: '取消',

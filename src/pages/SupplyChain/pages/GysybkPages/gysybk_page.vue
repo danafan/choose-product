@@ -53,8 +53,14 @@
 						<el-input style="width: 50px;" size="mini" type="number" v-model="start_price"></el-input>&nbsp~&nbsp
 						<el-input style="width: 50px;" size="mini" type="number" v-model="end_price"></el-input>
 					</el-form-item>
-					<el-form-item label="是否可退换货：">
-						<el-select v-model="supply_return_exchange" clearable placeholder="全部">
+					<el-form-item label="是否可退货：">
+						<el-select v-model="supply_return_goods" clearable placeholder="全部">
+							<el-option label="是" :value="1"></el-option>
+							<el-option label="否" :value="0"></el-option>
+						</el-select>
+					</el-form-item>
+					<el-form-item label="是否可换货：">
+						<el-select v-model="supply_exchange_goods" clearable placeholder="全部">
 							<el-option label="是" :value="1"></el-option>
 							<el-option label="否" :value="0"></el-option>
 						</el-select>
@@ -91,7 +97,6 @@
 				</el-form>
 				<el-divider></el-divider>
 				<TableTitle title="数据列表" id="table_title">
-					<!-- <el-button size="mini" type="primary" @click="import_dialog = true" v-if="button_list.import == 1">导入</el-button> -->
 					<el-button size="mini" type="primary" @click="addFn('1')" v-if="button_list.add == 1">添加</el-button>
 				</TableTitle>
 				<el-table ref="table" size="mini" :data="data.data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" v-loading="loading">
@@ -118,7 +123,8 @@
 					<el-table-column label="地址" prop="address"></el-table-column>
 					<el-table-column label="供应商合作客户" prop="supplier_cooperate_custom"></el-table-column>
 					<el-table-column label="产品价段位" prop="price_range"></el-table-column>
-					<el-table-column label="是否可退换货" prop="supply_return_exchange"></el-table-column>
+					<el-table-column label="是否可退货" prop="supply_return_goods"></el-table-column>
+					<el-table-column label="是否可换货" prop="supply_exchange_goods"></el-table-column>
 					<el-table-column label="是否可代发" prop="supply_replace_send"></el-table-column>
 					<el-table-column label="性价比" prop="cost_performance"></el-table-column>
 					<el-table-column label="合作程度" prop="cooperativeness"></el-table-column>
@@ -145,7 +151,6 @@
 								<!-- 填报编辑 -->
 								<el-button type="text" size="small" @click="addFn('2',scope.row.reserve_id)" v-if="scope.row.status != 0 && scope.row.status != 2 && scope.row.status != 3 && button_list.info_edit == 1">编辑</el-button>
 								<el-button type="text" size="small" v-if="scope.row.status != 0 && scope.row.status != 3 && button_list.del == 1" @click="deleteFn(scope.row.reserve_id)">删除</el-button>
-								<!-- <el-button type="text" size="small" v-if="scope.row.status == 0 && button_list.info_check == 1" @click="checkInfo('4',scope.row.reserve_id)">填报审核</el-button> -->
 							</template>
 						</el-table-column>
 					</el-table>
@@ -261,12 +266,19 @@
 								</el-select>
 								<div v-else>{{info_arg.supply_out_send}}</div>
 							</el-form-item>
-							<el-form-item label="是否可退换货：" required>
-								<el-select v-model="info_arg.supply_return_exchange" style="width: 120px;" placeholder="全部" v-if="add_type == '1' || add_type == '2'">
+							<el-form-item label="是否可退货：" required>
+								<el-select v-model="info_arg.supply_return_goods" style="width: 120px;" placeholder="全部" v-if="add_type == '1' || add_type == '2'">
 									<el-option label="是" :value="1"></el-option>
 									<el-option label="否" :value="0"></el-option>
 								</el-select>
-								<div v-else>{{info_arg.supply_return_exchange}}</div>
+								<div v-else>{{info_arg.supply_return_goods}}</div>
+							</el-form-item>
+							<el-form-item label="是否可换货：" required>
+								<el-select v-model="info_arg.supply_exchange_goods" style="width: 120px;" placeholder="全部" v-if="add_type == '1' || add_type == '2'">
+									<el-option label="是" :value="1"></el-option>
+									<el-option label="否" :value="0"></el-option>
+								</el-select>
+								<div v-else>{{info_arg.supply_exchange_goods}}</div>
 							</el-form-item>
 							<el-form-item label="是否可代发：" required>
 								<el-select v-model="info_arg.supply_replace_send" style="width: 120px;" placeholder="全部" v-if="add_type == '1' || add_type == '2'">
@@ -370,19 +382,6 @@
 							</el-form-item>
 						</el-form>
 						<el-divider v-if="info_arg.status >= 3"></el-divider>
-						<!-- 填报审核 -->
-						<!-- <el-form size="mini" v-if="add_type == '4'">
-							<el-form-item>
-								<el-radio-group v-model="check_status">
-									<el-radio :label="1">同意</el-radio>
-									<el-radio :label="0">拒绝</el-radio>
-								</el-radio-group>
-							</el-form-item>
-							<el-form-item label="拒绝原因：" v-if="check_status == 0" required>
-								<el-input type="textarea" :rows="3" placeholder="拒绝原因" v-model="remark">
-								</el-input>
-							</el-form-item>
-						</el-form> -->
 						<!-- 转合格审核 -->
 						<el-form size="mini" v-if="(add_type == '3' && info_arg.status >= 3) || add_type == '5'">
 							<el-form-item label="合格状态：">
@@ -418,8 +417,6 @@
 						<el-button size="small" @click="edit_dialog = false">取消</el-button>
 						<!-- 添加/编辑 -->
 						<el-button type="primary" size="small" @click="submitAddEdit" v-if="add_type == '1' || add_type == '2'">提交</el-button>
-						<!-- 填报审核 -->
-						<!-- <el-button type="primary" size="small" @click="submitCheck" v-if="add_type == '4'">保存</el-button> -->
 						<!-- 转合格审核 -->
 						<el-button type="primary" size="small" @click="zhgAudit" v-if="add_type == '5'">保存</el-button>
 					</div>
@@ -517,7 +514,6 @@
 				supplier_name:"",				//供应商名称
 				user_list:[],					//所有用户列表
 				developer:"",					//开发人员姓名
-				// develop_date:[],				//开发日期
 				classification_list:[],				//分类
 				classification:"",					//选中的分类
 				area_list:[],						//区域
@@ -537,7 +533,8 @@
 				supply_design:"",				//是否自有设计能力
 				start_price:"",					//价格段开始
 				end_price:"",					//价格段结束
-				supply_return_exchange:"",		//是否可退换货
+				supply_return_goods:"",			//是否可退货
+				supply_exchange_goods:"",		//是否可换货
 				supply_replace_send:"",			//是否可代发
 				status:"",						//状态
 				max_height:0,	
@@ -567,7 +564,6 @@
 					supply_replace_send:1,
 					cost_performance:"",
 					cooperativeness:"",
-					supply_return_exchange:1,
 					contactor:"",
 					address:"",
 					contact_information:"",
@@ -581,6 +577,8 @@
 					supplier_cooperate_custom:"",
 					introducer:"",
 					supply_out_send:1,
+					supply_return_goods:1,
+					supply_exchange_goods:1,
 					develop_date:"",
 					status:"",
 					info_refund_remark:"",
@@ -674,8 +672,6 @@
 				let arg = {
 					supplier_name:this.supplier_name,				//供应商名称
 					developer:this.developer,					//开发人员姓名
-					// start_time:this.develop_date && this.develop_date.length > 0?this.develop_date[0]:"",
-					// end_time:this.develop_date && this.develop_date.length > 0?this.develop_date[1]:"",
 					classification:this.classification,				//分类
 					area:this.area,						//区域
 					main_business:this.main_business,				//主营
@@ -683,7 +679,8 @@
 					supply_free_factory:this.supply_free_factory,			//是否自有工厂
 					supply_design:this.supply_design,				//是否自有设计能力
 					settlement_method:this.settlement_method,			//结算方式
-					supply_return_exchange:this.supply_return_exchange,		//是否可退换货
+					supply_return_goods:this.supply_return_goods,		//是否可退货
+					supply_exchange_goods:this.supply_exchange_goods,		//是否可换货
 					supply_replace_send:this.supply_replace_send,			//是否可代发
 					cost_performance:this.cost_performance,			//性价比
 					cooperativeness:this.cooperativeness,				//合作程度
@@ -782,7 +779,7 @@
 			//填报弹窗关闭
 			closeEdit(){
 				for(let k in this.info_arg){
-					if(k == 'supply_free_factory' || k == 'supply_design' || k == 'supply_replace_send' || k == 'supply_return_exchange' || k == 'supply_out_send'){
+					if(k == 'supply_free_factory' || k == 'supply_design' || k == 'supply_replace_send' || k == 'supply_return_goods' || k == 'supply_exchange_goods' || k == 'supply_out_send'){
 						this.info_arg[k] = 1;
 					}else{
 						this.info_arg[k] = "";
@@ -972,28 +969,6 @@
 				})
 				this.edit_dialog = true;
 			},
-			//提交填报审核
-			// submitCheck(){
-			// 	if(this.check_status == 0 && this.remark == ''){
-			// 		this.$message.warning('请输入拒绝原因');
-			// 		return;
-			// 	}
-			// 	let arg = {
-			// 		reserve_id:this.reserve_id,
-			// 		status:this.check_status,
-			// 		remark:this.remark
-			// 	}
-			// 	resource.checkInfo(arg).then(res => {
-			// 		if(res.data.code == 1){
-			// 			this.$message.success(res.data.msg);
-			// 			this.edit_dialog = false;
-			// 			//获取供应商列表
-			// 			this.supplierManagerList();
-			// 		}else{
-			// 			this.$message.warning(res.data.msg);
-			// 		}
-			// 	})
-			// },
 			//点击转合格编辑或添加
 			zhuanFn(type,reserve_id){
 				this.reserve_id = reserve_id;
@@ -1019,19 +994,6 @@
 							if(data.company_img){
 								this.company_img = data.company_img.split(',');
 							}
-							
-							// this.company_img = [];
-							// if(data.company_img){
-							// 	let company_img = data.company_img.split(',');
-							// 	company_img.map(item => {
-							// 		let company_img = {
-							// 			urls:item,
-							// 			show_icon:false
-							// 		}
-							// 		this.company_img.push(company_img);
-							// 	})
-							// }
-							
 							this.zhuan_dialog = true;
 						}else{
 							this.$message.warning(res.data.msg);
