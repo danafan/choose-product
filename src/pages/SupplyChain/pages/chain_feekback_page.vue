@@ -153,6 +153,7 @@
 							this.$message.success(res.data.msg);
 							//获取列表
 							this.getData();
+							this.$store.dispatch('ajaxNum')
 						}else{
 							this.$message.warning(res.data.msg);
 						}

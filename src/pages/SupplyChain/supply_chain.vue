@@ -12,12 +12,14 @@
 							<img class="collapse_chain_icon" :src="item.icon_active" v-if="active_index == index">
 							<img class="collapse_chain_icon" :src="item.icon" v-else>
 						</el-tooltip>
+						<div class="collapse_feekback_num" v-if="is_collapse && item.name == '反馈'">{{feekback_num}}</div>
 					</div>
 					<div v-else>
 						<img class="chain_icon" :src="item.icon_active" v-if="active_index == index">
 						<img class="chain_icon" :src="item.icon" v-else>
 					</div>
 					<div class="chain_text" v-if="!is_collapse">{{item.name}}</div>
+					<div class="feekback_num" v-if="!is_collapse && item.name == '反馈'">{{feekback_num}}</div>
 					<div class="active_line" v-if="active_index == index && !is_collapse"></div>
 				</div>
 			</el-menu-item>
@@ -60,16 +62,16 @@
 					this.title = to.query.supplier_type == '1'?"添加供应商":"编辑供应商";
 				}else if(to.query.goods_type){	//供应链中心（商品）
 					switch(to.query.goods_type){
-						case '1':
+					case '1':
 						this.title = "添加商品";
 						break;
-						case '2':
+					case '2':
 						this.title = "编辑商品";
 						break;
-						case '3':
+					case '3':
 						this.title = "商品详情";
 						break;
-						default: 
+					default: 
 						return;
 					}
 				}else if(to.path == '/chain_setting_page'){	//判断是否显示修改记录
@@ -84,6 +86,9 @@
 		computed: {
 			menu_arr() {
 				return this.$store.state.menu_list;
+			},
+			feekback_num() {
+				return this.$store.state.feekback_num;
 			},
 		},
 		created(){
@@ -130,12 +135,14 @@
 				return item.web_url == 'edit_record';
 			})
 			this.is_record = ff.length > 0;
+			this.$store.dispatch('ajaxNum')
 		},
 		methods:{
 			checkMenu(index){
 				this.active_index = index;
 				let path = this.menu_list[index].path;
 				this.$router.push(path);
+				this.$store.dispatch('ajaxNum')
 			},
 		},
 		components:{
@@ -144,102 +151,130 @@
 	}
 </script>
 <style type="text/css">
-.el-menu-item{
-	padding: 0!important;
-}
+	.el-menu-item{
+		padding: 0!important;
+	}
 </style>
 <style lang="less" scoped>
-.chain_page{
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	display: flex;
-	.collapse_row{
-		height: 30px;
-		padding-right: 5px;
-		display: flex;
-		align-items: center;
-		justify-content: flex-end;
-		.fold_icon{
-			font-size:20px;
-			cursor: pointer;
-		}
-	}
-	.menu_item{
-		width: 208rem;
-		height: 56px;
-		display: flex;
-		align-items: center;
-		font-size: 16rem;
-		color: #333333;
-		position: relative;
-		cursor:pointer;
-		padding-left: 16rem;
-		.chain_icon{
-			margin-right: 8rem;
-			width: 16rem;
-			height: 16rem;
-		}
-		.active_line{
-			position: absolute;
-			top: 0;
-			right: 0;
-			background: var(--color);
-			width: 2rem;
-			height: 56px;
-		}
-	}
-	.chain_text{
-		position: relative;
-		top: 2rem;
-	}
-	.collapse_menu_item{
-		width: 64px;
-		height: 56px;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		padding-left: 0;
-		.collapse_chain_icon{
-			width: 24px;
-			height: 24px;
-		}
-	}
-	.menu_item_active{
-		background: #FFFAF5;
-		color: var(--color);
-	}
-	.right_content{
-		flex:1;
+	.chain_page{
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
 		height: 100%;
 		display: flex;
-		flex-direction: column;
-		.right_content_title{
-			background: #ffffff;
-			height: 64rem;
-			padding-left: 24rem;
-			padding-right: 60rem;
+		.collapse_row{
+			height: 30px;
+			padding-right: 5px;
 			display: flex;
 			align-items: center;
-			justify-content: space-between;
-			.page_title{
-				font-size:18rem;
-				color: #333333;
-				font-weight: 500;
-			}
-			.edit_record{
-				font-size:14rem;
-				color: var(--color);
-				cursor:pointer;
+			justify-content: flex-end;
+			.fold_icon{
+				font-size:20px;
+				cursor: pointer;
 			}
 		}
-		.right_content_box{
+		.menu_item{
+			width: 208rem;
+			height: 56px;
+			display: flex;
+			align-items: center;
+			font-size: 16rem;
+			color: #333333;
 			position: relative;
-			flex:1;
+			cursor:pointer;
+			padding-left: 16rem;
+			.chain_icon{
+				margin-right: 8rem;
+				width: 16rem;
+				height: 16rem;
+			}
+			.collapse_feekback_num{
+				position: absolute;
+				top: 10px;
+				right: 5px;
+				border-radius: 10px;
+				background: #FF1515;
+				height: 20rem;
+				line-height: 20rem;
+				padding-left: 5rem;
+				padding-right: 5rem;
+				font-size: 12px;
+				color:#ffffff;
+			}
+			.feekback_num{
+				position: absolute;
+				top: 50%;
+				right: 5px;
+				transform: translate(0,-50%);
+				border-radius: 10px;
+				background: #FF1515;
+				height: 20rem;
+				line-height: 20rem;
+				padding-left: 5rem;
+				padding-right: 5rem;
+				font-size: 12px;
+				color:#ffffff;
+			}
+			.active_line{
+				position: absolute;
+				top: 0;
+				right: 0;
+				background: var(--color);
+				width: 2rem;
+				height: 56px;
+			}
 		}
-		
+		.chain_text{
+			position: relative;
+			top: 2rem;
+		}
+
+		.collapse_menu_item{
+			width: 64px;
+			height: 56px;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			padding-left: 0;
+			.collapse_chain_icon{
+				width: 24px;
+				height: 24px;
+			}
+		}
+		.menu_item_active{
+			background: #FFFAF5;
+			color: var(--color);
+		}
+		.right_content{
+			flex:1;
+			height: 100%;
+			display: flex;
+			flex-direction: column;
+			.right_content_title{
+				background: #ffffff;
+				height: 64rem;
+				padding-left: 24rem;
+				padding-right: 60rem;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				.page_title{
+					font-size:18rem;
+					color: #333333;
+					font-weight: 500;
+				}
+				.edit_record{
+					font-size:14rem;
+					color: var(--color);
+					cursor:pointer;
+				}
+			}
+			.right_content_box{
+				position: relative;
+				flex:1;
+			}
+
+		}
 	}
-}
 </style>

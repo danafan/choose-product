@@ -21,6 +21,7 @@ const store = new Vuex.Store({
     screen_open:true,    //查询条件下拉框是否展开
     notice_list:[],       //公告列表
     nuread_num:0,         //未读公告数量
+    feekback_num:0,       //反馈待处理数量
   },
   mutations: {
     //设置用户信息
@@ -43,6 +44,10 @@ const store = new Vuex.Store({
     //设置公告未读数量
     setNureadNum(state, nuread_num){
       state.nuread_num = nuread_num;
+    },
+    //反馈待处理数量
+    setFeekbackNum(state, feekback_num){
+      state.feekback_num = feekback_num;
     },
     //设置购物车
     setCarGoods(state, arg) {
@@ -81,7 +86,17 @@ const store = new Vuex.Store({
         Message.warning(res.data.msg);
        }
      })
-    }
+    },
+    //反馈待处理数量
+    ajaxNum(context) {
+      resource.ajaxNum().then(res => {
+       if(res.data.code == 1){
+         context.commit('setFeekbackNum', res.data.data);
+       }else{
+        Message.warning(res.data.msg);
+       }
+     })
+    },
   }
 });
 export default store;

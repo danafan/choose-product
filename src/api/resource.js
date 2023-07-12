@@ -32,6 +32,7 @@ let path = {
   twoFourTitle:'api/home/twofourtitle',                   //切换24小时不提示
   getUserName:'api/selected/getusername',                 //获取需求人
   hotSellGoods:'api/home/hotsellgoods',                   //爆款列表
+  ajaxNum:'api/feedback/ajaxNum',                         //反馈待处理数量
 } 
 export default {
   //钉钉登陆
@@ -161,5 +162,9 @@ export default {
   //爆款列表
   hotSellGoods(params) {
     return http.get(path.hotSellGoods, params);
+  },
+  //反馈待处理数量
+  ajaxNum(params) {
+    return http.get(path.ajaxNum, params);
   },
 };

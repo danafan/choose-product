@@ -13,7 +13,7 @@
 				</div>
 				<div class="flex">
 					<!-- 推荐商品 -->
-					<div class="recommended">
+					<div class="recommended" v-if="goods_info.recommend_list.length > 0">
 						<div class="recommended_title">推荐商品</div>
 						<div class="flex fc ac">
 							<div class="li-item" v-for="(item, index) in goods_info.recommend_list" :key="index" @click="getDetail(item.style_id)">
