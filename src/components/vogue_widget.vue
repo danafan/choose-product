@@ -64,7 +64,6 @@
       },
       //点击跳转详情
       getDetail(style_id){
-        console.log(style_id)
         let active_path = `/goods_detail?style_id=${style_id}`;
         const routeData = this.$router.resolve(active_path);
         window.open(routeData.href);

@@ -11,13 +11,27 @@
 					<!-- 店铺信息 -->
 					<StoreInfo :goods_info="goods_info"/>
 				</div>
-				<div class="bottom_content">
-					<div class="content_top_tab">
-						<div class="content_top_tab_item" :class="{'active_content_top_tab_item':active_index == 0}" @click="active_index = 0">详情</div>
-						<div class="content_top_tab_item" :class="{'active_content_top_tab_item':active_index == 1}" @click="active_index = 1">选中记录</div>
+				<div class="flex">
+					<!-- 推荐商品 -->
+					<div class="recommended">
+						<div class="recommended_title">推荐商品</div>
+						<div class="flex fc ac">
+							<div class="li-item" v-for="(item, index) in goods_info.recommend_list" :key="index" @click="getDetail(item.style_id)">
+								<el-image class="goods_img" :src="domain + item.img" fit="scale-down"></el-image>
+								<div class="hot_sell_item_price">¥{{item.cost_price}}</div>
+								<div class="hot_sell_item_title table_header_text">{{item.title}}阿克苏尖端科技阿斯顿啊就是的空间啊还是多看几阿斯顿卡就收到卡就收到阿克苏尖端科技阿斯顿啊就是的空间啊还是多看几阿斯顿卡就收到卡就收到</div>
+							</div>
+						</div>
 					</div>
-					<TabDetail :goods_info="goods_info" v-if="active_index == 0 && over_loading"/>
-					<TabRecord :selected_record="goods_info.info_log" v-if="active_index == 1"/>
+					<!-- 右侧内容 -->
+					<div class="bottom_content flex-1">
+						<div class="content_top_tab">
+							<div class="content_top_tab_item" :class="{'active_content_top_tab_item':active_index == 0}" @click="active_index = 0">详情</div>
+							<div class="content_top_tab_item" :class="{'active_content_top_tab_item':active_index == 1}" @click="active_index = 1">选中记录</div>
+						</div>
+						<TabDetail :goods_info="goods_info" v-if="active_index == 0 && over_loading"/>
+						<TabRecord :selected_record="goods_info.info_log" v-if="active_index == 1"/>
+					</div>
 				</div>
 			</div>
 			<CarWidget :is_fixed="true"/>
@@ -87,6 +101,12 @@
 						this.$message.warning(res.data.msg);
 					}
 				})
+			},
+			//点击跳转详情
+			getDetail(style_id){
+				let active_path = `/goods_detail?style_id=${style_id}`;
+				const routeData = this.$router.resolve(active_path);
+				window.open(routeData.href);
 			}
 		},
 		components:{
@@ -102,50 +122,91 @@
 	}
 </script>
 <style lang="less" scoped>
-.white_back{
-	background: #ffffff;
-	overflow-y: scroll;
-}
-.padding_page_content{
-	width: 1330rem;
-	height: 100%;
-	display: flex;
-	flex-direction: column;
-	position: relative;
-	.detail_content{
-		flex:1;
-		padding-left: 100rem;
-		.detail_top_row{
-			display: flex;
-			justify-content: space-between;
-		}
-		.bottom_content{
-			margin-top: 20rem;
-			border:1px solid #E5E5E5;
-			.content_top_tab{
-				background: #F6F6F6;
-				width: 100%;
-				height: 44rem;
+	.white_back{
+		background: #ffffff;
+		overflow-y: scroll;
+	}
+	.padding_page_content{
+		width: 1330rem;
+		height: 100%;
+		display: flex;
+		flex-direction: column;
+		position: relative;
+		.detail_content{
+			flex:1;
+			padding-left: 100rem;
+			.detail_top_row{
 				display: flex;
-				.content_top_tab_item{
-					border-left:1px solid #E5E5E5;
-					border-right:1px solid #E5E5E5;
+				justify-content: space-between;
+			}
+			.recommended{
+				margin-top: 20rem;
+				border: 1px solid #E5E5E5;
+				margin-right: 10px;
+				width: 254px;
+				background: #F6F6F6;
+				.recommended_title{
+					border-bottom: 1px solid #E5E5E5;
+					text-align: center;
 					height: 44rem;
 					line-height: 44rem;
-					padding-left: 60rem;
-					padding-right: 60rem;
-					font-size: 12rem;
-					color: #333333;
-					cursor:pointer;
+					font-size: 12px;
+					color: #F37605;
 				}
-				.active_content_top_tab_item{
-					border:1px solid var(--color);
+				.li-item {
+					margin-top: 10px;
 					background: #ffffff;
-					color: var(--color);
+					width: 234px;
+					.goods_img{
+						width: 234px;
+						height: 234px;
+					}
+					.hot_sell_item_price{
+						line-height: 22px;
+						width: 100%;
+						text-align: center;
+						color: #F37605;
+						font-size: 18px;
+						font-weight: bold;
+					}
+					.hot_sell_item_title{
+						padding-left: 8px;
+						padding-right: 8px;
+						width: 100%;
+						text-align: center;
+						font-size: 12px;
+						line-height: 30px;
+						color: #333333;
+					}
+				}
+			}
+			.bottom_content{
+				margin-top: 20rem;
+				border:1px solid #E5E5E5;
+				.content_top_tab{
+					background: #F6F6F6;
+					width: 100%;
+					height: 44rem;
+					display: flex;
+					.content_top_tab_item{
+						border-left:1px solid #E5E5E5;
+						border-right:1px solid #E5E5E5;
+						height: 44rem;
+						line-height: 44rem;
+						padding-left: 60rem;
+						padding-right: 60rem;
+						font-size: 12rem;
+						color: #333333;
+						cursor:pointer;
+					}
+					.active_content_top_tab_item{
+						border:1px solid var(--color);
+						background: #ffffff;
+						color: var(--color);
+					}
 				}
 			}
 		}
 	}
-}
-.white_back::-webkit-scrollbar{display:none}
+	.white_back::-webkit-scrollbar{display:none}
 </style>
