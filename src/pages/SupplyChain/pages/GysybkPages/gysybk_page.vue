@@ -147,7 +147,7 @@
 						</el-table-column>
 						<el-table-column label="拜访次数">
 							<template slot-scope="scope">
-								<el-button type="text" size="small" @click="getVisit(scope.row.reserve_id)">{{scope.row.num}}</el-button>
+								<el-button type="text" size="small" @click="getVisit(scope.row.reserve_id)">{{scope.row.visit_num}}</el-button>
 							</template>
 						</el-table-column>
 						<el-table-column label="操作" width="180" fixed="right">
@@ -468,6 +468,16 @@
 							<el-table-column label="拜访目的" prop="visit_purpose"></el-table-column>
 							<el-table-column label="拜访过程描述" prop="description"></el-table-column>
 							<el-table-column label="备注" prop="remark"></el-table-column>
+							<el-table-column label="图片" width="150" >
+								<template slot-scope="scope">
+									<div v-if="scope.row.images.length == 0">暂无</div>
+									<el-carousel trigger="hover" indicator-position="none" :autoplay="false" height="100px" v-if="scope.row.images.length > 0 && loading == false">
+										<el-carousel-item v-for="item in scope.row.images" :key="item">
+											<el-image :z-index="9999" class="image" :src="item" fit="scale-down" :preview-src-list="scope.row.images"></el-image>
+										</el-carousel-item>
+									</el-carousel>
+								</template>
+							</el-table-column>
 						</el-table>
 						<PaginationWidget :total="visit_data.total" :page="visit_page" :pagesize="20" :show_multiple="false" @checkPage="checkVisitPage"/>
 					</div>
@@ -1245,6 +1255,13 @@
 					if(res.data.code == 1){
 						this.visit_loading = false;
 						this.visit_data = res.data.data;
+						this.visit_data.data.map(item => {
+							item['images'] = [];
+							let images = item.attachment.split(',');
+							images.map(i => {
+								item.images.push(this.domain + i)
+							})
+						})
 					}else{
 						this.$message.warning(res.data.msg);
 					}

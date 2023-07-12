@@ -9,12 +9,14 @@
 		<div class="flex-1">
 			<SupplierPage v-if="web_url == 'supplier_page'"/>
 			<GysybkPage v-if="web_url == 'gysybk_page'"/>
+			<VisitLog v-if="web_url == 'visit_log'"/>
 		</div>
 	</div>
 </template>
 <script>
 	import SupplierPage from './GysybkPages/supplier_page.vue'
 	import GysybkPage from './GysybkPages/gysybk_page.vue'
+	import VisitLog from './GysybkPages/visit_log.vue'
 	export default{
 		data(){
 			return{
@@ -42,21 +44,13 @@
 			let child_arr = child_list.filter(item => {
 				return item.web_url == 'chain_gysybk_page';
 			});
-
-			// let tab_list = child_arr[0].list;
-			// tab_list.some((item, i) => {
-			// 	if (item.web_url == 'edit_record') {
-			// 		tab_list.splice(i, 1)
-    		// 		return true //当内部return true时跳出整个循环
-    		// 	}
-    		// })
-    		// this.tab_list = tab_list;
     		this.tab_list = child_arr[0].list;
 			this.web_url = this.tab_list[0].web_url;
 		},
 		components:{
 			SupplierPage,
-			GysybkPage
+			GysybkPage,
+			VisitLog
 		}
 	}
 </script>
