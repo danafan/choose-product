@@ -142,24 +142,44 @@
 			<!-- 内容 -->
 			<div class="pt-15">
 				<TableTitle title="数据列表" id="table_title">
-					<el-button size="mini" type="primary">添加</el-button>
+					<el-button size="mini" type="primary" @click="addEvakuateFn('添加评价','')">添加</el-button>
 				</TableTitle>
 				<el-table ref="table" size="mini" :data="evaluate_data.data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" v-loading="evaluate_loading">
-					<el-table-column label="评价内容" prop="evaluate_content" show-overflow-tooltip></el-table-column>
+					<el-table-column label="评价内容" prop="evaluate_content">
+						<template slot-scope="scope">
+							<el-button type="text" size="small" @click="addEvakuateFn('评价内容',scope.row.evaluate_content)">{{scope.row.evaluate_content}}</el-button>
+						</template>
+					</el-table-column>
 					<el-table-column label="评价时间" prop="add_time"></el-table-column>
 					<el-table-column label="操作" width="180" fixed="right">
 						<template slot-scope="scope">
-							<el-button size="mini" type="text">删除</el-button>
+							<el-button size="mini" type="text" @click="delEvaluate(scope.row.evaluate_log_id)">删除</el-button>
 						</template>
 					</el-table-column>
 				</el-table>
 				<PaginationWidget :total="evaluate_data.total" :page="evaluate_page" :show_multiple="false" :pagesize="10" @checkPage="checkEvaluatePage"/>
 			</div>
+			<!-- 添加或查看评价内容 -->
+			<el-dialog width="30%" :visible.sync="evaluate_info_dialog" append-to-body>
+				<div slot="title" class="dialog_title">
+					<div>{{evaluate_info_title}}</div>
+					<img class="close_icon" src="../../../../static/close_icon.png" @click="evaluate_info_dialog = false">
+				</div>
+				<div class="pt-15">
+					<el-input type="textarea" :rows="4" :disabled="evaluate_info_title == '评价内容'" placeholder="请输入评价内容" v-model="evaluate_content" maxlength="300"
+					show-word-limit>
+				</el-input>
+			</div>
 			<div slot="footer" class="dialog_footer">
-				<el-button size="small" @click="evaluate_dialog = false">关闭</el-button>
+				<el-button size="small" @click="evaluate_info_dialog = false">取消</el-button>
+				<el-button size="mini" type="primary" @click="evaluateSaveInfo" v-if="evaluate_info_title == '添加评价'">保存</el-button>
 			</div>
 		</el-dialog>
-	</div>
+		<div slot="footer" class="dialog_footer">
+			<el-button size="small" @click="evaluate_dialog = false">关闭</el-button>
+		</div>
+	</el-dialog>
+</div>
 </template>
 <style type="text/css">
 	.card_box .el-card__body{
@@ -205,6 +225,9 @@
 			}
 		}
 	}
+	.pt-15{
+		padding-top: 15px;
+	}
 // }
 </style>
 <script>
@@ -240,6 +263,9 @@
 				evaluate_page:1,
 				evaluate_loading:false,		
 				reserve_id:"",
+				evaluate_info_dialog:false,	//添加或查看评价弹窗
+				evaluate_info_title:"",		//添加或查看评价弹窗标题
+				evaluate_content:"",		//评价内容
 			}
 		},
 		beforeRouteLeave(to,from,next){
@@ -435,12 +461,65 @@
 					}
 				})
 			},
-			//评价记录切换页面
+			//评价记录切换页码
 			checkEvaluatePage(v){
 				this.evaluate_page = v;
 				//查看评价记录
 				this.evaluateList();
 			},
+			//点击添加或查看评价详情
+			addEvakuateFn(evaluate_info_title,evaluate_content){
+				this.evaluate_info_dialog = true;
+				this.evaluate_info_title = evaluate_info_title;
+				this.evaluate_content = evaluate_content;
+			},
+			//点击评价详情保存
+			evaluateSaveInfo(){
+				if(this.evaluate_content == ''){
+					this.$message.warning('请输入评价内容');
+				}else{
+					let arg = {
+						reserve_id:this.reserve_id,
+						evaluate_content:this.evaluate_content
+					}
+					resource.addEvaluate(arg).then(res => {
+						if(res.data.code == 1){
+							this.$message.success(res.data.msg);
+							this.evaluate_info_dialog = false;
+							//查看评价记录
+							this.evaluateList();
+						}else{
+							this.$message.warning(res.data.msg);
+						}
+					})
+				}
+			},
+			//点击删除评价记录
+			delEvaluate(evaluate_log_id){
+				this.$confirm('确认删除该评价记录?', '提示', {
+					confirmButtonText: '确定',
+					cancelButtonText: '取消',
+					type: 'warning'
+				}).then(() => {
+					let arg = {
+						evaluate_log_id:evaluate_log_id
+					}
+					resource.delEvaluate(arg).then(res => {
+						if(res.data.code == 1){
+							this.$message.success(res.data.msg);
+							//获取列表
+							this.evaluateList();
+						}else{
+							this.$message.warning(res.data.msg);
+						}
+					})
+				}).catch(() => {
+					this.$message({
+						type: 'info',
+						message: '已取消'
+					});          
+				});
+			}
 		},
 		components:{
 			TableTitle,

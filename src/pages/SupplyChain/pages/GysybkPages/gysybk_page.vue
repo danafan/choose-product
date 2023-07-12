@@ -150,6 +150,11 @@
 								<el-button type="text" size="small" @click="getVisit(scope.row.reserve_id)">{{scope.row.visit_num}}</el-button>
 							</template>
 						</el-table-column>
+						<el-table-column label="评价记录">
+							<template slot-scope="scope">
+								<el-button type="text" size="small" @click="getEvaluate(scope.row.reserve_id,scope.row.supplier_name)">{{scope.row.evaluate_num}}</el-button>
+							</template>
+						</el-table-column>
 						<el-table-column label="操作" width="180" fixed="right">
 							<template slot-scope="scope">
 								<el-button type="text" size="small" @click="checkInfo('3',scope.row.reserve_id)" v-if="button_list.detail == 1">查看</el-button>
@@ -378,7 +383,7 @@
 							</el-form>
 						</div>
 						<el-form size="mini" style="padding-left: 30px;width: 720px;">
-							<el-form-item label="拜访图片：" required>
+							<el-form-item label="供应商拜访记录图片：" required>
 								<UploadFile v-if="show_visiting_file && (add_type == '1' || add_type == '2')" :img_list="visiting_imgs" :is_multiple="true" :current_num="visiting_imgs.length" :max_num="9" @callbackFn="visitingImgsbackFn"/>
 								<div v-else>
 									<el-image style="width: 80px;height: 80px;margin-right: 10px;" :z-index="99999" :src="item" :initial-index="index" :preview-src-list="visiting_imgs" v-for="(item,index) in visiting_imgs">
@@ -485,71 +490,117 @@
 						<el-button size="small" @click="visit_dialog = false">关闭</el-button>
 					</div>
 				</el-dialog>
-			</div>
-		</template>
-		<style type="text/css">
-			.card_box .el-card__body{
-				height: 100%!important;
-				display: flex!important;
-				flex-direction: column!important;
-				padding-top: 0!important;
-				padding-bottom: 0!important;
-			}
-		</style>
-		<style lang="less" scoped>
-			.card_box{
-				.scroll_box{
-					.image{
-						width: 100px;
-						height: 100px;
-					}
-
+				<!-- 评价记录 -->
+				<el-dialog :visible.sync="evaluate_dialog">
+					<div slot="title" class="dialog_title">
+						<div>【{{supplier_name_title}}】评价记录</div>
+						<img class="close_icon" src="../../../../static/close_icon.png" @click="evaluate_dialog = false">
+					</div>
+					<!-- 内容 -->
+					<div class="pt-15">
+						<TableTitle title="数据列表" id="table_title">
+							<el-button size="mini" type="primary" @click="addEvakuateFn('添加评价','')">添加</el-button>
+						</TableTitle>
+						<el-table ref="table" size="mini" :data="evaluate_data.data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" v-loading="evaluate_loading">
+							<el-table-column label="评价内容" prop="evaluate_content">
+								<template slot-scope="scope">
+									<el-button type="text" size="small" @click="addEvakuateFn('评价内容',scope.row.evaluate_content)">{{scope.row.evaluate_content}}</el-button>
+								</template>
+							</el-table-column>
+							<el-table-column label="评价时间" prop="add_time"></el-table-column>
+							<el-table-column label="操作" width="180" fixed="right">
+								<template slot-scope="scope">
+									<el-button size="mini" type="text" @click="delEvaluate(scope.row.evaluate_log_id)">删除</el-button>
+								</template>
+							</el-table-column>
+						</el-table>
+						<PaginationWidget :total="evaluate_data.total" :page="evaluate_page" :show_multiple="false" :pagesize="10" @checkPage="checkEvaluatePage"/>
+					</div>
+					<!-- 添加或查看评价内容 -->
+					<el-dialog width="30%" :visible.sync="evaluate_info_dialog" append-to-body>
+						<div slot="title" class="dialog_title">
+							<div>{{evaluate_info_title}}</div>
+							<img class="close_icon" src="../../../../static/close_icon.png" @click="evaluate_info_dialog = false">
+						</div>
+						<div class="pt-15">
+							<el-input type="textarea" :rows="4" :disabled="evaluate_info_title == '评价内容'" placeholder="请输入评价内容" v-model="evaluate_content" maxlength="300"
+							show-word-limit>
+						</el-input>
+					</div>
+					<div slot="footer" class="dialog_footer">
+						<el-button size="small" @click="evaluate_info_dialog = false">取消</el-button>
+						<el-button size="mini" type="primary" @click="evaluateSaveInfo" v-if="evaluate_info_title == '添加评价'">保存</el-button>
+					</div>
+				</el-dialog>
+				<div slot="footer" class="dialog_footer">
+					<el-button size="small" @click="evaluate_dialog = false">关闭</el-button>
+				</div>
+			</el-dialog>
+		</div>
+	</template>
+	<style type="text/css">
+		.card_box .el-card__body{
+			height: 100%!important;
+			display: flex!important;
+			flex-direction: column!important;
+			padding-top: 0!important;
+			padding-bottom: 0!important;
+		}
+	</style>
+	<style lang="less" scoped>
+		.card_box{
+			.scroll_box{
+				.image{
+					width: 100px;
+					height: 100px;
 				}
-				.item_row{
-					display: flex;
-					.item_label{
-						width: 96px;
-						text-align:end;
-					}
+
+			}
+			.item_row{
+				display: flex;
+				.item_label{
+					width: 96px;
+					text-align:end;
 				}
 			}
-			.down_box{
-				display:flex;
-				padding:30rem;
-				.upload_box{
-					margin-left: 10px;
-					position: relative;
-					.upload_file{
-						position: absolute;
-						top: 0;
-						bottom: 0;
-						left: 0;
-						right: 0;
-						width: 100%;
-						height: 100%;
-						opacity: 0;
-					}
+		}
+		.down_box{
+			display:flex;
+			padding:30rem;
+			.upload_box{
+				margin-left: 10px;
+				position: relative;
+				.upload_file{
+					position: absolute;
+					top: 0;
+					bottom: 0;
+					left: 0;
+					right: 0;
+					width: 100%;
+					height: 100%;
+					opacity: 0;
 				}
 			}
-			.pt-15{
-				padding-top:15rem;
-			}
-		</style>
-		<script>
-			import { exportPost } from "../../../../api/export.js";
+		}
+		.pt-15{
+			padding-top:15rem;
+		}
+	</style>
+	<script>
+		import { exportPost } from "../../../../api/export.js";
 
-			import { MessageBox, Message } from "element-ui";
-			import resource from '../../../../api/chain_resource.js'
-			import commonResource from '../../../../api/common_resource.js'
+		import { MessageBox, Message } from "element-ui";
+		import resource from '../../../../api/chain_resource.js'
+		import commonResource from '../../../../api/common_resource.js'
 
-			import TableTitle from '../../components/table_title.vue'
-			import PaginationWidget from '../../../../components/pagination_widget.vue'
-			import UploadFile from '../../../../components/upload_file.vue'
-			import UploadXlsx from '../../../../components/upload_xlsx.vue'
-			export default{
-				data(){
-					return{
-						loading:false,
+		import TableTitle from '../../components/table_title.vue'
+		import PaginationWidget from '../../../../components/pagination_widget.vue'
+		import UploadFile from '../../../../components/upload_file.vue'
+		import UploadXlsx from '../../../../components/upload_xlsx.vue'
+		export default{
+			data(){
+				return{
+					loading:false,
 				supplier_name:"",				//供应商名称
 				user_list:[],					//所有用户列表
 				developer:"",					//开发人员姓名
@@ -642,6 +693,14 @@
 				visit_data:{},					//拜访记录数据
 				visit_page:1,					
 				visit_loading:false,
+				evaluate_dialog:false,		//评价列表弹窗
+				supplier_name_title:"",			//供应商名称
+				evaluate_data:{},			//评价列表数据
+				evaluate_page:1,
+				evaluate_loading:false,		
+				evaluate_info_dialog:false,	//添加或查看评价弹窗
+				evaluate_info_title:"",		//添加或查看评价弹窗标题
+				evaluate_content:"",		//评价内容
 			}
 		},
 		created(){
@@ -1273,6 +1332,90 @@
 				//拜访记录列表
 				this.getVisit();
 			},
+			//点击查看评价记录
+			getEvaluate(reserve_id,supplier_name){
+				this.reserve_id = reserve_id;
+				this.supplier_name_title = supplier_name;
+				this.evaluate_dialog = true;
+				//获取评级记录
+				this.evaluateList();
+			},
+			//获取评级记录
+			evaluateList(){
+				let arg = {
+					reserve_id:this.reserve_id,
+					page:this.evaluate_page,
+					pagesize:10
+				}
+				this.evaluate_loading = true;
+				resource.evaluateList(arg).then(res => {
+					if(res.data.code == 1){
+						this.evaluate_loading = false;
+						this.evaluate_data = res.data.data;
+					}else{
+						this.$message.warning(res.data.msg);
+					}
+				})
+			},
+			//评价记录切换页码
+			checkEvaluatePage(v){
+				this.evaluate_page = v;
+				//查看评价记录
+				this.evaluateList();
+			},
+			//点击添加或查看评价详情
+			addEvakuateFn(evaluate_info_title,evaluate_content){
+				this.evaluate_info_dialog = true;
+				this.evaluate_info_title = evaluate_info_title;
+				this.evaluate_content = evaluate_content;
+			},
+			//点击评价详情保存
+			evaluateSaveInfo(){
+				if(this.evaluate_content == ''){
+					this.$message.warning('请输入评价内容');
+				}else{
+					let arg = {
+						reserve_id:this.reserve_id,
+						evaluate_content:this.evaluate_content
+					}
+					resource.addEvaluate(arg).then(res => {
+						if(res.data.code == 1){
+							this.$message.success(res.data.msg);
+							this.evaluate_info_dialog = false;
+							//查看评价记录
+							this.evaluateList();
+						}else{
+							this.$message.warning(res.data.msg);
+						}
+					})
+				}
+			},
+			//点击删除评价记录
+			delEvaluate(evaluate_log_id){
+				this.$confirm('确认删除该评价记录?', '提示', {
+					confirmButtonText: '确定',
+					cancelButtonText: '取消',
+					type: 'warning'
+				}).then(() => {
+					let arg = {
+						evaluate_log_id:evaluate_log_id
+					}
+					resource.delEvaluate(arg).then(res => {
+						if(res.data.code == 1){
+							this.$message.success(res.data.msg);
+							//获取列表
+							this.evaluateList();
+						}else{
+							this.$message.warning(res.data.msg);
+						}
+					})
+				}).catch(() => {
+					this.$message({
+						type: 'info',
+						message: '已取消'
+					});          
+				});
+			}
 		},
 		filters:{
 			//填报状态

@@ -108,6 +108,8 @@ let path = {
   visitInfo:'api/supplier_manager/visit_info',              //拜访记录详情
   delVisit:'api/supplier_manager/del_visit',                //删除拜访记录
   evaluateList:'api/supplier_manager/evaluate_list',        //评价记录
+  addEvaluate:'api/supplier_manager/add_evaluate',          //创建评价记录
+  delEvaluate:'api/supplier_manager/del_evaluate',          //删除评价记录
 };  
 export default {
   //类目列表接口
@@ -593,5 +595,13 @@ export default {
   //评价记录
   evaluateList(params) {
     return http.get(path.evaluateList, params);
+  },
+  //创建评价记录
+  addEvaluate(params) {
+    return http.post(path.addEvaluate, params);
+  },
+  //删除评价记录
+  delEvaluate(params) {
+    return http.post(path.delEvaluate, params);
   },
 };
