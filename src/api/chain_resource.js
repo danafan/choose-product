@@ -107,6 +107,7 @@ let path = {
   editVisit:'api/supplier_manager/edit_visit',              //编辑拜访记录
   visitInfo:'api/supplier_manager/visit_info',              //拜访记录详情
   delVisit:'api/supplier_manager/del_visit',                //删除拜访记录
+  evaluateList:'api/supplier_manager/evaluate_list',        //评价记录
 };  
 export default {
   //类目列表接口
@@ -588,5 +589,9 @@ export default {
   //删除拜访记录
   delVisit(params) {
     return http.post(path.delVisit, params);
+  },
+  //评价记录
+  evaluateList(params) {
+    return http.get(path.evaluateList, params);
   },
 };

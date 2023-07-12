@@ -96,6 +96,11 @@
 						</template>
 					</el-table-column>
 					<el-table-column label="供应商等级" prop="grade_name"></el-table-column>
+					<el-table-column label="评价记录">
+						<template slot-scope="scope">
+							<el-button type="text" size="small" @click="getEvaluate(scope.row.supplier_id,scope.row.supplier_name)">{{scope.row.evaluate_num}}</el-button>
+						</template>
+					</el-table-column>
 					<el-table-column label="操作" width="180" fixed="right">
 						<template slot-scope="scope">
 							<el-button type="text" size="small" @click="getDetail(scope.row.supplier_id)" v-if="button_list.view == 1">查看</el-button>
@@ -126,6 +131,32 @@
 			</div>
 			<div slot="footer" class="dialog_footer">
 				<el-button size="small" @click="import_dialog = false">取消</el-button>
+			</div>
+		</el-dialog>
+		<!-- 评价记录 -->
+		<el-dialog :visible.sync="evaluate_dialog">
+			<div slot="title" class="dialog_title">
+				<div>【{{supplier_name}}】评价记录</div>
+				<img class="close_icon" src="../../../../static/close_icon.png" @click="evaluate_dialog = false">
+			</div>
+			<!-- 内容 -->
+			<div class="pt-15">
+				<TableTitle title="数据列表" id="table_title">
+					<el-button size="mini" type="primary">添加</el-button>
+				</TableTitle>
+				<el-table ref="table" size="mini" :data="evaluate_data.data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" v-loading="evaluate_loading">
+					<el-table-column label="评价内容" prop="evaluate_content" show-overflow-tooltip></el-table-column>
+					<el-table-column label="评价时间" prop="add_time"></el-table-column>
+					<el-table-column label="操作" width="180" fixed="right">
+						<template slot-scope="scope">
+							<el-button size="mini" type="text">删除</el-button>
+						</template>
+					</el-table-column>
+				</el-table>
+				<PaginationWidget :total="evaluate_data.total" :page="evaluate_page" :show_multiple="false" :pagesize="10" @checkPage="checkEvaluatePage"/>
+			</div>
+			<div slot="footer" class="dialog_footer">
+				<el-button size="small" @click="evaluate_dialog = false">关闭</el-button>
 			</div>
 		</el-dialog>
 	</div>
@@ -203,6 +234,12 @@
 				data:{},				//获取的数据
 				button_list:{},
 				import_dialog:false,		//导入弹窗
+				evaluate_dialog:false,		//评价列表弹窗
+				supplier_name:"",			//供应商名称
+				evaluate_data:{},			//评价列表数据
+				evaluate_page:1,
+				evaluate_loading:false,		
+				reserve_id:"",
 			}
 		},
 		beforeRouteLeave(to,from,next){
@@ -213,7 +250,6 @@
 			}
 			next();
 		},
-		// activated(){
 		created(){
 			if(!this.$route.meta.use_cache){
 				this.page = 1;
@@ -373,6 +409,37 @@
 						message: '已取消'
 					});          
 				});
+			},
+			//点击查看评价记录
+			getEvaluate(supplier_id,supplier_name){
+				this.reserve_id = supplier_id;
+				this.supplier_name = supplier_name;
+				this.evaluate_dialog = true;
+				//获取评级记录
+				this.evaluateList();
+			},
+			//获取评级记录
+			evaluateList(){
+				let arg = {
+					reserve_id:this.reserve_id,
+					page:this.evaluate_page,
+					pagesize:10
+				}
+				this.evaluate_loading = true;
+				resource.evaluateList(arg).then(res => {
+					if(res.data.code == 1){
+						this.evaluate_loading = false;
+						this.evaluate_data = res.data.data;
+					}else{
+						this.$message.warning(res.data.msg);
+					}
+				})
+			},
+			//评价记录切换页面
+			checkEvaluatePage(v){
+				this.evaluate_page = v;
+				//查看评价记录
+				this.evaluateList();
 			},
 		},
 		components:{
