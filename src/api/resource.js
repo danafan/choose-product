@@ -31,6 +31,7 @@ let path = {
   pushHostData:'supplier/productstyle/pushhostdata',      //推爆款
   twoFourTitle:'api/home/twofourtitle',                   //切换24小时不提示
   getUserName:'api/selected/getusername',                 //获取需求人
+  hotSellGoods:'api/home/hotsellgoods',                   //爆款列表
 } 
 export default {
   //钉钉登陆
@@ -156,5 +157,9 @@ export default {
   //获取所有需求人
   getUserName(params) {
     return http.get(path.getUserName, params);
+  },
+  //爆款列表
+  hotSellGoods(params) {
+    return http.get(path.hotSellGoods, params);
   },
 };

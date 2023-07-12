@@ -15,6 +15,7 @@
 							</el-carousel>
 						</div>
 					</div>
+					<VogueWidget/>
 					<el-card class="card_box" id="card_box">
 						<ScreeningWidget id="screen_widget" v-if="show_screen" :total_num="total" @callback="screenFn"/>
 						<div class="scroll_view" v-if="goods_list.length > 0">
@@ -45,6 +46,7 @@
 		import PaginationWidget from '../../components/pagination_widget.vue'
 		import CarWidget from '../../components/car_widget.vue'
 		import EmptyPage from '../../components/empty_page.vue'
+		import VogueWidget from '../../components/vogue_widget.vue'
 
 		import resource from '../../api/resource.js'
 		export default{
@@ -183,7 +185,8 @@
 			GoodsItem,
 			PaginationWidget,
 			CarWidget,
-			EmptyPage
+			EmptyPage,
+			VogueWidget
 		}
 	}
 </script>
@@ -244,7 +247,7 @@
 		width: 100%;
 		height: 100%;
 		.card_box{
-			padding-top:20px;
+			// padding-top:20px;
 			.scroll_view{
 				.goods_list{
 					display: flex;
