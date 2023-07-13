@@ -373,7 +373,7 @@
 							</el-form>
 						</div>
 						<el-form size="mini" style="padding-left: 30px;width: 720px;">
-							<el-form-item label="拜访图片：" required>
+							<el-form-item label="供应商拜访记录图片：" required>
 								<UploadFile v-if="show_visiting_file && (add_type == '1' || add_type == '2')" :img_list="visiting_imgs" :is_multiple="true" :current_num="visiting_imgs.length" :max_num="9" @callbackFn="visitingImgsbackFn"/>
 								<div v-else>
 									<el-image style="width: 80px;height: 80px;margin-right: 10px;" :z-index="99999" :src="item" :initial-index="index" :preview-src-list="visiting_imgs" v-for="(item,index) in visiting_imgs">
