@@ -279,7 +279,8 @@
 			</div>
 			<div class="source_url flex">
 				<div class="source_url_label">网盘地址：</div>
-				<el-button class="link" type="text" @click="windowOpen(net_disk_address)">{{or_net_disk_address}}</el-button>
+				<!-- <el-button class="link" type="text" @click="windowOpen(net_disk_address)">{{or_net_disk_address}}</el-button> -->
+				<div class="link" @click="windowOpen(net_disk_address)">{{or_net_disk_address}}</div>
 			</div>
 			<div class="more_image">
 				<el-image :z-index="9009" class="more_image_item" :src="img_url" fit="scale-down" v-for="(img_url,i) in img_arr" :key="i" :preview-src-list="img_arr"></el-image>
@@ -626,12 +627,13 @@
 				white-space: nowrap;
 			}
 			.link{
+				cursor: pointer;
 				padding-top: 0;
-				text-align: left;
 				white-space:pre-wrap;
 				word-wrap: break-word;
 				word-break: normal;
 				line-height: 16px;
+				color: #f37605;
 			}
 		}
 		.more_image{
