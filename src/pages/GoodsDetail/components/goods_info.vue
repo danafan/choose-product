@@ -485,6 +485,7 @@
 					color: #333333;
 				}
 				.link{
+					font-size: 12px;
 					cursor: pointer;
 					padding-top: 0;
 					white-space:pre-wrap;
