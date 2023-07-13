@@ -100,6 +100,7 @@
 			<div class="style_row" v-if="page_type != 'gys_supplier'">
 				<div class="style_item" :class="{'active_color':item.is_selected === 1}" v-for="(item,index) in cate_style_list" @click="checkStyle(index)">{{item.name}}</div>
 			</div>
+			<el-checkbox :true-label="1" :false-label="0" v-model="is_merge" @change="callbackFn"><span class="f12">合并同款</span></el-checkbox>
 			<div class="price_row" v-if="page_type != 'gys_supplier'">
 				<div>价格：</div>
 				<el-input style="width: 50px;" size="mini" type="number" v-model="start_price"></el-input>&nbsp~&nbsp
@@ -113,7 +114,7 @@
 				<el-checkbox :label="7">七日上新</el-checkbox>
 			</el-checkbox-group>
 			<div class="date_row">
-				<el-date-picker v-model="date" size="mini" type="daterange" unlink-panels value-format="yyyy-MM-dd" range-separator="至" start-placeholder="上新时间" end-placeholder="上新时间" @change="changeDate">
+				<el-date-picker style="width: 220px;" v-model="date" size="mini" type="daterange" unlink-panels value-format="yyyy-MM-dd" range-separator="至" start-placeholder="上新时间" end-placeholder="上新时间" @change="changeDate">
 				</el-date-picker>
 			</div>
 			
@@ -180,6 +181,7 @@
 				}],								//款式列表
 				up_type:[],					//上新类型
 				date:[],						//上新日期 
+				is_merge:0,						//合并同款
 				start_price:"",
 				end_price:"",
 				FristPin: ["全部","A", "B", "C", "D", "E", "F", "G", "H", "J", "K", "L", "M", "N", "P", "Q", "R", "S", "T", "W", "X", "Y", "Z"],
@@ -480,6 +482,7 @@
 					end_time:this.date && this.date.length > 0?this.date[1]:"",
 					start_price:this.start_price?parseFloat(this.start_price):'',
 					end_price:this.end_price?parseFloat(this.end_price):'',
+					is_merge:this.is_merge
 				}
 
 				//处理排序
@@ -537,6 +540,10 @@
 .total_num{
 	margin-bottom: 10rem;
 	text-align: end;
+	font-size: 12rem;
+	color: #666666;
+}
+.f12{
 	font-size: 12rem;
 	color: #666666;
 }
