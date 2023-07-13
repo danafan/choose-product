@@ -143,9 +143,9 @@
 							<template slot-scope="scope">
 								<el-button type="text" size="small" @click="checkInfo('3',scope.row.reserve_id)" v-if="button_list.detail == 1">查看</el-button>
 								<!-- 填报编辑 -->
-								<el-button type="text" size="small" @click="addFn('2',scope.row.reserve_id)" v-if="scope.row.status != 0 && scope.row.status != 2 && scope.row.status != 3 && button_list.info_edit == 1">编辑</el-button>
+								<el-button type="text" size="small" @click="addFn('2',scope.row.reserve_id)" v-if="scope.row.status != 0 && button_list.info_edit == 1">编辑</el-button>
 								<el-button type="text" size="small" v-if="scope.row.status != 0 && scope.row.status != 3 && button_list.del == 1" @click="deleteFn(scope.row.reserve_id)">删除</el-button>
-								<!-- <el-button type="text" size="small" v-if="scope.row.status == 0 && button_list.info_check == 1" @click="checkInfo('4',scope.row.reserve_id)">填报审核</el-button> -->
+								<el-button type="text" size="small" v-if="scope.row.status == 0 && button_list.info_check == 1" @click="checkInfo('4',scope.row.reserve_id)">填报审核</el-button>
 							</template>
 						</el-table-column>
 					</el-table>
@@ -371,7 +371,7 @@
 						</el-form>
 						<el-divider v-if="info_arg.status >= 3"></el-divider>
 						<!-- 填报审核 -->
-						<!-- <el-form size="mini" v-if="add_type == '4'">
+						<el-form size="mini" v-if="add_type == '4'">
 							<el-form-item>
 								<el-radio-group v-model="check_status">
 									<el-radio :label="1">同意</el-radio>
@@ -382,7 +382,7 @@
 								<el-input type="textarea" :rows="3" placeholder="拒绝原因" v-model="remark">
 								</el-input>
 							</el-form-item>
-						</el-form> -->
+						</el-form>
 						<!-- 转合格审核 -->
 						<el-form size="mini" v-if="(add_type == '3' && info_arg.status >= 3) || add_type == '5'">
 							<el-form-item label="合格状态：">
@@ -419,7 +419,7 @@
 						<!-- 添加/编辑 -->
 						<el-button type="primary" size="small" @click="submitAddEdit" v-if="add_type == '1' || add_type == '2'">提交</el-button>
 						<!-- 填报审核 -->
-						<!-- <el-button type="primary" size="small" @click="submitCheck" v-if="add_type == '4'">保存</el-button> -->
+						<el-button type="primary" size="small" @click="submitCheck" v-if="add_type == '4'">保存</el-button>
 						<!-- 转合格审核 -->
 						<el-button type="primary" size="small" @click="zhgAudit" v-if="add_type == '5'">保存</el-button>
 					</div>
@@ -959,6 +959,11 @@
 						}
 
 						//拜访图片
+						//拜访图片
+							// if(data.visiting_imgs){
+							// 	this.visiting_imgs = data.visiting_imgs.split(',');
+							// }
+							// console.log()
 						this.visiting_imgs = [];
 						if(data.visiting_imgs){
 							let visiting_imgs = data.visiting_imgs.split(',');
@@ -966,6 +971,7 @@
 								this.visiting_imgs.push(this.domain + item);
 							})
 						}
+						console.log(this.visiting_imgs)
 					}else{
 						this.$message.warning(res.data.msg);
 					}
@@ -973,27 +979,27 @@
 				this.edit_dialog = true;
 			},
 			//提交填报审核
-			// submitCheck(){
-			// 	if(this.check_status == 0 && this.remark == ''){
-			// 		this.$message.warning('请输入拒绝原因');
-			// 		return;
-			// 	}
-			// 	let arg = {
-			// 		reserve_id:this.reserve_id,
-			// 		status:this.check_status,
-			// 		remark:this.remark
-			// 	}
-			// 	resource.checkInfo(arg).then(res => {
-			// 		if(res.data.code == 1){
-			// 			this.$message.success(res.data.msg);
-			// 			this.edit_dialog = false;
-			// 			//获取供应商列表
-			// 			this.supplierManagerList();
-			// 		}else{
-			// 			this.$message.warning(res.data.msg);
-			// 		}
-			// 	})
-			// },
+			submitCheck(){
+				if(this.check_status == 0 && this.remark == ''){
+					this.$message.warning('请输入拒绝原因');
+					return;
+				}
+				let arg = {
+					reserve_id:this.reserve_id,
+					status:this.check_status,
+					remark:this.remark
+				}
+				resource.checkInfo(arg).then(res => {
+					if(res.data.code == 1){
+						this.$message.success(res.data.msg);
+						this.edit_dialog = false;
+						//获取供应商列表
+						this.supplierManagerList();
+					}else{
+						this.$message.warning(res.data.msg);
+					}
+				})
+			},
 			//点击转合格编辑或添加
 			zhuanFn(type,reserve_id){
 				this.reserve_id = reserve_id;
