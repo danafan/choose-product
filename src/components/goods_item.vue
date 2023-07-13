@@ -627,6 +627,7 @@
 				white-space: nowrap;
 			}
 			.link{
+				font-size: 12px;
 				cursor: pointer;
 				padding-top: 0;
 				white-space:pre-wrap;
