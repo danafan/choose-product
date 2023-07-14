@@ -78,6 +78,7 @@
 					</el-table-column>
 					<el-table-column label="库存" prop="data_num"></el-table-column>
 					<el-table-column label="调价" prop="data_price"></el-table-column>
+					<el-table-column label="提交时间" prop="add_time"></el-table-column>
 					<el-table-column label="主推款备注" prop="remark"></el-table-column>
 					<el-table-column label="当前状态" prop="status">
 						<template slot-scope="scope">

@@ -371,9 +371,6 @@
 								<el-input clearable v-model="info_arg.description" style="width: 120px;" placeholder="备注" v-if="add_type == '1' || add_type == '2'"></el-input>
 								<div v-else>{{info_arg.description}}</div>
 							</el-form-item>
-							<el-form-item label="上传附件：" v-if="add_type == '1'" required>
-								<UploadXlsx :attachment="attachment" @callBackXlsx="callBackXlsx"/>
-							</el-form-item>
 							<el-form-item label="填报状态：" v-if="add_type != '1' && add_type != '2'">
 								<div v-if="info_arg.status <= 2">{{info_arg.status | info_refund_status}}</div>
 									<div v-else>填报后审核通过</div>
@@ -434,6 +431,9 @@
 							<el-form-item label="拒绝原因：" v-if="audit_status == 0 && add_type == '5'" required>
 								<el-input type="textarea" :rows="3" placeholder="拒绝原因" v-model="audit_remark">
 								</el-input>
+							</el-form-item>
+							<el-form-item label="上传附件：" required>
+								<UploadXlsx :attachment="attachment" @callBackXlsx="callBackXlsx"/>
 							</el-form-item>
 						</el-form>
 					</div>
@@ -884,8 +884,8 @@
 							data.scpl.split(',').map(item => {
 								this.info_arg_scpl.push(parseInt(item));
 							})
-							//附件
-							this.attachment = data.attachment.indexOf('fileId') > -1?JSON.parse(data.attachment)[0]:{};
+							// //附件
+							// this.attachment = data.attachment.indexOf('fileId') > -1?JSON.parse(data.attachment)[0]:{};
 							//拜访图片
 							if(data.visiting_imgs){
 								this.visiting_imgs = data.visiting_imgs.split(',');
@@ -1015,15 +1015,6 @@
 				arg['scpl'] = this.info_arg_scpl.join(',');
 
 				if(this.add_type == '1'){		//创建
-					if(!this.attachment.fileId){
-						this.$message.warning('请上传附件');
-						return;
-					}
-					//处理附件
-					let arr = [];
-					arr.push(this.attachment)
-					arg['attachment'] = JSON.stringify(arr);
-					
 					resource.reserveAdd(arg).then(res => {
 						if(res.data.code == 1){
 							this.$message.success(res.data.msg);
@@ -1035,19 +1026,6 @@
 						}
 					})
 				}else if(this.add_type == '2'){		//编辑
-					// let arg = JSON.parse(JSON.stringify(this.info_arg));
-					// arg['price_range'] = `${arg.start_price}_${arg.end_price}`;
-					// delete arg.start_price;
-					// delete arg.end_price;
-
-					// //处理拜访图片
-					// arg['visiting_imgs'] = this.visiting_imgs.join(',');
-
-					// //主营
-					// arg['main_business'] = this.info_arg_main_business.join(',');
-					// //擅长品类
-					// arg['scpl'] = this.info_arg_scpl.join(',');
-
 					arg['reserve_id'] = this.reserve_id;
 					resource.reserveEditPost(arg).then(res => {
 						if(res.data.code == 1){
@@ -1333,11 +1311,20 @@
 					this.$message.warning('请输入拒绝原因');
 					return;
 				}
+				if(!this.attachment.fileId){
+					this.$message.warning('请上传附件');
+					return;
+				}
 				let arg = {
 					reserve_id:this.reserve_id,
 					status:this.audit_status,
-					remark:this.audit_remark
+					remark:this.audit_remark,
 				}
+				//处理附件
+				let arr = [];
+				arr.push(this.attachment)
+				arg['attachment'] = JSON.stringify(arr);
+				
 				resource.checkQualified(arg).then(res => {
 					if(res.data.code == 1){
 						this.$message.success(res.data.msg);
