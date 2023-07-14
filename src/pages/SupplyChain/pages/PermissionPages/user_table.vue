@@ -103,6 +103,7 @@
 					children: 'list'
 				},
 				dept_list:[],				//所有部门列表
+				arr:[],						//扁平化后的部门列表
 				dept_ids:[],				//选中的部门
 				shop_list:[],				//店铺列表
 				shop_codes:[],				//选中的店铺列表
@@ -113,7 +114,6 @@
 				isIndeterminate: false,		//当前半全选状态（店铺）
 				checkAllDept: false,			//当前全选状态（部门）
 				checkAll: false,			//当前全选状态（店铺）
-				arr:[]
 			}
 		},
 		created(){
@@ -125,24 +125,24 @@
 		},
 		mounted() {
     		//获取表格最大高度
-    		this.onResize();
-    		window.addEventListener("resize", this.onResize());
-    	},
-    	methods: {
+			this.onResize();
+			window.addEventListener("resize", this.onResize());
+		},
+		methods: {
     		//监听屏幕大小变化
-    		onResize() {
-    			this.$nextTick(() => {
-    				let card_box_height = document.getElementById("card_box").offsetHeight;
-    				let table_title_height = document.getElementById("table_title").offsetHeight;
-    				let bottom_row_height = document.getElementById("bottom_row").offsetHeight;
-    				this.max_height =
-    				card_box_height -
-    				table_title_height -
-    				bottom_row_height -
-    				55 +
-    				"px";
-    			});
-    		},
+			onResize() {
+				this.$nextTick(() => {
+					let card_box_height = document.getElementById("card_box").offsetHeight;
+					let table_title_height = document.getElementById("table_title").offsetHeight;
+					let bottom_row_height = document.getElementById("bottom_row").offsetHeight;
+					this.max_height =
+					card_box_height -
+					table_title_height -
+					bottom_row_height -
+					55 +
+					"px";
+				});
+			},
 			//获取列表
 			getData(){
 				let arg = {
@@ -211,15 +211,12 @@
 						this.user_name = data.info.ding_user_name;
 						this.role_list = data.menu_role_list;
 						this.menu_role_ids = data.info.menu_role_ids;
+
 						this.dept_list = data.dept_list;
-						this.dept_ids = data.selected_depts;
-						this.isIndeterminateDept =
-						this.dept_ids.length > 0 &&
-						this.dept_ids.length < this.dept_list.length;
-						this.checkAllDept = this.dept_ids.length == this.arr.length;
+						
 						this.view_type = data.view_type;
 						//获取店铺列表
-						this.ajaxViewShop(this.dept_ids,data.selected_shops);
+						this.ajaxViewShop(data.selected_depts,data.selected_shops);
 						this.show_dialog = true;
 					}else{
 						this.$message.warning(res.data.msg);
@@ -235,23 +232,28 @@
 			ajaxViewShop(dept_ids,selected_shops) {
 				this.arr = [];
 				this.getDeptIds(this.dept_list);
+				this.dept_ids = dept_ids == '-1'?this.arr:dept_ids;
 				this.isIndeterminateDept =
-				dept_ids.length > 0 &&
-				dept_ids.length < this.arr.length;
-				this.checkAllDept = dept_ids.length == this.arr.length;
+				dept_ids != '-1' && dept_ids.length > 0 &&
+				dept_ids.length < this.arr.length?true:false;
+				this.checkAllDept = dept_ids == '-1' || dept_ids.length == this.arr.length?true:false;
+
 				let arg = {
 					type: 2,
-					dept_ids: dept_ids.join(","),
+					dept_ids: dept_ids == '-1'?this.arr.join(','):dept_ids.join(","),
 				};
 				commonResource.ajaxViewShop(arg).then((res) => {
 					if (res.data.code == 1) {
 						this.shop_list = res.data.data;
+						let shop_ids = this.shop_list.map(item => {
+							return item.shop_code;
+						})
 						if (!!selected_shops) {
-							this.shop_codes = selected_shops;
+							this.shop_codes = selected_shops == '-1'?shop_ids:selected_shops;
 							this.isIndeterminate =
-							selected_shops.length > 0 &&
-							selected_shops.length < this.shop_list.length;
-							this.checkAll = selected_shops.length == this.shop_list.length;
+							selected_shops != '-1' && selected_shops.length > 0 &&
+							selected_shops.length < shop_ids.length?true:false;
+							this.checkAll = selected_shops == '-1' || selected_shops.length == shop_ids.length?true:false;
 						} else {
 							this.shop_codes = [];
 							this.isIndeterminate = false;
@@ -281,31 +283,31 @@
 					})
 				}
     			//获取店铺列表
-    			this.ajaxViewShop(this.dept_ids);
-    		},
-    		getDeptIds(list){
-    			list.map((item) => {
-    				if(item.list){
-    					this.arr.push(item.dept_id);
-    					this.getDeptIds(item.list)
-    				}else{
-    					this.arr.push(item.dept_id);
-    				}
-    			});
-    		},
+				this.ajaxViewShop(this.dept_ids);
+			},
+			getDeptIds(list){
+				list.map((item) => {
+					if(item.list){
+						this.arr.push(item.dept_id);
+						this.getDeptIds(item.list)
+					}else{
+						this.arr.push(item.dept_id);
+					}
+				});
+			},
     		//切换是否全选店铺
-    		checkAllStore(val) {
-    			this.isIndeterminate = false;
-    			if (val) {
-    				let arr = [];
-    				this.shop_list.map((item) => {
-    					arr.push(item.shop_code);
-    				});
-    				this.shop_codes = arr;
-    			} else {
-    				this.shop_codes = [];
-    			}
-    		},
+			checkAllStore(val) {
+				this.isIndeterminate = false;
+				if (val) {
+					let arr = [];
+					this.shop_list.map((item) => {
+						arr.push(item.shop_code);
+					});
+					this.shop_codes = arr;
+				} else {
+					this.shop_codes = [];
+				}
+			},
 			//点击确认
 			commitFn(){
 				if(this.type == '1' && this.user_id == ''){	
@@ -316,13 +318,15 @@
 					this.$message.warning('请选择角色!');
 					return;
 				}
+
 				let arg = {
 					user_id:this.type == '1'?this.user_id:this.id,
 					menu_role_id:this.menu_role_ids.join(','),
-					dept_ids:this.menu_role_ids.indexOf(1) == -1?this.dept_ids.join(','):'-1',
-					shop_codes:this.menu_role_ids.indexOf(1) == -1?this.shop_codes.join(','):'-1',
+					dept_ids:this.menu_role_ids.indexOf(1) > -1 || this.dept_ids.length == this.arr.length?'-1':this.dept_ids.join(','),
+					shop_codes:this.menu_role_ids.indexOf(1) > -1 || this.shop_codes.length == this.shop_list.length?'-1':this.shop_codes.join(','),
 					view_type:this.view_type
 				}
+
 				if(this.type == '1'){		//添加
 					resource.addUserPost(arg).then(res => {
 						if(res.data.code == 1){
@@ -361,20 +365,20 @@
 	}
 </script>
 <style lang="less" scoped>
-.setting_content{
-	flex:1;
-	position: relative;
-	.card_box{
-		padding-top: 20px;
-		position: absolute;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100%;
+	.setting_content{
+		flex:1;
+		position: relative;
+		.card_box{
+			padding-top: 20px;
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+		}
 	}
-}
-.dialog_content{
-	padding-top: 50rem;
-	padding-bottom: 20rem;
-}
+	.dialog_content{
+		padding-top: 50rem;
+		padding-bottom: 20rem;
+	}
 </style>
