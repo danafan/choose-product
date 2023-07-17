@@ -99,7 +99,7 @@
 				<TableTitle title="数据列表" id="table_title">
 					<el-button size="mini" type="primary" @click="addFn('1')" v-if="button_list.add == 1">添加</el-button>
 				</TableTitle>
-				<el-table ref="table" size="mini" :data="data.data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" v-loading="loading">
+				<el-table class="gysybk_table" ref="table" size="mini" :data="data.data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" v-loading="loading">
 					<el-table-column label="供应商名称" prop="supplier_name"></el-table-column>
 					<el-table-column label="供应商简称" prop="supplier_code"></el-table-column>
 					<el-table-column label="开发员" prop="developer"></el-table-column>
@@ -128,7 +128,7 @@
 					<el-table-column label="是否可代发" prop="supply_replace_send"></el-table-column>
 					<el-table-column label="性价比" prop="cost_performance"></el-table-column>
 					<el-table-column label="合作程度" prop="cooperativeness"></el-table-column>
-					<el-table-column label="备注" prop="description"></el-table-column>
+					<el-table-column label="备注" prop="description" show-overflow-tooltip></el-table-column>
 					<el-table-column label="介绍人" prop="introducer"></el-table-column>
 					<el-table-column label="填报状态">
 						<template slot-scope="scope">
@@ -520,7 +520,7 @@
 						<el-table ref="table" size="mini" :data="evaluate_data.data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" v-loading="evaluate_loading">
 							<el-table-column label="评价内容" prop="evaluate_content">
 								<template slot-scope="scope">
-									<el-button type="text" size="small" @click="addEvakuateFn('评价内容',scope.row.evaluate_content)">{{scope.row.evaluate_content}}</el-button>
+									<el-button type="text" size="small" @click="addEvakuateFn('评价内容',scope.row.evaluate_content)"><p style="text-decoration:underline">{{scope.row.evaluate_content}}</p></el-button>
 								</template>
 							</el-table-column>
 							<el-table-column label="评价时间" prop="add_time"></el-table-column>
@@ -562,6 +562,10 @@
 			padding-top: 0!important;
 			padding-bottom: 0!important;
 		}
+		.el-tooltip__popper {
+			max-width: 800px;
+		}
+
 	</style>
 	<style lang="less" scoped>
 		.card_box{
@@ -1324,7 +1328,7 @@
 				let arr = [];
 				arr.push(this.attachment)
 				arg['attachment'] = JSON.stringify(arr);
-				
+
 				resource.checkQualified(arg).then(res => {
 					if(res.data.code == 1){
 						this.$message.success(res.data.msg);
@@ -1347,7 +1351,7 @@
 						this.visit_data = res.data.data;
 						this.visit_data.data.map(item => {
 							item['images'] = [];
-							let images = item.attachment.split(',');
+							let images = item.attachment == ''?[]:item.attachment.split(',');
 							images.map(i => {
 								item.images.push(this.domain + i)
 							})

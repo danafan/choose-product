@@ -98,7 +98,7 @@
 					<el-table-column label="供应商等级" prop="grade_name"></el-table-column>
 					<el-table-column label="评价记录">
 						<template slot-scope="scope">
-							<el-button type="text" size="small" @click="getEvaluate(scope.row.supplier_id,scope.row.supplier_name)">{{scope.row.evaluate_num}}</el-button>
+							<el-button type="text" size="small" @click="getEvaluate(scope.row.reserve_id,scope.row.supplier_name)">{{scope.row.evaluate_num}}</el-button>
 						</template>
 					</el-table-column>
 					<el-table-column label="操作" width="180" fixed="right">
@@ -142,20 +142,20 @@
 			<!-- 内容 -->
 			<div class="pt-15">
 				<TableTitle title="数据列表" id="table_title">
-					<el-button size="mini" type="primary" @click="addEvakuateFn('添加评价','')">添加</el-button>
+					<!-- <el-button size="mini" type="primary" @click="addEvakuateFn('添加评价','')">添加</el-button> -->
 				</TableTitle>
 				<el-table ref="table" size="mini" :data="evaluate_data.data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" v-loading="evaluate_loading">
 					<el-table-column label="评价内容" prop="evaluate_content">
 						<template slot-scope="scope">
-							<el-button type="text" size="small" @click="addEvakuateFn('评价内容',scope.row.evaluate_content)">{{scope.row.evaluate_content}}</el-button>
+							<el-button type="text" size="small" @click="addEvakuateFn('评价内容',scope.row.evaluate_content)"><p style="text-decoration:underline">{{scope.row.evaluate_content}}</p></el-button>
 						</template>
 					</el-table-column>
 					<el-table-column label="评价时间" prop="add_time"></el-table-column>
-					<el-table-column label="操作" width="180" fixed="right">
+					<!-- <el-table-column label="操作" width="180" fixed="right">
 						<template slot-scope="scope">
 							<el-button size="mini" type="text" @click="delEvaluate(scope.row.evaluate_log_id)">删除</el-button>
 						</template>
-					</el-table-column>
+					</el-table-column> -->
 				</el-table>
 				<PaginationWidget :total="evaluate_data.total" :page="evaluate_page" :show_multiple="false" :pagesize="10" @checkPage="checkEvaluatePage"/>
 			</div>
@@ -437,8 +437,8 @@
 				});
 			},
 			//点击查看评价记录
-			getEvaluate(supplier_id,supplier_name){
-				this.reserve_id = supplier_id;
+			getEvaluate(reserve_id,supplier_name){
+				this.reserve_id = reserve_id;
 				this.supplier_name = supplier_name;
 				this.evaluate_dialog = true;
 				//获取评级记录

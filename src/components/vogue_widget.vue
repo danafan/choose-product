@@ -1,9 +1,13 @@
 <template>
   <div class="vogue_widget">
-    <div class="vogue_title flex ac jsb">
+    <div class="vogue_title flex ac jsb" :class="{'title_radius':!screen_open}">
       <div>爆款专区</div>
+      <div class="selected_right" @click="screen_open = !screen_open">
+        <div>{{screen_open?'收起':'展开'}}</div>
+        <img class="down_arrow" :class="{'rotate':screen_open == true}" src="../static/down_arrow.png">
+      </div>
     </div>
-    <div class="seamless_box">
+    <div class="seamless_box" v-if="screen_open">
       <vue-seamless-scroll
       :data="hot_sell_goods"
       :class-option="classOption"
@@ -37,8 +41,9 @@
         listData: [1, 2, 3, 4, 5, 6],
         classOption: {
           limitMoveNum: 2,
-          direction: 3,
-        }
+          direction: 2,
+        },
+        screen_open:true
       }
     },
     computed:{
@@ -56,7 +61,7 @@
       hotSellGoods(){
         resource.hotSellGoods().then(res => {
           if(res.data.code == 1){
-              this.hot_sell_goods = res.data.data;
+            this.hot_sell_goods = res.data.data;
           }else{
             this.$message.warning(res.data.msg);
           }
@@ -85,6 +90,25 @@
     padding-right: 26px;
     color: #333333;
     font-size: 14px;
+    .selected_right{
+      display: flex;
+      align-items: center;
+      cursor:pointer;
+      font-size: 12px;
+      color:#666666;
+      .down_arrow{
+        margin-left: 5rem;
+        transform: rotate(-90deg);
+        width: 7rem;
+        height: 4rem;
+      }
+      .rotate{
+        transform: rotate(0deg);
+      }
+    }
+  }
+  .title_radius{
+    border-radius: 18px;
   }
   .seamless_box{
     border-radius: 0 0 18px 18px;

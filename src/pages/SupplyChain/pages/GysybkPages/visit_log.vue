@@ -189,7 +189,7 @@
 				pickerOptions: {
 					shortcuts: [
 					{
-						text: "今日上新",
+						text: "今日",
 						onClick(picker) {
 							const start = getNowDate();
 							const end = getNowDate();
@@ -197,7 +197,7 @@
 						},
 					},
 					{
-						text: "三日上新",
+						text: "近三日",
 						onClick(picker) {
 							const start = getCurrentDate(3);
 							const end = getNowDate();
@@ -205,7 +205,7 @@
 						},
 					},
 					{
-						text: "七日上新",
+						text: "近七日",
 						onClick(picker) {
 							const start = getCurrentDate(7);
 							const end = getNowDate();
@@ -304,7 +304,7 @@
 					start_date:this.date && this.date.length > 0?this.date[0]:"",
 					end_date:this.date && this.date.length > 0?this.date[1]:"",
 					page:this.page,
-					pagesize:100
+					pagesize:10
 				}
 
 				this.loading = true;
@@ -315,7 +315,7 @@
 						this.data = res.data.data;
 						this.data.data.map(item => {
 							item['images'] = [];
-							let images = item.attachment.split(',');
+							let images = item.attachment == ''?[]:item.attachment.split(',');
 							images.map(i => {
 								item.images.push(this.domain + i)
 							})
