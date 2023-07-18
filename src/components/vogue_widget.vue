@@ -7,18 +7,18 @@
         <img class="down_arrow" :class="{'rotate':screen_open == true}" src="../static/down_arrow.png">
       </div>
     </div>
-    <div class="seamless_box" v-if="screen_open">
+    <div class="seamless_box" v-if="screen_open" @click="getDetail($event)">
       <vue-seamless-scroll
       :data="hot_sell_goods"
       :class-option="classOption"
       class="warp"
       >
       <ul class="ul-item">
-        <li class="li-item pointer" :class="{'li-item_border':index < hot_sell_goods.length - 3}" v-for="(item, index) in hot_sell_goods" :key="index" @click="getDetail(item.style_id)">
+        <li class="li-item pointer" v-for="(item, index) in hot_sell_goods" :key="index">
           <div v-if="index < hot_sell_goods.length - 3">
-            <img class="goods_img" :src="domain + item.img" style="object-fit: scale-down;">
-            <div class="hot_sell_item_title table_header_text">{{item.title}}</div>
-            <div class="hot_sell_item_price">¥{{item.cost_price}}</div>
+            <img class="goods_img" :data-obj="JSON.stringify(item)" :src="domain + item.img" style="object-fit: scale-down;">
+            <div class="hot_sell_item_title table_header_text" :data-obj="JSON.stringify(item)">{{item.title}}</div>
+            <div class="hot_sell_item_price" :data-obj="JSON.stringify(item)">¥{{item.cost_price}}</div>
           </div>
           <div v-else></div>
         </li>
@@ -45,7 +45,7 @@
         classOption: {
           limitMoveNum: 2,
           direction: 2,
-          step:0.2
+          step:0.5
         },
         screen_open:true
       }
@@ -75,11 +75,15 @@
         })
       },
       //点击跳转详情
-      getDetail(style_id){
-        let active_path = `/goods_detail?style_id=${style_id}`;
-        const routeData = this.$router.resolve(active_path);
-        window.open(routeData.href);
-      },
+      getDetail(e){
+        if (e.target.classList.contains("goods_img") || e.target.classList.contains("hot_sell_item_title") || e.target.classList.contains("hot_sell_item_price")) {
+          let row = JSON.parse(e.target.dataset.obj);
+          let active_path = `/goods_detail?style_id=${row.style_id}`;
+          const routeData = this.$router.resolve(active_path);
+          window.open(routeData.href);
+        }
+      }
+
     }
   }
 </script>
@@ -133,7 +137,6 @@
       &.ul-item {
         display: flex;
         .li-item {
-          
           width: 180px;
           margin-right: 54px;
           .goods_img{
