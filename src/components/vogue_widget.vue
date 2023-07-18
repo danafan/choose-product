@@ -14,10 +14,13 @@
       class="warp"
       >
       <ul class="ul-item">
-        <li class="li-item" v-for="(item, index) in hot_sell_goods" :key="index" @click="getDetail(item.style_id)">
-          <el-image class="goods_img" :src="domain + item.img" fit="scale-down"></el-image>
-          <div class="hot_sell_item_title table_header_text">{{item.title}}</div>
-          <div class="hot_sell_item_price">¥{{item.cost_price}}</div>
+        <li class="li-item pointer" :class="{'li-item_border':index < hot_sell_goods.length - 3}" v-for="(item, index) in hot_sell_goods" :key="index" @click="getDetail(item.style_id)">
+          <div v-if="index < hot_sell_goods.length - 3">
+            <img class="goods_img" :src="domain + item.img" style="object-fit: scale-down;">
+            <div class="hot_sell_item_title table_header_text">{{item.title}}</div>
+            <div class="hot_sell_item_price">¥{{item.cost_price}}</div>
+          </div>
+          <div v-else></div>
         </li>
       </ul>
     </vue-seamless-scroll>
@@ -42,6 +45,7 @@
         classOption: {
           limitMoveNum: 2,
           direction: 2,
+          step:0.2
         },
         screen_open:true
       }
@@ -62,6 +66,9 @@
         resource.hotSellGoods().then(res => {
           if(res.data.code == 1){
             this.hot_sell_goods = res.data.data;
+            this.hot_sell_goods.push('');
+            this.hot_sell_goods.push('');
+            this.hot_sell_goods.push('');
           }else{
             this.$message.warning(res.data.msg);
           }
@@ -126,7 +133,7 @@
       &.ul-item {
         display: flex;
         .li-item {
-          border:1px solid #F9BF8B;
+          
           width: 180px;
           margin-right: 54px;
           .goods_img{
@@ -148,6 +155,9 @@
             color: #F37605;
             font-size: 12px;
           }
+        }
+        .li-item_border{
+          border:1px solid #F9BF8B;
         }
       }
     }

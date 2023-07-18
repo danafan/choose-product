@@ -49,7 +49,7 @@
 			<div class="content_row">
 				<div class="row_lable">网盘地址</div>
 				<!-- <el-button type="text" size="small" class="link" @click="windowOpen(goods_info.net_disk_address)">{{goods_info.or_net_disk_address}}</el-button> -->
-				<div class="link" @click="windowOpen(goods_info.net_disk_address)">{{goods_info.or_net_disk_address}}</div>
+				<div class="flex-1 link" @click="windowOpen(goods_info.net_disk_address)">{{goods_info.or_net_disk_address}}</div>
 			</div>
 			<div class="content_row">
 				<div class="row_lable">备注</div>

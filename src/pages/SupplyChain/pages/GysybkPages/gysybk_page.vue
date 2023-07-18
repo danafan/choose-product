@@ -432,7 +432,10 @@
 								<el-input type="textarea" :rows="3" placeholder="拒绝原因" v-model="audit_remark">
 								</el-input>
 							</el-form-item>
-							<el-form-item label="上传附件：" required>
+							<el-form-item v-if="audit_status == 1 && add_type == '5'">
+								<el-checkbox v-model="is_oa" :true-label="1" :false-label="0">是否提交钉钉审批</el-checkbox>
+							</el-form-item>
+							<el-form-item label="上传附件：" required v-if="audit_status == 1 && is_oa == 1 && add_type == '5'">
 								<UploadXlsx :attachment="attachment" @callBackXlsx="callBackXlsx"/>
 							</el-form-item>
 						</el-form>
@@ -706,6 +709,7 @@
 				company_name:"",				//公司名称
 				business_license_img:[],		//工商营业执照
 				company_img:[],					//公司照片
+				is_oa:1,						//是否提交钉钉审批
 				audit_status:1,					//转合格审核（1:同意；2:拒绝）
 				audit_remark:"",				//转合格审核拒绝原因
 				show_upload_file:true,
@@ -876,20 +880,60 @@
 						if(res.data.code == 1){
 							let data = res.data.data;
 							for(let k in this.info_arg){
-								this.info_arg[k] = data[k];
+								if(k == 'classification'){
+									let arr = this.classification_list.filter(item => {
+										return item.id == data[k]
+									})
+									if(arr.length > 0){
+										this.info_arg[k] = data[k];
+									}else{
+										data[k] = '';
+									}
+								}else if(k == 'is_scm'){
+									let arr = this.scm_list.filter(item => {
+										return item.id == data[k]
+									})
+									if(arr.length > 0){
+										this.info_arg[k] = data[k];
+									}else{
+										data[k] = '';
+									}
+								}else if(k == 'cost_performance'){
+									let arr = this.cost_performance_list.filter(item => {
+										return item.id == data[k]
+									})
+									if(arr.length > 0){
+										this.info_arg[k] = data[k];
+									}else{
+										data[k] = '';
+									}
+								}else if(k == 'cooperativeness'){
+									let arr = this.cooperativeness_list.filter(item => {
+										return item.id == data[k]
+									})
+									if(arr.length > 0){
+										this.info_arg[k] = data[k];
+									}else{
+										data[k] = '';
+									}
+								}else{
+									this.info_arg[k] = data[k];
+								}
 							}
 							//主营
 							this.info_arg_main_business = [];
-							data.main_business.split(',').map(item => {
-								this.info_arg_main_business.push(parseInt(item));
-							})
+							if(data.main_business != '0'){
+								data.main_business.split(',').map(item => {
+									this.info_arg_main_business.push(parseInt(item));
+								})
+							}
 							//擅长品类
 							this.info_arg_scpl = [];
-							data.scpl.split(',').map(item => {
-								this.info_arg_scpl.push(parseInt(item));
-							})
-							// //附件
-							// this.attachment = data.attachment.indexOf('fileId') > -1?JSON.parse(data.attachment)[0]:{};
+							if(data.scpl){
+								data.scpl.split(',').map(item => {
+									this.info_arg_scpl.push(parseInt(item));
+								})
+							}
 							//拜访图片
 							if(data.visiting_imgs){
 								this.visiting_imgs = data.visiting_imgs.split(',');
@@ -925,6 +969,7 @@
 				this.company_name = ""					//公司名称
 				this.business_license_img = [];			//工商营业执照
 				this.company_img = [];					//公司照片
+				this.is_oa = 1;
 				this.audit_status = 1;					//转合格审核状态
 				this.audit_remark = '';					//转合格审核原因
 				this.attachment = {};
@@ -1315,19 +1360,28 @@
 					this.$message.warning('请输入拒绝原因');
 					return;
 				}
-				if(!this.attachment.fileId){
+				if(this.audit_status == 1 && this.is_oa == 1 && !this.attachment.fileId){
 					this.$message.warning('请上传附件');
 					return;
 				}
+				
 				let arg = {
 					reserve_id:this.reserve_id,
 					status:this.audit_status,
-					remark:this.audit_remark,
+					remark:this.audit_remark
 				}
-				//处理附件
-				let arr = [];
-				arr.push(this.attachment)
-				arg['attachment'] = JSON.stringify(arr);
+				
+				if(this.audit_status == 1){
+					arg['is_oa'] = this.is_oa;
+				}
+
+				if(this.audit_status == 1 && this.is_oa == 1){
+					//处理附件
+					let arr = [];
+					arr.push(this.attachment)
+					arg['attachment'] = JSON.stringify(arr);
+				}
+				
 
 				resource.checkQualified(arg).then(res => {
 					if(res.data.code == 1){

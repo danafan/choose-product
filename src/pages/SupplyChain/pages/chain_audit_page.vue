@@ -914,6 +914,12 @@
 						end_time:this.date && this.date.length > 0?this.date[1]:"",
 						i_id:this.i_id,
 					};
+					if(this.multiple_selection.length > 0){
+						let select_ids = this.multiple_selection.map(item => {
+							return item.select_id
+						})
+						arg['select_ids'] = select_ids.join(',');
+					}
 					resource.deriveSelected(arg).then((res) => {
 						if (res) {
 							exportPost("\ufeff" + res.data, "已选商品");

@@ -12,14 +12,14 @@
 							<img class="collapse_chain_icon" :src="item.icon_active" v-if="active_index == index">
 							<img class="collapse_chain_icon" :src="item.icon" v-else>
 						</el-tooltip>
-						<div class="collapse_feekback_num" v-if="is_collapse && item.name == '反馈'">{{feekback_num}}</div>
+						<div class="collapse_feekback_num" v-if="is_collapse && item.name == '反馈' && feekback_num > 0">{{feekback_num}}</div>
 					</div>
 					<div v-else>
 						<img class="chain_icon" :src="item.icon_active" v-if="active_index == index">
 						<img class="chain_icon" :src="item.icon" v-else>
 					</div>
 					<div class="chain_text" v-if="!is_collapse">{{item.name}}</div>
-					<div class="feekback_num" v-if="!is_collapse && item.name == '反馈'">{{feekback_num}}</div>
+					<div class="feekback_num" v-if="!is_collapse && item.name == '反馈' && feekback_num > 0">{{feekback_num}}</div>
 					<div class="active_line" v-if="active_index == index && !is_collapse"></div>
 				</div>
 			</el-menu-item>

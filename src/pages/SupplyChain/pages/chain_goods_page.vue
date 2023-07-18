@@ -558,6 +558,12 @@
 						check_status:this.check_status_id,
 						price_status:this.price_status
 					}
+					if(this.multiple_selection.length > 0){
+						let style_ids = this.multiple_selection.map(item => {
+							return item.style_id
+						})
+						arg['style_ids'] = style_ids.join(',');
+					}
 					let search = JSON.parse(JSON.stringify(this.search));
 					if(search.indexOf("\n") > -1 || search.indexOf(" ") > -1 || search.indexOf("+") > -1){
 						if (search.indexOf("\n") > -1) {
