@@ -139,9 +139,12 @@
 						<el-table-column label="合格状态" width="120">
 							<template slot-scope="scope">
 								<el-button type="text" size="small" v-if="scope.row.status == 1 && button_list.apply_qualified == 1" @click="zhuanFn('1',scope.row.reserve_id)">待转合格</el-button>
+								<div v-if="scope.row.status == 1 && button_list.apply_qualified == 0">待转合格</div>
 								<el-button type="text" size="small" v-if="scope.row.status == 3 && button_list.qualified_check == 1" @click="hgAuditFn(scope.row.reserve_id)">合格待审核</el-button>
+								<div v-if="scope.row.status == 3 && button_list.qualified_check == 0">合格待审核</div>
 								<!-- 转合格编辑 -->
 								<el-button style="color:red" type="text" size="small" @click="zhuanFn('2',scope.row.reserve_id)" v-if="scope.row.status == 5 && button_list.qualified_edit == 1">转合格拒绝</el-button>
+								<div v-if="scope.row.status == 5 && button_list.qualified_edit == 0">转合格拒绝</div>
 								<div v-if="scope.row.status == 4">{{scope.row.status | qualified_refund_status}}</div>
 							</template>
 						</el-table-column>

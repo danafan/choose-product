@@ -10,7 +10,7 @@
 						<el-input clearable v-model="address" placeholder="供应商地址" style="width: 192px;"></el-input>
 					</el-form-item>
 					<el-form-item label="主营：" required>
-						<el-input clearable v-model="main_business" placeholder="主营" style="width: 192px;"></el-input>
+						<el-input type="textarea" :autosize="{ minRows: 1, maxRows: 4}" clearable v-model="main_business" placeholder="主营" style="width: 192px;"></el-input>
 					</el-form-item>
 					<el-form-item label="提供拍照：">
 						<el-radio-group v-model="supply_photograph">

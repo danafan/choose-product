@@ -5,6 +5,10 @@
 		</div>
 		<img class="image_box" src="../static/load_failure.png" v-else>
 		<div class="goods_info">
+			<div class="price">
+				<div class="p_icon">¥</div>
+				<div class="p_value">{{info.cost_price}}</div>
+			</div>
 			<div class="desc">{{info.title}}</div>
 			<div class="price_cate">
 				<div class="time">{{info.new_time_name}}</div>
@@ -14,6 +18,10 @@
 				<div>浏览：{{info.views_num}}</div>
 				<div>选中：{{info.select_num}}</div>
 				<div>30天销量：{{info.sales_num_all}}</div>
+			</div>
+			<div class="num_row">
+				<div>30天退货率：{{info.thl_30}}</div>
+				<div>7天发货率：{{info.fhl_7}}</div>
 			</div>
 			<div class="num_row">
 				<div class="kh">款号：{{info.p_style_name}}</div>
@@ -79,113 +87,128 @@
 	</div>
 </template>
 <style>
-.el-tag {
-	position: relative;
-	max-width: 300px;
-	margin-right: 10px;
-	margin-bottom: 0!important;
-	overflow: hidden!important;
-	text-overflow: ellipsis!important;
-	white-space: nowrap!important;
-	padding-right: 18px;
-}
-.el-tag__close{
-	position: absolute!important;
-	right: 1px!important;
-	top: 3px!important;
-}
+	.el-tag {
+		position: relative;
+		max-width: 300px;
+		margin-right: 10px;
+		margin-bottom: 0!important;
+		overflow: hidden!important;
+		text-overflow: ellipsis!important;
+		white-space: nowrap!important;
+		padding-right: 18px;
+	}
+	.el-tag__close{
+		position: absolute!important;
+		right: 1px!important;
+		top: 3px!important;
+	}
 </style>
 <style lang="less" scoped>
-.goods_item{
-	margin-bottom: 20rem;
-	border:1px solid #EDEDED;
-	width: 265rem;
-	cursor:pointer;
-	.image_box{
-		position: relative;
-		width: 263rem;
-		height: 263rem;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		.goods_img{
-			position: absolute;
-			top: 0;
-			left: 0;
-			width: 100%;
-			height: 100%;
-		}
-	}
-	.goods_info{
-		padding: 8rem 10rem;
-		.desc{
-			margin-top: 6rem;
-			font-size:12rem;
-			color: #333333;
-			word-break: break-all;
-			text-overflow: ellipsis;
-			overflow: hidden;
-			display: -webkit-box;
-			-webkit-line-clamp: 1;
-			-webkit-box-orient: vertical;
-		}
-		.price_cate{
-			margin-top: 12rem;
+	.goods_item{
+		margin-bottom: 20rem;
+		border:1px solid #EDEDED;
+		width: 265rem;
+		cursor:pointer;
+		.image_box{
+			position: relative;
+			width: 263rem;
+			height: 263rem;
 			display: flex;
 			align-items: center;
-			justify-content: space-between;
-			font-size: 12rem;
-			.time{
+			justify-content: center;
+			.goods_img{
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+			}
+		}
+		.goods_info{
+			padding: 8rem 10rem;
+			.price{
+				display: flex;
+				align-items: flex-end;
+				color: var(--color);
+				font-weight: bold;
+				.p_icon{
+					position: relative;
+					top: -1px;
+					font-size:14rem;
+				}
+				.p_value{
+					margin-left: 1rem;
+					font-size:18rem;
+				}
+			}
+			.desc{
+				margin-top: 6rem;
+				font-size:12rem;
+				color: #333333;
+				word-break: break-all;
+				text-overflow: ellipsis;
+				overflow: hidden;
+				display: -webkit-box;
+				-webkit-line-clamp: 1;
+				-webkit-box-orient: vertical;
+			}
+			.price_cate{
+				margin-top: 12rem;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				font-size: 12rem;
+				.time{
+					color: #999999;
+				}
+				.cate{
+					color: #333333;
+				}
+			}
+			.num_row{
+				margin-top: 14rem;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				font-size: 12rem;
 				color: #999999;
 			}
-			.cate{
-				color: #333333;
+			.kh{
+				word-break: break-all;
+				text-overflow: ellipsis;
+				overflow: hidden;
+				display: -webkit-box;
+				-webkit-line-clamp: 1;
+				-webkit-box-orient: vertical;
 			}
-		}
-		.num_row{
-			margin-top: 14rem;
-			display: flex;
-			align-items: center;
-			justify-content: space-between;
-			font-size: 12rem;
-			color: #999999;
-		}
-		.kh{
-			word-break: break-all;
-			text-overflow: ellipsis;
-			overflow: hidden;
-			display: -webkit-box;
-			-webkit-line-clamp: 1;
-			-webkit-box-orient: vertical;
-		}
-		.buts{
-			display: flex;
-			.but{
-				margin-left: 10rem;
-				border-radius: 2rem;
-				background: var(--color);
-				padding: 0 3rem;
-				height: 20rem;
-				line-height: 20rem;
-				font-size: 12rem;
-				color: #ffffff;
+			.buts{
+				display: flex;
+				.but{
+					margin-left: 10rem;
+					border-radius: 2rem;
+					background: var(--color);
+					padding: 0 3rem;
+					height: 20rem;
+					line-height: 20rem;
+					font-size: 12rem;
+					color: #ffffff;
+				}
+				.drak_back{
+					background-color: #999999;
+				}
 			}
-			.drak_back{
-				background-color: #999999;
-			}
-		}
-		.img_list{
-			margin-top: 12rem;
-			flex:1;
-			display: flex;
-			.info_icon{
-				margin-right: 6rem;
-				width: 20rem;
-				height: 20rem;
+			.img_list{
+				margin-top: 12rem;
+				flex:1;
+				display: flex;
+				.info_icon{
+					margin-right: 6rem;
+					width: 20rem;
+					height: 20rem;
+				}
 			}
 		}
 	}
-}
 </style>
 <script>
 	import resource from '../api/resource.js'
@@ -218,7 +241,7 @@
 			//单个商品
 			info:{
 				type:Object,
-				default:{}
+			default:{}
 			}
 		},
 		computed:{
