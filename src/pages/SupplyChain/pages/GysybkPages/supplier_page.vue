@@ -55,102 +55,102 @@
 				<el-divider></el-divider>
 				<TableTitle title="数据列表" id="table_title">
 					<el-button size="mini" type="primary" @click="exportFn" v-if="button_list.export == 1">导出</el-button>
-					<el-button size="mini" type="primary" @click="import_dialog = true" v-if="button_list.import == 1">导入</el-button>
-					<el-button size="mini" type="primary" @click="addFn('1')" v-if="button_list.add == 1">添加</el-button>
-				</TableTitle>
-				<el-table ref="table" size="mini" :data="data.data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" v-loading="loading">
-					<el-table-column label="供应商名称" prop="supplier_name"></el-table-column>
-					<el-table-column label="供应商地址" prop="address"></el-table-column>
-					<el-table-column label="联系人" width="120" prop="contactor"></el-table-column>
-					<el-table-column label="联系方式" width="120" prop="contact_information"></el-table-column>
-					<el-table-column label="主营" prop="main_business"></el-table-column>
-					<el-table-column label="微信" prop="weixin"></el-table-column>
-					<el-table-column label="拍照">
-						<template slot-scope="scope">
-							{{scope.row.supply_photograph == 1?'是':'否'}}
-						</template>
-					</el-table-column>
-					<el-table-column label="退货">
-						<template slot-scope="scope">
-							{{scope.row.supply_return_goods == 1?'是':'否'}}
-						</template>
-					</el-table-column>
-					<el-table-column label="换货">
-						<template slot-scope="scope">
-							{{scope.row.supply_exchange_goods == 1?'是':'否'}}
-						</template>
-					</el-table-column>
-					<el-table-column label="代发">
-						<template slot-scope="scope">
-							{{scope.row.supply_replace_send == 1?'是':'否'}}
-						</template>
-					</el-table-column>
-					<el-table-column label="入仓">
-						<template slot-scope="scope">
-							{{scope.row.supply_warehousing == 1?'是':'否'}}
-						</template>
-					</el-table-column>
-					<el-table-column label="结算">
-						<template slot-scope="scope">
-							{{scope.row.supply_monthly_settlement == 1?'月结':'现结'}}
-						</template>
-					</el-table-column>
-					<el-table-column label="供应商等级" prop="grade_name"></el-table-column>
-					<el-table-column label="评价记录">
-						<template slot-scope="scope">
-							<el-button type="text" size="small" @click="getEvaluate(scope.row.reserve_id,scope.row.supplier_name)">{{scope.row.evaluate_num}}</el-button>
-						</template>
-					</el-table-column>
-					<el-table-column label="操作" width="180" fixed="right">
-						<template slot-scope="scope">
-							<el-button type="text" size="small" @click="getDetail(scope.row.supplier_id)" v-if="button_list.view == 1">查看</el-button>
-							<el-button type="text" size="small" @click="addFn('2',scope.row.supplier_id)" v-if="button_list.edit == 1">编辑</el-button>
-							<el-button type="text" size="small" @click="deleteFn(scope.row.supplier_id)" v-if="button_list.del == 1">删除</el-button>
-							<el-button type="text" size="small" @click="$router.push(`/account_list?supplier_id=${scope.row.supplier_id}&supplier_name=${scope.row.supplier_name}`)" v-if="button_list.add_account == 1">账号管理</el-button>
-						</template>
-					</el-table-column>
-				</el-table>
-			</div>
-			<PaginationWidget id="bottom_row" :total="data.total" :page="page" :pagesize="20" :show_multiple="false" @checkPage="checkPage"/>
-		</el-card>
-		<!-- 导入 -->
-		<el-dialog :visible.sync="import_dialog" width="30%">
-			<div slot="title" class="dialog_title">
-				<div>导入</div>
-				<img class="close_icon" src="../../../../static/close_icon.png" @click="import_dialog = false">
-			</div>
-			<div class="down_box">
-				<el-button type="primary" plain size="small" @click="downTemplate">下载模版<i class="el-icon-download el-icon--right"></i></el-button>
-				<div class="upload_box">
-					<el-button type="primary" size="small">
-						导入
-						<i class="el-icon-upload el-icon--right"></i>
-					</el-button>
-					<input type="file" ref="csvUpload" class="upload_file" accept=".csv, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" @change="uploadCsv">
+					<!-- <el-button size="mini" type="primary" @click="import_dialog = true" v-if="button_list.import == 1">导入</el-button>
+						<el-button size="mini" type="primary" @click="addFn('1')" v-if="button_list.add == 1">添加</el-button> -->
+					</TableTitle>
+					<el-table ref="table" size="mini" :data="data.data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" v-loading="loading">
+						<el-table-column label="供应商名称" prop="supplier_name"></el-table-column>
+						<el-table-column label="供应商地址" prop="address"></el-table-column>
+						<el-table-column label="联系人" width="120" prop="contactor"></el-table-column>
+						<el-table-column label="联系方式" width="120" prop="contact_information"></el-table-column>
+						<el-table-column label="主营" prop="main_business"></el-table-column>
+						<el-table-column label="微信" prop="weixin"></el-table-column>
+						<el-table-column label="拍照">
+							<template slot-scope="scope">
+								{{scope.row.supply_photograph == 1?'是':'否'}}
+							</template>
+						</el-table-column>
+						<el-table-column label="退货">
+							<template slot-scope="scope">
+								{{scope.row.supply_return_goods == 1?'是':'否'}}
+							</template>
+						</el-table-column>
+						<el-table-column label="换货">
+							<template slot-scope="scope">
+								{{scope.row.supply_exchange_goods == 1?'是':'否'}}
+							</template>
+						</el-table-column>
+						<el-table-column label="代发">
+							<template slot-scope="scope">
+								{{scope.row.supply_replace_send == 1?'是':'否'}}
+							</template>
+						</el-table-column>
+						<el-table-column label="入仓">
+							<template slot-scope="scope">
+								{{scope.row.supply_warehousing == 1?'是':'否'}}
+							</template>
+						</el-table-column>
+						<el-table-column label="结算">
+							<template slot-scope="scope">
+								{{scope.row.supply_monthly_settlement == 1?'月结':'现结'}}
+							</template>
+						</el-table-column>
+						<el-table-column label="供应商等级" prop="grade_name"></el-table-column>
+						<el-table-column label="评价记录">
+							<template slot-scope="scope">
+								<el-button type="text" size="small" @click="getEvaluate(scope.row.reserve_id,scope.row.supplier_name)">{{scope.row.evaluate_num}}</el-button>
+							</template>
+						</el-table-column>
+						<el-table-column label="操作" width="180" fixed="right">
+							<template slot-scope="scope">
+								<el-button type="text" size="small" @click="getDetail(scope.row.supplier_id)" v-if="button_list.view == 1">查看</el-button>
+								<el-button type="text" size="small" @click="addFn('2',scope.row.supplier_id)" v-if="button_list.edit == 1">编辑</el-button>
+								<el-button type="text" size="small" @click="deleteFn(scope.row.supplier_id)" v-if="button_list.del == 1">删除</el-button>
+								<el-button type="text" size="small" @click="$router.push(`/account_list?supplier_id=${scope.row.supplier_id}&supplier_name=${scope.row.supplier_name}`)" v-if="button_list.add_account == 1">账号管理</el-button>
+							</template>
+						</el-table-column>
+					</el-table>
 				</div>
-			</div>
-			<div slot="footer" class="dialog_footer">
-				<el-button size="small" @click="import_dialog = false">取消</el-button>
-			</div>
-		</el-dialog>
-		<!-- 评价记录 -->
-		<el-dialog :visible.sync="evaluate_dialog">
-			<div slot="title" class="dialog_title">
-				<div>【{{supplier_name}}】评价记录</div>
-				<img class="close_icon" src="../../../../static/close_icon.png" @click="evaluate_dialog = false">
-			</div>
-			<!-- 内容 -->
-			<div class="pt-15">
-				<TableTitle title="数据列表" id="table_title">
-					<!-- <el-button size="mini" type="primary" @click="addEvakuateFn('添加评价','')">添加</el-button> -->
-				</TableTitle>
-				<el-table ref="table" size="mini" :data="evaluate_data.data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" v-loading="evaluate_loading">
-					<el-table-column label="评价内容" prop="evaluate_content">
-						<template slot-scope="scope">
-							<el-button type="text" size="small" @click="addEvakuateFn('评价内容',scope.row.evaluate_content)"><p style="text-decoration:underline">{{scope.row.evaluate_content}}</p></el-button>
-						</template>
-					</el-table-column>
-					<el-table-column label="评价时间" prop="add_time"></el-table-column>
+				<PaginationWidget id="bottom_row" :total="data.total" :page="page" :pagesize="20" :show_multiple="false" @checkPage="checkPage"/>
+			</el-card>
+			<!-- 导入 -->
+			<el-dialog :visible.sync="import_dialog" width="30%">
+				<div slot="title" class="dialog_title">
+					<div>导入</div>
+					<img class="close_icon" src="../../../../static/close_icon.png" @click="import_dialog = false">
+				</div>
+				<div class="down_box">
+					<el-button type="primary" plain size="small" @click="downTemplate">下载模版<i class="el-icon-download el-icon--right"></i></el-button>
+					<div class="upload_box">
+						<el-button type="primary" size="small">
+							导入
+							<i class="el-icon-upload el-icon--right"></i>
+						</el-button>
+						<input type="file" ref="csvUpload" class="upload_file" accept=".csv, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" @change="uploadCsv">
+					</div>
+				</div>
+				<div slot="footer" class="dialog_footer">
+					<el-button size="small" @click="import_dialog = false">取消</el-button>
+				</div>
+			</el-dialog>
+			<!-- 评价记录 -->
+			<el-dialog :visible.sync="evaluate_dialog">
+				<div slot="title" class="dialog_title">
+					<div>【{{supplier_name}}】评价记录</div>
+					<img class="close_icon" src="../../../../static/close_icon.png" @click="evaluate_dialog = false">
+				</div>
+				<!-- 内容 -->
+				<div class="pt-15">
+					<TableTitle title="数据列表" id="table_title">
+						<!-- <el-button size="mini" type="primary" @click="addEvakuateFn('添加评价','')">添加</el-button> -->
+					</TableTitle>
+					<el-table ref="table" size="mini" :data="evaluate_data.data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" v-loading="evaluate_loading">
+						<el-table-column label="评价内容" prop="evaluate_content">
+							<template slot-scope="scope">
+								<el-button type="text" size="small" @click="addEvakuateFn('评价内容',scope.row.evaluate_content)"><p style="text-decoration:underline">{{scope.row.evaluate_content}}</p></el-button>
+							</template>
+						</el-table-column>
+						<el-table-column label="评价时间" prop="add_time"></el-table-column>
 					<!-- <el-table-column label="操作" width="180" fixed="right">
 						<template slot-scope="scope">
 							<el-button size="mini" type="text" @click="delEvaluate(scope.row.evaluate_log_id)">删除</el-button>
@@ -165,21 +165,21 @@
 					<div>{{evaluate_info_title}}</div>
 					<img class="close_icon" src="../../../../static/close_icon.png" @click="evaluate_info_dialog = false">
 				</div>
-				<div class="pt-15">
-					<el-input type="textarea" :rows="4" :disabled="evaluate_info_title == '评价内容'" placeholder="请输入评价内容" v-model="evaluate_content" maxlength="300"
-					show-word-limit>
-				</el-input>
-			</div>
+				<div class="pt-15 pb-15">
+					<el-input type="textarea" :rows="4" :disabled="evaluate_info_title == '评价内容'" placeholder="请输入评价内容" v-model="evaluate_content" maxlength="300" show-word-limit v-if="evaluate_info_title == '添加评价'">
+					</el-input>
+					<div v-else>{{evaluate_content}}</div>
+				</div>
+				<div slot="footer" class="dialog_footer">
+					<el-button size="small" @click="evaluate_info_dialog = false">取消</el-button>
+					<el-button size="mini" type="primary" @click="evaluateSaveInfo" v-if="evaluate_info_title == '添加评价'">保存</el-button>
+				</div>
+			</el-dialog>
 			<div slot="footer" class="dialog_footer">
-				<el-button size="small" @click="evaluate_info_dialog = false">取消</el-button>
-				<el-button size="mini" type="primary" @click="evaluateSaveInfo" v-if="evaluate_info_title == '添加评价'">保存</el-button>
+				<el-button size="small" @click="evaluate_dialog = false">关闭</el-button>
 			</div>
 		</el-dialog>
-		<div slot="footer" class="dialog_footer">
-			<el-button size="small" @click="evaluate_dialog = false">关闭</el-button>
-		</div>
-	</el-dialog>
-</div>
+	</div>
 </template>
 <style type="text/css">
 	.card_box .el-card__body{
@@ -227,6 +227,9 @@
 	}
 	.pt-15{
 		padding-top: 15px;
+	}
+	.pb-15{
+		padding-bottom:15rem;
 	}
 // }
 </style>

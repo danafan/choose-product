@@ -506,7 +506,7 @@
 								</template>
 							</el-table-column>
 						</el-table>
-						<PaginationWidget :total="visit_data.total" :page="visit_page" :pagesize="20" :show_multiple="false" @checkPage="checkVisitPage"/>
+						<PaginationWidget :total="visit_data.total" :page="visit_page" :pagesize="10" :show_multiple="false" @checkPage="checkVisitPage"/>
 					</div>
 					<div slot="footer" class="dialog_footer">
 						<el-button size="small" @click="visit_dialog = false">关闭</el-button>
@@ -544,10 +544,11 @@
 							<div>{{evaluate_info_title}}</div>
 							<img class="close_icon" src="../../../../static/close_icon.png" @click="evaluate_info_dialog = false">
 						</div>
-						<div class="pt-15">
+						<div class="pt-15 pb-15">
 							<el-input type="textarea" :rows="4" :disabled="evaluate_info_title == '评价内容'" placeholder="请输入评价内容" v-model="evaluate_content" maxlength="300"
-							show-word-limit>
+							show-word-limit v-if="evaluate_info_title == '添加评价'">
 						</el-input>
+						<div v-else>{{evaluate_content}}</div>
 					</div>
 					<div slot="footer" class="dialog_footer">
 						<el-button size="small" @click="evaluate_info_dialog = false">取消</el-button>
@@ -610,6 +611,9 @@
 		}
 		.pt-15{
 			padding-top:15rem;
+		}
+		.pb-15{
+			padding-bottom:15rem;
 		}
 	</style>
 	<script>
@@ -1402,7 +1406,23 @@
 				this.reserve_id = reserve_id;
 				this.visit_dialog = true;
 				this.visit_loading = true;
-				resource.visitList({reserve_id:this.reserve_id}).then(res => {
+				//拜访记录列表
+				this.getBfjl();
+			},
+			//拜访记录分页
+			checkVisitPage(v){
+				this.visit_page = v;
+				//拜访记录列表
+				this.getBfjl();
+			},
+			//获取拜访记录列表
+			getBfjl(){
+				let arg = {
+					reserve_id:this.reserve_id,
+					page:this.visit_page,
+					pagesize:10
+				}
+				resource.visitList(arg).then(res => {
 					if(res.data.code == 1){
 						this.visit_loading = false;
 						this.visit_data = res.data.data;
@@ -1417,12 +1437,6 @@
 						this.$message.warning(res.data.msg);
 					}
 				})
-			},
-			//拜访记录分页
-			checkVisitPage(v){
-				this.visit_page = v;
-				//拜访记录列表
-				this.getVisit();
 			},
 			//点击查看评价记录
 			getEvaluate(reserve_id,supplier_name){

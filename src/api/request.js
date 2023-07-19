@@ -78,6 +78,7 @@ export function middleWare(params, type) {
   var Base64 = require("js-base64").Base64;
   var token_obj = { ...token_target, ...{ sign: sign } };
   var token = Base64.encode(JSON.stringify(token_obj));
+  
   //组织参数
   var req = { ...params, ...{ sign: sign, token: token } };
   // var req = { ...params, ...{ admin_id: "8318",utype:'1' } };
