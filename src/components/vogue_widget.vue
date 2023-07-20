@@ -1,8 +1,9 @@
 <template>
   <div class="vogue_widget">
-    <div class="vogue_title flex ac jsb" :class="{'title_radius':!screen_open}">
+    <div class="vogue_title flex ac jsb" :class="{'title_radius':!screen_open}" @click="screen_open = !screen_open">
       <div>爆款专区</div>
-      <div class="selected_right" @click="screen_open = !screen_open">
+      <!-- <div @mousedown="touchStart" @mouseup="touchEnd">加速</div> -->
+      <div class="selected_right">
         <div>{{screen_open?'收起':'展开'}}</div>
         <img class="down_arrow" :class="{'rotate':screen_open == true}" src="../static/down_arrow.png">
       </div>
@@ -47,7 +48,8 @@
           direction: 2,
           step:0.5
         },
-        screen_open:true
+        screen_open:true,
+        ss:null
       }
     },
     computed:{
@@ -61,6 +63,17 @@
       this.hotSellGoods();
     },
     methods:{
+      touchStart(){
+        this.ss = setInterval(() => {
+          this.classOption.step = this.classOption.step + 1;
+        },100);
+        console.log('按下')
+      },
+      touchEnd(){
+        clearInterval(this.ss);
+        this.classOption.step = 0.5;
+        console.log('放开')
+      },
       //爆款列表
       hotSellGoods(){
         resource.hotSellGoods().then(res => {

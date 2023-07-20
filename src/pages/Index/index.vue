@@ -1,5 +1,5 @@
 <template>
-	<div class="padding_page scroll-y">
+	<div class="padding_page scroll-y" ref="paddingPageContent">
 		<div class="index_container">
 			<div class="padding_page_content">
 				<div class="flex ac">
@@ -28,6 +28,7 @@
 						<EmptyPage :is_loading="loading" v-else/>
 					</el-card>
 				</div>
+				<img class="scroll_top_icon" src="../../static/scroll_top_icon.png" @click="setScrollTop">
 				<CarWidget :is_fixed="true"/>
 			</div>
 			<!-- 点击放大 -->
@@ -90,6 +91,9 @@
 			},
 		},
 		methods:{
+			setScrollTop(){
+				this.$refs.paddingPageContent.scrollTop = 0;
+			},
 			group_notice_list(array) {
 				let index = 0;
 				let newArray = [];
@@ -261,6 +265,15 @@
 		}
 	}
 	.padding_page_content::-webkit-scrollbar{display:none}
+	.scroll_top_icon{
+		position: fixed;
+		top: 40%;
+		right: 8rem;
+		width: 82rem;
+		height: 82rem;
+		z-index: 9;
+		cursor:pointer;
+	}
 </style>
 
 

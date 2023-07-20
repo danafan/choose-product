@@ -1,5 +1,5 @@
 <template>
-	<div class="padding_page white_back" id="white_back">
+	<div class="padding_page white_back" ref="paddingPageContent" id="white_back">
 		<div class="padding_page_content">
 			<PageTitle title="选品详情"/>
 			<div class="detail_content">
@@ -11,7 +11,7 @@
 					<!-- 店铺信息 -->
 					<StoreInfo :goods_info="goods_info"/>
 				</div>
-				<div class="flex">
+				<div class="flex as">
 					<!-- 推荐商品 -->
 					<div class="recommended" v-if="goods_info.recommend_list.length > 0">
 						<div class="recommended_title">推荐商品</div>
@@ -19,7 +19,7 @@
 							<div class="li-item" v-for="(item, index) in goods_info.recommend_list" :key="index" @click="getDetail(item.style_id)">
 								<el-image class="goods_img" :src="domain + item.img" fit="scale-down"></el-image>
 								<div class="hot_sell_item_price">¥{{item.cost_price}}</div>
-								<div class="hot_sell_item_title table_header_text">{{item.title}}阿克苏尖端科技阿斯顿啊就是的空间啊还是多看几阿斯顿卡就收到卡就收到阿克苏尖端科技阿斯顿啊就是的空间啊还是多看几阿斯顿卡就收到卡就收到</div>
+								<div class="hot_sell_item_title table_header_text">{{item.title}}</div>
 							</div>
 						</div>
 					</div>
@@ -34,6 +34,7 @@
 					</div>
 				</div>
 			</div>
+			<img class="scroll_top_icon" src="../../static/scroll_top_icon.png" @click="setScrollTop">
 			<CarWidget :is_fixed="true"/>
 			<FeekbackWidget :style_id="style_id" :is_fixed="true"/>
 		</div>
@@ -73,6 +74,10 @@
 			}
 		},
 		methods:{
+			setScrollTop(){
+				console.log(this.$refs.paddingPageContent.scrollTop)
+				this.$refs.paddingPageContent.scrollTop = 0;
+			},
 			//获取商品详情
 			getGoodsInfo(){
 				let arg = {
@@ -145,6 +150,7 @@
 				margin-right: 10px;
 				width: 254px;
 				background: #F6F6F6;
+				padding-bottom: 10px;
 				.recommended_title{
 					border-bottom: 1px solid #E5E5E5;
 					text-align: center;
@@ -154,6 +160,7 @@
 					color: #F37605;
 				}
 				.li-item {
+					padding-top: 10px;
 					margin-top: 10px;
 					background: #ffffff;
 					width: 234px;
@@ -209,4 +216,13 @@
 		}
 	}
 	.white_back::-webkit-scrollbar{display:none}
+	.scroll_top_icon{
+		position: fixed;
+		top: 40%;
+		right: 8rem;
+		width: 82rem;
+		height: 82rem;
+		z-index: 9;
+		cursor:pointer;
+	}
 </style>

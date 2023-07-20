@@ -48,7 +48,6 @@
 			</div>
 			<div class="content_row">
 				<div class="row_lable">网盘地址</div>
-				<!-- <el-button type="text" size="small" class="link" @click="windowOpen(goods_info.net_disk_address)">{{goods_info.or_net_disk_address}}</el-button> -->
 				<div class="flex-1 link" @click="windowOpen(goods_info.net_disk_address)">{{goods_info.or_net_disk_address}}</div>
 			</div>
 			<div class="content_row">
@@ -453,7 +452,6 @@
 <style lang="less" scoped>
 	.goods_info{
 		width: 512rem;
-		height: 546rem;
 		display: flex;
 		flex-direction: column;
 		.goods_name{
