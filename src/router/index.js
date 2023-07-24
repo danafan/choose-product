@@ -33,6 +33,8 @@ const chain_permissions_page = (resolve) => require(["@/pages/SupplyChain/pages/
 const chain_feekback_page = (resolve) => require(["@/pages/SupplyChain/pages/chain_feekback_page"], resolve);
 const setting_record_page = (resolve) => require(["@/pages/SupplyChain/pages/setting_record_page"], resolve);
 
+const gysybk_detail = (resolve) => require(["@/pages/GysybkDetail/index"], resolve);
+
 Vue.use(Router);
 
 const router = new Router({
@@ -41,6 +43,11 @@ const router = new Router({
     path: "/login",
     name: "登录",
     component: login
+  },
+  {
+    path: "/gysybk_detail",
+    name: "供应商详情",
+    component: gysybk_detail
   },
   {
     path: "/tab_menu",

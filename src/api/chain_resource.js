@@ -110,6 +110,7 @@ let path = {
   evaluateList:'api/supplier_manager/evaluate_list',        //评价记录
   addEvaluate:'api/supplier_manager/add_evaluate',          //创建评价记录
   delEvaluate:'api/supplier_manager/del_evaluate',          //删除评价记录
+  gysybkDetail:'api/supplier/reserve_info',                 //供应商预备库直接进入详情
 };  
 export default {
   //类目列表接口
@@ -603,5 +604,9 @@ export default {
   //删除评价记录
   delEvaluate(params) {
     return http.post(path.delEvaluate, params);
+  },
+  //供应商预备库直接进入详情
+  gysybkDetail(params) {
+    return http.get(path.gysybkDetail, params);
   },
 };

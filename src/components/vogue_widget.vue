@@ -1,6 +1,6 @@
 <template>
   <div class="vogue_widget">
-    <div class="vogue_title flex ac jsb" :class="{'title_radius':!screen_open}" @click="screen_open = !screen_open">
+    <div class="vogue_title flex ac jsb" :class="{'title_radius':!screen_open}" @click.stop="screen_open = !screen_open">
       <div>爆款专区</div>
       <div class="selected_right">
         <div>{{screen_open?'收起':'展开'}}</div>
@@ -90,7 +90,7 @@
 </script>
 <style type="text/css">
   .el-carousel__container{
-    height: 248px!important;
+    height: 248rem!important;
   }
 </style>
 <style lang="less" scoped>
