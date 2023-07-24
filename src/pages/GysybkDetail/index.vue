@@ -1,5 +1,5 @@
 <template>
-	<el-form size="mini" style="width: 360px;" >
+	<el-form size="mini" style="width: 360px;padding-left: 30px;" >
 		<el-form-item label="供应商名称：">
 			<div>{{info_arg.supplier_name}}</div>
 		</el-form-item>
