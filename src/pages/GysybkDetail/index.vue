@@ -174,17 +174,10 @@
 				company_name:"",				//公司名称
 			}
 		},
-		computed:{
-			//图片前缀
-			domain(){
-				return this.$store.state.domain;
-			}
-		},
 		created(){
 			let reserve_id = this.$route.query.reserve_id;
 			//点击填报阶段审核/查看
 			this.checkInfo(reserve_id);
-			// this.checkInfo(178);
 		},
 		methods:{
 			//点击填报阶段审核/查看
@@ -211,7 +204,7 @@
 						if(data.business_license){
 							let business_license_img = data.business_license.split(',');
 							business_license_img.map(item => {
-								this.business_license_img.push(this.domain + item);
+								this.business_license_img.push(data.img_domain + item);
 							})
 						}
 						
@@ -220,7 +213,7 @@
 						if(data.company_img){
 							let company_img = data.company_img.split(',');
 							company_img.map(item => {
-								this.company_img.push(this.domain + item);
+								this.company_img.push(data.img_domain + item);
 							})
 						}
 
@@ -229,7 +222,7 @@
 						if(data.visiting_imgs){
 							let visiting_imgs = data.visiting_imgs.split(',');
 							visiting_imgs.map(item => {
-								this.visiting_imgs.push(this.domain + item);
+								this.visiting_imgs.push(data.img_domain + item);
 							})
 						}
 					}else{
