@@ -80,16 +80,23 @@
 					<ScreeningWidget id="screen_widget" v-if="show_screen" :total_num="total" page_type="supplier" @callback="screenFn"/>
 					<div class="scroll_view" v-if="goods_list.length > 0">
 						<div class="goods_list">
-							<GoodsItem :info="item" @setStatus="setStatus" v-for="item in goods_list"/>
+							<GoodsItem :info="item" @setStatus="setStatus" v-for="item in goods_list" @enlargeFn="enlargeFn"/>
 							<div class="padding_item" v-for="i in 6-(goods_list.length%6) == 6?0:6-(goods_list.length%6)"></div>
 						</div>
-						<PaginationWidget :total="total" :page="page" :pagesize="pagesize" @checkPage="checkPage"/>
+						<PaginationWidget :total="total" :page="page" :pagesize="pagesize" :show_multiple="false" @checkPage="checkPage"/>
 					</div>
 					<EmptyPage :is_loading="loading" v-else/>
 				</el-card>
 			</div>
 			<CarWidget :is_fixed="true"/>
 		</div>
+		<!-- 点击放大 -->
+		<el-dialog :visible.sync="enlarge_dialog" :show-close="false" custom-class="custom_class">
+			<div slot="title" class="dialog_title" style="justify-content: flex-end;">
+				<img class="close_icon" src="../../static/close_icon.png" @click="enlarge_dialog = false">
+			</div>
+			<GoodsItem :info="enlarge_item" @setStatus="setStatus" :is_enlarge="true"/>
+		</el-dialog>
 	</div>
 </template>
 <script>
@@ -113,7 +120,9 @@
 				pagesize:30,
 				search:"",
 				show_screen:true,
-				arg:{}
+				arg:{},
+				enlarge_dialog:false,
+				enlarge_item:{},
 			}
 		},
 		created(){
@@ -128,6 +137,11 @@
 			this.getList(arg);
 		},
 		methods:{
+			//点击放大
+			enlargeFn(info){
+				this.enlarge_item = info;
+				this.enlarge_dialog = true;
+			},
 			//供应商基本信息
 			supplierInfo(){
 				let arg = {
@@ -207,22 +221,27 @@
 		}
 	}
 </script>
+<style type="text/css" lang="less">
+	.custom_class{
+		width: 460rem!important;
+	}
+</style>
 <style lang="less" scoped>
-.ddd{
-	overflow-y: scroll;
-}
-.supplier_detail_container{
-	position: relative;
-	width: 1725rem;
-	height: 100%;
-}
-.supplier_detail_container::-webkit-scrollbar{display:none}
-.padding_page_content{
-	position: absolute;
-	top:0;
-	left: 0;
-	width: 100%;
-	height: 100%;
+	.ddd{
+		overflow-y: scroll;
+	}
+	.supplier_detail_container{
+		position: relative;
+		width: 1725rem;
+		height: 100%;
+	}
+	.supplier_detail_container::-webkit-scrollbar{display:none}
+	.padding_page_content{
+		position: absolute;
+		top:0;
+		left: 0;
+		width: 100%;
+		height: 100%;
 	// overflow-y: scroll;
 	.card_box{
 		.top_content{

@@ -10,7 +10,7 @@
     <div class="carousel_box flex ac" v-if="screen_open">
       <img class="check_arrow pointer" src="../static/check_left_arrow.png" @click="checkArrow('1')">
       <div class="flex-1">
-        <el-carousel indicator-position="none" arrow="never" ref="hotCarousel" :autoplay="false">
+        <el-carousel class="sss" indicator-position="none" arrow="never" ref="hotCarousel" :autoplay="false">
           <el-carousel-item v-for="(array_item,index) in hot_sell_goods" :key="index">
             <div class="width-100 flex jsb">
               <div class="li-item pointer" v-for="item in array_item" :key="item.style_id" @click="getDetail(item.style_id)">
@@ -89,7 +89,7 @@
   }
 </script>
 <style type="text/css">
-  .el-carousel__container{
+  .vogue_widget .el-carousel__container{
     height: 248rem!important;
   }
 </style>

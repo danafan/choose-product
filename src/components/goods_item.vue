@@ -135,7 +135,7 @@
 		</div>
 	</div>
 	<!-- 选款弹窗 -->
-	<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" @close="closeSelectDialog" destroy-on-close :visible.sync="show_select" :modal-append-to-body="false">
+	<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" @close="closeSelectDialog" destroy-on-close :visible.sync="show_select" append-to-body>
 		<div slot="title" class="dialog_title">
 			<div>选款</div>
 			<img class="close_icon" src="../static/close_icon.png" @click="show_select = false">
@@ -242,7 +242,7 @@
 		</div>
 	</el-dialog>
 	<!-- 反馈弹窗 -->
-	<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" @close="closeFeekDialog" destroy-on-close :visible.sync="feekback_dialog" :modal-append-to-body="false">
+	<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" @close="closeFeekDialog" destroy-on-close :visible.sync="feekback_dialog" append-to-body>
 		<div slot="title" class="dialog_title">
 			<div>意见反馈</div>
 			<img class="close_icon" src="../static/close_icon.png" @click="feekback_dialog = false">
@@ -261,7 +261,7 @@
 		</div>
 	</el-dialog>
 	<!-- 更多图片 -->
-	<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" :visible.sync="more_image_dialog" :modal-append-to-body="false">
+	<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" :visible.sync="more_image_dialog" append-to-body>
 		<div slot="title" class="dialog_title">
 			<div>更多图片</div>
 			<img class="close_icon" src="../static/close_icon.png" @click="more_image_dialog = false">

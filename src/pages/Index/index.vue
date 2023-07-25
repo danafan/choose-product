@@ -23,7 +23,7 @@
 								<GoodsItem :info="item" @setStatus="setStatus" v-for="item in goods_list" @callback="getList" @enlargeFn="enlargeFn"/>
 								<div class="padding_item" v-for="i in 6-(goods_list.length%6) == 6?0:6-(goods_list.length%6)"></div>
 							</div>
-							<PaginationWidget :total="total" :page="page" :pagesize="pagesize" @checkPage="checkPage"/>
+							<PaginationWidget :total="total" :page="page" :pagesize="pagesize" :show_multiple="false" @checkPage="checkPage"/>
 						</div>
 						<EmptyPage :is_loading="loading" v-else/>
 					</el-card>
@@ -36,7 +36,7 @@
 				<div slot="title" class="dialog_title" style="justify-content: flex-end;">
 					<img class="close_icon" src="../../static/close_icon.png" @click="enlarge_dialog = false">
 				</div>
-				<GoodsItem :info="enlarge_item" :is_enlarge="true"/>
+				<GoodsItem :info="enlarge_item" @setStatus="setStatus" :is_enlarge="true"/>
 			</el-dialog>
 		</div>
 	</template>
