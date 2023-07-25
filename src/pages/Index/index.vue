@@ -267,7 +267,7 @@
 	.padding_page_content::-webkit-scrollbar{display:none}
 	.scroll_top_icon{
 		position: fixed;
-		top: 40%;
+		top: 56%;
 		right: 8rem;
 		width: 82rem;
 		height: 82rem;

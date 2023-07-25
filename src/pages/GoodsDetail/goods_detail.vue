@@ -218,7 +218,7 @@
 	.white_back::-webkit-scrollbar{display:none}
 	.scroll_top_icon{
 		position: fixed;
-		top: 40%;
+		top: 70%;
 		right: 8rem;
 		width: 82rem;
 		height: 82rem;

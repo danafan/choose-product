@@ -104,7 +104,7 @@
 		height: 26rem;
 	}
 	.back_text{
-		color: #333333;
+		color: var(--color);
 		font-size: 12rem;
 	}
 }
