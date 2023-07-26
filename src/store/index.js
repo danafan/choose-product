@@ -22,6 +22,8 @@ const store = new Vuex.Store({
     notice_list:[],       //公告列表
     nuread_num:0,         //未读公告数量
     feekback_num:0,       //反馈待处理数量
+    hot_num:0,            //爆款主推款审核待处理数量
+    notice_num:"",        //待处理公告数量
   },
   mutations: {
     //设置用户信息
@@ -46,8 +48,10 @@ const store = new Vuex.Store({
       state.nuread_num = nuread_num;
     },
     //反馈待处理数量
-    setFeekbackNum(state, feekback_num){
-      state.feekback_num = feekback_num;
+    setFeekbackNum(state, data){
+      state.feekback_num = data.feedback_num;
+      state.hot_num = data.hot_num;
+      state.notice_num = data.notice_num;
     },
     //设置购物车
     setCarGoods(state, arg) {

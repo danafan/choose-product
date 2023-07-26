@@ -13,6 +13,8 @@
 							<img class="collapse_chain_icon" :src="item.icon" v-else>
 						</el-tooltip>
 						<div class="collapse_feekback_num" v-if="is_collapse && item.name == '反馈' && feekback_num > 0">{{feekback_num}}</div>
+						<div class="collapse_feekback_num" v-if="is_collapse && item.name == '爆款主推款审核' && hot_num > 0">{{hot_num}}</div>
+						<div class="collapse_feekback_num" v-if="is_collapse && item.name == '公告管理' && notice_num > 0">{{notice_num}}</div>
 					</div>
 					<div v-else>
 						<img class="chain_icon" :src="item.icon_active" v-if="active_index == index">
@@ -20,6 +22,8 @@
 					</div>
 					<div class="chain_text" v-if="!is_collapse">{{item.name}}</div>
 					<div class="feekback_num" v-if="!is_collapse && item.name == '反馈' && feekback_num > 0">{{feekback_num}}</div>
+					<div class="feekback_num" v-if="!is_collapse && item.name == '爆款主推款审核' && hot_num > 0">{{hot_num}}</div>
+					<div class="feekback_num" v-if="!is_collapse && item.name == '公告管理' && notice_num > 0">{{notice_num}}</div>
 					<div class="active_line" v-if="active_index == index && !is_collapse"></div>
 				</div>
 			</el-menu-item>
@@ -89,6 +93,12 @@
 			},
 			feekback_num() {
 				return this.$store.state.feekback_num;
+			},
+			hot_num() {
+				return this.$store.state.hot_num;
+			},
+			notice_num() {
+				return this.$store.state.notice_num;
 			},
 		},
 		created(){

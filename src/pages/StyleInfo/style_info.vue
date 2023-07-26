@@ -36,6 +36,9 @@
 					<el-date-picker v-model="date" size="mini" type="daterange" unlink-panels value-format="yyyy-MM-dd" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions">
 					</el-date-picker>
 				</el-form-item>
+				<el-form-item label="款号">
+						<el-input placeholder="款号" v-model="style_name"></el-input>
+					</el-form-item>
 				<el-form-item class="form_item">
 					<el-button type="primary" @click="checkPage(1)">查询</el-button>
 				</el-form-item>
@@ -226,6 +229,7 @@
 					id:6
 				}],						//审核状态列表
 				check_status_id:"",		//选中的审核状态
+				style_name:"",			//款号
 				date:[],				//上新日期
 				pickerOptions: {
 					shortcuts: [
@@ -285,6 +289,7 @@
     			this.shooting_style_ids = [];
     			this.date = [];
     			this.check_status_id = "";
+    			this.style_name = "";
     			this.status_id = "";
     			this.page = 1;
     		}
@@ -395,6 +400,7 @@
 					end_time:this.date && this.date.length > 0?this.date[1]:"",
 					check_status:this.check_status_id,
 					status:this.status_id,
+					style_name:this.style_name,
 					page:this.page,
 					pagesize:100
 				}

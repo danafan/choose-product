@@ -210,7 +210,7 @@
 					</div>
 				</div>
 				<div class="banner">
-					<el-carousel indicator-position="none" arrow="never" @change="changeImage" ref="cardShow">
+					<el-carousel indicator-position="none" arrow="never" @change="changeImage" ref="cardShow" class="el-carousel-container">
 						<el-carousel-item v-for="item in banner_list" :key="item">
 							<el-image :z-index="9999" class="image" :src="item" fit="scale-down" :preview-src-list="banner_list"></el-image>
 						</el-carousel-item>
@@ -296,6 +296,10 @@
 	.popover_image{
 		height: 400px!important;
 		width: 400px!important;
+	}
+	.el-carousel-container .el-carousel__container{
+		width: 152px!important;
+		height: 152px!important;
 	}
 </style>
 <style lang="less" scoped>
@@ -540,13 +544,13 @@
 			.banner{
 				border:1px solid #D9D9D9;
 				padding: 10rem;
-				width: 260rem;
-				height: 290rem;
+				width: 170px;
+				height: 210px;
 				display: flex;
 				flex-direction: column;
 				.image{
-					width: 240rem;
-					height: 240rem;
+					width: 152px;
+					height: 152px;
 				}
 				.indicator_box{
 					flex:1;
@@ -557,8 +561,8 @@
 						border: 1px solid #979797;
 						background: #D8D8D8;
 						border-radius: 50%;
-						width: 16rem;
-						height: 16rem;
+						width: 8px;
+						height: 8px;
 					}
 					.is_active{
 						border: 1px solid var(--color);

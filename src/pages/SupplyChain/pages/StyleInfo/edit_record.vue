@@ -25,26 +25,30 @@
 				</el-form>
 				<el-divider></el-divider>
 				<TableTitle title="数据列表" id="table_title">
-					<el-button size="mini" type="primary" v-if="button_list.audit == 1">批量审核</el-button>
+					<el-button size="mini" type="primary" v-if="button_list.audit == 1" @click="allSetting('1')">批量审核</el-button>
 				</TableTitle>
 				<el-table ref="table" size="mini" :data="data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" @selection-change="handleSelectionChange" v-loading="loading">
-					<el-table-column type="selection" width="55" fixed>
+					<el-table-column type="selection" width="55" :selectable="setStatus" fixed>
 					</el-table-column>
 					<el-table-column label="款号" prop="style_name"></el-table-column>
 					<el-table-column label="供应商" prop="supplier_name"></el-table-column>
-					<el-table-column label="图片">
+					<el-table-column label="图片" width="200">
 						<template slot-scope="scope">
 							<el-image :z-index="2006" class="image" :src="domain + scope.row.img" fit="scale-down"></el-image>
 						</template>
 					</el-table-column>
-					<el-table-column label="原商品信息">
+					<el-table-column label="原商品信息" width="200">
 						<template slot-scope="scope">
-							<div v-for="item in scope.row.info_arr">{{item}}</div>
+							<div class="flex fc as">
+								<div v-for="item in scope.row.info_arr">{{item}}</div>
+							</div>
 						</template>
 					</el-table-column>
-					<el-table-column label="修改后商品信息">
+					<el-table-column label="修改后商品信息" width="200">
 						<template slot-scope="scope">
-							<div v-for="item in scope.row.edit_info_arr">{{item}}</div>
+							<div class="flex fc as">
+								<div v-for="item in scope.row.edit_info_arr">{{item}}</div>
+							</div>
 						</template>
 					</el-table-column>
 					<el-table-column label="修改提交时间" prop="add_time"></el-table-column>
@@ -54,15 +58,33 @@
 							<div>{{scope.row.check_status | check_status_filter}}</div>
 						</template>
 					</el-table-column>
-					<el-table-column label="操作" width="180" fixed="right">
+					<el-table-column label="操作" width="120" fixed="right">
 						<template slot-scope="scope">
-							<el-button type="text" size="small" v-if="button_list.audit == 1">审核</el-button>
+							<el-button type="text" size="small" v-if="button_list.audit == 1 && scope.row.check_status == 1" @click="allSetting('2',scope.row.log_id)">审核</el-button>
+							<el-button type="text" size="small" v-if="button_list.revoke == 1 && scope.row.is_self == 1 && scope.row.check_status == 1" @click="revokeFn(scope.row.log_id)">撤销</el-button>
 						</template>
 					</el-table-column>
 				</el-table>
 			</div>
 			<PaginationWidget :total="total" :page="page" :multiple_selection_num="multiple_selection.length" :pagesize="100" @checkPage="checkPage"/>
 		</el-card>
+		<!-- 审批 -->
+		<el-dialog :visible.sync="audit_dialog" @close="audit_status = 1" width="30%">
+			<div slot="title" class="dialog_title">
+				<div>审批</div>
+				<img class="close_icon" src="../../../../static/close_icon.png" @click="audit_dialog = false">
+			</div>
+			<div class="down_box">
+				<el-radio-group v-model="audit_status">
+					<el-radio :label="1">通过</el-radio>
+					<el-radio :label="2">拒绝</el-radio>
+				</el-radio-group>
+			</div>
+			<div slot="footer" class="dialog_footer">
+				<el-button size="small" @click="audit_dialog = false">取消</el-button>
+				<el-button size="small" type="primary" @click="confirmAudit">确定</el-button>
+			</div>
+		</el-dialog>
 	</div>
 </template>
 <style type="text/css">
@@ -136,7 +158,7 @@
 					name:'审核通过',
 					id:2
 				},{
-					name:'上架审核拒绝',
+					name:'审核拒绝',
 					id:3
 				},{
 					name:'已撤销',
@@ -177,7 +199,10 @@
 				data:[],				//获取的数据
 				total:0,
 				button_list:{},
-				multiple_selection:[]
+				multiple_selection:[],
+				log_id:"",				//单个或批量选中的id
+				audit_dialog:false,		//审批弹窗
+				audit_status:1,			//审批类型
 			}
 		},
 		created(){
@@ -224,13 +249,13 @@
 						this.data.map(item => {
 							let info_arr = [];
 							for(let k in item.info){
-								info_arr.push(`${this.label_filter(k)}：${item.info[k]}`)
+								info_arr.push(`${this.label_filter(k)}：${k == 'hot_style' || k == 'sole_style' || k == 'data_style' || k == 'again_style' || k == 'depth_inventory' || k == 'video_style'?item.info[k] == 0?'否':'是':item.info[k]}`)
 							}
 							item['info_arr'] = info_arr;
 
 							let edit_info_arr = [];
 							for(let k in item.edit_info){
-								edit_info_arr.push(`${this.label_filter(k)}：${item.edit_info[k]}`)
+								edit_info_arr.push(`${this.label_filter(k)}：${k == 'hot_style' || k == 'sole_style' || k == 'data_style' || k == 'again_style' || k == 'depth_inventory' || k == 'video_style'?item.edit_info[k] == 0?'否':'是':item.edit_info[k]}`)
 							}
 							item['edit_info_arr'] = edit_info_arr;
 						})
@@ -241,6 +266,14 @@
 						this.$message.warning(res.data.msg);
 					}
 				})
+			},
+			//判断是否可以选中
+			setStatus(row){
+				if (row.check_status == '1') { 
+					return true;  
+				}else{
+					return false;
+				}
 			},
 			label_filter(v){
 				switch(v){
@@ -317,10 +350,65 @@
 				this.multiple_selection = val;
 			},
 			//批量操作
-			allSetting(type){
-				
+			allSetting(type,log_id){
+				if(type == '1'){		//批量编辑
+					if(this.multiple_selection.length == 0){
+						this.$message.warning('还没有选中的数据哦～')
+					}else{
+						let log_ids = this.multiple_selection.map(item => {
+							return item.log_id;
+						});
+						this.log_id = log_ids.join(',');
+						this.audit_dialog = true;
+					}
+				}else{					//单个编辑
+					this.log_id = log_id;
+					this.audit_dialog = true;
+				}
+			},
+			//提交审批
+			confirmAudit(){
+				let arg = {
+					log_id:this.log_id,
+					status:this.audit_status
+				}
+				resource.editlogAudit(arg).then(res => {
+					if(res.data.code == 1){
+						this.$message.success(res.data.msg);
+						this.audit_dialog = false;
+						//获取列表
+						this.editLogList()
+					}else{
+						this.$message.warning(res.data.msg);
+					}
+				})
+			},
+			//撤销修改
+			revokeFn(log_id){
+				this.$confirm('确认撤销编辑?', '提示', {
+					confirmButtonText: '确定',
+					cancelButtonText: '取消',
+					type: 'warning'
+				}).then(() => {
+					let arg = {
+						log_id:log_id
+					}
+					resource.editLogRevoke(arg).then(res => {
+						if(res.data.code == 1){
+							this.$message.success(res.data.msg);
+							//获取列表
+							this.editLogList()
+						}else{
+							this.$message.warning(res.data.msg);
+						}
+					})
+				}).catch(() => {
+					this.$message({
+						type: 'info',
+						message: '已取消'
+					});          
+				});
 			}
-
 		},
 		filters:{
 			//审核状态
