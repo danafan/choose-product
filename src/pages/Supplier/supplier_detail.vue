@@ -95,7 +95,13 @@
 			<div slot="title" class="dialog_title" style="justify-content: flex-end;">
 				<img class="close_icon" src="../../static/close_icon.png" @click="enlarge_dialog = false">
 			</div>
-			<GoodsItem :info="enlarge_item" @setStatus="setStatus" :is_enlarge="true"/>
+			<div class="flex">
+				<GoodsItem :info="enlarge_item" @setStatus="setStatus" :is_enlarge="true"/>
+				<div class="chart_box flex fc ac jsa">
+					<div class="charts_div" id="zst"></div>
+					<div class="charts_div" id="qst"></div>
+				</div>
+			</div>
 		</el-dialog>
 	</div>
 </template>
@@ -141,6 +147,74 @@
 			enlargeFn(info){
 				this.enlarge_item = info;
 				this.enlarge_dialog = true;
+				resource.styleSaleNum({style_id:info.style_id}).then(res => {
+					if(res.data.code == 1){
+						let data = res.data.data;
+						var echarts = require("echarts");
+						this.$nextTick(() => {
+							let seven_days = data.seven_days;				//7天日期数组
+							let seven_sale_nums = data.seven_sale_nums;		//7天销量数组
+							var zst_chart = document.getElementById('zst');
+							this.zstChart = echarts.getInstanceByDom(zst_chart)
+							if (this.zstChart == null) { 
+								this.zstChart = echarts.init(zst_chart);
+							}
+							this.zstChart.setOption(this.lineSetOptions('7天销量走势图',seven_days,seven_sale_nums,'bar'));
+
+							let thirty_days = data.thirty_days;				//30天日期数组
+							let thirty_sale_nums = data.thirty_sale_nums;	//30天销量数组
+							var qst_chart = document.getElementById('qst');
+							this.qstChart = echarts.getInstanceByDom(qst_chart)
+							if (this.qstChart == null) { 
+								this.qstChart = echarts.init(qst_chart);
+							}
+							this.qstChart.setOption(this.lineSetOptions('30天销量趋势图',thirty_days,thirty_sale_nums,'line'));
+						})
+					}else{
+						this.$message.warning(res.data.msg);
+					}
+				})
+			},
+			//折线图配置
+			lineSetOptions(title,x_axis,series_data,type){
+				return {
+					title: {
+						text: title
+					},
+					tooltip: {
+        				trigger: 'axis',
+        				formatter: function (params) {
+        					let tip = "";
+        					if(params != null && params.length > 0) {
+        						tip = "日期：" + params[0].axisValue + "</br>"
+        						+ "销量：" + params[0].value;
+        					}
+        					return tip;
+        				},
+        				backgroundColor:"rgba(0,0,0,.8)",
+        				textStyle:{
+        					color:"#ffffff"
+        				},
+        				borderColor:"rgba(0,0,0,0.7)",
+        				axisPointer: {            
+        					type: 'shadow'        
+        				}
+        			},
+					xAxis: {
+						type: 'category',
+						data: x_axis
+					},
+					yAxis: {
+						type: 'value',
+						name: '销量'
+					},
+					series: 
+					{
+						data: series_data,
+						type: type
+					}
+					
+				}
 			},
 			//供应商基本信息
 			supplierInfo(){
@@ -223,7 +297,7 @@
 </script>
 <style type="text/css" lang="less">
 	.custom_class{
-		width: 460rem!important;
+		width: 960rem!important;
 	}
 </style>
 <style lang="less" scoped>
@@ -289,6 +363,13 @@
 	}
 }
 .padding_page_content::-webkit-scrollbar{display:none}
+.chart_box{
+	width: 500rem;
+	.charts_div{
+		width: 500rem;
+		height: 300rem;
+	}
+}
 </style>
 
 

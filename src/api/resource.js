@@ -33,6 +33,7 @@ let path = {
   getUserName:'api/selected/getusername',                 //获取需求人
   hotSellGoods:'api/home/hotsellgoods',                   //爆款列表
   ajaxNum:'api/feedback/ajaxNum',                         //反馈待处理数量
+  styleSaleNum:'api/home/style_sale_num',                 //商品的销量趋势图和柱状图
 } 
 export default {
   //钉钉登陆
@@ -166,5 +167,9 @@ export default {
   //反馈待处理数量
   ajaxNum(params) {
     return http.get(path.ajaxNum, params);
+  },
+  //商品的销量趋势图和柱状图
+  styleSaleNum(params) {
+    return http.get(path.styleSaleNum, params);
   },
 };
