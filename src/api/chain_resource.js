@@ -114,7 +114,11 @@ let path = {
   editLogList:'api/editlog/list',                            //款式资料修改记录表
   editlogAudit:'api/editlog/audit',                         //修改记录审核
   editLogRevoke:'api/editlog/revoke',                       //撤销修改
-};  
+  studioList:'api/supplier_manager/studio_list',            //工作室列表
+  editStudio:'api/supplier_manager/edit_studio',            //编辑工作室
+  addStudio:'api/supplier_manager/add_studio',              //添加工作室
+  delStudio:'api/supplier_manager/del_studio',              //删除工作室
+};    
 export default {
   //类目列表接口
   getCateList(params) {
@@ -623,5 +627,25 @@ export default {
   //撤销修改
   editLogRevoke(params) {
     return http.post(path.editLogRevoke, params);
+  },
+  //工作室列表
+  studioList(params) {
+    return http.get(path.studioList, params);
+  },
+  //获取工作室详情
+  editStudioGet(params) {
+    return http.get(path.editStudio, params);
+  },
+  //编辑工作室
+  editStudioPost(params) {
+    return http.post(path.editStudio, params);
+  },
+  //添加工作室
+  addStudio(params) {
+    return http.post(path.addStudio, params);
+  },
+  //删除工作室
+  delStudio(params) {
+    return http.post(path.delStudio, params);
   },
 };

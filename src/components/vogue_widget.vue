@@ -28,7 +28,7 @@
           </el-carousel-item>
         </el-carousel>
       </div>
-      <div class="absolute indicator" v-if="goods_list.length > 0">{{current_index}}/{{goods_list.length}}</div>
+      <div class="absolute indicator" v-if="goods_list.length > 0">{{current_index + 1}}/{{goods_list.length}}</div>
       <img class="check_arrow pointer" src="../static/check_right_arrow.png" @click.stop="checkArrow('2')" v-if="goods_list.length > 0">
       
     </div>

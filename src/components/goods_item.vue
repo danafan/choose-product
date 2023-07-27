@@ -20,7 +20,7 @@
 			</div>
 			<div class="style_row">
 				<el-tooltip class="item" effect="dark" content="七天内降价款" placement="top-start" v-if="info.is_price_reduction == 1">
-					<img class="goods_tag" src="../static/bao_icon.png" v-if="info.is_price_reduction == 1">
+					<img class="goods_down_arrow" src="../static/goods_down_arrow.png" v-if="info.is_price_reduction == 1">
 				</el-tooltip>
 				
 				<img class="goods_tag" src="../static/bao_icon.png" v-if="info.hot_style == 1">
@@ -661,6 +661,11 @@
 		.toast_text{
 			margin-bottom: 15rem;
 		}
+	}
+	.goods_down_arrow{
+		margin-left: 3rem;
+		width: 9rem;
+		height: 12rem;
 	}
 </style>
 <script>

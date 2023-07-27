@@ -126,14 +126,15 @@
 			this.menu_list = new_menu_list;
 
 			//设置默认页面
-			// let cc = {
-			// 	icon:require(`../../static/gysybk.png`),
-			// 	icon_active:require(`../../static/gysybk_active.png`),
-			// 	list:[],
-			// 	path:`/gysybk_page`,
-			// 	name:"供应商预备库"
-			// }
-			// this.menu_list.push(cc);
+			let cc = {
+				icon:require(`../../static/chain_studio.png`),
+				icon_active:require(`../../static/chain_studio_active.png`),
+				list:[],
+				path:`/chain_studio_page`,
+				name:"工作室"
+			}
+			this.menu_list.push(cc);
+			//结束
 
 			this.title = this.menu_list[this.active_index].name;
 			let path = this.menu_list[this.active_index].path;

@@ -32,6 +32,7 @@ const edit_record = (resolve) => require(["@/pages/SupplyChain/pages/SettingPage
 const chain_permissions_page = (resolve) => require(["@/pages/SupplyChain/pages/chain_permissions_page"], resolve);
 const chain_feekback_page = (resolve) => require(["@/pages/SupplyChain/pages/chain_feekback_page"], resolve);
 const setting_record_page = (resolve) => require(["@/pages/SupplyChain/pages/setting_record_page"], resolve);
+const chain_studio_page = (resolve) => require(["@/pages/SupplyChain/pages/chain_studio_page"], resolve);
 
 const gysybk_detail = (resolve) => require(["@/pages/GysybkDetail/index"], resolve);
 
@@ -176,6 +177,11 @@ const router = new Router({
      use_cache:false
    },
    component: chain_gysybk_page
+ },
+ {
+    path: "/chain_studio_page",
+    name: "工作室",
+   component: chain_studio_page
  },
  {
   path: "/add_edit_supplier",
