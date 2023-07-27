@@ -302,8 +302,8 @@
 		width: 400px!important;
 	}
 	.el-carousel-container .el-carousel__container{
-		width: 152px!important;
-		height: 172px!important;
+		width: 208px!important;
+		height: 222px!important;
 	}
 </style>
 <style lang="less" scoped>
@@ -547,13 +547,13 @@
 			}
 			.banner{
 				border:1px solid #D9D9D9;
-				padding: 10rem;
-				width: 170px;
-				height: 210px;
+				padding: 10rem 10rem 0 10rem;
+				width: 222px;
+				height: 252px;
 				display: flex;
 				flex-direction: column;
 				.image img{
-					width: 172px;
+					width: 192px;
 					height: 172px;
 				}
 				.indicator_box{

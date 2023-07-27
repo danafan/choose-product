@@ -37,21 +37,22 @@
 							<el-image :z-index="2006" class="image" :src="domain + scope.row.img" fit="scale-down"></el-image>
 						</template>
 					</el-table-column>
-					<el-table-column label="原商品信息" width="200">
+					<el-table-column label="原商品信息/修改后商品信息" width="400">
 						<template slot-scope="scope">
 							<div class="flex fc as">
-								<div v-for="item in scope.row.info_arr">{{item}}</div>
+								<div class="flex" v-for="(item,index) in scope.row.info_arr.length">
+									<div class="flex as" style="width:180px;text-align: start;margin-right:10px" v-if="scope.row.info_arr[index].split('：')[0] == '图片'">
+										图片：<el-image :z-index="2006" class="image" :src="iii" fit="scale-down" v-for="iii in JSON.parse(scope.row.info_arr[index].split('：')[1])"></el-image>
+									</div>
+									<div style="width:180px;text-align: start;margin-right:10px" v-else>{{scope.row.info_arr[index]}}</div>
+
+									<div style="width:180px;text-align: start" v-if="scope.row.edit_info_arr[index].split('：')[0] == '图片'">兔兔图图</div>
+									<div style="width:180px;text-align: start" v-else>{{scope.row.edit_info_arr[index]}}</div>
+								</div>
 							</div>
 						</template>
 					</el-table-column>
-					<el-table-column label="修改后商品信息" width="200">
-						<template slot-scope="scope">
-							<div class="flex fc as">
-								<div v-for="item in scope.row.edit_info_arr">{{item}}</div>
-							</div>
-						</template>
-					</el-table-column>
-					<el-table-column label="修改提交时间" prop="add_time"></el-table-column>
+					<el-table-column label="修改提交时间" width="120" prop="add_time"></el-table-column>
 					<el-table-column label="修改提交人" prop="add_admin_name"></el-table-column>
 					<el-table-column label="修改状态" prop="common_text">
 						<template slot-scope="scope">
@@ -249,7 +250,21 @@
 						this.data.map(item => {
 							let info_arr = [];
 							for(let k in item.info){
-								info_arr.push(`${this.label_filter(k)}：${k == 'hot_style' || k == 'sole_style' || k == 'data_style' || k == 'again_style' || k == 'depth_inventory' || k == 'video_style'?item.info[k] == 0?'否':'是':item.info[k]}`)
+								if(k == 'hot_style' || k == 'sole_style' || k == 'data_style' || k == 'again_style' || k == 'depth_inventory' || k == 'video_style'){
+									if(item.info[k] == 0){
+										info_arr.push(`${this.label_filter(k)}：否`)
+									}else{
+										info_arr.push(`${this.label_filter(k)}：是`)
+									}
+								}else if(k == 'all_imgs'){
+									let all_imgs_arr = [];
+									item.info[k].split(',').map(iii => {
+										all_imgs_arr.push(this.domain + iii)
+									})
+									info_arr.push(`${this.label_filter(k)}：${JSON.stringify(all_imgs_arr)}`)
+								}else{
+									info_arr.push(`${this.label_filter(k)}：${item.info[k]}`)
+								}
 							}
 							item['info_arr'] = info_arr;
 

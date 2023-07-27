@@ -132,7 +132,7 @@
 						</div>
 					</div>
 					<div class="banner">
-						<el-carousel indicator-position="none" arrow="never" @change="changeImage" ref="cardShow">
+						<el-carousel indicator-position="none" arrow="never" @change="changeImage" ref="cardShow" class="el-carousel-container">
 							<el-carousel-item v-for="item in banner_list" :key="item">
 								<el-image :z-index="9999" class="image" :src="item" fit="scale-down" :preview-src-list="banner_list"></el-image>
 							</el-carousel-item>
@@ -449,6 +449,12 @@
 		}
 	}
 </script>
+<style type="text/css">
+	.el-carousel-container .el-carousel__container{
+		width: 208px!important;
+		height: 222px!important;
+	}
+</style>
 <style lang="less" scoped>
 	.goods_info{
 		width: 512rem;
@@ -553,14 +559,14 @@
 				}
 				.banner{
 					border:1px solid #D9D9D9;
-					padding: 10rem;
-					width: 260rem;
-					height: 290rem;
+					padding: 10rem 10rem 0 10rem;
+					width: 222px;
+					height: 252px;
 					display: flex;
 					flex-direction: column;
-					.image{
-						width: 240rem;
-						height: 240rem;
+					.image img{
+						width: 192px;
+						height: 172px;
 					}
 					.indicator_box{
 						flex:1;
@@ -571,8 +577,8 @@
 							border: 1px solid #979797;
 							background: #D8D8D8;
 							border-radius: 50%;
-							width: 16rem;
-							height: 16rem;
+							width: 8px;
+							height: 8px;
 						}
 						.is_active{
 							border: 1px solid var(--color);
