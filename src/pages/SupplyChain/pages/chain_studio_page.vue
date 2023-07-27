@@ -58,7 +58,8 @@
 						<el-input clearable v-model="arg.studio_name" style="width: 120px;" placeholder="工作室名称"></el-input>
 					</el-form-item>
 					<el-form-item label="风格：">
-						<el-input clearable v-model="arg.style" style="width: 120px;" placeholder="风格"></el-input>
+						<el-input style="width: 192px;" type="textarea" :autosize="{ minRows: 1, maxRows: 4}" placeholder="风格" v-model="arg.style">
+						</el-input>
 					</el-form-item>
 					<el-form-item label="联系人：">
 						<el-input clearable v-model="arg.contacter" style="width: 120px;" placeholder="联系人"></el-input>
@@ -187,8 +188,8 @@
 								item.imgs.split(',').map(i => {
 									images.push(this.domain + i);
 								})
-								item['images'] = images;
 							}
+							item['images'] = images;
 						})
 						this.data = table_data;
 						this.total = data.total;

@@ -139,7 +139,7 @@
 		</div>
 	</div>
 	<!-- 选款弹窗 -->
-	<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" @close="closeSelectDialog" destroy-on-close :visible.sync="show_select" append-to-body>
+	<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" @close="closeSelectDialog" destroy-on-close :visible.sync="show_select" top="30px" append-to-body>
 		<div slot="title" class="dialog_title">
 			<div>选款</div>
 			<img class="close_icon" src="../static/close_icon.png" @click="show_select = false">
@@ -303,7 +303,7 @@
 	}
 	.el-carousel-container .el-carousel__container{
 		width: 152px!important;
-		height: 152px!important;
+		height: 172px!important;
 	}
 </style>
 <style lang="less" scoped>
@@ -552,9 +552,9 @@
 				height: 210px;
 				display: flex;
 				flex-direction: column;
-				.image{
-					width: 152px;
-					height: 152px;
+				.image img{
+					width: 172px;
+					height: 172px;
 				}
 				.indicator_box{
 					flex:1;
