@@ -19,6 +19,10 @@
 				<div class="p_value">{{info.cost_price}}</div>
 			</div>
 			<div class="style_row">
+				<el-tooltip class="item" effect="dark" content="七天内降价款" placement="top-start" v-if="info.is_price_reduction == 1">
+					<img class="goods_tag" src="../static/bao_icon.png" v-if="info.is_price_reduction == 1">
+				</el-tooltip>
+				
 				<img class="goods_tag" src="../static/bao_icon.png" v-if="info.hot_style == 1">
 				<img class="goods_tag" src="../static/du_icon.png" v-if="info.sole_style == 1">
 				<img class="goods_tag" src="../static/tui_tag_icon.png" v-if="info.data_style == 1">

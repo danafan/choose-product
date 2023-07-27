@@ -365,7 +365,7 @@
 				this.audit_status = 1;
 				this.remark = "";
 			},
-			//提价审核
+			//提交审核
 			confirmAudit(){
 				let arg = {
 					id:this.info_data.id,
@@ -375,6 +375,7 @@
 				resource.hotDataInfoPost(arg).then(res => {
 					if(res.data.code == 1){
 						this.$message.success(res.data.msg);
+						this.$store.dispatch('ajaxNum')
 						//获取列表
 						this.hotDataList();
 						this.audit_dialog = false;

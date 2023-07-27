@@ -378,6 +378,7 @@
 					resource.auditNotice(arg).then(res => {
 						if(res.data.code == 1){
 							this.$message.success(res.data.msg);
+							this.$store.dispatch('ajaxNum')
 							//公告列表
 							this.noticeList();
 						}else{
