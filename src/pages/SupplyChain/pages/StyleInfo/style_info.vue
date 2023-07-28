@@ -39,12 +39,12 @@
 							</el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item label="调价审核状态：">
+					<!-- <el-form-item label="调价审核状态：">
 						<el-select v-model="price_status" clearable placeholder="全部">
 							<el-option v-for="item in adjust_status_list" :key="item.id" :label="item.name" :value="item.id">
 							</el-option>
 						</el-select>
-					</el-form-item>
+					</el-form-item> -->
 					<el-form-item label="上新日期：">
 						<el-date-picker v-model="date" size="mini" type="daterange" unlink-panels value-format="yyyy-MM-dd" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions">
 						</el-date-picker>
@@ -60,7 +60,7 @@
 				<el-divider></el-divider>
 				<TableTitle title="数据列表" id="table_title">
 					<el-button size="mini" type="primary" v-if="button_list.edit_i_id == 1" @click="importFn('1')">修改款式编码</el-button>
-					<el-button size="mini" type="primary" @click="allSetting('adjust')" v-if="button_list.price_btn == 1">调价审批</el-button>
+					<!-- <el-button size="mini" type="primary" @click="allSetting('adjust')" v-if="button_list.price_btn == 1">调价审批</el-button> -->
 					<el-button size="mini" type="primary" v-if="is_check == 1 && button_list.agree_refuse == 1" @click="allSetting('audit_1')">批量同意</el-button>
 					<el-button size="mini" type="primary" v-if="is_check == 1 && button_list.agree_refuse == 1" @click="allSetting('audit_2')">批量拒绝</el-button>
 					<el-button size="mini" type="primary" @click="allSetting('1')" v-if="button_list.in_out == 1">批量上架</el-button>
@@ -190,7 +190,7 @@
 			</div>
 		</el-dialog>
 		<!-- 调价审批 -->
-		<el-dialog width="30%" :visible.sync="adjust_dialog" @close="closeAdjust">
+		<!-- <el-dialog width="30%" :visible.sync="adjust_dialog" @close="closeAdjust">
 			<div slot="title" class="dialog_title">
 				<div>调价审批</div>
 				<img class="close_icon" src="../../../../static/close_icon.png" @click="adjust_dialog = false">
@@ -219,7 +219,7 @@
 				<el-button size="small" @click="adjust_dialog = false">取 消</el-button>
 				<el-button size="small" type="primary" @click="confirmAdjust">确 定</el-button>
 			</div>
-		</el-dialog>
+		</el-dialog> -->
 	</div>
 </template>
 <style type="text/css">
@@ -317,17 +317,17 @@
 					id:6
 				}],						//审核状态列表
 				check_status_id:"",		//选中的审核状态
-				adjust_status_list:[{
-					name:'待审核',
-					id:1
-				},{
-					name:'审核通过',
-					id:2
-				},{
-					name:'审核拒绝',
-					id:3
-				}],						//调价审核状态
-				price_status:"",		//选中的调价审核状态
+				// adjust_status_list:[{
+				// 	name:'待审核',
+				// 	id:1
+				// },{
+				// 	name:'审核通过',
+				// 	id:2
+				// },{
+				// 	name:'审核拒绝',
+				// 	id:3
+				// }],						//调价审核状态
+				// price_status:"",		//选中的调价审核状态
 				date:[],				//上新日期
 				pickerOptions: {
 					shortcuts: [
@@ -394,7 +394,7 @@
 			this.shooting_style_ids = [];
 			this.date = [];
 			this.check_status_id = "";
-			this.price_status = "";
+			// this.price_status = "";
 			this.search = "";
 			this.page = 1;
 			//获取列表
@@ -547,7 +547,7 @@
 						start_time:this.date && this.date.length > 0?this.date[0]:"",
 						end_time:this.date && this.date.length > 0?this.date[1]:"",
 						check_status:this.check_status_id,
-						price_status:this.price_status
+						// price_status:this.price_status
 					}
 					if(this.multiple_selection.length > 0){
 						let style_ids = this.multiple_selection.map(item => {
@@ -598,7 +598,7 @@
 					start_time:this.date && this.date.length > 0?this.date[0]:"",
 					end_time:this.date && this.date.length > 0?this.date[1]:"",
 					check_status:this.check_status_id,
-					price_status:this.price_status,
+					// price_status:this.price_status,
 					page:this.page,
 					pagesize:100
 				}
@@ -731,15 +731,16 @@
 						});          
 					});
 					return;
-				}else if(type == 'adjust'){					//调价审批
-					let unset_list = this.multiple_selection.filter(item => {
-						return item.price_status == 1;
-					})
-					unset_list.map(item => {
-						style_id.push(item.style_id)
-					})
-					unset_num = total_num - unset_list.length;
 				}
+				// else if(type == 'adjust'){					//调价审批
+				// 	let unset_list = this.multiple_selection.filter(item => {
+				// 		return item.price_status == 1;
+				// 	})
+				// 	unset_list.map(item => {
+				// 		style_id.push(item.style_id)
+				// 	})
+				// 	unset_num = total_num - unset_list.length;
+				// }
 				if(total_num == unset_num){
 					this.$message.warning('没有符合操作条件的记录！');
 					return;
@@ -790,10 +791,11 @@
 								this.$message.warning(res.data.msg);
 							}
 						})
-					}else if(type == 'adjust'){					//调价审批
-						//调价审批
-						this.adjustAudit(style_id.join(','));
 					}
+					// else if(type == 'adjust'){					//调价审批
+					// 	//调价审批
+					// 	this.adjustAudit(style_id.join(','));
+					// }
 					
 				}).catch(() => {
 					this.$message({
@@ -802,40 +804,40 @@
 					});          
 				});
 			},
-			//调价审批
-			adjustAudit(style_id,cost_price,edit_price){
-				this.style_id = style_id;
-				this.cost_price = cost_price;
-				this.edit_price = edit_price;
-				this.adjust_dialog = true;
-			},
-			//关闭调价审批
-			closeAdjust(){
-				this.adjust_type = 1;				//调价审批选中的状态
-				this.cost_price = '';
-				this.edit_price = '';
-				this.refuse_reason = "";			//拒绝原因
-			},
-			//提交调价审批
-			confirmAdjust(){
-				let arg = {
-					id:this.style_id,
-					type:this.adjust_type,
-				}
-				if(this.adjust_type == 2){
-					arg['refuse_reason'] = this.refuse_reason;
-				}
-				resource.changePrice(arg).then(res => {
-					if(res.data.code == 1){
-						this.$message.success(res.data.msg);
-						this.adjust_dialog = false;
-						//获取列表
-						this.getGoodsList();
-					}else{
-						this.$message.warning(res.data.msg);
-					}
-				})
-			},
+			// //调价审批
+			// adjustAudit(style_id,cost_price,edit_price){
+			// 	this.style_id = style_id;
+			// 	this.cost_price = cost_price;
+			// 	this.edit_price = edit_price;
+			// 	this.adjust_dialog = true;
+			// },
+			// //关闭调价审批
+			// closeAdjust(){
+			// 	this.adjust_type = 1;				//调价审批选中的状态
+			// 	this.cost_price = '';
+			// 	this.edit_price = '';
+			// 	this.refuse_reason = "";			//拒绝原因
+			// },
+			// //提交调价审批
+			// confirmAdjust(){
+			// 	let arg = {
+			// 		id:this.style_id,
+			// 		type:this.adjust_type,
+			// 	}
+			// 	if(this.adjust_type == 2){
+			// 		arg['refuse_reason'] = this.refuse_reason;
+			// 	}
+			// 	resource.changePrice(arg).then(res => {
+			// 		if(res.data.code == 1){
+			// 			this.$message.success(res.data.msg);
+			// 			this.adjust_dialog = false;
+			// 			//获取列表
+			// 			this.getGoodsList();
+			// 		}else{
+			// 			this.$message.warning(res.data.msg);
+			// 		}
+			// 	})
+			// },
 			//监听更多操作按钮
 			handleCommand(e,id,name){
 				if(e == '1'){	//查看

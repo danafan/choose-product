@@ -34,19 +34,27 @@
 					<el-table-column label="供应商" prop="supplier_name"></el-table-column>
 					<el-table-column label="图片" width="200">
 						<template slot-scope="scope">
-							<el-image :z-index="2006" class="image" :src="domain + scope.row.img" fit="scale-down"></el-image>
+							<el-image :z-index="2006" class="image" :src="domain + scope.row.img" fit="scale-down" :preview-src-list="[domain + scope.row.img]"></el-image>
 						</template>
 					</el-table-column>
 					<el-table-column label="原商品信息/修改后商品信息" width="400">
 						<template slot-scope="scope">
 							<div class="flex fc as">
 								<div class="flex" v-for="(item,index) in scope.row.info_arr.length">
-									<div class="flex as" style="width:180px;text-align: start;margin-right:10px" v-if="scope.row.info_arr[index].split('：')[0] == '图片'">
-										图片：<el-image :z-index="2006" class="image" :src="iii" fit="scale-down" v-for="iii in JSON.parse(scope.row.info_arr[index].split('：')[1])"></el-image>
+									<div class="flex as" style="width:180px;text-align: start;margin-right:10px" v-if="scope.row.info_arr[index].indexOf('：') == -1">
+										<div class="table_header_text">图片：</div>
+										<div class="flex-1 flex-warp">
+											<el-image :z-index="2006" class="edit_image" :src="iii" fit="scale-down":preview-src-list="scope.row.info_arr[index]" v-for="iii in scope.row.info_arr[index]"></el-image>
+										</div>
 									</div>
 									<div style="width:180px;text-align: start;margin-right:10px" v-else>{{scope.row.info_arr[index]}}</div>
 
-									<div style="width:180px;text-align: start" v-if="scope.row.edit_info_arr[index].split('：')[0] == '图片'">兔兔图图</div>
+									<div class="flex as" style="width:180px;text-align: start;margin-right:10px" v-if="scope.row.edit_info_arr[index].indexOf('：') == -1">
+										<div class="table_header_text">图片：</div>
+										<div class="flex-1 flex-warp">
+											<el-image :z-index="2006" class="edit_image" :src="iii" fit="scale-down" :preview-src-list="scope.row.edit_info_arr[index]" v-for="iii in scope.row.edit_info_arr[index]"></el-image>
+										</div>
+									</div>
 									<div style="width:180px;text-align: start" v-else>{{scope.row.edit_info_arr[index]}}</div>
 								</div>
 							</div>
@@ -135,6 +143,12 @@
 				opacity: 0;
 			}
 		}
+	}
+	.edit_image{
+		margin-right: 3px;
+		margin-bottom: 3px;
+		width: 30px;
+		height: 30px;
 	}
 </style>
 <script>
@@ -261,7 +275,7 @@
 									item.info[k].split(',').map(iii => {
 										all_imgs_arr.push(this.domain + iii)
 									})
-									info_arr.push(`${this.label_filter(k)}：${JSON.stringify(all_imgs_arr)}`)
+									info_arr.push(all_imgs_arr)
 								}else{
 									info_arr.push(`${this.label_filter(k)}：${item.info[k]}`)
 								}
@@ -270,7 +284,21 @@
 
 							let edit_info_arr = [];
 							for(let k in item.edit_info){
-								edit_info_arr.push(`${this.label_filter(k)}：${k == 'hot_style' || k == 'sole_style' || k == 'data_style' || k == 'again_style' || k == 'depth_inventory' || k == 'video_style'?item.edit_info[k] == 0?'否':'是':item.edit_info[k]}`)
+								if(k == 'hot_style' || k == 'sole_style' || k == 'data_style' || k == 'again_style' || k == 'depth_inventory' || k == 'video_style'){
+									if(item.edit_info[k] == 0){
+										edit_info_arr.push(`${this.label_filter(k)}：否`)
+									}else{
+										edit_info_arr.push(`${this.label_filter(k)}：是`)
+									}
+								}else if(k == 'all_imgs'){
+									let all_imgs_arr = [];
+									item.edit_info[k].split(',').map(iii => {
+										all_imgs_arr.push(this.domain + iii)
+									})
+									edit_info_arr.push(all_imgs_arr)
+								}else{
+									edit_info_arr.push(`${this.label_filter(k)}：${item.edit_info[k]}`)
+								}
 							}
 							item['edit_info_arr'] = edit_info_arr;
 						})
@@ -434,7 +462,7 @@
 				case 2:
 					return '审核通过'
 				case 3:
-					return '上架审核拒绝'
+					return '审核拒绝'
 				case 4:
 					return '已撤销'
 				}
