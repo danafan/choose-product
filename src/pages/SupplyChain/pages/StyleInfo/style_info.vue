@@ -387,16 +387,31 @@
 			this.ajaxStyleList();
     		//分类列表
 			this.ajaxClassList();
-			this.supplier_ids = [];
-			this.category_ids = [];
-			this.market_ids = [];
-			this.classification_ids = [];
-			this.shooting_style_ids = [];
-			this.date = [];
-			this.check_status_id = "";
-			// this.price_status = "";
-			this.search = "";
-			this.page = 1;
+			//获取列表
+			this.getGoodsList();
+		},
+		activated(){
+			if(!this.$route.meta.use_cache){
+				this.page = 1;
+				//获取供应商列表
+				this.ajaxSupplierList();
+    			//获取类目列表
+				this.ajaxCateList();
+    			//市场列表
+				this.ajaxMarketList();
+    			//拍摄风格列表
+				this.ajaxStyleList();
+    			//分类列表
+				this.ajaxClassList();
+				this.supplier_ids = [];
+				this.category_ids = [];
+				this.market_ids = [];
+				this.classification_ids = [];
+				this.shooting_style_ids = [];
+				this.date = [];
+				this.check_status_id = "";
+				this.search = "";
+			}
 			//获取列表
 			this.getGoodsList();
 		},

@@ -13,8 +13,8 @@
 							<img class="collapse_chain_icon" :src="item.icon" v-else>
 						</el-tooltip>
 						<div class="collapse_feekback_num" v-if="is_collapse && item.name == '反馈' && feekback_num > 0">{{feekback_num}}</div>
-						<div class="collapse_feekback_num" v-if="is_collapse && item.name == '爆款主推款审核' && hot_num > 0">{{hot_num}}</div>
-						<div class="collapse_feekback_num" v-if="is_collapse && item.name == '公告管理' && notice_num > 0">{{notice_num}}</div>
+						<div class="yuan" v-if="is_collapse && item.name == '爆款主推款审核' && hot_num > 0"></div>
+						<div class="yuan" v-if="is_collapse && item.name == '公告管理' && notice_num > 0"></div>
 					</div>
 					<div v-else>
 						<img class="chain_icon" :src="item.icon_active" v-if="active_index == index">
@@ -22,8 +22,8 @@
 					</div>
 					<div class="chain_text" v-if="!is_collapse">{{item.name}}</div>
 					<div class="feekback_num" v-if="!is_collapse && item.name == '反馈' && feekback_num > 0">{{feekback_num}}</div>
-					<div class="feekback_num" v-if="!is_collapse && item.name == '爆款主推款审核' && hot_num > 0">{{hot_num}}</div>
-					<div class="feekback_num" v-if="!is_collapse && item.name == '公告管理' && notice_num > 0">{{notice_num}}</div>
+					<div class="yuan" v-if="!is_collapse && item.name == '爆款主推款审核' && hot_num > 0"></div>
+					<div class="yuan" v-if="!is_collapse && item.name == '公告管理' && notice_num > 0"></div>
 					<div class="active_line" v-if="active_index == index && !is_collapse"></div>
 				</div>
 			</el-menu-item>
@@ -126,14 +126,14 @@
 			this.menu_list = new_menu_list;
 
 			//设置默认页面
-			let cc = {
-				icon:require(`../../static/chain_studio.png`),
-				icon_active:require(`../../static/chain_studio_active.png`),
-				list:[],
-				path:`/chain_studio_page`,
-				name:"工作室"
-			}
-			this.menu_list.push(cc);
+			// let cc = {
+			// 	icon:require(`../../static/chain_studio.png`),
+			// 	icon_active:require(`../../static/chain_studio_active.png`),
+			// 	list:[],
+			// 	path:`/chain_studio_page`,
+			// 	name:"工作室"
+			// }
+			// this.menu_list.push(cc);
 			//结束
 
 			this.title = this.menu_list[this.active_index].name;
@@ -226,6 +226,16 @@
 				padding-right: 5rem;
 				font-size: 12px;
 				color:#ffffff;
+			}
+			.yuan{
+				position: absolute;
+				top: 50%;
+				right: 5px;
+				transform: translate(0,-50%);
+				border-radius: 5px;
+				background: #FF1515;
+				height: 10px;
+				width: 10px;
 			}
 			.active_line{
 				position: absolute;

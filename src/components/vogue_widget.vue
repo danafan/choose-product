@@ -71,6 +71,7 @@
             this.goods_list = this.reduction_price_list;
             break;
           }
+          this.current_index = 0;
         }
       }
     },
@@ -94,7 +95,6 @@
             this.reduction_price_list = this.groupArray(reduction_price_list, 7);
 
             this.goods_list = this.hot_list;
-            console.log(this.goods_list)
           }else{
             this.$message.warning(res.data.msg);
           }

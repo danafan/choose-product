@@ -14,15 +14,14 @@
 	<img class="image_box" :class="[{'default_img_width':!is_enlarge},{'enlarge_img_width':is_enlarge}]" src="../static/load_failure.png" @click="getMoreImage" v-else>
 	<div class="goods_info" @click="getDetail" @mousedown="mouseDownFn" @mouseup="mouseUpFn">
 		<div class="price_cate">
+			<el-tooltip class="item" effect="dark" content="七天内降价款" placement="top-start" v-if="info.is_price_reduction == 1">
+				<div style="color: green;font-weight: bold;"v-if="info.is_price_reduction == 1">↓</div>
+			</el-tooltip>
 			<div class="price">
 				<div class="p_icon">¥</div>
 				<div class="p_value">{{info.cost_price}}</div>
 			</div>
 			<div class="style_row">
-				<el-tooltip class="item" effect="dark" content="七天内降价款" placement="top-start" v-if="info.is_price_reduction == 1">
-					<img class="goods_down_arrow" src="../static/goods_down_arrow.png" v-if="info.is_price_reduction == 1">
-				</el-tooltip>
-				
 				<img class="goods_tag" src="../static/bao_icon.png" v-if="info.hot_style == 1">
 				<img class="goods_tag" src="../static/du_icon.png" v-if="info.sole_style == 1">
 				<img class="goods_tag" src="../static/tui_tag_icon.png" v-if="info.data_style == 1">
@@ -512,8 +511,8 @@
 				}
 				.enlarge_icon{
 					margin-right: 8rem;
-					width: 11rem;
-					height: 11rem;
+					width: 16rem;
+					height: 16rem;
 				}
 				.feek_back{
 					font-size: 12rem;
