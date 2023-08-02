@@ -591,7 +591,7 @@
 		}
 	}
 	.dialog_content{
-		max-height: 450px;
+		max-height: 800px;
 		overflow-y: scroll;
 		.detail_row{
 			border-bottom:1px solid #F0F0F0;

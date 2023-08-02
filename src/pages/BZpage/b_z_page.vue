@@ -70,7 +70,7 @@
 				</el-table-column>
 				<el-table-column label="审核备注" prop="status_remark"></el-table-column>
 			</el-table>
-			<PaginationWidget id="bottom_row" :total="total" :page="page" :pagesize="20" @checkPage="checkPage"/>
+			<PaginationWidget id="bottom_row" :show_multiple="false" :total="total" :page="page" :pagesize="20" @checkPage="checkPage"/>
 		</el-card>
 	</div>
 </template>
@@ -161,7 +161,7 @@
     				card_box_height -
     				table_title_height -
     				bottom_row_height -
-    				60 +
+    				30 +
     				"px";
     			});
     		},

@@ -98,7 +98,10 @@
 					</el-form-item>
 				</el-form>
 			</div>
-			<el-button class="commit_but" size="small" type="primary" @click="commitFn">提交</el-button>
+			<div class="flex jc" style="padding-bottom: 15px;">
+				<el-button size="small" type="primary" @click="commitFn">提交</el-button>
+			</div>
+			
 		</el-card>
 	</div>
 </template>
@@ -357,14 +360,10 @@
 			flex-direction: column;
 			align-items: center;
 			overflow-y: scroll;
-			position: relative;
 			.form_row{
-				position: absolute;
-				top: 0;
-				left: 0;
 				width: 100%;
 				display: flex;
-				justify-content: space-evenly;
+				justify-content: space-around;
 				padding-top: 40rem;
 				padding-bottom: 60rem;
 				.view_card_img {
@@ -392,10 +391,6 @@
 						}
 					}
 				}
-			}
-			.commit_but{
-				position: fixed;
-				bottom: 90rem;
 			}
 		}
 	}

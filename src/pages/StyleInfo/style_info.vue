@@ -105,7 +105,7 @@
 					</template>
 				</el-table-column>
 			</el-table>
-			<PaginationWidget id="bottom_row" :total="total" :page="page" :pagesize="100" @checkPage="checkPage"/>
+			<PaginationWidget id="bottom_row" :multiple_selection_num="multiple_selection.length" :total="total" :page="page" :pagesize="100" @checkPage="checkPage"/>
 		</el-card>
 		<!-- 导入 -->
 		<el-dialog :visible.sync="import_dialog" width="30%">
@@ -161,6 +161,7 @@
 		}
 	}
 	.card_box{
+		padding-top: 15rem;
 		flex:1;
 		.image{
 			width: 58rem;
@@ -321,7 +322,7 @@
     				card_box_height -
     				table_title_height -
     				bottom_row_height -
-    				60 +
+    				45 +
     				"px";
     			});
     		},

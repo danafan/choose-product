@@ -134,16 +134,14 @@
 				</div>
 			</el-dialog>
 			<!-- 评价记录 -->
-			<el-dialog :visible.sync="evaluate_dialog">
+			<el-dialog :visible.sync="evaluate_dialog" @close="evaluate_page = 1">
 				<div slot="title" class="dialog_title">
 					<div>【{{supplier_name}}】评价记录</div>
 					<img class="close_icon" src="../../../../static/close_icon.png" @click="evaluate_dialog = false">
 				</div>
 				<!-- 内容 -->
 				<div class="pt-15">
-					<TableTitle title="数据列表" id="table_title">
-						<!-- <el-button size="mini" type="primary" @click="addEvakuateFn('添加评价','')">添加</el-button> -->
-					</TableTitle>
+					<TableTitle title="数据列表" id="table_title"></TableTitle>
 					<el-table ref="table" size="mini" :data="evaluate_data.data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" v-loading="evaluate_loading">
 						<el-table-column label="评价内容" prop="evaluate_content">
 							<template slot-scope="scope">
@@ -151,86 +149,81 @@
 							</template>
 						</el-table-column>
 						<el-table-column label="评价时间" prop="add_time"></el-table-column>
-					<!-- <el-table-column label="操作" width="180" fixed="right">
-						<template slot-scope="scope">
-							<el-button size="mini" type="text" @click="delEvaluate(scope.row.evaluate_log_id)">删除</el-button>
-						</template>
-					</el-table-column> -->
-				</el-table>
-				<PaginationWidget :total="evaluate_data.total" :page="evaluate_page" :show_multiple="false" :pagesize="10" @checkPage="checkEvaluatePage"/>
-			</div>
-			<!-- 添加或查看评价内容 -->
-			<el-dialog width="30%" :visible.sync="evaluate_info_dialog" append-to-body>
-				<div slot="title" class="dialog_title">
-					<div>{{evaluate_info_title}}</div>
-					<img class="close_icon" src="../../../../static/close_icon.png" @click="evaluate_info_dialog = false">
+					</el-table>
+					<PaginationWidget :total="evaluate_data.total" :page="evaluate_page" :show_multiple="false" :pagesize="10" @checkPage="checkEvaluatePage"/>
 				</div>
-				<div class="pt-15 pb-15">
-					<el-input type="textarea" :rows="4" :disabled="evaluate_info_title == '评价内容'" placeholder="请输入评价内容" v-model="evaluate_content" maxlength="300" show-word-limit v-if="evaluate_info_title == '添加评价'">
-					</el-input>
-					<div v-else>{{evaluate_content}}</div>
-				</div>
+				<!-- 添加或查看评价内容 -->
+				<el-dialog width="30%" :visible.sync="evaluate_info_dialog" append-to-body>
+					<div slot="title" class="dialog_title">
+						<div>{{evaluate_info_title}}</div>
+						<img class="close_icon" src="../../../../static/close_icon.png" @click="evaluate_info_dialog = false">
+					</div>
+					<div class="pt-15 pb-15">
+						<el-input type="textarea" :rows="4" :disabled="evaluate_info_title == '评价内容'" placeholder="请输入评价内容" v-model="evaluate_content" maxlength="300" show-word-limit v-if="evaluate_info_title == '添加评价'">
+						</el-input>
+						<div v-else>{{evaluate_content}}</div>
+					</div>
+					<div slot="footer" class="dialog_footer">
+						<el-button size="small" @click="evaluate_info_dialog = false">取消</el-button>
+						<el-button size="mini" type="primary" @click="evaluateSaveInfo" v-if="evaluate_info_title == '添加评价'">保存</el-button>
+					</div>
+				</el-dialog>
 				<div slot="footer" class="dialog_footer">
-					<el-button size="small" @click="evaluate_info_dialog = false">取消</el-button>
-					<el-button size="mini" type="primary" @click="evaluateSaveInfo" v-if="evaluate_info_title == '添加评价'">保存</el-button>
+					<el-button size="small" @click="evaluate_dialog = false">关闭</el-button>
 				</div>
 			</el-dialog>
-			<div slot="footer" class="dialog_footer">
-				<el-button size="small" @click="evaluate_dialog = false">关闭</el-button>
-			</div>
-		</el-dialog>
-	</div>
-</template>
-<style type="text/css">
-	.card_box .el-card__body{
-		height: 100%!important;
-		display: flex!important;
-		flex-direction: column!important;
-		padding-top: 0!important;
-		padding-bottom: 0!important;
-	}
-</style>
-<style lang="less" scoped>
-	.card_box{
-		.scroll_box{
-			.image{
-				width: 100px;
-				height: 100px;
-			}
+		</div>
+	</template>
+	<style type="text/css">
+		.card_box .el-card__body{
+			height: 100%!important;
+			display: flex!important;
+			flex-direction: column!important;
+			padding-top: 0!important;
+			padding-bottom: 0!important;
+		}
+	</style>
+	<style lang="less" scoped>
+		.card_box{
+			.scroll_box{
+				.image{
+					width: 100px;
+					height: 100px;
+				}
 
-		}
-		.item_row{
-			display: flex;
-			.item_label{
-				width: 96px;
-				text-align:end;
+			}
+			.item_row{
+				display: flex;
+				.item_label{
+					width: 96px;
+					text-align:end;
+				}
 			}
 		}
-	}
-	.down_box{
-		display:flex;
-		padding:30rem;
-		.upload_box{
-			margin-left: 10px;
-			position: relative;
-			.upload_file{
-				position: absolute;
-				top: 0;
-				bottom: 0;
-				left: 0;
-				right: 0;
-				width: 100%;
-				height: 100%;
-				opacity: 0;
+		.down_box{
+			display:flex;
+			padding:30rem;
+			.upload_box{
+				margin-left: 10px;
+				position: relative;
+				.upload_file{
+					position: absolute;
+					top: 0;
+					bottom: 0;
+					left: 0;
+					right: 0;
+					width: 100%;
+					height: 100%;
+					opacity: 0;
+				}
 			}
 		}
-	}
-	.pt-15{
-		padding-top: 15px;
-	}
-	.pb-15{
-		padding-bottom:15rem;
-	}
+		.pt-15{
+			padding-top: 15px;
+		}
+		.pb-15{
+			padding-bottom:15rem;
+		}
 // }
 </style>
 <script>

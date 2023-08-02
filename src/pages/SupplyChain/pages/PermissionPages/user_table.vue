@@ -193,7 +193,7 @@
 						this.role_list = data.role_list;
 						this.dept_list = data.dept_list;
 						//获取店铺列表
-						this.ajaxViewShop(this.dept_ids);
+						this.ajaxViewShop();
 						this.show_dialog = true;
 					}else{
 						this.$message.warning(res.data.msg);
@@ -216,7 +216,7 @@
 						
 						this.view_type = data.view_type;
 						//获取店铺列表
-						this.ajaxViewShop(data.selected_depts,data.selected_shops);
+						this.ajaxViewShop(data.selected_shops);
 						this.show_dialog = true;
 					}else{
 						this.$message.warning(res.data.msg);
@@ -226,21 +226,21 @@
 			//点击某个部门选项
 			checkChange(data, checked) {
 				this.dept_ids = checked.checkedKeys;
-				this.ajaxViewShop(this.dept_ids);
+				// this.ajaxViewShop(this.dept_ids);
 			},
 			//切换选中部门
-			ajaxViewShop(dept_ids,selected_shops) {
-				this.arr = [];
-				this.getDeptIds(this.dept_list);
-				this.dept_ids = dept_ids == '-1'?this.arr:dept_ids;
-				this.isIndeterminateDept =
-				dept_ids != '-1' && dept_ids.length > 0 &&
-				dept_ids.length < this.arr.length?true:false;
-				this.checkAllDept = dept_ids == '-1' || dept_ids.length == this.arr.length?true:false;
+			ajaxViewShop(selected_shops) {
+				// this.arr = [];
+				// this.getDeptIds(this.dept_list);
+				// this.dept_ids = dept_ids == '-1'?this.arr:dept_ids;
+				// this.isIndeterminateDept =
+				// dept_ids != '-1' && dept_ids.length > 0 &&
+				// dept_ids.length < this.arr.length?true:false;
+				// this.checkAllDept = dept_ids == '-1' || dept_ids.length == this.arr.length?true:false;
 
 				let arg = {
 					type: 2,
-					dept_ids: dept_ids == '-1'?this.arr.join(','):dept_ids.join(","),
+					dept_ids: '-1',
 				};
 				commonResource.ajaxViewShop(arg).then((res) => {
 					if (res.data.code == 1) {
@@ -254,7 +254,7 @@
 							selected_shops != '-1' && selected_shops.length > 0 &&
 							selected_shops.length < shop_ids.length?true:false;
 							this.checkAll = selected_shops == '-1' || selected_shops.length == shop_ids.length?true:false;
-						} else {
+						}else {
 							this.shop_codes = [];
 							this.isIndeterminate = false;
 							this.checkAll = false;
@@ -283,7 +283,7 @@
 					})
 				}
     			//获取店铺列表
-				this.ajaxViewShop(this.dept_ids);
+				// this.ajaxViewShop(this.dept_ids);
 			},
 			getDeptIds(list){
 				list.map((item) => {

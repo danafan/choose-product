@@ -479,7 +479,7 @@
 					</div>
 				</el-dialog>
 				<!-- 拜访记录详情 -->
-				<el-dialog :visible.sync="visit_dialog" width="65%">
+				<el-dialog :visible.sync="visit_dialog" @close="visit_page = 1" width="65%">
 					<div slot="title" class="dialog_title">
 						<div>拜访记录</div>
 						<img class="close_icon" src="../../../../static/close_icon.png" @click="visit_dialog = false">
@@ -513,7 +513,7 @@
 					</div>
 				</el-dialog>
 				<!-- 评价记录 -->
-				<el-dialog :visible.sync="evaluate_dialog">
+				<el-dialog :visible.sync="evaluate_dialog" @close="evaluate_page = 1">
 					<div slot="title" class="dialog_title">
 						<div>【{{supplier_name_title}}】评价记录</div>
 						<img class="close_icon" src="../../../../static/close_icon.png" @click="evaluate_dialog = false">
