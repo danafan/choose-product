@@ -183,6 +183,8 @@
 				this.dept_ids = [];
 				this.shop_codes = [];
 				this.view_type = 1;
+				this.isIndeterminateDept = false;
+				this.checkAllDept = false;
 			},
 			//创建get
 			addUserGet(){
@@ -213,6 +215,13 @@
 						this.menu_role_ids = data.info.menu_role_ids;
 
 						this.dept_list = data.dept_list;
+						this.arr = [];
+						this.getDeptIds(this.dept_list);
+						this.dept_ids = data.selected_depts == '-1'?this.arr:data.selected_depts;
+						this.isIndeterminateDept =
+						data.selected_depts != '-1' && data.selected_depts.length > 0 &&
+						data.selected_depts.length < this.arr.length?true:false;
+						this.checkAllDept = data.selected_depts == '-1' || data.selected_depts.length == this.arr.length?true:false;
 						
 						this.view_type = data.view_type;
 						//获取店铺列表
@@ -230,14 +239,6 @@
 			},
 			//切换选中部门
 			ajaxViewShop(selected_shops) {
-				// this.arr = [];
-				// this.getDeptIds(this.dept_list);
-				// this.dept_ids = dept_ids == '-1'?this.arr:dept_ids;
-				// this.isIndeterminateDept =
-				// dept_ids != '-1' && dept_ids.length > 0 &&
-				// dept_ids.length < this.arr.length?true:false;
-				// this.checkAllDept = dept_ids == '-1' || dept_ids.length == this.arr.length?true:false;
-
 				let arg = {
 					type: 2,
 					dept_ids: '-1',

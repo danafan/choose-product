@@ -18,7 +18,7 @@
 				</el-form>
 				<el-divider></el-divider>
 				<TableTitle title="数据列表" id="table_title">
-					<el-button size="mini" type="primary" @click="addFn('1')">添加</el-button>
+					<el-button size="mini" type="primary" @click="addFn('1')" v-if="button_list.add == 1">添加</el-button>
 				</TableTitle>
 				<el-table ref="table" size="mini" :data="data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" v-loading="loading">
 					<el-table-column label="工作室名称" prop="studio_name"></el-table-column>
@@ -37,8 +37,8 @@
 					</el-table-column>
 					<el-table-column label="操作">
 						<template slot-scope="scope">
-							<el-button type="text" size="small" @click="addFn('2',scope.row.studio_id)">编辑</el-button>
-							<el-button type="text" size="small" @click="deleteFn(scope.row.studio_id)">删除</el-button>
+							<el-button type="text" size="small" @click="addFn('2',scope.row.studio_id)" v-if="button_list.edit == 1">编辑</el-button>
+							<el-button type="text" size="small" @click="deleteFn(scope.row.studio_id)" v-if="button_list.del == 1">删除</el-button>
 						</template>
 					</el-table-column>
 				</el-table>
@@ -124,6 +124,7 @@
 				contacter:"",			//联系人
 				style:"",				//风格
 				max_height:0,	
+				button_list:{},
 				page:1,
 				data:[],				//获取的数据
 				total:0,
@@ -181,6 +182,7 @@
 					if(res.data.code == 1){
 						this.loading = false;
 						let data = res.data.data;
+						this.button_list = data.button_list;
 						let table_data = data.data;
 						table_data.map(item => {
 							let images = [];

@@ -57,7 +57,7 @@
 							<GoodsItem @reload="getList(arg)" :info="item" v-for="item in goods_list"/>
 							<div class="padding_item" v-for="i in 6-(goods_list.length%6) == 6?0:6-(goods_list.length%6)"></div>
 						</div>
-						<PaginationWidget :total="total" :page="page" :pagesize="pagesize" @checkPage="checkPage"/>
+						<PaginationWidget :total="total" :page="page" :pagesize="pagesize" :show_multiple="false" @checkPage="checkPage"/>
 					</div>
 					<EmptyPage :is_loading="loading" v-else/>
 				</el-card>

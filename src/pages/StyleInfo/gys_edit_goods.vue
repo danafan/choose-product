@@ -17,7 +17,7 @@
 							</el-select>
 						</el-form-item>
 						<el-form-item label="拍摄风格：">
-							<el-select v-model="shooting_style_ids" multiple filterable clearable placeholder="请选择拍摄风格" :disabled="is_detail || goods_type == '2'">
+							<el-select v-model="shooting_style_ids" multiple filterable clearable placeholder="请选择拍摄风格" :disabled="is_detail || goods_type == '2' || goods_type == '5'">
 								<el-option v-for="item in style_list" :key="item.shooting_style_id" :label="item.shooting_style_name" :value="item.shooting_style_id">
 								</el-option>
 							</el-select>
@@ -59,7 +59,7 @@
 					</el-form>
 					<el-form size="small" label-width="100px" style="width:50%">
 						<el-form-item label="商品款号：" required>
-							<el-input placeholder="商品款号" style="width:190px" v-model="arg.style_name" :disabled="is_detail || goods_type == '2'">
+							<el-input placeholder="商品款号" style="width:190px" v-model="arg.style_name" :disabled="is_detail || goods_type == '2' || goods_type == '5'">
 							</el-input>
 						</el-form-item>
 						<el-form-item label="标题：" required>
