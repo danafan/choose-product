@@ -18,17 +18,7 @@
 	export default{
 		data(){
 			return{
-				tab_list:[{
-					menu_id:111,
-					menu_name:"款式资料",
-					show_type:1,
-					web_url:"style_info"
-				},{
-					menu_id:112,
-					menu_name:"修改记录表",
-					show_type:1,
-					web_url:"edit_record"
-				}],			//顶部导航列表
+				tab_list:[],			//顶部导航列表
 				active_index:0,			//当前选中的导航下标
 				web_url:""
 			}
@@ -44,15 +34,15 @@
 			}
 		},
 		created(){
-			// let new_menu_list = [];
-			// let arr = this.menu_arr.filter(item => {
-			// 	return item.web_url == 'supply_chain';
-			// });
-			// let child_list = arr[0].list;
-			// let child_arr = child_list.filter(item => {
-			// 	return item.web_url == 'chain_goods_page';
-			// });
-			// this.tab_list = child_arr[0].list;
+			let new_menu_list = [];
+			let arr = this.menu_arr.filter(item => {
+				return item.web_url == 'supply_chain';
+			});
+			let child_list = arr[0].list;
+			let child_arr = child_list.filter(item => {
+				return item.web_url == 'chain_goods_page';
+			});
+			this.tab_list = child_arr[0].list;
 			this.web_url = this.tab_list[0].web_url;
 		},
 		components:{

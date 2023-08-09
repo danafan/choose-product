@@ -235,7 +235,11 @@
 			//点击某个部门选项
 			checkChange(data, checked) {
 				this.dept_ids = checked.checkedKeys;
-				// this.ajaxViewShop(this.dept_ids);
+
+				this.arr = [];
+				this.getDeptIds(this.dept_list);
+				this.isIndeterminateDept = this.dept_ids.length > 0 && this.dept_ids.length < this.arr.length?true:false;
+				this.checkAllDept = this.dept_ids.length == this.arr.length?true:false;
 			},
 			//切换选中部门
 			ajaxViewShop(selected_shops) {
@@ -265,27 +269,19 @@
 					}
 				});
 			},
-			//切换选中店铺
-			selectedStore(selected_shops) {
-				this.isIndeterminate =
-				selected_shops.length > 0 &&
-				selected_shops.length < this.shop_list.length;
-				this.checkAll = selected_shops.length == this.shop_list.length;
-			},
 			//切换是否全选部门
 			checkAllDeptFn(val) {
 				this.isIndeterminateDept = false;
 				if (val) {
 					this.dept_ids = this.arr;
 				} else {
-					this.dept_ids.splice(0,this.dept_ids.length);
+					this.dept_ids = [];
 					this.arr.map(item => {
 						this.$refs.tree.setChecked(item,false);
 					})
 				}
-    			//获取店铺列表
-				// this.ajaxViewShop(this.dept_ids);
 			},
+			//获取所有部门id
 			getDeptIds(list){
 				list.map((item) => {
 					if(item.list){
@@ -295,6 +291,13 @@
 						this.arr.push(item.dept_id);
 					}
 				});
+			},
+			//切换选中店铺
+			selectedStore(selected_shops) {
+				this.isIndeterminate =
+				selected_shops.length > 0 &&
+				selected_shops.length < this.shop_list.length;
+				this.checkAll = selected_shops.length == this.shop_list.length;
 			},
     		//切换是否全选店铺
 			checkAllStore(val) {

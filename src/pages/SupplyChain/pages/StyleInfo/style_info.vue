@@ -172,7 +172,10 @@
 		</el-card>
 		<el-dialog :visible.sync="import_dialog" width="30%">
 			<div slot="title" class="dialog_title">
-				<div>导入</div>
+				<div class="flex ac">
+					<div>导入</div>
+					<div style="font-size: 12px;color: #F37605;">（文件大小不超过400M）</div>
+				</div>
 				<img class="close_icon" src="../../../../static/close_icon.png" @click="import_dialog = false">
 			</div>
 			<div class="down_box">
