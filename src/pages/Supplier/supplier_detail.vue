@@ -98,8 +98,8 @@
 			<div class="flex">
 				<GoodsItem :info="enlarge_item" @setStatus="setStatus" :is_enlarge="true"/>
 				<div class="chart_box flex fc ac jsa">
-					<div class="charts_div" id="zst"></div>
-					<div class="charts_div" id="qst"></div>
+					<div class="charts_div" id="zst" v-loading="chart_loading"></div>
+					<div class="charts_div" id="qst" v-loading="chart_loading"></div>
 				</div>
 			</div>
 		</el-dialog>
@@ -129,6 +129,9 @@
 				arg:{},
 				enlarge_dialog:false,
 				enlarge_item:{},
+				zstChart:null,
+				qstChart:null,
+				chart_loading:false
 			}
 		},
 		created(){
@@ -147,9 +150,11 @@
 			enlargeFn(info){
 				this.enlarge_item = info;
 				this.enlarge_dialog = true;
+				this.chart_loading = true;
 				resource.styleSaleNum({style_id:info.style_id}).then(res => {
 					if(res.data.code == 1){
 						let data = res.data.data;
+						this.chart_loading = false;
 						var echarts = require("echarts");
 						this.$nextTick(() => {
 							let seven_days = data.seven_days;				//7天日期数组

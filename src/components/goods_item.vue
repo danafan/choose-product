@@ -282,7 +282,6 @@
 			</div>
 			<div class="source_url flex">
 				<div class="source_url_label">网盘地址：</div>
-				<!-- <el-button class="link" type="text" @click="windowOpen(net_disk_address)">{{or_net_disk_address}}</el-button> -->
 				<div class="link" @click="windowOpen(net_disk_address)">{{or_net_disk_address}}</div>
 			</div>
 			<div class="more_image">

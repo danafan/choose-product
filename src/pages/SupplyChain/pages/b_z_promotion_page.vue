@@ -323,7 +323,9 @@
 			},
 			//点击链接
 			openWindow(url){
-				if(url.indexOf('http://') == -1 && url.indexOf('https://') == -1 ){
+				let match2 = /^((http|https):\/\/)+([A-Za-z]+)[/\?\:]?.*$/;
+				let testVol = match2.test(url);
+				if(!testVol ){
 					this.$alert(`【${url}】不是正确的链接格式!`, '提示', {
 						confirmButtonText: '我知道了',
 						callback: action => {

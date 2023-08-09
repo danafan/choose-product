@@ -7,6 +7,7 @@ module.exports = {
 		proxy: {
 			'/': {
 				target: 'http://selectiontest.92nu.com',
+				// target: 'http://selection.92nu.com',
 				ws: true,
 				changOlrigin: true,		
 			}
