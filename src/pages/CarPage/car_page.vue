@@ -49,7 +49,6 @@
 							</div>
 						</template>
 					</el-table-column>
-					<el-table-column label="拍摄风格" prop="shooting_style_name"></el-table-column>
 					<el-table-column label="档口批价" prop="wholesale_price"></el-table-column>
 					<el-table-column label="价格" prop="cost_price"></el-table-column>
 					<el-table-column label="操作" width="80" fixed="right">

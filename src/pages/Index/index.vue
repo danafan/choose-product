@@ -6,7 +6,7 @@
 					<SearchWidget page_path="index_history" @callback="searchFn" placeholder="搜索款式编码、标题、款号、供应商"/>
 					<div class="carousel_box" v-if="new_notice_list.length > 0">
 						<img class="top_line" src="../../static/notice_top_line.png">
-						<el-carousel class="custom_carousel" direction="vertical" indicator-position="none">
+						<el-carousel class="custom_carousel" direction="vertical" indicator-position="none" :initial-index="initialIndex">
 							<el-carousel-item v-for="(item,i) in new_notice_list" :key="i">
 								<div class="custom_item">
 									<div class="notice_item flex ac pointer" :class="{'border_bottom':index <= 1}" v-for="(i,index) in item" @click="noticeDetail(i.notice_id)">{{i.notice_title}}</div>
@@ -38,9 +38,9 @@
 				</div>
 				<div class="flex">
 					<GoodsItem :info="enlarge_item" @setStatus="setStatus" :is_enlarge="true"/>
-					<div class="chart_box flex fc ac jsa">
-						<div class="charts_div" id="zst" v-loading="chart_loading"></div>
-						<div class="charts_div" id="qst" v-loading="chart_loading"></div>
+					<div class="chart_box flex fc ac jsa" v-loading="chart_loading">
+						<div class="charts_div" id="zst" v-if="!chart_loading"></div>
+						<div class="charts_div" id="qst" v-if="!chart_loading"></div>
 					</div>
 				</div>
 			</el-dialog>
@@ -69,6 +69,7 @@
 				arg:{},
 				enlarge_dialog:false,
 				enlarge_item:{},
+				initialIndex:0,
 				new_notice_list:[],
 				zstChart:null,
 				qstChart:null,
@@ -108,6 +109,11 @@
 				let newArray = [];
 				while(index < array.length) {
 					newArray.push(array.slice(index, index += 3));
+				}
+				if(newArray.length == 2){
+					newArray.unshift(newArray[1]);
+					newArray.push(newArray[1]);
+					this.initialIndex = 1;
 				}
 				return newArray;
 			},

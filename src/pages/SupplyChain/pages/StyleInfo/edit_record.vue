@@ -62,7 +62,7 @@
 					</el-table-column>
 					<el-table-column label="修改提交时间" width="120" prop="add_time"></el-table-column>
 					<el-table-column label="修改提交人" prop="add_admin_name"></el-table-column>
-					<el-table-column label="修改状态" prop="common_text">
+					<el-table-column label="审核状态" prop="common_text">
 						<template slot-scope="scope">
 							<div>{{scope.row.check_status | check_status_filter}}</div>
 						</template>

@@ -96,7 +96,7 @@
 				</el-table-column>
 				<el-table-column label="当前状态">
 					<template slot-scope="scope">
-						<div v-if="scope.row.audit_status == 1">待审核</div>
+						<div v-if="scope.row.audit_status == 1">待确认</div>
 						<div v-if="scope.row.audit_status == 2">已确认</div>
 						<div v-if="scope.row.audit_status == 4">已拒绝</div>
 						<div v-if="scope.row.audit_status == 0">已撤销</div>
@@ -114,7 +114,7 @@
 		<CarWidget/>
 	</div>
 	<!-- 详情弹窗 -->
-	<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" destroy-on-close :visible.sync="detail_dialog">
+	<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" top="30px" destroy-on-close :visible.sync="detail_dialog">
 		<div slot="title" class="dialog_title">
 			<div>商品详情</div>
 			<img class="close_icon" src="../../static/close_icon.png" @click="detail_dialog = false">
@@ -177,10 +177,6 @@
 				<div class="value">{{goods_info.classification_name}}</div>
 			</div>
 			<div class="detail_row">
-				<div class="lable">拍摄风格</div>
-				<div class="value">{{goods_info.shooting_style_name}}</div>
-			</div>
-			<div class="detail_row">
 				<div class="lable">合作模式</div>
 				<div class="value">{{goods_info.mode}}</div>
 			</div>
@@ -231,7 +227,7 @@
 			<div class="detail_row">
 				<div class="lable">当前状态</div>
 				<div class="value" v-if="goods_info.audit_status == 0">已撤销</div>
-				<div class="value" v-if="goods_info.audit_status == 1">待审核</div>
+				<div class="value" v-if="goods_info.audit_status == 1">待确认</div>
 				<div class="value" v-if="goods_info.audit_status == 2">已确认</div>
 				<div class="value" v-if="goods_info.audit_status == 4">已拒绝</div>
 			</div>
@@ -591,7 +587,7 @@
 		}
 	}
 	.dialog_content{
-		max-height: 800px;
+		max-height: 750px;
 		overflow-y: scroll;
 		.detail_row{
 			border-bottom:1px solid #F0F0F0;

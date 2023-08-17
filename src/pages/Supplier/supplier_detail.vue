@@ -97,9 +97,9 @@
 			</div>
 			<div class="flex">
 				<GoodsItem :info="enlarge_item" @setStatus="setStatus" :is_enlarge="true"/>
-				<div class="chart_box flex fc ac jsa">
-					<div class="charts_div" id="zst" v-loading="chart_loading"></div>
-					<div class="charts_div" id="qst" v-loading="chart_loading"></div>
+				<div class="chart_box flex fc ac jsa" v-loading="chart_loading">
+					<div class="charts_div" id="zst" v-if="!chart_loading"></div>
+					<div class="charts_div" id="qst" v-if="!chart_loading"></div>
 				</div>
 			</div>
 		</el-dialog>

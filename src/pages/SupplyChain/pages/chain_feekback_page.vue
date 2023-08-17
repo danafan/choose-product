@@ -17,17 +17,23 @@
 				<TableTitle title="数据列表" id="table_title"></TableTitle>
 				<el-table ref="table" size="mini" :data="data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" v-loading="loading">
 					<el-table-column prop="style_name" label="款号" align="center"></el-table-column>
-					<el-table-column label="款式编码" width="140">
+					<el-table-column label="款式编码" width="240">
 						<template slot-scope="scope">
 							<div class="item_row">
-								<div class="item_label">普通：</div>
-								<div>
+								<div class="item_label">供应商款式编码：</div>
+								<div class="flex-1 flex fc as">
+									<div v-for="item in scope.row.new_supplier_ksbm">{{item}}</div>
+								</div>
+							</div>
+							<div class="item_row">
+								<div class="item_label">内部款式编码：</div>
+								<div class="flex-1 flex fc as">
 									<div v-for="item in scope.row.new_i_id">{{item}}</div>
 								</div>
 							</div>
 							<div class="item_row">
-								<div class="item_label">BD：</div>
-								<div>
+								<div class="item_label">BD款式编码：</div>
+								<div class="flex-1 flex fc as">
 									<div v-for="item in scope.row.new_bd_i_id">{{item}}</div>
 								</div>
 							</div>
@@ -127,6 +133,9 @@
 							}
 							if(item.bd_i_id){
 								item.new_bd_i_id = item.bd_i_id.split(',')
+							}
+							if(item.supplier_ksbm){
+								item.new_supplier_ksbm = item.supplier_ksbm.split(',')
 							}
 						})
 						this.data = data;

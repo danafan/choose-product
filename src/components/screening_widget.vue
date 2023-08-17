@@ -184,7 +184,7 @@
 				is_merge:0,						//合并同款
 				start_price:"",
 				end_price:"",
-				FristPin: ["全部","A", "B", "C", "D", "E", "F", "G", "H", "J", "K", "L", "M", "N", "P", "Q", "R", "S", "T", "W", "X", "Y", "Z"],
+				FristPin: ["全部","A", "B", "C", "D", "E", "F", "G", "H", "I" ,"J", "K", "L", "M", "N", "O","P", "Q", "R", "S", "T", "U","V","W", "X", "Y", "Z","#"],
 				a_item:"全部",
 				cityjson: {},
 				open_more:false,		//是否更多
@@ -277,12 +277,13 @@
 						let supplier_list = data.supplier;
 						let pinyin = require('js-pinyin');
 						pinyin.setOptions({checkPolyphone: false, charCase: 0});
+
 						let cityArr = [];
 						for (let i = 0; i < supplier_list.length; i++) {
             				//遍历数组,拿到城市名称
             				let cityName = supplier_list[i].supplier_name;
             				//取全部城市的首字母
-            				let fristName = pinyin.getCamelChars(cityName).substring(0, 1);    
+            				let fristName = pinyin.getCamelChars(cityName).substring(0, 1).toUpperCase();  
             				//	这里截取首字母的第一位
             				//给原json添加首字母键值对
             				supplier_list[i].first = fristName;
@@ -294,8 +295,12 @@
         				for (let i = 0; i < this.FristPin.length; i++) { 
         					if(i == 0){
         						cityJson[this.FristPin[i]] = cityArr;
+        					}else if(i == this.FristPin.length - 1){
+        						let zm_arr = ["A", "B", "C", "D", "E", "F", "G", "H", "I" ,"J", "K", "L", "M", "N", "O","P", "Q", "R", "S", "T", "U","V","W", "X", "Y", "Z"]
+        						cityJson[this.FristPin[i]] = cityArr.filter( (value) => {
+        							return zm_arr.indexOf(value.first) == -1;
+        						})
         					} else{
-        						//这里的FirstPin是一个写入了所有字母的数组,见data中
         						cityJson[this.FristPin[i]] = cityArr.filter( (value) => {
         							return value.first === this.FristPin[i];
         						})

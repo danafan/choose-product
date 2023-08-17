@@ -98,7 +98,7 @@
 							</div>
 						</template>
 					</el-table-column>
-					<el-table-column label="图片" width="150" >
+					<!-- <el-table-column label="图片" width="150" >
 						<template slot-scope="scope">
 							<div v-if="scope.row.images.length == 0">暂无</div>
 							<el-carousel trigger="hover" indicator-position="none" :autoplay="false" height="100px" v-if="scope.row.images.length > 0 && loading == false">
@@ -107,7 +107,7 @@
 								</el-carousel-item>
 							</el-carousel>
 						</template>
-					</el-table-column>
+					</el-table-column> -->
 					<el-table-column label="网盘地址">
 						<template slot-scope="scope">
 							<el-button class="pre_wrap" size="small" type="text" @click="windowOpen(scope.row.net_disk_address,scope.row.or_net_disk_address)" v-if="scope.row.or_net_disk_address !== ''">访问链接</el-button>
@@ -192,37 +192,6 @@
 				<el-button size="small" @click="import_dialog = false">取消</el-button>
 			</div>
 		</el-dialog>
-		<!-- 调价审批 -->
-		<!-- <el-dialog width="30%" :visible.sync="adjust_dialog" @close="closeAdjust">
-			<div slot="title" class="dialog_title">
-				<div>调价审批</div>
-				<img class="close_icon" src="../../../../static/close_icon.png" @click="adjust_dialog = false">
-			</div>
-			<div style="padding:20px">
-				<el-form>
-					<el-form-item label="原成本价：" v-if="cost_price">
-						<div>{{cost_price}}</div>
-					</el-form-item>
-					<el-form-item label="调后成本价：" v-if="edit_price">
-						<div>{{edit_price}}</div>
-					</el-form-item>
-					<el-form-item>
-						<el-radio-group v-model="adjust_type">
-							<el-radio :label="1">同意</el-radio>
-							<el-radio :label="2">拒绝</el-radio>
-						</el-radio-group>
-					</el-form-item>
-					<el-form-item v-if="adjust_type == 2">
-						<el-input type="textarea" :rows="3" placeholder="请输入拒绝原因" v-model="refuse_reason">
-						</el-input>
-					</el-form-item>
-				</el-form>
-			</div>
-			<div slot="footer" class="dialog_footer">
-				<el-button size="small" @click="adjust_dialog = false">取 消</el-button>
-				<el-button size="small" type="primary" @click="confirmAdjust">确 定</el-button>
-			</div>
-		</el-dialog> -->
 	</div>
 </template>
 <style type="text/css">
@@ -642,22 +611,22 @@
 						this.total = res.data.data.total;
 						let data = res.data.data.data;
 						this.is_check = res.data.data.check;
-						data.map(item => {
-							let images = [];
-							item.img.map(i => {
-								images.push(this.domain + i);
-							})
-							item.images = images;
-							if(item.i_id){
-								item.new_i_id = item.i_id.split(',')
-							}
-							if(item.bd_i_id){
-								item.new_bd_i_id = item.bd_i_id.split(',')
-							}
-							if(item.supplier_ksbm){
-								item.new_supplier_ksbm = item.supplier_ksbm.split(',')
-							}
-						})
+						// data.map(item => {
+						// 	let images = [];
+						// 	item.img.map(i => {
+						// 		images.push(this.domain + i);
+						// 	})
+						// 	item.images = images;
+						// 	if(item.i_id){
+						// 		item.new_i_id = item.i_id.split(',')
+						// 	}
+						// 	if(item.bd_i_id){
+						// 		item.new_bd_i_id = item.bd_i_id.split(',')
+						// 	}
+						// 	if(item.supplier_ksbm){
+						// 		item.new_supplier_ksbm = item.supplier_ksbm.split(',')
+						// 	}
+						// })
 						this.data = data;
 						this.$refs.table.bodyWrapper.scrollTop = 0;
 					}else{

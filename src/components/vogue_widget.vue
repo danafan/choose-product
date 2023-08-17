@@ -21,7 +21,12 @@
               <div class="li-item pointer" v-for="item in array_item" :key="item.style_id" @click="getDetail(item.style_id)">
                 <img class="goods_img" :data-obj="JSON.stringify(item)" :src="domain + item.img" style="object-fit: scale-down;">
                 <div class="hot_sell_item_title table_header_text" :data-obj="JSON.stringify(item)">{{item.title}}</div>
-                <div class="hot_sell_item_price" :data-obj="JSON.stringify(item)">¥{{item.cost_price}}</div>
+                <div class="flex jc ac">
+                  <div class="hot_sell_item_price" :data-obj="JSON.stringify(item)" v-if
+                  ="banner_index == 2">¥{{item.before_price}}&nbsp&nbsp→&nbsp&nbsp</div>
+                  <div class="hot_sell_item_price" :data-obj="JSON.stringify(item)">¥{{item.cost_price}}</div>
+                </div>
+                
               </div>
               <div class="li-item" v-for="j in 7 - array_item.length"></div>
             </div>
@@ -217,9 +222,6 @@
       color: #333333;
     }
     .hot_sell_item_price{
-      margin-bottom: 10rem;
-      width: 100%;
-      text-align: center;
       color: #F37605;
       font-size: 12rem;
     }

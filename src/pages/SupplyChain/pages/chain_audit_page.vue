@@ -51,12 +51,6 @@
 							</el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item label="拍摄风格：">
-						<el-select v-model="shooting_style_ids" clearable multiple filterable collapse-tags placeholder="全部">
-							<el-option v-for="item in style_list" :key="item.shooting_style_id" :label="item.shooting_style_name" :value="item.shooting_style_id">
-							</el-option>
-						</el-select>
-					</el-form-item>
 					<el-form-item label="市场：">
 						<el-select v-model="market_ids" clearable multiple filterable collapse-tags placeholder="全部">
 							<el-option v-for="item in market_list" :key="item.market_id" :label="item.market_name" :value="item.market_id">
@@ -169,7 +163,7 @@
 		<PaginationWidget :total="total" :page="page" :multiple_selection_num="multiple_selection.length" :pagesize="100" @checkPage="checkPage"/>
 	</el-card>
 	<!-- 详情弹窗 -->
-	<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" destroy-on-close :visible.sync="detail_dialog">
+	<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" top="30px" destroy-on-close :visible.sync="detail_dialog">
 		<div slot="title" class="dialog_title">
 			<div>商品详情</div>
 			<img class="close_icon" src="../../../static/close_icon.png" @click="detail_dialog = false">
@@ -230,10 +224,6 @@
 			<div class="detail_row">
 				<div class="lable">分类</div>
 				<div class="value">{{goods_info.classification_name}}</div>
-			</div>
-			<div class="detail_row">
-				<div class="lable">拍摄风格</div>
-				<div class="value">{{goods_info.shooting_style_name}}</div>
 			</div>
 			<div class="detail_row">
 				<div class="lable">合作模式</div>
@@ -445,7 +435,7 @@
 			}
 		}
 		.dialog_content{
-			max-height: 450px;
+			max-height: 750px;
 			overflow-y: scroll;
 			.detail_row{
 				border-bottom:1px solid #F0F0F0;
@@ -511,8 +501,6 @@
 				category_ids:[],		//选中的类目
 				market_list:[],			//市场列表
 				market_ids:[],			//选中的市场
-				style_list:[],			//拍摄风格列表
-				shooting_style_ids:[],	//选中的拍摄风格
 				class_list:[],			//分类列表
 				classification_ids:[],	//选中的分类
 				send_type_list:[],		//发货类型列表
@@ -561,8 +549,6 @@
 			this.ajaxCateList();
     		//市场列表
 			this.ajaxMarketList();
-    		//拍摄风格列表
-			this.ajaxStyleList();
     		//分类列表
 			this.ajaxClassList();
     		//获取列表
@@ -685,16 +671,6 @@
 					}
 				})
 			},
-			//拍摄风格列表
-			ajaxStyleList(){
-				commonResource.ajaxStyleList().then(res => {
-					if(res.data.code == 1){
-						this.style_list = res.data.data;
-					}else{
-						this.$message.warning(res.data.msg);
-					}
-				})
-			},
 			//分类列表
 			ajaxClassList(){
 				commonResource.ajaxClassList().then(res => {
@@ -774,7 +750,6 @@
 					category_id:this.category_ids.join(','),
 					market_id:this.market_ids.join(','),
 					classification_id:this.classification_ids.join(','),
-					shooting_style_id:this.shooting_style_ids.join(','),
 					send_type:this.send_type.join(','),
 					start_time:this.date && this.date.length > 0?this.date[0]:"",
 					end_time:this.date && this.date.length > 0?this.date[1]:"",
@@ -908,7 +883,6 @@
 						category_id:this.category_ids.join(','),
 						market_id:this.market_ids.join(','),
 						classification_id:this.classification_ids.join(','),
-						shooting_id:this.shooting_style_ids.join(','),
 						send_type:this.send_type.join(','),
 						start_time:this.date && this.date.length > 0?this.date[0]:"",
 						end_time:this.date && this.date.length > 0?this.date[1]:"",
