@@ -335,15 +335,15 @@
 						})
 					})
 					//商品ID
-					let style_id_arr = [];
-					let select_id_arr = [];
-					this.selected_list.map(item => {
-						style_id_arr.push(item.style_id);
-						select_id_arr.push(item.select_cart_id);
-					})
+					// let style_id_arr = [];
+					// let select_id_arr = [];
+					// this.selected_list.map(item => {
+					// 	style_id_arr.push(item.style_id);
+					// 	select_id_arr.push(item.select_cart_id);
+					// })
 					let arg = {
 						select_id:select_id_arr.join(','),
-						style_id_arr:style_id_arr.join(','),
+						// style_id_arr:style_id_arr.join(','),
 						shop_code:shop_code_arr.join(','),
 						shop_name:shop_name_arr.join(','),
 						demand_type:this.demand_type.join(','),

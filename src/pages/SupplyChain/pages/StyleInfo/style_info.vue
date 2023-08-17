@@ -149,12 +149,12 @@
 					</el-table-column>
 					<el-table-column label="操作" width="180" fixed="right">
 						<template slot-scope="scope">
-							<el-button type="text" size="small" v-if="(scope.row.check_status == 1 || scope.row.check_status == 4) && button_list.agree_refuse == 1" @click="$router.push('/edit_goods?page_type=goods&goods_type=4&style_id=' + scope.row.style_id)">审核</el-button>
-							<el-button type="text" size="small" v-if="(scope.row.check_status == 2 || scope.row.check_status == 5 || scope.row.check_status == 6) && button_list.in_out == 1" @click="checkStatus(scope.row.style_id,scope.row.check_status)">{{scope.row.check_status == 2 || scope.row.check_status == 6?'下架':'上架'}}</el-button>
+							<el-button type="text" size="small" v-if="(scope.row.check_status == 1 || scope.row.check_status == 4) && button_list.agree_refuse == 1" @click="$router.push('/edit_goods?page_type=goods&goods_type=4&goods_id=' + scope.row.goods_id)">审核</el-button>
+							<el-button type="text" size="small" v-if="(scope.row.check_status == 2 || scope.row.check_status == 5 || scope.row.check_status == 6) && button_list.in_out == 1" @click="checkStatus(scope.row.goods_id,scope.row.check_status)">{{scope.row.check_status == 2 || scope.row.check_status == 6?'下架':'上架'}}</el-button>
 							<el-button size="small" type="text" @click="adjustAudit(scope.row.style_id,scope.row.cost_price,scope.row.edit_price)" v-if="scope.row.price_status == '1' && button_list.price_btn == 1">调价审批</el-button>
 							<el-button style="margin-right: 10px" type="text" size="small" v-if="scope.row.check_status != 3 && scope.row.check_status != 5 && button_list.edit == 1" @click="$router.push('/edit_goods?page_type=goods&goods_type=2&style_id=' + scope.row.style_id);">编辑</el-button>
 							<el-button type="text" size="small" v-if="(scope.row.check_status == 3 || scope.row.check_status == 5) && button_list.reset == 1" @click="$router.push('/edit_goods?page_type=goods&goods_type=5&style_id=' + scope.row.style_id)">重新提交</el-button>
-							<el-dropdown style="margin-left: 10px;" size="small" @command="handleCommand($event,scope.row.style_id,scope.row.style_id,scope.row.style_name)" v-if="scope.row.check_status != 1 && scope.row.check_status != 4 && (button_list.info == 1 || button_list.del == 1)">
+							<el-dropdown style="margin-left: 10px;" size="small" @command="handleCommand($event,scope.row.goods_id,scope.row.style_name)" v-if="scope.row.check_status != 1 && scope.row.check_status != 4 && (button_list.info == 1 || button_list.del == 1)">
 								<el-button type="text" size="small">
 									更多<i class="el-icon-arrow-down el-icon--right"></i>
 								</el-button>
@@ -170,6 +170,7 @@
 			</div>
 			<PaginationWidget :total="total" :page="page" :multiple_selection_num="multiple_selection.length" :pagesize="100" @checkPage="checkPage"/>
 		</el-card>
+		<!-- 导入 -->
 		<el-dialog :visible.sync="import_dialog" width="30%">
 			<div slot="title" class="dialog_title">
 				<div class="flex ac">
@@ -190,6 +191,21 @@
 			</div>
 			<div slot="footer" class="dialog_footer">
 				<el-button size="small" @click="import_dialog = false">取消</el-button>
+			</div>
+		</el-dialog>
+		<!-- 下架弹窗 -->
+		<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" destroy-on-close @close="off_reason = ''" :visible.sync="delist_dialog" width="30%">
+			<div slot="title" class="dialog_title">
+				<div>确认下架？</div>
+				<img class="close_icon" src="../../../../static/close_icon.png" @click="delist_dialog = false">
+			</div>
+			<div class="remark_content">
+				<el-input type="textarea" :rows="3" placeholder="请输入下架原因" v-model="off_reason">
+				</el-input>
+			</div>
+			<div slot="footer" class="dialog_footer">
+				<el-button size="mini" @click="delist_dialog = false">取消</el-button>
+				<el-button size="mini" type="primary" @click="clickDelist">确认</el-button>
 			</div>
 		</el-dialog>
 	</div>
@@ -242,6 +258,9 @@
 			}
 		}
 	}
+	.remark_content{
+			padding:20rem;
+		}
 </style>
 <script>
 	import commonResource from '../../../../api/common_resource.js'
@@ -289,17 +308,6 @@
 					id:6
 				}],						//审核状态列表
 				check_status_id:"",		//选中的审核状态
-				// adjust_status_list:[{
-				// 	name:'待审核',
-				// 	id:1
-				// },{
-				// 	name:'审核通过',
-				// 	id:2
-				// },{
-				// 	name:'审核拒绝',
-				// 	id:3
-				// }],						//调价审核状态
-				// price_status:"",		//选中的调价审核状态
 				date:[],				//上新日期
 				pickerOptions: {
 					shortcuts: [
@@ -341,11 +349,14 @@
 				is_check:0,				//1:展示批量审核；0：不展示
 				fullscreenLoading:false,
 				style_id:"",				//点击的款式ID
+				goods_id:"",
 				cost_price:"",
 				edit_price:"",
 				adjust_dialog:false,		//调价审批
 				adjust_type:1,				//调价审批选中的状态
 				refuse_reason:"",			//拒绝原因
+				delist_dialog:false,		//下架弹窗
+				off_reason:"",				//下架原因
 			}
 		},
 		created(){
@@ -534,13 +545,12 @@
 						start_time:this.date && this.date.length > 0?this.date[0]:"",
 						end_time:this.date && this.date.length > 0?this.date[1]:"",
 						check_status:this.check_status_id,
-						// price_status:this.price_status
 					}
 					if(this.multiple_selection.length > 0){
-						let style_ids = this.multiple_selection.map(item => {
-							return item.style_id
+						let goods_ids = this.multiple_selection.map(item => {
+							return item.goods_id
 						})
-						arg['style_ids'] = style_ids.join(',');
+						arg['goods_ids'] = goods_ids.join(',');
 					}
 					let search = JSON.parse(JSON.stringify(this.search));
 					if(search.indexOf("\n") > -1 || search.indexOf(" ") > -1 || search.indexOf("+") > -1){
@@ -585,7 +595,6 @@
 					start_time:this.date && this.date.length > 0?this.date[0]:"",
 					end_time:this.date && this.date.length > 0?this.date[1]:"",
 					check_status:this.check_status_id,
-					// price_status:this.price_status,
 					page:this.page,
 					pagesize:100
 				}
@@ -661,7 +670,7 @@
 						return item.check_status == 2 || item.check_status == 6;
 					})
 					unset_list.map(item => {
-						style_id.push(item.style_id)
+						style_id.push(item.goods_id)
 					})
 					unset_num = total_num - unset_list.length;
 				}else if(type == '1'){	//上架
@@ -670,13 +679,13 @@
 						return item.check_status == 5;
 					})
 					unset_list.map(item => {
-						style_id.push(item.style_id)
+						style_id.push(item.goods_id)
 					})
 					unset_num = total_num - unset_list.length;
 				}else if(type == '2'){	//对接推单
 					title = '确认对接推单？'
 					this.multiple_selection.map(item => {
-						style_id.push(item.style_id)
+						style_id.push(item.goods_id)
 					})
 					unset_num = 0;
 				}else if(type == '3'){	//删除
@@ -685,13 +694,13 @@
 						return item.check_status == 3 || item.check_status == 5;
 					})
 					unset_list.map(item => {
-						style_id.push(item.style_id)
+						style_id.push(item.goods_id)
 					})
 					unset_num = total_num - unset_list.length;
 				}else if(type.indexOf('audit') > -1){	//批量审批
 					let ids = [];
 					this.multiple_selection.map(item => {
-						ids.push(item.style_id)
+						ids.push(item.goods_id)
 					})
 					this.$confirm(`确认批量${type.split('_')[1] == 1?'同意':'拒绝'}？`, '提示', {
 						confirmButtonText: '确定',
@@ -699,7 +708,7 @@
 						type: 'warning'
 					}).then(() => {
 						let arg = {
-							id:ids.join(','),
+							goods_id:ids.join(','),
 							type:type.split('_')[1]
 						}
 						resource.auditGoods(arg).then(res => {
@@ -719,15 +728,7 @@
 					});
 					return;
 				}
-				// else if(type == 'adjust'){					//调价审批
-				// 	let unset_list = this.multiple_selection.filter(item => {
-				// 		return item.price_status == 1;
-				// 	})
-				// 	unset_list.map(item => {
-				// 		style_id.push(item.style_id)
-				// 	})
-				// 	unset_num = total_num - unset_list.length;
-				// }
+				
 				if(total_num == unset_num){
 					this.$message.warning('没有符合操作条件的记录！');
 					return;
@@ -739,7 +740,7 @@
 				}).then(() => {
 					if(type == '0' || type == '1'){	//上架或下架
 						let arg = {
-							style_id:style_id.join(','),
+							goods_id:style_id.join(','),
 							type:type
 						}
 						resource.checkStatus(arg).then(res => {
@@ -753,7 +754,7 @@
 						})
 					}else if(type == '2'){	//对接推单
 						let arg = {
-							style_id:style_id.join(','),
+							goods_id:style_id.join(','),
 							type:1
 						}
 						resource.setAbutmentType(arg).then(res => {
@@ -767,7 +768,7 @@
 						})
 					}else if(type == '3'){	//删除
 						let arg = {
-							style_id:style_id.join(',')
+							goods_id:style_id.join(',')
 						}
 						resource.delGoods(arg).then(res => {
 							if(res.data.code == 1){
@@ -779,10 +780,7 @@
 							}
 						})
 					}
-					// else if(type == 'adjust'){					//调价审批
-					// 	//调价审批
-					// 	this.adjustAudit(style_id.join(','));
-					// }
+					
 					
 				}).catch(() => {
 					this.$message({
@@ -791,46 +789,12 @@
 					});          
 				});
 			},
-			// //调价审批
-			// adjustAudit(style_id,cost_price,edit_price){
-			// 	this.style_id = style_id;
-			// 	this.cost_price = cost_price;
-			// 	this.edit_price = edit_price;
-			// 	this.adjust_dialog = true;
-			// },
-			// //关闭调价审批
-			// closeAdjust(){
-			// 	this.adjust_type = 1;				//调价审批选中的状态
-			// 	this.cost_price = '';
-			// 	this.edit_price = '';
-			// 	this.refuse_reason = "";			//拒绝原因
-			// },
-			// //提交调价审批
-			// confirmAdjust(){
-			// 	let arg = {
-			// 		id:this.style_id,
-			// 		type:this.adjust_type,
-			// 	}
-			// 	if(this.adjust_type == 2){
-			// 		arg['refuse_reason'] = this.refuse_reason;
-			// 	}
-			// 	resource.changePrice(arg).then(res => {
-			// 		if(res.data.code == 1){
-			// 			this.$message.success(res.data.msg);
-			// 			this.adjust_dialog = false;
-			// 			//获取列表
-			// 			this.getGoodsList();
-			// 		}else{
-			// 			this.$message.warning(res.data.msg);
-			// 		}
-			// 	})
-			// },
 			//监听更多操作按钮
 			handleCommand(e,id,name){
 				if(e == '1'){	//查看
-					this.$router.push('/edit_goods?page_type=goods&goods_type=3&style_id=' + id);
+					this.$router.push('/edit_goods?page_type=goods&goods_type=3&goods_id=' + id);
 				}else if(e == '2'){	//图片管理
-					this.$router.push('/image_setting?style_id=' + id + '&style_name=' + name)
+					this.$router.push('/image_setting?goods_id=' + id + '&style_name=' + name)
 				}else if(e == '3'){	//删除
 					this.$confirm(`确认删除?`, '提示', {
 						confirmButtonText: '确定',
@@ -838,7 +802,7 @@
 						type: 'warning'
 					}).then(() => {
 						let arg = {
-							style_id:id
+							goods_id:id
 						}
 						resource.delGoods(arg).then(res => {
 							if(res.data.code == 1){
@@ -858,31 +822,52 @@
 				}
 			},
 			//切换上架或下架
-			checkStatus(style_id,type){
-				this.$confirm(`确认${type == 5?'上架':'下架'}?`, '提示', {
-					confirmButtonText: '确定',
-					cancelButtonText: '取消',
-					type: 'warning'
-				}).then(() => {
-					let arg = {
-						style_id:style_id,
-						type:type == 5?1:0
-					}
-					resource.checkStatus(arg).then(res => {
-						if(res.data.code == 1){
-							this.$message.success(res.data.msg);
-								//获取列表
-							this.getGoodsList();
-						}else{
-							this.$message.warning(res.data.msg);
+			checkStatus(goods_id,type){
+				this.goods_id = goods_id;
+				if(type == 5){		//上架
+					this.$confirm(`确认上架`, '提示', {
+						confirmButtonText: '确定',
+						cancelButtonText: '取消',
+						type: 'warning'
+					}).then(() => {
+						let arg = {
+							goods_id:this.goods_id,
+							type:1
 						}
-					})
-				}).catch(() => {
-					this.$message({
-						type: 'info',
-						message: '已取消'
-					});          
-				});
+						//提交上下架
+						this.confirmDelist(arg);
+					}).catch(() => {
+						this.$message({
+							type: 'info',
+							message: '已取消'
+						});          
+					});
+				}else{				//下架
+					this.delist_dialog = true;
+				}	
+			},
+			//点击下架
+			clickDelist(){
+				let arg = {
+					goods_id:this.goods_id,
+					type:0,
+					off_reason:this.off_reason
+				}
+				//提交上下架
+				this.confirmDelist(arg);
+			},
+			//提交上下架
+			confirmDelist(arg){
+				resource.checkStatus(arg).then(res => {
+					if(res.data.code == 1){
+						this.$message.success(res.data.msg);
+								//获取列表
+						this.getGoodsList();
+						this.delist_dialog = false;
+					}else{
+						this.$message.warning(res.data.msg);
+					}
+				})
 			},
 			windowOpen(url,old_url){
 				if(!old_url || old_url.indexOf('https://pan.baidu.com') == -1){

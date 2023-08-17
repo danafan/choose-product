@@ -214,7 +214,7 @@
 				preview_image:[],		//查看详情的图片列表
 				preview_bk_image:[],	//查看详情的爆款图片列表
 				img_list:[],			
-				style_id:"",			//商品ID
+				goods_id:"",			//商品ID
 				add_admin_name:"",		//提交人
 				check_status:"",		//审核状态
 				price_status:"",		//调价审核状态
@@ -267,7 +267,7 @@
 		},
 		created(){
 			//商品ID
-			this.style_id = this.$route.query.style_id;
+			this.goods_id = this.$route.query.goods_id;
 			this.is_detail = this.$route.query.goods_type == '3' || this.$route.query.goods_type == '4'?true:false;
 			//页面来源
 			this.page_type = this.$route.query.page_type;
@@ -303,7 +303,7 @@
 			//获取商品详情
 			getGoodsDetail(){
 				var arg = {
-					style_id:this.style_id
+					goods_id:this.goods_id
 				}
 				if(this.page_type == 'goods'){	//商品管理
 					if(this.goods_type == '3'){	//查看
@@ -336,7 +336,7 @@
 								this.$message.warning(res.data.msg);
 							}
 						})
-					}else{
+					}else{								//修改
 						resource.editGoodsGet(arg).then(res => {
 							if(res.data.code == 1){
 								let data_info = res.data.data;
@@ -354,13 +354,6 @@
 							if(data_info.img){
 								this.img_list = data_info.img;
 							}
-							// data_info.img.map(item => {
-							// 	let img_obj = {
-							// 		urls:item,
-							// 		show_icon:false
-							// 	}
-							// 	this.img_list.push(img_obj);
-							// })
 							this.add_admin_name = data_info.add_admin_name;
 							this.check_status = data_info.check_status;
 							this.off_reason = data_info.off_reason;
@@ -388,11 +381,6 @@
 					this.img_list = data_info.img;
 				}
 				data_info.img.map(item => {
-					// let img_obj = {
-					// 	urls:item,
-					// 	show_icon:false
-					// }
-					// this.img_list.push(img_obj);
 					this.preview_image.push(this.domain + item);
 				})
 				this.add_admin_name = data_info.add_admin_name;
@@ -414,11 +402,6 @@
 					this.bk_img_list = data_info.hot_img;
 				}
 				data_info.hot_img.map(item => {
-					// let img_obj = {
-					// 	urls:item,
-					// 	show_icon:false
-					// }
-					// this.bk_img_list.push(img_obj);
 					this.preview_bk_image.push(this.domain + item);
 				})
 				this.bk_img = data_info.hot_img;
@@ -548,7 +531,7 @@
 				}else if(!this.arg.market_id){
 					this.$message.warning('请选择市场!');
 				}else{
-					var arg = this.goods_type == '1'?this.arg:{...this.arg,...{style_id:this.style_id}};
+					var arg = this.goods_type == '1'?this.arg:{...this.arg,...{goods_id:this.goods_id}};
 					if (arg.i_id.indexOf(";") > -1) {
 						arg.i_id = arg.i_id.replaceAll(";", ",");
 					}
@@ -626,7 +609,7 @@
 			auditFn(type){
 				let arg = {
 					type:type,
-					id:this.style_id
+					goods_id:this.goods_id
 				}
 				if(type == '1'){
 					this.$confirm('确认同意?', '提示', {		//同意

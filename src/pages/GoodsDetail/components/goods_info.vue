@@ -269,7 +269,7 @@
 						})
 					})
 					let arg = {
-						style_id:this.goods_info.style_id,
+						goods_id:this.goods_info.goods_id,
 						shop_code:shop_code_arr.join(','),
 						shop_name:shop_name_arr.join(','),
 						demand_type:this.demand_type.join(','),
