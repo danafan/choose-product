@@ -1,5 +1,5 @@
 <template>
-	<div class="chain_page_content">
+	<div class="chain_page_content" :class="[{'absolute':edit_goods_id == ''},{'top_left_0':edit_goods_id == ''}]">
 		<el-card class="card_box_edit_goods">
 			<div class="form_row">
 				<el-form size="small" style="width: 50%" label-width="130px">
@@ -30,12 +30,12 @@
 							</el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item label="拍摄风格：">
+					<!-- <el-form-item label="拍摄风格：">
 						<el-select v-model="shooting_style_ids" multiple filterable clearable :placeholder="is_detail?'':'请选择拍摄风格'" :disabled="is_detail || goods_type == '2'|| goods_type == '5'">
 							<el-option v-for="item in style_list" :key="item.shooting_style_id" :label="item.shooting_style_name" :value="item.shooting_style_id">
 							</el-option>
 						</el-select>
-					</el-form-item>
+					</el-form-item> -->
 					<el-form-item label="面料：">
 						<el-input :placeholder="is_detail?'':'面料'" v-model="arg.fabric" :disabled="is_detail">
 						</el-input>
@@ -177,11 +177,36 @@
 			</div>
 			<div class="form_row">
 				<el-form size="small" label-width="100px">
-					<el-form-item label="商品图：">
-						<div v-if="is_detail">
+					<el-form-item label="拍摄风格：">
+						<div class="flex border_bottom">
+							<div class="relative style_item flex pointer" :class="[{'active_item':active_style_index == index}]" :key="item.shooting_style_id" v-for="(item,index) in style_card_list" @click="checkStyleTab(index)">
+								<img class="delete_style_icon" src="../../../../static/delete_style_icon.png" v-if="goods_type != '3'" @click.stop="deleteStyleTab(index)">
+								<div>{{item.shooting_style_name}}</div>
+							</div>
+							<el-popover ref="stylePopover" placement="right-start" width="400" trigger="click">
+								<div>
+									<div style="margin-bottom: 10px;">选择风格</div>
+									<el-table size="mini" :data="style_table_data" :max-height="240" tooltip-effect="dark" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" @selection-change="styleChange">
+										<el-table-column type="selection" width="55" fixed>
+										</el-table-column>
+										<el-table-column label="风格" prop="shooting_style_name">
+										</el-table-column>
+									</el-table>
+									<div class="dialog_footer">
+										<el-button size="small" type="primary" @click="setStyleFn">保存</el-button>
+									</div>
+								</div>
+								<div class="style_item flex ac pointer" slot="reference" v-if="goods_type != '3'">
+									<img class="add_style_icon" src="../../../../static/add_style_icon.png" @click="import_dialog = false">
+									<div>新增</div>
+								</div>
+							</el-popover>
+						</div>
+						<UploadFile v-if="show_style_upload && style_card_list.length > 0" :is_multiple="true" :max_num="9" :current_num="style_card_list.length > 0?style_card_list[active_style_index].image_arr.length:0" :img_list="style_card_list.length > 0?style_card_list[active_style_index].image_arr:[]" :only_view="goods_type == '3'" @callbackFn="currentStyleImgCallBackFn"/>
+						<!-- <div v-if="is_detail">
 							<el-image class="card_img" v-for="item in preview_image" :src="item" fit="scale-down" :preview-src-list="preview_image"></el-image>
 						</div>
-						<UploadFile :is_main="true" :img_list="img_list" :is_multiple="true" :current_num="arg.img.length" :max_num="99" @callbackFn="callbackFn" v-else/>
+						<UploadFile :is_main="true" :img_list="img_list" :is_multiple="true" :current_num="arg.img.length" :max_num="99" @callbackFn="callbackFn" v-else/> -->
 					</el-form-item>
 				</el-form>
 			</div>
@@ -209,7 +234,7 @@
 				supplier_list:[],		//供应商列表
 				cate_list:[],			//类目列表
 				market_list:[],			//市场列表
-				style_list:[],			//拍摄风格列表
+				// style_list:[],			//拍摄风格列表
 				class_list:[],			//分类列表
 				preview_image:[],		//查看详情的图片列表
 				preview_bk_image:[],	//查看详情的爆款图片列表
@@ -247,7 +272,7 @@
 					img:[],					//图片列表
 					remark:"",				//备注
 				},							//可传递的参数
-				shooting_style_ids:[],		//已选中的拍摄风格
+				// shooting_style_ids:[],		//已选中的拍摄风格
 				default_hot_style:0,		//默认是否爆款
 				default_data_style:0,		//默认是否主推款
 				hot_status:10,				//爆款审核状态
@@ -263,18 +288,30 @@
 				tj:"",						//调价
 				bz:"",						//备注
 
+				style_card_list:[],				//风格列表
+				selected_style:[],				//表格已选中的列表
+				style_table_data:[],			//未选择的风格列表
+				active_style_index:0,			//风格列表选中的下标
+				show_style_upload:true,			//是否显示风格图图片组件
+
 			}
 		},
 		created(){
 			//商品ID
-			this.goods_id = this.$route.query.goods_id;
+			this.goods_id = this.$route.query.goods_id?this.$route.query.goods_id:this.edit_goods_id;
 			this.is_detail = this.$route.query.goods_type == '3' || this.$route.query.goods_type == '4'?true:false;
 			//页面来源
-			this.page_type = this.$route.query.page_type;
+			this.page_type = this.$route.query.page_type?this.$route.query.page_type:'goods';
 			//类型
-			this.goods_type = this.$route.query.goods_type;
+			this.goods_type = this.$route.query.goods_type?this.$route.query.goods_type:'2';
 			//获取数据列表
 			this.getInfoList();
+		},
+		props:{
+			edit_goods_id:{
+				type:String,
+			default:''
+			}
 		},
 		computed:{
 			//图片前缀
@@ -305,6 +342,7 @@
 				var arg = {
 					goods_id:this.goods_id
 				}
+				console.log(arg)
 				if(this.page_type == 'goods'){	//商品管理
 					if(this.goods_type == '3'){	//查看
 						resource.getOnepro(arg).then(res => {
@@ -380,9 +418,6 @@
 				if(data_info.img){
 					this.img_list = data_info.img;
 				}
-				data_info.img.map(item => {
-					this.preview_image.push(this.domain + item);
-				})
 				this.add_admin_name = data_info.add_admin_name;
 				this.check_status = data_info.check_status;
 				this.off_reason = data_info.off_reason;
@@ -409,12 +444,28 @@
 				this.tj = data_info.data_price;
 				this.bz = data_info.data_remark;
 
-				if(data_info.shooting_style_id != ''){
-					let shooting_style_ids = data_info.shooting_style_id.split(',');
-					this.shooting_style_ids = shooting_style_ids.map(item => {
-						return parseInt(item);
-					})
-				}
+				//拍摄风格
+				let styles_data = data_info.styles_data;
+
+				styles_data.map(item => {
+					let style_card_item = {
+						shooting_style_id:item.shooting_style_id,
+						shooting_style_name:item.shooting_style_name,
+						image_arr:item.imgs
+					}
+					this.style_card_list.push(style_card_item)
+				})
+				// let style_list = res.data.data;
+				// style_list.map(item => {
+				// 	item['image_arr'] = [];
+				// })
+				// this.style_card_list = style_list;
+				// if(data_info.shooting_style_id != ''){
+				// 	let shooting_style_ids = data_info.shooting_style_id.split(',');
+				// 	this.shooting_style_ids = shooting_style_ids.map(item => {
+				// 		return parseInt(item);
+				// 	})
+				// }
 				
 				for(let key in this.arg){
 					for(let k in data_info){
@@ -472,13 +523,59 @@
 				return new Promise((resolve)=>{
 					commonResource.ajaxStyleList().then(res => {
 						if(res.data.code == 1){
-							this.style_list = res.data.data;
+							let style_list = res.data.data;
+							style_list.map(item => {
+								item['image_arr'] = [];
+							})
+							this.style_table_data = style_list;
 							resolve();
 						}else{
 							this.$message.warning(res.data.msg);
 						}
 					})
 				})
+			},
+			//切换商品风格添加表格切换多选
+			styleChange(val){
+				this.selected_style = val;
+			},
+			//确认商品风格添加表格切换多选
+			setStyleFn(){
+				this.selected_style.map(item => {
+					item['image_arr'] = [];
+					this.style_card_list.push(item);
+				})
+				this.style_table_data = this.filterStyle(this.style_table_data,this.style_card_list);
+				this.$refs.stylePopover.doClose();
+			},
+			//点击删除已选的风格
+			deleteStyleTab(index){
+				this.show_style_upload = false;
+				this.active_style_index = 0;
+				let current_style = this.style_card_list[index];
+				this.style_table_data.unshift(current_style);
+				this.style_card_list.splice(index,1);
+				this.$nextTick(()=>{
+					this.show_style_upload = true;
+				})
+			},
+			//点击切换已选的风格
+			checkStyleTab(index){
+				this.show_style_upload = false;
+				this.active_style_index = index;
+				this.$nextTick(()=>{
+					this.show_style_upload = true;
+				})
+			},
+			//监听风格图列表回调
+			currentStyleImgCallBackFn(img_arr){
+				let new_item = JSON.parse(JSON.stringify(this.style_card_list[this.active_style_index]));
+				new_item.image_arr = img_arr;
+				this.$set(this.style_card_list,this.active_style_index,new_item);
+			},
+			//对比已选中的过滤右侧未选中的风格  
+			filterStyle(arr1, arr2) {
+				return arr1.filter((v) => arr2.every((val) => val.shooting_style_id!= v.shooting_style_id));
 			},
 			//分类列表
 			ajaxClassList(){
@@ -508,7 +605,7 @@
 			//点击新增爆款链接
 			showInput() {
 				this.inputVisible = true;
-				this.$nextTick(_ => {
+				this.$nextTick(() => {
 					this.$refs.saveTagInput.$refs.input.focus();
 				});
 			},
@@ -541,7 +638,17 @@
 					if (arg.supplier_ksbm.indexOf(";") > -1) {
 						arg.supplier_ksbm = arg.supplier_ksbm.replaceAll(";", ",");
 					}
-					arg.shooting_style_id = this.shooting_style_ids.join(',');
+					
+					let style_imgs = [];
+					//处理拍摄风格
+					this.style_card_list.map(item => {
+						let img_arr = [];
+						item.image_arr.map(i => {
+							img_arr.push(i)
+						})
+						style_imgs.push(`${item.shooting_style_id}-${img_arr.join(',')}`)
+					})
+					arg.style_imgs = style_imgs.join(';');
 
 					arg.hot_url = this.link_urls.join(',');
 					arg.hot_img = this.bk_img.join(',');
@@ -663,22 +770,22 @@
 			checkStatus:function(val){
 				let ss = "";
 				switch(val){
-					case 1:
+				case 1:
 					ss =  '上架待审核';
 					break;
-					case 2:
+				case 2:
 					ss =  '审核通过(已上架)';
 					break;
-					case 3:
+				case 3:
 					ss =  '上架审核拒绝';
 					break;
-					case 4:
+				case 4:
 					ss =  '下架待审核';
 					break;
-					case 5:
+				case 5:
 					ss =  '下架审核通过(已下架)';
 					break;
-					case 6:
+				case 6:
 					ss =  '下架审核拒绝';
 					break;
 				}
@@ -687,13 +794,13 @@
 			priceStatus:function(e){
 				let status_str = "";
 				switch(e){
-					case 1:
+				case 1:
 					status_str = '待审核';
 					break;
-					case 2:
+				case 2:
 					status_str = '审核通过';
 					break;
-					case 3:
+				case 3:
 					status_str = '审核拒绝';
 					break;
 				}
@@ -706,64 +813,102 @@
 	}
 </script>
 <style>
-.el-tag {
-	position: relative;
-	max-width: 300px;
-	margin-right: 10px;
-	margin-bottom: 0!important;
-	overflow: hidden!important;
-	text-overflow: ellipsis!important;
-	white-space: nowrap!important;
-	padding-right: 18px;
-}
-.el-tag__close{
-	position: absolute!important;
-	right: 1px!important;
-	top: 3px!important;
-}
+	.el-tag {
+		position: relative;
+		max-width: 300px;
+		margin-right: 10px;
+		margin-bottom: 0!important;
+		overflow: hidden!important;
+		text-overflow: ellipsis!important;
+		white-space: nowrap!important;
+		padding-right: 18px;
+	}
+	.el-tag__close{
+		position: absolute!important;
+		right: 1px!important;
+		top: 3px!important;
+	}
 </style>
 <style lang="less" scoped>
-.chain_page_content{
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	padding: 24rem;
-	display: flex;
-	flex-direction: column;
-	.card_box_edit_goods{
-		flex:1;
+	.chain_page_content{
+		// position: absolute;
+		// top: 0;
+		// left: 0;
+		width: 100%;
+		height: 100%;
+		padding: 24rem;
 		display: flex;
 		flex-direction: column;
-		align-items: center;
-		overflow-y: scroll;
-		.form_row{
-			width: 1000rem;
+		.card_box_edit_goods{
+			flex:1;
 			display: flex;
-			justify-content: space-between;
-			.card_img{
-				margin-right: 40rem;
-				margin-bottom: 20rem;
+			flex-direction: column;
+			align-items: center;
+			overflow-y: scroll;
+			.form_row{
+				width: 1000rem;
+				display: flex;
+				justify-content: space-between;
+				.card_img{
+					margin-right: 40rem;
+					margin-bottom: 20rem;
+					border-radius: 2rem;
+					width: 160rem;
+					height: 160rem;
+				}
+			}
+			.bk_card_img{
+				margin-right: 16px;
+				margin-bottom: 16px;
 				border-radius: 2rem;
-				width: 160rem;
-				height: 160rem;
+				width: 80px;
+				height: 80px;
+			}
+			.margin_bottom{
+				margin-bottom: 20px;
+			}
+			.bottom_row{
+				display: flex;
+				justify-content: center;
+			}
+
+			.style_item{
+				border: 1px solid #DDDDDD;
+				padding: 10rem 20rem;
+				font-size: 14rem;
+				color: #333333;
+				position:relative;
+				.delete_style_icon{
+					position: absolute;
+					top: 0;
+					right: 0;
+					width: 14rem;
+					height: 14rem;
+				}
+				.add_style_icon{
+					margin-right: 6rem;
+					width: 14rem;
+					height: 14rem;
+				}
+			}
+			.active_item{
+				border: 1px solid #FFC998;
+				background: #FFFCFA;
+				color: #E47A1A;
+			}
+			.border_bottom{
+				border-bottom:1px solid #DDDDDD;
+				margin-bottom: 20px;
+			}
+			.view_box{
+				height: 360rem;
+				overflow-y: scroll;
+			}
+			.info_value{
+				display: initial;
+				font-size: 13rem;
+				color: #333333;
 			}
 		}
-		.bk_card_img{
-			margin-right: 16px;
-			margin-bottom: 16px;
-			border-radius: 2rem;
-			width: 80px;
-			height: 80px;
-		}
-		.margin_bottom{
-			margin-bottom: 20px;
-		}
-		.bottom_row{
-			display: flex;
-			justify-content: center;
-		}
 	}
-}
 </style>

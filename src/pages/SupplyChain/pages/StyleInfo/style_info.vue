@@ -98,7 +98,7 @@
 							</div>
 						</template>
 					</el-table-column>
-					<el-table-column label="图片" width="180" >
+					<el-table-column label="拍摄风格" width="180" >
 						<template slot-scope="scope">
 							<el-tabs size="mini" v-model="scope.row.active_index" @tab-click="handleClick($event,scope.$index)">
 								<el-tab-pane :label="item.shooting_style_name" :name="index.toString()" v-for="(item,index) in scope.row.shooting_style_list"></el-tab-pane>
@@ -135,7 +135,6 @@
 							<div>{{scope.row.photograph == 1?'是':'否'}}</div>
 						</template>
 					</el-table-column>
-					<el-table-column label="拍摄风格" prop="shooting_style"></el-table-column>
 					<el-table-column label="类目" prop="category"></el-table-column>
 					<el-table-column label="分类" prop="classification"></el-table-column>
 					<el-table-column label="合作模式" prop="mode"></el-table-column>
@@ -156,15 +155,16 @@
 							<el-button type="text" size="small" v-if="(scope.row.check_status == 1 || scope.row.check_status == 4) && button_list.agree_refuse == 1" @click="$router.push('/edit_goods?page_type=goods&goods_type=4&goods_id=' + scope.row.goods_id)">审核</el-button>
 							<el-button type="text" size="small" v-if="(scope.row.check_status == 2 || scope.row.check_status == 5 || scope.row.check_status == 6) && button_list.in_out == 1" @click="checkStatus(scope.row.goods_id,scope.row.check_status)">{{scope.row.check_status == 2 || scope.row.check_status == 6?'下架':'上架'}}</el-button>
 							<el-button size="small" type="text" @click="adjustAudit(scope.row.style_id,scope.row.cost_price,scope.row.edit_price)" v-if="scope.row.price_status == '1' && button_list.price_btn == 1">调价审批</el-button>
-							<el-button style="margin-right: 10px" type="text" size="small" v-if="scope.row.check_status != 3 && scope.row.check_status != 5 && button_list.edit == 1" @click="$router.push('/edit_goods?page_type=goods&goods_type=2&style_id=' + scope.row.style_id);">编辑</el-button>
-							<el-button type="text" size="small" v-if="(scope.row.check_status == 3 || scope.row.check_status == 5) && button_list.reset == 1" @click="$router.push('/edit_goods?page_type=goods&goods_type=5&style_id=' + scope.row.style_id)">重新提交</el-button>
+							<!-- <el-button style="margin-right: 10px" type="text" size="small" v-if="scope.row.check_status != 3 && scope.row.check_status != 5 && button_list.edit == 1" @click="$router.push('/edit_goods?page_type=goods&goods_type=2&goods_id=' + scope.row.goods_id);">编辑</el-button> -->
+							<el-button style="margin-right: 10px" type="text" size="small" v-if="scope.row.check_status != 3 && scope.row.check_status != 5 && button_list.edit == 1" @click="editFn(scope.row.goods_id)">编辑</el-button>
+							<el-button type="text" size="small" v-if="(scope.row.check_status == 3 || scope.row.check_status == 5) && button_list.reset == 1" @click="$router.push('/edit_goods?page_type=goods&goods_type=5&goods_id=' + scope.row.goods_id)">重新提交</el-button>
 							<el-dropdown style="margin-left: 10px;" size="small" @command="handleCommand($event,scope.row.goods_id,scope.row.style_name)" v-if="scope.row.check_status != 1 && scope.row.check_status != 4 && (button_list.info == 1 || button_list.del == 1)">
 								<el-button type="text" size="small">
 									更多<i class="el-icon-arrow-down el-icon--right"></i>
 								</el-button>
 								<el-dropdown-menu slot="dropdown">
 									<el-dropdown-item command="1" v-if="button_list.info == 1">查看</el-dropdown-item>
-									<el-dropdown-item command="2" v-if="scope.row.check_status == 2 || scope.row.check_status == 6">图片管理</el-dropdown-item>
+									<!-- <el-dropdown-item command="2" v-if="scope.row.check_status == 2 || scope.row.check_status == 6">图片管理</el-dropdown-item> -->
 									<el-dropdown-item command="3" v-if="(scope.row.check_status == 3 || scope.row.check_status == 5) && button_list.del == 1">删除</el-dropdown-item>
 								</el-dropdown-menu>
 							</el-dropdown>
@@ -217,8 +217,6 @@
 				<el-tabs size="mini" v-model="view_active_index" @tab-click="handleViewClick">
 					<el-tab-pane :label="item.shooting_style_name" :name="index.toString()" v-for="(item,index) in view_shooting_style_list"></el-tab-pane>
 				</el-tabs>
-				<!-- <div :style="{'width':'100%','height':scope.row.style_loading?'100px':'0px'}" v-loading="scope.row.style_loading"></div> -->
-
 				<el-carousel style="width: 100%;height: 310px;" trigger="hover" indicator-position="none" :autoplay="false" :initial-index="default_img_index" v-if="view_shooting_style_list.length > 0">
 					<el-carousel-item v-for="item in view_shooting_style_list[parseInt(view_active_index)].img" :key="item">
 						<el-image :z-index="2006" class="view_image" :src="domain + item" fit="scale-down"></el-image>
@@ -228,6 +226,19 @@
 			</div>
 			<div slot="footer" class="dialog_footer">
 				<el-button size="mini" type="primary" @click="view_dialog = false">关闭</el-button>
+			</div>
+		</el-dialog>
+		<!-- 编辑弹窗 -->
+		<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" destroy-on-close width="65%" :visible.sync="edit_dialog">
+			<div slot="title" class="dialog_title">
+				<div>编辑商品</div>
+				<img class="close_icon" src="../../../../static/close_icon.png" @click="edit_dialog = false">
+			</div>
+			<div class="remark_content">
+				<EditGoods :edit_goods_id="goods_id"/>
+			</div>
+			<div slot="footer" class="dialog_footer">
+				<el-button size="mini" type="primary" @click="edit_dialog = false">关闭</el-button>
 			</div>
 		</el-dialog>
 	</div>
@@ -298,6 +309,7 @@
 
 	import TableTitle from '../../components/table_title.vue'
 	import PaginationWidget from '../../../../components/pagination_widget.vue'
+	import EditGoods from '../GoodsPages/edit_goods.vue'
 	export default{
 		data(){
 			return{
@@ -386,6 +398,7 @@
 				view_active_index:'0',		//图片放大顶部标签的选中下标
 				default_img_index:0,		//图片放大默认图片下标
 				view_shooting_style_list:[],//放大图片列表
+				edit_dialog:false,			//编辑弹窗
 			}
 		},
 		created(){
@@ -823,15 +836,12 @@
 			//放大弹窗切换图片
 			handleViewClick(e){
 				let style_id = this.view_shooting_style_list[e.index].style_id;
-				// current_row.style_loading = true;
-				// this.$set(this.data,index,current_row);
 				resource.getStyleImgs({style_id:style_id}).then(res => {
 					if(res.data.code == 1){
 						let data = res.data.data;
 						let current_info = JSON.parse(JSON.stringify(this.view_shooting_style_list[e.index]));
 						current_info.img = res.data.data;
 						this.view_active_index = e.index.toString();
-						// current_row.style_loading = false;
 						this.$set(this.view_shooting_style_list,e.index,current_info);
 					}else{
 						this.$message.warning(res.data.msg);
@@ -849,9 +859,11 @@
 			handleCommand(e,id,name){
 				if(e == '1'){	//查看
 					this.$router.push('/edit_goods?page_type=goods&goods_type=3&goods_id=' + id);
-				}else if(e == '2'){	//图片管理
-					this.$router.push('/image_setting?goods_id=' + id + '&style_name=' + name)
-				}else if(e == '3'){	//删除
+				}
+				// else if(e == '2'){	//图片管理
+				// 	this.$router.push('/image_setting?goods_id=' + id + '&style_name=' + name)
+				// }
+				else if(e == '3'){	//删除
 					this.$confirm(`确认删除?`, '提示', {
 						confirmButtonText: '确定',
 						cancelButtonText: '取消',
@@ -931,11 +943,18 @@
 				}else{
 					window.open(url)
 				}
+			},
+			//点击编辑
+			editFn(goods_id){
+				this.goods_id = goods_id.toString();
+				console.log(this.goods_id)
+				this.edit_dialog = true;
 			}
 		},
 		components:{
 			TableTitle,
-			PaginationWidget
+			PaginationWidget,
+			EditGoods
 		}
 	}
 </script>
