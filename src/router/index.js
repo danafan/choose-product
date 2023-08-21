@@ -18,7 +18,7 @@ const gys_image_setting = (resolve) => require(["@/pages/StyleInfo/gys_image_set
 const supplier_detail = (resolve) => require(["@/pages/Supplier/supplier_detail"], resolve);
 const supply_chain = (resolve) => require(["@/pages/SupplyChain/supply_chain"], resolve);
 const chain_message_page = (resolve) => require(["@/pages/SupplyChain/pages/chain_message_page"], resolve);
-const chain_goods_page = (resolve) => require(["@/pages/SupplyChain/pages/chain_goods_page"], resolve);
+const chain_goods_page = (resolve) => require(["@/pages/SupplyChain/pages/chain_goods_page"], resolve)
 const chain_audit_page = (resolve) => require(["@/pages/SupplyChain/pages/chain_audit_page"], resolve);
 const b_z_promotion_page = (resolve) => require(["@/pages/SupplyChain/pages/b_z_promotion_page"], resolve);
 const edit_goods = (resolve) => require(["@/pages/SupplyChain/pages/GoodsPages/edit_goods"], resolve);
@@ -137,109 +137,105 @@ const router = new Router({
     {
       path: "/chain_goods_page",
       name: "款式资料",
+      component: chain_goods_page
+    },
+    {
+      path: "/chain_audit_page",
+      name: "商品审核",
+      component: chain_audit_page
+    },
+    {
+      path: "/b_z_promotion_page",
+      name: "爆/主推款审",
+      component: b_z_promotion_page
+    },
+    {
+      path: "/edit_goods",
+      name: "上传/编辑商品",
+      meta:{
+        is_back:true
+      },
+      component: edit_goods
+    },
+    {
+      path: "/image_setting",
+      name: "图片管理",
+      meta:{
+        is_back:true
+      },
+      component: image_setting
+    },
+    {
+      path: "/chain_gysybk_page",
+      name: "供应商",
       meta:{
        keep_alive:true,
        use_cache:false
      },
-     component: chain_goods_page,
+     component: chain_gysybk_page
    },
    {
-    path: "/chain_audit_page",
-    name: "商品审核",
-    component: chain_audit_page
-  },
-  {
-    path: "/b_z_promotion_page",
-    name: "爆/主推款审",
-    component: b_z_promotion_page
-  },
-  {
-    path: "/edit_goods",
-    name: "上传/编辑商品",
-    meta:{
-      is_back:true
-    },
-    component: edit_goods
-  },
-  {
-    path: "/image_setting",
-    name: "图片管理",
-    meta:{
-      is_back:true
-    },
-    component: image_setting
-  },
- {
-    path: "/chain_gysybk_page",
-    name: "供应商",
-    meta:{
-     keep_alive:true,
-     use_cache:false
-   },
-   component: chain_gysybk_page
- },
- {
     path: "/chain_studio_page",
     name: "工作室",
-   component: chain_studio_page
- },
- {
-  path: "/add_edit_supplier",
-  name: "添加/编辑供应商",
-  meta:{
-    is_back:true
+    component: chain_studio_page
   },
-  component: add_edit_supplier
-},
-{
-  path: "/chain_supplier_detail",
-  name: "供应商详情",
-  meta:{
-    is_back:true
+  {
+    path: "/add_edit_supplier",
+    name: "添加/编辑供应商",
+    meta:{
+      is_back:true
+    },
+    component: add_edit_supplier
   },
-  component: chain_supplier_detail
-},
-{
-  path: "/account_list",
-  name: "账号管理",
-  meta:{
-    is_back:true
+  {
+    path: "/chain_supplier_detail",
+    name: "供应商详情",
+    meta:{
+      is_back:true
+    },
+    component: chain_supplier_detail
   },
-  component: account_list
-},
-{
-  path: "/chain_setting_page",
-  name: "配置",
-  component: chain_setting_page
-},
-{
-  path: "/edit_record",
-  name: "修改记录",
-  meta:{
-    is_back:true
+  {
+    path: "/account_list",
+    name: "账号管理",
+    meta:{
+      is_back:true
+    },
+    component: account_list
   },
-  component: edit_record
-},
-{
-  path: "/chain_permissions_page",
-  name: "权限",
-  component: chain_permissions_page
-},
-{
-  path: "/chain_feekback_page",
-  name: "反馈",
-  component: chain_feekback_page
-},
-{
-  path: "/setting_record_page",
-  name: "操作日志",
-  component: setting_record_page
-},
-]
-},
-],
-},
-],
+  {
+    path: "/chain_setting_page",
+    name: "配置",
+    component: chain_setting_page
+  },
+  {
+    path: "/edit_record",
+    name: "修改记录",
+    meta:{
+      is_back:true
+    },
+    component: edit_record
+  },
+  {
+    path: "/chain_permissions_page",
+    name: "权限",
+    component: chain_permissions_page
+  },
+  {
+    path: "/chain_feekback_page",
+    name: "反馈",
+    component: chain_feekback_page
+  },
+  {
+    path: "/setting_record_page",
+    name: "操作日志",
+    component: setting_record_page
+  },
+  ]
+  },
+  ],
+  },
+  ],
 });
 
 router.beforeEach((to, from, next) => {

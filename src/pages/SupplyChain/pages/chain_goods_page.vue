@@ -7,8 +7,8 @@
 			</div>
 		</div>
 		<div class="flex-1">
-			<StyleInfo v-if="web_url == 'style_info'"/>
-			<EditRecord v-if="web_url == 'edit_record'"/>
+			<StyleInfo :webUrl="web_url" v-show="web_url == 'style_info'"/>
+			<EditRecord :webUrl="web_url" v-show="web_url == 'edit_record'"/>
 		</div>
 	</div>
 </template>

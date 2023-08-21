@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div class="pointer">
 		<div class="back_widget" :class="{'fixed_style':is_fixed == true}" @click="feekback_dialog = true">
 			<img class="back_icon" src="../static/feekback_icon.png">
 			<div class="back_text">反馈</div>

@@ -1,5 +1,5 @@
 <template>
-	<div class="back_row" @click="$router.go(-1)">
+	<div class="back_row pointer" @click="$router.go(-1)">
 		<img class="page_back_icon" src="../static/page_back_icon.png">
 		返回
 	</div>

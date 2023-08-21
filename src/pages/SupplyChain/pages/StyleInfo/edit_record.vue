@@ -224,6 +224,22 @@
 			//获取列表
 			this.editLogList();
 		},
+		props:{
+			//监听url变化
+			webUrl:{
+				type:String,
+			default:''
+			}
+		},
+		watch:{
+			//监听切换到审核修改记录页面重新获取列表
+			webUrl:function(n,o){
+				if(n == 'edit_record'){
+					//获取列表
+					this.editLogList();
+				}
+			},
+		},
 		mounted() {
     		//获取表格最大高度
 			this.onResize();

@@ -98,16 +98,20 @@
 							</div>
 						</template>
 					</el-table-column>
-					<!-- <el-table-column label="图片" width="150" >
+					<el-table-column label="图片" width="180" >
 						<template slot-scope="scope">
-							<div v-if="scope.row.images.length == 0">暂无</div>
-							<el-carousel trigger="hover" indicator-position="none" :autoplay="false" height="100px" v-if="scope.row.images.length > 0 && loading == false">
-								<el-carousel-item v-for="item in scope.row.images" :key="item">
-									<el-image :z-index="2006" class="image" :src="item" fit="scale-down" :preview-src-list="scope.row.images"></el-image>
+							<el-tabs size="mini" v-model="scope.row.active_index" @tab-click="handleClick($event,scope.$index)">
+								<el-tab-pane :label="item.shooting_style_name" :name="index.toString()" v-for="(item,index) in scope.row.shooting_style_list"></el-tab-pane>
+							</el-tabs>
+							<div :style="{'width':'100%','height':scope.row.style_loading?'100px':'0px'}" v-loading="scope.row.style_loading"></div>
+							<div v-if="scope.row.shooting_style_list[parseInt(scope.row.active_index)].img.length == 0 && !scope.row.style_loading">暂无</div>
+							<el-carousel trigger="hover" indicator-position="none" :autoplay="false" height="100px" v-if="scope.row.shooting_style_list[parseInt(scope.row.active_index)].img.length > 0 && !scope.row.style_loading">
+								<el-carousel-item v-for="item in scope.row.shooting_style_list[parseInt(scope.row.active_index)].img" :key="item">
+									<el-image :z-index="2006" class="image" :src="domain + item" fit="scale-down" @click="viewImage(scope.row.shooting_style_list,scope.row.active_index)"></el-image>
 								</el-carousel-item>
 							</el-carousel>
 						</template>
-					</el-table-column> -->
+					</el-table-column>
 					<el-table-column label="网盘地址">
 						<template slot-scope="scope">
 							<el-button class="pre_wrap" size="small" type="text" @click="windowOpen(scope.row.net_disk_address,scope.row.or_net_disk_address)" v-if="scope.row.or_net_disk_address !== ''">访问链接</el-button>
@@ -200,12 +204,33 @@
 				<img class="close_icon" src="../../../../static/close_icon.png" @click="delist_dialog = false">
 			</div>
 			<div class="remark_content">
-				<el-input type="textarea" :rows="3" placeholder="请输入下架原因" v-model="off_reason">
-				</el-input>
+				
 			</div>
 			<div slot="footer" class="dialog_footer">
 				<el-button size="mini" @click="delist_dialog = false">取消</el-button>
 				<el-button size="mini" type="primary" @click="clickDelist">确认</el-button>
+			</div>
+		</el-dialog>
+		<!-- 图片放大 -->
+		<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" destroy-on-close :visible.sync="view_dialog">
+			<!-- <div slot="title" class="dialog_title">
+				<div>确认下架？</div>
+				<img class="close_icon" src="../../../../static/close_icon.png" @click="delist_dialog = false">
+			</div> -->
+			<div class="remark_content">
+				<el-tabs size="mini" v-model="view_active_index" @tab-click="handleViewClick($event,scope.$index)">
+					<el-tab-pane :label="item.shooting_style_name" :name="index" v-for="(item,index) in view_shooting_style_list"></el-tab-pane>
+				</el-tabs>
+				<div :style="{'width':'100%','height':scope.row.style_loading?'100px':'0px'}" v-loading="scope.row.style_loading"></div>
+				<div v-if="scope.row.shooting_style_list[parseInt(scope.row.active_index)].img.length == 0 && !scope.row.style_loading">暂无</div>
+				<el-carousel trigger="hover" indicator-position="none" :autoplay="false" height="100px" v-if="scope.row.shooting_style_list[parseInt(scope.row.active_index)].img.length > 0 && !scope.row.style_loading">
+					<el-carousel-item v-for="item in scope.row.shooting_style_list[parseInt(scope.row.active_index)].img" :key="item">
+						<el-image :z-index="2006" class="image" :src="domain + item" fit="scale-down" @click="viewImage(scope.$index,scope.row.active_index,scope.row.shooting_style_list)"></el-image>
+					</el-carousel-item>
+				</el-carousel>
+			</div>
+			<div slot="footer" class="dialog_footer">
+				<el-button size="mini" type="primary" @click="view_dialog = false">关闭</el-button>
 			</div>
 		</el-dialog>
 	</div>
@@ -259,8 +284,8 @@
 		}
 	}
 	.remark_content{
-			padding:20rem;
-		}
+		padding:20rem;
+	}
 </style>
 <script>
 	import commonResource from '../../../../api/common_resource.js'
@@ -357,6 +382,8 @@
 				refuse_reason:"",			//拒绝原因
 				delist_dialog:false,		//下架弹窗
 				off_reason:"",				//下架原因
+				view_active_index:0,		//图片放大的选中下标
+				view_shooting_style_list:[],//放大图片列表
 			}
 		},
 		created(){
@@ -373,30 +400,12 @@
 			//获取列表
 			this.getGoodsList();
 		},
-		activated(){
-			if(!this.$route.meta.use_cache){
-				this.page = 1;
-				//获取供应商列表
-				this.ajaxSupplierList();
-    			//获取类目列表
-				this.ajaxCateList();
-    			//市场列表
-				this.ajaxMarketList();
-    			//拍摄风格列表
-				this.ajaxStyleList();
-    			//分类列表
-				this.ajaxClassList();
-				this.supplier_ids = [];
-				this.category_ids = [];
-				this.market_ids = [];
-				this.classification_ids = [];
-				this.shooting_style_ids = [];
-				this.date = [];
-				this.check_status_id = "";
-				this.search = "";
+		props:{
+			//监听url变化
+			webUrl:{
+				type:String,
+			default:''
 			}
-			//获取列表
-			this.getGoodsList();
 		},
 		mounted() {
     		//获取表格最大高度
@@ -417,7 +426,11 @@
 			is_up:function(n,o){
     			//获取表格最大高度
 				this.onResize();
-			}
+			},
+			//监听切换到商品管理页面获取指定商品的信息
+			webUrl:function(n,o){
+				console.log(n)
+			},
 		},
 		methods: {
     		//监听屏幕大小变化
@@ -620,22 +633,20 @@
 						this.total = res.data.data.total;
 						let data = res.data.data.data;
 						this.is_check = res.data.data.check;
-						// data.map(item => {
-						// 	let images = [];
-						// 	item.img.map(i => {
-						// 		images.push(this.domain + i);
-						// 	})
-						// 	item.images = images;
-						// 	if(item.i_id){
-						// 		item.new_i_id = item.i_id.split(',')
-						// 	}
-						// 	if(item.bd_i_id){
-						// 		item.new_bd_i_id = item.bd_i_id.split(',')
-						// 	}
-						// 	if(item.supplier_ksbm){
-						// 		item.new_supplier_ksbm = item.supplier_ksbm.split(',')
-						// 	}
-						// })
+						data.map(item => {
+							item['active_index'] = '0';
+							item['style_loading'] = false;
+							
+							if(item.i_id){
+								item.new_i_id = item.i_id.split(',')
+							}
+							if(item.bd_i_id){
+								item.new_bd_i_id = item.bd_i_id.split(',')
+							}
+							if(item.supplier_ksbm){
+								item.new_supplier_ksbm = item.supplier_ksbm.split(',')
+							}
+						})
 						this.data = data;
 						this.$refs.table.bodyWrapper.scrollTop = 0;
 					}else{
@@ -788,6 +799,29 @@
 						message: '已取消'
 					});          
 				});
+			},
+			//切换风格图展示
+			handleClick(event,index){
+				let current_row = JSON.parse(JSON.stringify(this.data[index]));
+				let style_id = current_row.shooting_style_list[event.index].style_id;
+				current_row.style_loading = true;
+				this.$set(this.data,index,current_row);
+				resource.getStyleImgs({style_id:style_id}).then(res => {
+					if(res.data.code == 1){
+						let data = res.data.data;
+						current_row.shooting_style_list[event.index].img = res.data.data;
+						current_row.active_index = event.index.toString();
+						current_row.style_loading = false;
+						this.$set(this.data,index,current_row);
+					}else{
+						this.$message.warning(res.data.msg);
+					}
+				})
+			},
+			//点击放大查看图片
+			viewImage(shooting_style_list,active_index){
+				this.view_active_index = active_index;
+				this.view_shooting_style_list = shooting_style_list;
 			},
 			//监听更多操作按钮
 			handleCommand(e,id,name){

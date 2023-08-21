@@ -118,6 +118,7 @@ let path = {
   editStudio:'api/supplier_manager/edit_studio',            //编辑工作室
   addStudio:'api/supplier_manager/add_studio',              //添加工作室
   delStudio:'api/supplier_manager/del_studio',              //删除工作室
+  getStyleImgs:'api/productstyle/getstyleimgs',             //商品管理获取指定风格图片
 };    
 export default {
   //类目列表接口
@@ -647,5 +648,9 @@ export default {
   //删除工作室
   delStudio(params) {
     return http.post(path.delStudio, params);
+  },
+  //商品管理获取指定风格图片
+  getStyleImgs(params) {
+    return http.get(path.getStyleImgs, params);
   },
 };
