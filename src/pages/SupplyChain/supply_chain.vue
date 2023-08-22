@@ -35,11 +35,7 @@
 				<div class="edit_record" v-if="show_record" @click="$router.push('/edit_record')">修改记录</div>
 			</div>
 			<div class="right_content_box">
-				<keep-alive>
-					<router-view v-if="$route.meta.keep_alive">
-					</router-view>
-				</keep-alive>
-				<router-view v-if="!$route.meta.keep_alive"></router-view>
+				<router-view></router-view>
 			</div>
 		</div>
 	</div>

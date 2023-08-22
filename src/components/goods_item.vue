@@ -998,7 +998,7 @@
 				resource.addSelectCart(arg).then(res => {
 					if(res){
 						this.$message.success(res.data.msg);
-						this.$emit('setStatus',this.info.style_id)
+						this.$emit('setStatus',this.info.goods_id)
 						let arg = {
 							type:'add',
 							num:1

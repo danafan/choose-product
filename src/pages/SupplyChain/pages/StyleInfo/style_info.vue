@@ -235,7 +235,7 @@
 				<img class="close_icon" src="../../../../static/close_icon.png" @click="edit_dialog = false">
 			</div>
 			<div class="remark_content">
-				<EditGoods :edit_goods_id="goods_id"/>
+				<EditGoods :edit_goods_id="goods_id" @callBack="edit_dialog = false"/>
 			</div>
 			<div slot="footer" class="dialog_footer">
 				<el-button size="mini" type="primary" @click="edit_dialog = false">关闭</el-button>
@@ -956,7 +956,6 @@
 			//点击编辑
 			editFn(goods_id){
 				this.goods_id = goods_id.toString();
-				console.log(this.goods_id)
 				this.edit_dialog = true;
 			},
 			//获取更新后的商品信息

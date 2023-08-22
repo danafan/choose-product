@@ -30,12 +30,6 @@
 							</el-option>
 						</el-select>
 					</el-form-item>
-					<!-- <el-form-item label="拍摄风格：">
-						<el-select v-model="shooting_style_ids" multiple filterable clearable :placeholder="is_detail?'':'请选择拍摄风格'" :disabled="is_detail || goods_type == '2'|| goods_type == '5'">
-							<el-option v-for="item in style_list" :key="item.shooting_style_id" :label="item.shooting_style_name" :value="item.shooting_style_id">
-							</el-option>
-						</el-select>
-					</el-form-item> -->
 					<el-form-item label="面料：">
 						<el-input :placeholder="is_detail?'':'面料'" v-model="arg.fabric" :disabled="is_detail">
 						</el-input>
@@ -178,56 +172,80 @@
 			<div class="form_row">
 				<el-form size="small" label-width="100px">
 					<el-form-item label="拍摄风格：">
-						<div class="flex border_bottom">
-							<div class="relative style_item flex pointer" :class="[{'active_item':active_style_index == index}]" :key="item.shooting_style_id" v-for="(item,index) in style_card_list" @click="checkStyleTab(index)">
-								<img class="delete_style_icon" src="../../../../static/delete_style_icon.png" v-if="goods_type != '3'" @click.stop="deleteStyleTab(index)">
-								<div>{{item.shooting_style_name}}</div>
-							</div>
-							<el-popover ref="stylePopover" placement="right-start" width="400" trigger="click">
-								<div>
-									<div style="margin-bottom: 10px;">选择风格</div>
-									<el-table size="mini" :data="style_table_data" :max-height="240" tooltip-effect="dark" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" @selection-change="styleChange">
-										<el-table-column type="selection" width="55" fixed>
-										</el-table-column>
-										<el-table-column label="风格" prop="shooting_style_name">
-										</el-table-column>
-									</el-table>
+						<div>
+							<div class="flex jse" style="margin-bottom:10px">
+								<el-popover ref="stylePopover" placement="right-start" width="400" trigger="click">
+									<div>
+										<el-select v-model="selected_style" multiple placeholder="全部风格">
+											<el-option
+											v-for="item in style_table_data"
+											:key="item.shooting_style_id"
+											:label="item.shooting_style_name"
+											:value="item.shooting_style_id">
+										</el-option>
+									</el-select>
 									<div class="dialog_footer">
 										<el-button size="small" type="primary" @click="setStyleFn">保存</el-button>
 									</div>
 								</div>
-								<div class="style_item flex ac pointer" slot="reference" v-if="goods_type != '3'">
-									<img class="add_style_icon" src="../../../../static/add_style_icon.png" @click="import_dialog = false">
-									<div>新增</div>
-								</div>
+								<el-button size="mini" type="primary" slot="reference" v-if="goods_type != '3'">添加</el-button>
 							</el-popover>
 						</div>
-						<UploadFile v-if="show_style_upload && style_card_list.length > 0" :is_multiple="true" :max_num="9" :current_num="style_card_list.length > 0?style_card_list[active_style_index].image_arr.length:0" :img_list="style_card_list.length > 0?style_card_list[active_style_index].image_arr:[]" :only_view="goods_type == '3'" @callbackFn="currentStyleImgCallBackFn"/>
-						<!-- <div v-if="is_detail">
-							<el-image class="card_img" v-for="item in preview_image" :src="item" fit="scale-down" :preview-src-list="preview_image"></el-image>
+						<div class="flex" v-for="(item,index) in style_card_list">
+							<div class="relative style_item flex ac jc" >
+								<div>{{item.shooting_style_name}}</div>
+								<img class="delete_style_icon" src="../../../../static/delete_style_icon.png" v-if="goods_type != '3'">
+							</div>
+							<UploadFile :size="80" :is_multiple="true" :max_num="9" :current_num="style_card_list[active_style_index].image_arr.length" :img_list="style_card_list[active_style_index].image_arr" :only_view="goods_type == '3'"/>
 						</div>
-						<UploadFile :is_main="true" :img_list="img_list" :is_multiple="true" :current_num="arg.img.length" :max_num="99" @callbackFn="callbackFn" v-else/> -->
-					</el-form-item>
-				</el-form>
-			</div>
-			<div class="bottom_row" v-if="goods_type == '1' || goods_type == '2' || goods_type == '5'">
-				<el-button size="small" type="primary" @click="commitEditGoods">提交</el-button>
-			</div>
-			<div class="bottom_row" v-if="goods_type == '4'">
-				<el-button size="small" type="primary" @click="auditFn('1')">同意</el-button>
-				<el-button size="small" type="primary" @click="auditFn('2')">拒绝</el-button>
-			</div>
-		</el-card>
-	</div>
-</template>
-<script>
-	import commonResource from '../../../../api/common_resource.js'
-	import resource from '../../../../api/chain_resource.js'
+					</div>
 
-	import UploadFile from '../../../../components/upload_file.vue'
-	export default{
-		data(){
-			return{
+							<!-- <div class="flex border_bottom">
+								<div class="relative style_item flex pointer" :class="[{'active_item':active_style_index == index}]" :key="item.shooting_style_id" v-for="(item,index) in style_card_list" @click="checkStyleTab(index)">
+									<img class="delete_style_icon" src="../../../../static/delete_style_icon.png" v-if="goods_type != '3'" @click.stop="deleteStyleTab(index)">
+									<div>{{item.shooting_style_name}}</div>
+								</div>
+								<el-popover ref="stylePopover" placement="right-start" width="400" trigger="click">
+									<div>
+										<div style="margin-bottom: 10px;">选择风格</div>
+										<el-table size="mini" :data="style_table_data" :max-height="350" tooltip-effect="dark" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" @selection-change="styleChange">
+											<el-table-column type="selection" width="55" fixed>
+											</el-table-column>
+											<el-table-column label="风格" prop="shooting_style_name">
+											</el-table-column>
+										</el-table>
+										<div class="dialog_footer">
+											<el-button size="small" type="primary" @click="setStyleFn">保存</el-button>
+										</div>
+									</div>
+									<div class="style_item flex ac pointer" slot="reference" v-if="goods_type != '3'">
+										<img class="add_style_icon" src="../../../../static/add_style_icon.png" @click="import_dialog = false">
+										<div>新增</div>
+									</div>
+								</el-popover>
+							</div>
+							<UploadFile v-if="show_style_upload && style_card_list.length > 0" :is_multiple="true" :max_num="9" :current_num="style_card_list.length > 0?style_card_list[active_style_index].image_arr.length:0" :img_list="style_card_list.length > 0?style_card_list[active_style_index].image_arr:[]" :only_view="goods_type == '3'" @callbackFn="currentStyleImgCallBackFn"/> -->
+							</el-form-item>
+						</el-form>
+					</div>
+					<div class="bottom_row" v-if="goods_type == '1' || goods_type == '2' || goods_type == '5'">
+						<el-button size="small" type="primary" @click="commitEditGoods">提交</el-button>
+					</div>
+					<div class="bottom_row" v-if="goods_type == '4'">
+						<el-button size="small" type="primary" @click="auditFn('1')">同意</el-button>
+						<el-button size="small" type="primary" @click="auditFn('2')">拒绝</el-button>
+					</div>
+				</el-card>
+			</div>
+		</template>
+		<script>
+			import commonResource from '../../../../api/common_resource.js'
+			import resource from '../../../../api/chain_resource.js'
+
+			import UploadFile from '../../../../components/upload_file.vue'
+			export default{
+				data(){
+					return{
 				is_detail:false,		//是否是详情
 				page_type:'',			//页面来源（goods:商品；feekback:反馈）
 				goods_type:"",			//类型（1:添加；2:编辑；3:查看；4:审核；5：重新提交）
@@ -342,7 +360,6 @@
 				var arg = {
 					goods_id:this.goods_id
 				}
-				console.log(arg)
 				if(this.page_type == 'goods'){	//商品管理
 					if(this.goods_type == '3'){	//查看
 						resource.getOnepro(arg).then(res => {
@@ -536,14 +553,18 @@
 				})
 			},
 			//切换商品风格添加表格切换多选
-			styleChange(val){
-				this.selected_style = val;
-			},
+			// styleChange(val){
+			// 	this.selected_style = val;
+			// },
 			//确认商品风格添加表格切换多选
 			setStyleFn(){
 				this.selected_style.map(item => {
-					item['image_arr'] = [];
-					this.style_card_list.push(item);
+					let style_card_item = {
+						shooting_style_id:item,
+						shooting_style_name:item,
+						image_arr:[]
+					}
+					this.style_card_list.push(style_card_item);
 				})
 				this.style_table_data = this.filterStyle(this.style_table_data,this.style_card_list);
 				this.$refs.stylePopover.doClose();
@@ -687,7 +708,7 @@
 									resource.editGoodsPost(arg).then(res => {
 										if(res.data.code == 1){
 											this.$message.success(res.data.msg);
-											this.$router.go(-1);
+											this.$emit('callBack');
 										}else{
 											this.$message.warning(res.data.msg);
 										}
@@ -871,13 +892,17 @@
 				display: flex;
 				justify-content: center;
 			}
+			.add_style{
 
+			}
 			.style_item{
-				border: 1px solid #DDDDDD;
-				padding: 10rem 20rem;
+				border: 1px solid #FFC998;
+				background: #FFFCFA;
+				color: #E47A1A;
 				font-size: 14rem;
-				color: #333333;
-				position:relative;
+				width:80px;
+				height:80px;
+				margin-right:24px;
 				.delete_style_icon{
 					position: absolute;
 					top: 0;
@@ -890,11 +915,6 @@
 					width: 14rem;
 					height: 14rem;
 				}
-			}
-			.active_item{
-				border: 1px solid #FFC998;
-				background: #FFFCFA;
-				color: #E47A1A;
 			}
 			.border_bottom{
 				border-bottom:1px solid #DDDDDD;

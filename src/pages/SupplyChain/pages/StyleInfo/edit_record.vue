@@ -13,6 +13,12 @@
 							</el-option>
 						</el-select>
 					</el-form-item>
+					<el-form-item label="供应商：">
+						<el-select v-model="supplier_ids" clearable multiple filterable collapse-tags placeholder="全部">
+							<el-option v-for="item in supplier_list" :key="item.supplier_id" :label="item.supplier_name" :value="item.supplier_id">
+							</el-option>
+						</el-select>
+					</el-form-item>
 					<el-form-item label="款号">
 						<el-input placeholder="款号" v-model="style_name"></el-input>
 					</el-form-item>
@@ -64,7 +70,8 @@
 					<el-table-column label="修改提交人" prop="add_admin_name"></el-table-column>
 					<el-table-column label="审核状态" prop="common_text">
 						<template slot-scope="scope">
-							<div>{{scope.row.check_status | check_status_filter}}</div>
+							<div>{{scope.row.check_status | check_status_filter}}（{{scope.row.check_admin_name}}）</div>
+							<div>{{scope.row.check_time}}</div>
 						</template>
 					</el-table-column>
 					<el-table-column label="操作" width="120" fixed="right">
@@ -164,6 +171,8 @@
 		data(){
 			return{
 				loading:false,
+				supplier_list:[],		//供应商列表
+				supplier_ids:[],		//选中的供应商
 				style_name:"",			//款式编码
 				username:"",			//提交人
 				status_list:[{
@@ -221,6 +230,8 @@
 			}
 		},
 		created(){
+			//获取供应商列表
+			this.ajaxSupplierList();
 			//获取列表
 			this.editLogList();
 		},
@@ -260,9 +271,20 @@
 					this.max_height = card_box_height - form_height + 70 + "px";
 				});
 			},
+			//获取供应商列表
+			ajaxSupplierList(){
+				commonResource.ajaxSupplierList().then(res => {
+					if(res.data.code == 1){
+						this.supplier_list = res.data.data;
+					}else{
+						this.$message.warning(res.data.msg);
+					}
+				})
+			},
 			//获取列表
 			editLogList(){
 				let arg = {
+					supplier_id:this.supplier_ids.join(','),
 					status:this.status,
 					style_name:this.style_name,
 					start_date:this.date && this.date.length > 0?this.date[0]:"",
