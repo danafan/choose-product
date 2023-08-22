@@ -7,8 +7,8 @@
 			</div>
 		</div>
 		<div class="flex-1">
-			<StyleInfo :webUrl="web_url" v-show="web_url == 'style_info'"/>
-			<EditRecord :webUrl="web_url" v-show="web_url == 'edit_record'"/>
+			<StyleInfo :webUrl="web_url" :goods_ids="goods_ids" v-show="web_url == 'style_info'"/>
+			<EditRecord :webUrl="web_url" v-show="web_url == 'edit_record'" @updateGoods="updateGoods"/>
 		</div>
 	</div>
 </template>
@@ -18,6 +18,7 @@
 	export default{
 		data(){
 			return{
+				goods_ids:'',			//修改记录审核后更新的goods_id
 				tab_list:[],			//顶部导航列表
 				active_index:0,			//当前选中的导航下标
 				web_url:""
@@ -44,6 +45,11 @@
 			});
 			this.tab_list = child_arr[0].list;
 			this.web_url = this.tab_list[0].web_url;
+		},
+		methods:{
+			updateGoods(goods_ids){
+				this.goods_ids = goods_ids;
+			},
 		},
 		components:{
 			StyleInfo,

@@ -416,12 +416,12 @@
 					}else{
 						let log_ids = this.multiple_selection.map(item => {
 							return item.log_id;
-						});
+						}); 
 						this.log_id = log_ids.join(',');
 						this.audit_dialog = true;
 					}
 				}else{					//单个编辑
-					this.log_id = log_id;
+					this.log_id = log_id.toString();
 					this.audit_dialog = true;
 				}
 			},
@@ -431,10 +431,17 @@
 					log_id:this.log_id,
 					status:this.audit_status
 				}
+
 				resource.editlogAudit(arg).then(res => {
 					if(res.data.code == 1){
 						this.$message.success(res.data.msg);
 						this.audit_dialog = false;
+						let new_log_ids = this.log_id.split(',');
+						let newArr = this.data.filter((v) => new_log_ids.some((val) => val == v.log_id))
+						let goods_ids = newArr.map(item => {
+							return item.goods_id
+						})
+						this.$emit('updateGoods',goods_ids.join(','));
 						//获取列表
 						this.editLogList()
 					}else{

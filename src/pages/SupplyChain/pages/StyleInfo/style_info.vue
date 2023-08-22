@@ -420,7 +420,12 @@
 			webUrl:{
 				type:String,
 			default:''
-			}
+			},
+			//修改记录审核后更新的goods_id
+			goods_ids:{
+				type:String,
+			default:''
+			},
 		},
 		mounted() {
     		//获取表格最大高度
@@ -445,6 +450,10 @@
 			//监听切换到商品管理页面获取指定商品的信息
 			webUrl:function(n,o){
 				console.log(n)
+			},
+			//修改记录审核后更新的goods_id
+			goods_ids:function(n,o){
+				this.getRefreshInfo(n);
 			},
 		},
 		methods: {
@@ -949,6 +958,37 @@
 				this.goods_id = goods_id.toString();
 				console.log(this.goods_id)
 				this.edit_dialog = true;
+			},
+			//获取更新后的商品信息
+			getRefreshInfo(goods_ids){
+				resource.getRefreshInfo({goods_ids:goods_ids}).then(res => {
+					if(res.data.code == 1){
+						let update_data = res.data.data;
+						update_data.map(item => {
+							let ele_index = this.data.findIndex(i => {
+								return item.goods_id == i.goods_id;
+							})
+							item['active_index'] = '0';
+							item['style_loading'] = false;
+							
+							if(item.i_id){
+								item.new_i_id = item.i_id.split(',')
+							}
+							if(item.bd_i_id){
+								item.new_bd_i_id = item.bd_i_id.split(',')
+							}
+							if(item.supplier_ksbm){
+								item.new_supplier_ksbm = item.supplier_ksbm.split(',')
+							}
+							if(ele_index >= 0){
+								console.log(item)
+								this.$set(this.data,ele_index,item)
+							}
+						})
+					}else{
+						this.$message.warning(res.data.msg);
+					}
+				})
 			}
 		},
 		components:{
