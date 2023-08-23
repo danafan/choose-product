@@ -40,7 +40,8 @@
 					<el-table-column label="供应商" prop="supplier_name"></el-table-column>
 					<el-table-column label="图片" width="200">
 						<template slot-scope="scope">
-							<el-image :z-index="2006" class="image" :src="domain + scope.row.img" fit="scale-down" :preview-src-list="[domain + scope.row.img]"></el-image>
+							<div v-if="scope.row.img == ''">未上传</div>
+							<el-image :z-index="2006" class="image" :src="domain + scope.row.img" fit="scale-down" :preview-src-list="[domain + scope.row.img]" v-else></el-image>
 						</template>
 					</el-table-column>
 					<el-table-column label="原商品信息/修改后商品信息" width="400">
@@ -49,9 +50,10 @@
 								<div class="flex" v-for="(item,index) in scope.row.info_arr.length">
 									<div class="flex as" style="width:180px;text-align: start;margin-right:10px" v-if="scope.row.info_arr[index].indexOf('：') == -1">
 										<div class="table_header_text">图片：</div>
-										<div class="flex-1 flex-warp">
+										<div class="flex-1 flex-warp" v-if="scope.row.info_arr[index].length > 0">
 											<el-image :z-index="2006" class="edit_image" :src="iii" fit="scale-down":preview-src-list="scope.row.info_arr[index]" v-for="iii in scope.row.info_arr[index]"></el-image>
 										</div>
+										<div v-else>未上传</div>
 									</div>
 									<div style="width:180px;text-align: start;margin-right:10px" v-else>{{scope.row.info_arr[index]}}</div>
 
@@ -70,7 +72,10 @@
 					<el-table-column label="修改提交人" prop="add_admin_name"></el-table-column>
 					<el-table-column label="审核状态" prop="common_text">
 						<template slot-scope="scope">
-							<div>{{scope.row.check_status | check_status_filter}}（{{scope.row.check_admin_name}}）</div>
+							<div class="flex">
+								<div>{{scope.row.check_status | check_status_filter}}</div>
+								<div v-if="scope.row.check_admin_name">（{{scope.row.check_admin_name}}）</div>
+							</div>
 							<div>{{scope.row.check_time}}</div>
 						</template>
 					</el-table-column>
@@ -310,9 +315,11 @@
 									}
 								}else if(k == 'all_imgs'){
 									let all_imgs_arr = [];
-									item.info[k].split(',').map(iii => {
-										all_imgs_arr.push(this.domain + iii)
-									})
+									if(item.info[k] != ''){
+										item.info[k].split(',').map(iii => {
+											all_imgs_arr.push(this.domain + iii)
+										})
+									}
 									info_arr.push(all_imgs_arr)
 								}else{
 									info_arr.push(`${this.label_filter(k)}：${item.info[k]}`)
@@ -330,9 +337,11 @@
 									}
 								}else if(k == 'all_imgs'){
 									let all_imgs_arr = [];
-									item.edit_info[k].split(',').map(iii => {
-										all_imgs_arr.push(this.domain + iii)
-									})
+									if(item.edit_info[k] != ''){
+										item.edit_info[k].split(',').map(iii => {
+											all_imgs_arr.push(this.domain + iii)
+										})
+									}
 									edit_info_arr.push(all_imgs_arr)
 								}else{
 									edit_info_arr.push(`${this.label_filter(k)}：${item.edit_info[k]}`)

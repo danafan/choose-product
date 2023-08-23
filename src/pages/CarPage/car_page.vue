@@ -259,15 +259,15 @@
 					if(res.data.code == 1){
 						this.loading = false;
 						let car_goods = res.data.data.data;
-						console.log(car_goods)
 						car_goods.map(item => {
 							let images = [];
 							if(item.img){
-								item.img.map(i => {
+								item.img.split(',').map(i => {
 									images.push(this.domain + i);
 								})
 							}
-							item.images = images;
+							item['images'] = images;
+
 							if(item.i_id){
 								item.new_i_id = item.i_id.split(',')
 							}

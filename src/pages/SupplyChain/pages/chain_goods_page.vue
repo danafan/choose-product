@@ -7,7 +7,7 @@
 			</div>
 		</div>
 		<div class="flex-1">
-			<StyleInfo :webUrl="web_url" :goods_ids="goods_ids" v-show="web_url == 'style_info'"/>
+			<StyleInfo :goods_ids="goods_ids" v-show="web_url == 'style_info'"/>
 			<EditRecord :webUrl="web_url" v-show="web_url == 'edit_record'" @updateGoods="updateGoods"/>
 		</div>
 	</div>

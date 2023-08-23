@@ -155,9 +155,8 @@
 							<el-button type="text" size="small" v-if="(scope.row.check_status == 1 || scope.row.check_status == 4) && button_list.agree_refuse == 1" @click="$router.push('/edit_goods?page_type=goods&goods_type=4&goods_id=' + scope.row.goods_id)">审核</el-button>
 							<el-button type="text" size="small" v-if="(scope.row.check_status == 2 || scope.row.check_status == 5 || scope.row.check_status == 6) && button_list.in_out == 1" @click="checkStatus(scope.row.goods_id,scope.row.check_status)">{{scope.row.check_status == 2 || scope.row.check_status == 6?'下架':'上架'}}</el-button>
 							<el-button size="small" type="text" @click="adjustAudit(scope.row.style_id,scope.row.cost_price,scope.row.edit_price)" v-if="scope.row.price_status == '1' && button_list.price_btn == 1">调价审批</el-button>
-							<!-- <el-button style="margin-right: 10px" type="text" size="small" v-if="scope.row.check_status != 3 && scope.row.check_status != 5 && button_list.edit == 1" @click="$router.push('/edit_goods?page_type=goods&goods_type=2&goods_id=' + scope.row.goods_id);">编辑</el-button> -->
-							<el-button style="margin-right: 10px" type="text" size="small" v-if="scope.row.check_status != 3 && scope.row.check_status != 5 && button_list.edit == 1" @click="editFn(scope.row.goods_id)">编辑</el-button>
-							<el-button type="text" size="small" v-if="(scope.row.check_status == 3 || scope.row.check_status == 5) && button_list.reset == 1" @click="$router.push('/edit_goods?page_type=goods&goods_type=5&goods_id=' + scope.row.goods_id)">重新提交</el-button>
+							<el-button style="margin-right: 10px" type="text" size="small" v-if="scope.row.check_status != 3 && scope.row.check_status != 5 && button_list.edit == 1" @click="editFn(scope.row.goods_id,'编辑商品')">编辑</el-button>
+							<el-button type="text" size="small" v-if="(scope.row.check_status == 3 || scope.row.check_status == 5) && button_list.reset == 1"  @click="editFn(scope.row.goods_id,'重新提交')">重新提交</el-button>
 							<el-dropdown style="margin-left: 10px;" size="small" @command="handleCommand($event,scope.row.goods_id,scope.row.style_name)" v-if="scope.row.check_status != 1 && scope.row.check_status != 4 && (button_list.info == 1 || button_list.del == 1)">
 								<el-button type="text" size="small">
 									更多<i class="el-icon-arrow-down el-icon--right"></i>
@@ -228,14 +227,14 @@
 				<el-button size="mini" type="primary" @click="view_dialog = false">关闭</el-button>
 			</div>
 		</el-dialog>
-		<!-- 编辑弹窗 -->
-		<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" destroy-on-close width="65%" :visible.sync="edit_dialog">
+		<!-- 编辑/重新提交弹窗 -->
+		<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" width="65%" top="15px" :visible.sync="edit_dialog">
 			<div slot="title" class="dialog_title">
-				<div>编辑商品</div>
+				<div>{{edit_dialog_title}}</div>
 				<img class="close_icon" src="../../../../static/close_icon.png" @click="edit_dialog = false">
 			</div>
 			<div class="remark_content">
-				<EditGoods :edit_goods_id="goods_id" @callBack="edit_dialog = false"/>
+				<EditGoods v-if="edit_dialog" :edit_goods_id="goods_id" @callBack="editCallBack"/>
 			</div>
 			<div slot="footer" class="dialog_footer">
 				<el-button size="mini" type="primary" @click="edit_dialog = false">关闭</el-button>
@@ -398,7 +397,8 @@
 				view_active_index:'0',		//图片放大顶部标签的选中下标
 				default_img_index:0,		//图片放大默认图片下标
 				view_shooting_style_list:[],//放大图片列表
-				edit_dialog:false,			//编辑弹窗
+				edit_dialog:false,			//编辑/重新提交弹窗
+				edit_dialog_title:"",		//编辑/重新提交标题
 			}
 		},
 		created(){
@@ -416,11 +416,6 @@
 			this.getGoodsList();
 		},
 		props:{
-			//监听url变化
-			webUrl:{
-				type:String,
-			default:''
-			},
 			//修改记录审核后更新的goods_id
 			goods_ids:{
 				type:String,
@@ -446,10 +441,6 @@
 			is_up:function(n,o){
     			//获取表格最大高度
 				this.onResize();
-			},
-			//监听切换到商品管理页面获取指定商品的信息
-			webUrl:function(n,o){
-				console.log(n)
 			},
 			//修改记录审核后更新的goods_id
 			goods_ids:function(n,o){
@@ -954,9 +945,16 @@
 				}
 			},
 			//点击编辑
-			editFn(goods_id){
+			editFn(goods_id,edit_dialog_title){
+				this.edit_dialog_title = edit_dialog_title;
 				this.goods_id = goods_id.toString();
 				this.edit_dialog = true;
+			},
+			//编辑和重新提交之后的回调
+			editCallBack(){
+				this.edit_dialog = false;
+				//获取更新后的商品信息
+				this.getRefreshInfo(this.goods_id);
 			},
 			//获取更新后的商品信息
 			getRefreshInfo(goods_ids){
@@ -980,7 +978,6 @@
 								item.new_supplier_ksbm = item.supplier_ksbm.split(',')
 							}
 							if(ele_index >= 0){
-								console.log(item)
 								this.$set(this.data,ele_index,item)
 							}
 						})
