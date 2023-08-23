@@ -305,9 +305,9 @@
 				})
 			},
 			//设置已加入
-			setStatus(style_id){
+			setStatus(goods_id){
 				this.goods_list.map(item => {
-					if(item.style_id == style_id){
+					if(item.goods_id == goods_id){
 						item.in_cart = 1; 
 					}
 				})

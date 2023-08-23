@@ -171,7 +171,7 @@
 			</div>
 			<div class="form_row">
 				<el-form size="small" label-width="100px">
-					<el-form-item label="拍摄风格：">
+					<el-form-item label="拍摄风格：" required>
 						<div>
 							<div class="flex jse" style="margin-bottom:10px">
 								<el-popover ref="stylePopover" placement="right-start" width="400" trigger="click">
@@ -188,71 +188,47 @@
 										<el-button size="small" type="primary" @click="setStyleFn">保存</el-button>
 									</div>
 								</div>
-								<el-button size="mini" type="primary" slot="reference" v-if="goods_type != '3'">添加</el-button>
+								<el-button size="mini" type="primary" slot="reference" v-if="goods_type != '3' || goods_type != '4'">添加</el-button>
 							</el-popover>
 						</div>
 						<div class="flex" v-for="(item,index) in style_card_list">
 							<div class="relative style_item flex ac jc" >
 								<div>{{item.shooting_style_name}}</div>
-								<img class="delete_style_icon" src="../../../../static/delete_style_icon.png" v-if="goods_type != '3'">
+								<img class="delete_style_icon" src="../../../../static/delete_style_icon.png" v-if="goods_type != '3' || goods_type != '4'" @click.stop="deleteStyleTab(index)">
 							</div>
-							<UploadFile :size="80" :is_multiple="true" :max_num="9" :current_num="style_card_list[active_style_index].image_arr.length" :img_list="style_card_list[active_style_index].image_arr" :only_view="goods_type == '3'"/>
+							<div class="flex-1">
+								<UploadFile :size="80" :is_multiple="true" :max_num="9" :current_num="style_card_list[index].image_arr.length" :img_list="style_card_list[index].image_arr" :only_view="goods_type == '3' || goods_type == '4'" @callbackFn="currentStyleImgCallBackFn(index,arguments)"/>
+							</div>
+							
 						</div>
 					</div>
+				</el-form-item>
+			</el-form>
+		</div>
+		<div class="bottom_row" v-if="goods_type == '1' || goods_type == '2' || goods_type == '5'">
+			<el-button size="small" type="primary" @click="commitEditGoods">提交</el-button>
+		</div>
+		<div class="bottom_row" v-if="goods_type == '4'">
+			<el-button size="small" type="primary" @click="auditFn('1')">同意</el-button>
+			<el-button size="small" type="primary" @click="auditFn('2')">拒绝</el-button>
+		</div>
+	</el-card>
+</div>
+</template>
+<script>
+	import commonResource from '../../../../api/common_resource.js'
+	import resource from '../../../../api/chain_resource.js'
 
-							<!-- <div class="flex border_bottom">
-								<div class="relative style_item flex pointer" :class="[{'active_item':active_style_index == index}]" :key="item.shooting_style_id" v-for="(item,index) in style_card_list" @click="checkStyleTab(index)">
-									<img class="delete_style_icon" src="../../../../static/delete_style_icon.png" v-if="goods_type != '3'" @click.stop="deleteStyleTab(index)">
-									<div>{{item.shooting_style_name}}</div>
-								</div>
-								<el-popover ref="stylePopover" placement="right-start" width="400" trigger="click">
-									<div>
-										<div style="margin-bottom: 10px;">选择风格</div>
-										<el-table size="mini" :data="style_table_data" :max-height="350" tooltip-effect="dark" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" @selection-change="styleChange">
-											<el-table-column type="selection" width="55" fixed>
-											</el-table-column>
-											<el-table-column label="风格" prop="shooting_style_name">
-											</el-table-column>
-										</el-table>
-										<div class="dialog_footer">
-											<el-button size="small" type="primary" @click="setStyleFn">保存</el-button>
-										</div>
-									</div>
-									<div class="style_item flex ac pointer" slot="reference" v-if="goods_type != '3'">
-										<img class="add_style_icon" src="../../../../static/add_style_icon.png" @click="import_dialog = false">
-										<div>新增</div>
-									</div>
-								</el-popover>
-							</div>
-							<UploadFile v-if="show_style_upload && style_card_list.length > 0" :is_multiple="true" :max_num="9" :current_num="style_card_list.length > 0?style_card_list[active_style_index].image_arr.length:0" :img_list="style_card_list.length > 0?style_card_list[active_style_index].image_arr:[]" :only_view="goods_type == '3'" @callbackFn="currentStyleImgCallBackFn"/> -->
-							</el-form-item>
-						</el-form>
-					</div>
-					<div class="bottom_row" v-if="goods_type == '1' || goods_type == '2' || goods_type == '5'">
-						<el-button size="small" type="primary" @click="commitEditGoods">提交</el-button>
-					</div>
-					<div class="bottom_row" v-if="goods_type == '4'">
-						<el-button size="small" type="primary" @click="auditFn('1')">同意</el-button>
-						<el-button size="small" type="primary" @click="auditFn('2')">拒绝</el-button>
-					</div>
-				</el-card>
-			</div>
-		</template>
-		<script>
-			import commonResource from '../../../../api/common_resource.js'
-			import resource from '../../../../api/chain_resource.js'
-
-			import UploadFile from '../../../../components/upload_file.vue'
-			export default{
-				data(){
-					return{
+	import UploadFile from '../../../../components/upload_file.vue'
+	export default{
+		data(){
+			return{
 				is_detail:false,		//是否是详情
 				page_type:'',			//页面来源（goods:商品；feekback:反馈）
 				goods_type:"",			//类型（1:添加；2:编辑；3:查看；4:审核；5：重新提交）
 				supplier_list:[],		//供应商列表
 				cate_list:[],			//类目列表
 				market_list:[],			//市场列表
-				// style_list:[],			//拍摄风格列表
 				class_list:[],			//分类列表
 				preview_image:[],		//查看详情的图片列表
 				preview_bk_image:[],	//查看详情的爆款图片列表
@@ -290,7 +266,6 @@
 					img:[],					//图片列表
 					remark:"",				//备注
 				},							//可传递的参数
-				// shooting_style_ids:[],		//已选中的拍摄风格
 				default_hot_style:0,		//默认是否爆款
 				default_data_style:0,		//默认是否主推款
 				hot_status:10,				//爆款审核状态
@@ -305,13 +280,9 @@
 				kcs:"",						//库存数
 				tj:"",						//调价
 				bz:"",						//备注
-
-				style_card_list:[],				//风格列表
-				selected_style:[],				//表格已选中的列表
-				style_table_data:[],			//未选择的风格列表
-				active_style_index:0,			//风格列表选中的下标
-				show_style_upload:true,			//是否显示风格图图片组件
-
+				style_card_list:[],				//已选中的风格列表
+				style_table_data:[],			//未选中的风格列表
+				selected_style:[],				//已选中的风格ID列表
 			}
 		},
 		created(){
@@ -472,17 +443,6 @@
 					}
 					this.style_card_list.push(style_card_item)
 				})
-				// let style_list = res.data.data;
-				// style_list.map(item => {
-				// 	item['image_arr'] = [];
-				// })
-				// this.style_card_list = style_list;
-				// if(data_info.shooting_style_id != ''){
-				// 	let shooting_style_ids = data_info.shooting_style_id.split(',');
-				// 	this.shooting_style_ids = shooting_style_ids.map(item => {
-				// 		return parseInt(item);
-				// 	})
-				// }
 				
 				for(let key in this.arg){
 					for(let k in data_info){
@@ -552,47 +512,44 @@
 					})
 				})
 			},
-			//切换商品风格添加表格切换多选
-			// styleChange(val){
-			// 	this.selected_style = val;
-			// },
-			//确认商品风格添加表格切换多选
+			//确认商品风格多选
 			setStyleFn(){
 				this.selected_style.map(item => {
+					let name_arr = this.style_table_data.filter(i => {
+						return i.shooting_style_id == item;
+					})
 					let style_card_item = {
 						shooting_style_id:item,
-						shooting_style_name:item,
+						shooting_style_name:name_arr[0].shooting_style_name,
 						image_arr:[]
 					}
 					this.style_card_list.push(style_card_item);
 				})
 				this.style_table_data = this.filterStyle(this.style_table_data,this.style_card_list);
-				this.$refs.stylePopover.doClose();
+				this.$refs.stylePopover.doClose()
 			},
 			//点击删除已选的风格
 			deleteStyleTab(index){
-				this.show_style_upload = false;
-				this.active_style_index = 0;
 				let current_style = this.style_card_list[index];
-				this.style_table_data.unshift(current_style);
-				this.style_card_list.splice(index,1);
-				this.$nextTick(()=>{
-					this.show_style_upload = true;
-				})
-			},
-			//点击切换已选的风格
-			checkStyleTab(index){
-				this.show_style_upload = false;
-				this.active_style_index = index;
-				this.$nextTick(()=>{
-					this.show_style_upload = true;
-				})
+				this.$confirm(`确认删除【${current_style.shooting_style_name}】风格及包含的${current_style.image_arr.length}张图片?`, '提示', {
+					confirmButtonText: '确定',
+					cancelButtonText: '取消',
+					type: 'warning'
+				}).then(() => {
+					this.style_table_data.unshift(current_style);
+					this.style_card_list.splice(index,1);
+				}).catch(() => {
+					this.$message({
+						type: 'info',
+						message: '取消删除'
+					});          
+				});
 			},
 			//监听风格图列表回调
-			currentStyleImgCallBackFn(img_arr){
-				let new_item = JSON.parse(JSON.stringify(this.style_card_list[this.active_style_index]));
-				new_item.image_arr = img_arr;
-				this.$set(this.style_card_list,this.active_style_index,new_item);
+			currentStyleImgCallBackFn(index,data){
+				let new_item = JSON.parse(JSON.stringify(this.style_card_list[index]));
+				new_item.image_arr = data[0];
+				this.$set(this.style_card_list,index,new_item);
 			},
 			//对比已选中的过滤右侧未选中的风格  
 			filterStyle(arr1, arr2) {
@@ -648,7 +605,28 @@
 					this.$message.warning('请选择类目!');
 				}else if(!this.arg.market_id){
 					this.$message.warning('请选择市场!');
+				}else if(this.style_card_list.length == 0){
+					this.$message.warning('至少上传一个拍摄风格!');
 				}else{
+					//处理拍摄风格参数
+					let style_imgs = [];
+					let null_arr = [];
+					this.style_card_list.map(item => {
+						if(item.image_arr.length == 0){
+							null_arr.push(item.shooting_style_name)
+						}else{
+							let img_arr = [];
+							item.image_arr.map(i => {
+								img_arr.push(i)
+							})
+							style_imgs.push(`${item.shooting_style_id}-${img_arr.join(',')}`)
+						}
+					})
+					if(null_arr.length > 0){
+						this.$message.warning(`【${null_arr.join(',')}】风格图片为空!`);
+						return;
+					}
+
 					var arg = this.goods_type == '1'?this.arg:{...this.arg,...{goods_id:this.goods_id}};
 					if (arg.i_id.indexOf(";") > -1) {
 						arg.i_id = arg.i_id.replaceAll(";", ",");
@@ -659,17 +637,10 @@
 					if (arg.supplier_ksbm.indexOf(";") > -1) {
 						arg.supplier_ksbm = arg.supplier_ksbm.replaceAll(";", ",");
 					}
-					
-					let style_imgs = [];
-					//处理拍摄风格
-					this.style_card_list.map(item => {
-						let img_arr = [];
-						item.image_arr.map(i => {
-							img_arr.push(i)
-						})
-						style_imgs.push(`${item.shooting_style_id}-${img_arr.join(',')}`)
-					})
+
+					//拍摄风格参数
 					arg.style_imgs = style_imgs.join(';');
+					
 
 					arg.hot_url = this.link_urls.join(',');
 					arg.hot_img = this.bk_img.join(',');
@@ -903,6 +874,7 @@
 				width:80px;
 				height:80px;
 				margin-right:24px;
+				margin-bottom:16px;
 				.delete_style_icon{
 					position: absolute;
 					top: 0;
