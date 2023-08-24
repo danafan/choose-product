@@ -70,7 +70,7 @@
 					<el-table-column label="修改提交人" prop="add_admin_name"></el-table-column>
 					<el-table-column label="审核状态" prop="common_text">
 						<template slot-scope="scope">
-							<div class="flex">
+							<div class="flex jc">
 								<div>{{scope.row.check_status | check_status_filter}}</div>
 								<div v-if="scope.row.check_admin_name">（{{scope.row.check_admin_name}}）</div>
 							</div>

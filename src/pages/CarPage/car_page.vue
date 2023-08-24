@@ -3,7 +3,10 @@
 		<div class="padding_page_content">
 			<PageTitle title="待选记录"/>
 			<el-card class="card_box" id="card_box">
-				<div class="all_title" id="all_title">待选（全部{{car_goods.length}}）</div>
+				<!-- <div class="all_title" id="all_title">待选（全部{{car_goods.length}}）</div> -->
+				<TableTitle id="all_title" :title="`待选（全部${car_goods.length}）`">
+					<el-button size="mini" type="primary" @click="exportFn">导出</el-button>
+				</TableTitle>
 				<el-table ref="multipleTable" size="mini" :data="car_goods" tooltip-effect="dark" style="width: 100%" @selection-change="changeSelected" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" v-loading="loading">
 					<el-table-column type="selection" width="85" fixed="left" :selectable="setStatus">
 					</el-table-column>
@@ -145,7 +148,10 @@
 <script>
 	import resource from '../../api/resource.js'
 	import commonResource from '../../api/common_resource.js'
+	import { exportPost } from "../../api/export.js";
+	import { MessageBox, Message } from "element-ui";
 
+	import TableTitle from '../SupplyChain/components/table_title.vue'
 	import PageTitle from '../../components/page_title.vue'
 	import QuillEditor from '../../components/quill_editor.vue'
 	export default{
@@ -502,10 +508,32 @@
 				const routeData = this.$router.resolve(active_path);
 				window.open(routeData.href);
 			},
+			//导出
+			exportFn() {
+				MessageBox.confirm("确认导出?", "提示", {
+					confirmButtonText: "确定",
+					cancelButtonText: "取消",
+					type: "warning",
+				})
+				.then(() => {
+					resource.exportCartKsbm().then((res) => {
+						if (res) {
+							exportPost("\ufeff" + res.data, "待选记录");
+						}
+					});
+				})
+				.catch(() => {
+					Message({
+						type: "info",
+						message: "取消导出",
+					});
+				});
+			},
 		},
 		components:{
 			PageTitle,
-			QuillEditor
+			QuillEditor,
+			TableTitle
 		}
 	}
 </script>

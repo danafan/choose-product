@@ -4,7 +4,7 @@
       <!-- logo -->
       <img class="logo_icon" src="../static/logo_icon.png" v-if="active_path == '/supply_chain' || notice_list.length == 0">
       <!-- 公告 -->
-      <el-popover placement="bottom-end" width="420" trigger="hover" v-else>
+      <el-popover placement="bottom-end" width="420" trigger="click" v-else>
         <el-table :data="notice_list" max-height="180px" size="mini" :show-header="false" @row-click="noticeDetail">
           <el-table-column width="248" property="notice_content" label="内容">
             <template slot-scope="scope">
@@ -17,7 +17,7 @@
             </template>
           </el-table-column>
         </el-table>
-        <div class="message_box" slot="reference">
+        <div class="message_box pointer" slot="reference">
           <div class="message_icon_box">
             <img class="message_icon" src="../static/message_icon.png">
             <div class="num" v-if="nuread_num > 0">{{nuread_num}}</div>

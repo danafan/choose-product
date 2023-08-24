@@ -47,7 +47,7 @@ const router = new Router({
   },
   {
     path: "/gysybk_detail",
-    name: "供应商详情",
+    name: "供应商商品详情",
     component: gysybk_detail
   },
   {
@@ -67,7 +67,7 @@ const router = new Router({
     },
     {
       path: "/gys_index",
-      name: "首页",
+      name: "供应商首页",
       component: gys_index
     },
     {
@@ -92,7 +92,7 @@ const router = new Router({
     },
     {
       path: "/supplier",
-      name: "供应商",
+      name: "供应商主页",
       component: supplier
     },
     {
@@ -102,7 +102,7 @@ const router = new Router({
     },
     {
       path: "/style_info",
-      name: "款式资料",
+      name: "供应商款式资料",
       meta:{
        keepAlive:true,
        use_cache:false
@@ -111,12 +111,12 @@ const router = new Router({
    },
    {
     path: "/gys_edit_goods",
-    name: "上传/编辑商品",
+    name: "供应商上传/编辑商品",
     component: gys_edit_goods
   },
   {
     path: "/gys_image_setting",
-    name: "图片管理",
+    name: "供应商图片管理",
     component: gys_image_setting
   },
   {
@@ -167,7 +167,7 @@ const router = new Router({
     },
     {
       path: "/chain_gysybk_page",
-      name: "供应商",
+      name: "供应商菜单",
       meta:{
        keep_alive:true,
        use_cache:false
@@ -189,7 +189,7 @@ const router = new Router({
   },
   {
     path: "/chain_supplier_detail",
-    name: "供应商详情",
+    name: "供应商主页详情",
     meta:{
       is_back:true
     },

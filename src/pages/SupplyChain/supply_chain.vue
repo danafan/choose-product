@@ -56,8 +56,6 @@
 		},
 		watch:{
 			$route:function(to,from){
-				console.log(to)
-				console.log(from)
 				//设置返回按钮
 				this.is_back = to.meta.is_back;
 				if(to.query.supplier_type){	//供应链中心（供应商）

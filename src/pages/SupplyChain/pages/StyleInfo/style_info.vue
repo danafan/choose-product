@@ -663,7 +663,10 @@
 							}
 						})
 						this.data = data;
-						this.$refs.table.bodyWrapper.scrollTop = 0;
+						this.$nextTick(() => {
+							this.$refs.table.bodyWrapper.scrollTop = 0;
+						});
+						
 					}else{
 						this.$message.warning(res.data.msg);
 					}

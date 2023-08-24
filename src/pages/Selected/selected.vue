@@ -43,7 +43,7 @@
 				</el-form>
 			</div>
 			<TableTitle id="table_title">
-				<el-button size="mini" type="primary" @click="exportFn">导出</el-button>
+				<el-button size="mini" type="primary" @click="export_dialog = true">导出</el-button>
 			</TableTitle>
 			<el-table ref="table" size="mini" :data="data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" v-loading="loading">
 				<el-table-column label="图片" width="150">
@@ -244,6 +244,23 @@
 			<el-button type="primary" size="small" @click="detail_dialog = false">关闭</el-button>
 		</div>
 	</el-dialog>
+	<!-- 导出弹窗 -->
+	<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" width="30%" :show-close="false" @close="export_type = '1'" :visible.sync="export_dialog">
+		<div slot="title" class="dialog_title">
+			<div>导出</div>
+			<img class="close_icon" src="../../static/close_icon.png" @click="export_dialog = false">
+		</div>
+		<div class="dialog_content">
+			<el-radio-group v-model="export_type">
+				<el-radio label="1">款式资料</el-radio>
+				<el-radio label="2">选品需求</el-radio>
+			</el-radio-group>
+		</div>
+		<div slot="footer" class="dialog_footer">
+			<el-button size="small" @click="export_dialog = false">取消</el-button>
+			<el-button type="primary" size="small" @click="exportFn">确认</el-button>
+		</div>
+	</el-dialog>
 </div>
 </template>
 <script>
@@ -290,6 +307,8 @@
 				max_height:0,	
 				detail_dialog:false,		//详情弹窗
 				goods_info:{},				//详情数据
+				export_dialog:false,		//导出弹窗
+				export_type:'1',			//1:款式资料；2:选品需求
 			}
 		},
 		destroyed() {
@@ -374,36 +393,6 @@
 			},
 			//导出
 			exportFn() {
-				MessageBox.confirm("确认导出?", "提示", {
-					confirmButtonText: "确定",
-					cancelButtonText: "取消",
-					type: "warning",
-				})
-				.then(() => {
-					let arg = {
-						status:this.tab_list[this.active_index].id,
-						search:this.search,
-						shop_code:this.shop_code,
-						search_user:this.search_user,
-						only_self:this.only_self,
-						start_time:this.date_time && this.date_time.length> 0?this.date_time[0]:"",
-						end_time:this.date_time && this.date_time.length> 0?this.date_time[1]:"",
-					};
-					resource.selectedExport(arg).then((res) => {
-						if (res) {
-							exportPost("\ufeff" + res.data, "已选商品");
-						}
-					});
-				})
-				.catch(() => {
-					Message({
-						type: "info",
-						message: "取消导出",
-					});
-				});
-			},
-			//获取列表
-			getSelected(){
 				let arg = {
 					status:this.tab_list[this.active_index].id,
 					search:this.search,
@@ -412,202 +401,230 @@
 					only_self:this.only_self,
 					start_time:this.date_time && this.date_time.length> 0?this.date_time[0]:"",
 					end_time:this.date_time && this.date_time.length> 0?this.date_time[1]:"",
-					page:this.page
-				}
-				this.loading = true;
-				resource.getSelected(arg).then(res => {
-					if(res.data.code == 1){
-						this.loading = false;
-						let data = res.data.data;
-						let data_list = data.data;
-						data_list.map(item => {
-							let images = [];
-							item.img.map(i => {
-								images.push(this.domain + i);
-							})
-							item.images = images;
+				};
+					if(this.export_type == '1'){		//款式资料
+						resource.exportSelectedKsbm(arg).then((res) => {
+							if (res) {
+								exportPost("\ufeff" + res.data, "已选商品（款式资料）");
+								this.export_dialog = false;
+							}
+						});
+					}else{								//选品需求
+						resource.selectedExport(arg).then((res) => {
+							if (res) {
+								exportPost("\ufeff" + res.data, "已选商品（选品需求）");
+								this.export_dialog = false;
+							}
+						});
+					}
+				},
+			//获取列表
+				getSelected(){
+					let arg = {
+						status:this.tab_list[this.active_index].id,
+						search:this.search,
+						shop_code:this.shop_code,
+						search_user:this.search_user,
+						only_self:this.only_self,
+						start_time:this.date_time && this.date_time.length> 0?this.date_time[0]:"",
+						end_time:this.date_time && this.date_time.length> 0?this.date_time[1]:"",
+						page:this.page
+					}
+					this.loading = true;
+					resource.getSelected(arg).then(res => {
+						if(res.data.code == 1){
+							this.loading = false;
+							let data = res.data.data;
+							let data_list = data.data;
+							data_list.map(item => {
+								let images = [];
+								item.img.map(i => {
+									images.push(this.domain + i);
+								})
+								item.images = images;
 
-							if(item.i_id){
-								item.new_i_id = item.i_id.split(',')
-							}
-							if(item.bd_i_id){
-								item.new_bd_i_id = item.bd_i_id.split(',')
-							}
-							if(item.supplier_ksbm){
-								item.new_supplier_ksbm = item.supplier_ksbm.split(',')
+								if(item.i_id){
+									item.new_i_id = item.i_id.split(',')
+								}
+								if(item.bd_i_id){
+									item.new_bd_i_id = item.bd_i_id.split(',')
+								}
+								if(item.supplier_ksbm){
+									item.new_supplier_ksbm = item.supplier_ksbm.split(',')
+								}
+							})
+							this.data = data_list;
+							this.total = data.total;
+							this.$refs.table.bodyWrapper.scrollTop = 0;
+						}else{
+							this.$message.warning(res.data.msg);
+						}
+					})
+				},
+			//翻页
+				checkPage(val) {
+					this.page = val;
+				//获取列表
+					this.getSelected();
+				},
+			//获取详情
+				selectedInfo(select_id){
+					let arg = {
+						select_id:select_id,
+						select_type:1
+					}
+					resource.selectedInfo(arg).then(res => {
+						if(res.data.code == 1){
+							this.goods_info = res.data.data;
+							this.detail_dialog = true;
+						}else{
+							this.$message.warning(res.data.msg);
+						}
+					})
+				},
+			//点击撤销
+				undoSelected(select_id){
+					this.$confirm('确认撤销?', '提示', {
+						confirmButtonText: '确定',
+						cancelButtonText: '取消',
+						type: 'warning'
+					}).then(() => {
+					//商品ID
+						let arg = {
+							select_id:select_id
+						}
+						resource.undoSelected(arg).then(res => {
+							if(res.data.code == 1){
+								this.$message.success(res.data.msg);
+							//获取列表
+								this.getSelected();
+							}else{
+								this.$message.warning(res.data.msg);
 							}
 						})
-						this.data = data_list;
-						this.total = data.total;
-						this.$refs.table.bodyWrapper.scrollTop = 0;
-					}else{
-						this.$message.warning(res.data.msg);
-					}
-				})
-			},
-			//翻页
-			checkPage(val) {
-				this.page = val;
-				//获取列表
-				this.getSelected();
-			},
-			//获取详情
-			selectedInfo(select_id){
-				let arg = {
-					select_id:select_id,
-					select_type:1
-				}
-				resource.selectedInfo(arg).then(res => {
-					if(res.data.code == 1){
-						this.goods_info = res.data.data;
-						this.detail_dialog = true;
-					}else{
-						this.$message.warning(res.data.msg);
-					}
-				})
-			},
-			//点击撤销
-			undoSelected(select_id){
-				this.$confirm('确认撤销?', '提示', {
-					confirmButtonText: '确定',
-					cancelButtonText: '取消',
-					type: 'warning'
-				}).then(() => {
-					//商品ID
-					let arg = {
-						select_id:select_id
-					}
-					resource.undoSelected(arg).then(res => {
-						if(res.data.code == 1){
-							this.$message.success(res.data.msg);
-							//获取列表
-							this.getSelected();
-						}else{
-							this.$message.warning(res.data.msg);
-						}
-					})
-				}).catch(() => {
-					this.$message({
-						type: 'info',
-						message: '已取消'
-					});          
-				});
-			},
+					}).catch(() => {
+						this.$message({
+							type: 'info',
+							message: '已取消'
+						});          
+					});
+				},
 			//点击取消
-			cancelSelected(select_id){
-				this.$confirm('确认取消?', '提示', {
-					confirmButtonText: '确定',
-					cancelButtonText: '取消',
-					type: 'warning'
-				}).then(() => {
+				cancelSelected(select_id){
+					this.$confirm('确认取消?', '提示', {
+						confirmButtonText: '确定',
+						cancelButtonText: '取消',
+						type: 'warning'
+					}).then(() => {
 					//商品ID
-					let arg = {
-						select_id:select_id
-					}
-					resource.cancelSelected(arg).then(res => {
-						if(res.data.code == 1){
-							this.$message.success(res.data.msg);
-							//获取列表
-							this.getSelected();
-						}else{
-							this.$message.warning(res.data.msg);
+						let arg = {
+							select_id:select_id
 						}
-					})
-				}).catch(() => {
-					this.$message({
-						type: 'info',
-						message: '已取消'
-					});          
-				});
+						resource.cancelSelected(arg).then(res => {
+							if(res.data.code == 1){
+								this.$message.success(res.data.msg);
+							//获取列表
+								this.getSelected();
+							}else{
+								this.$message.warning(res.data.msg);
+							}
+						})
+					}).catch(() => {
+						this.$message({
+							type: 'info',
+							message: '已取消'
+						});          
+					});
+				}
+			},
+			components:{
+				SearchWidget,
+				PaginationWidget,
+				CarWidget,
+				TableTitle
 			}
-		},
-		components:{
-			SearchWidget,
-			PaginationWidget,
-			CarWidget,
-			TableTitle
 		}
-	}
-</script>
-<style type="text/css">
-	.el-dialog__body{
-		padding: 0!important;
-	}
-</style>
-<style lang="less" scoped>
-	.padding_page_content{
-		width: 1680rem;
-		height: 100%;
-		display: flex;
-		flex-direction: column;
-		position: relative;
-		.card_box{
-			flex:1;
-			.tab_row{
-				border:1px solid var(--color);
-				border-radius: 4rem;
-				background: #FFFCFA;
-				height: 64rem;
-				display: flex;
-				padding-left: 30rem;
-				margin-top:20px;
-				margin-bottom: 15rem;
-				.tab_item{
-					cursor:pointer;
-					margin-right: 80rem;
-					position: relative;
+	</script>
+	<style type="text/css">
+		.el-dialog__body{
+			padding: 0!important;
+		}
+	</style>
+	<style lang="less" scoped>
+		.padding_page_content{
+			width: 1680rem;
+			height: 100%;
+			display: flex;
+			flex-direction: column;
+			position: relative;
+			.card_box{
+				flex:1;
+				.tab_row{
+					border:1px solid var(--color);
+					border-radius: 4rem;
+					background: #FFFCFA;
 					height: 64rem;
-					line-height: 64rem;
-					color: #333333;
-					font-size: 14rem;
-					font-weight: bold;
-					.active_line{
-						background: var(--color);
-						position: absolute;
-						bottom: 2rem;
-						width: 100%;
-						height: 2rem;
+					display: flex;
+					padding-left: 30rem;
+					margin-top:20px;
+					margin-bottom: 15rem;
+					.tab_item{
+						cursor:pointer;
+						margin-right: 80rem;
+						position: relative;
+						height: 64rem;
+						line-height: 64rem;
+						color: #333333;
+						font-size: 14rem;
+						font-weight: bold;
+						.active_line{
+							background: var(--color);
+							position: absolute;
+							bottom: 2rem;
+							width: 100%;
+							height: 2rem;
+						}
+					}
+					.active_item{
+						color: var(--color);
 					}
 				}
-				.active_item{
-					color: var(--color);
+				.image{
+					width: 100px;
+					height: 100px;
 				}
-			}
-			.image{
-				width: 100px;
-				height: 100px;
-			}
-			.item_row{
-				display: flex;
-				.item_label{
-					width: 96px;
-					text-align:end;
+				.item_row{
+					display: flex;
+					.item_label{
+						width: 96px;
+						text-align:end;
+					}
 				}
 			}
 		}
-	}
-	.dialog_content{
-		max-height: 750px;
-		overflow-y: scroll;
-		.detail_row{
-			border-bottom:1px solid #F0F0F0;
-			display: flex;
-			font-size:14rem;
-			color: #333333;
-			.lable{
-				border-right:1px solid #F0F0F0;
-				width: 120rem;
-				padding:12rem 20rem;
+		.dialog_content{
+			max-height: 750px;
+			overflow-y: scroll;
+			padding:30rem;
+			.detail_row{
+				border-bottom:1px solid #F0F0F0;
 				display: flex;
-				align-items: center;
-			}
-			.value{
-				flex:1;
-				padding: 12rem 20rem;
+				font-size:14rem;
+				color: #333333;
+				.lable{
+					border-right:1px solid #F0F0F0;
+					width: 120rem;
+					padding:12rem 20rem;
+					display: flex;
+					align-items: center;
+				}
+				.value{
+					flex:1;
+					padding: 12rem 20rem;
+				}
 			}
 		}
-	}
-</style>
+	</style>
 
 
 
