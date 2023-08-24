@@ -91,7 +91,7 @@
 			<CarWidget :is_fixed="true"/>
 		</div>
 		<!-- 点击放大 -->
-		<el-dialog :visible.sync="enlarge_dialog" :show-close="false" custom-class="custom_class">
+		<el-dialog :visible.sync="enlarge_dialog" top="15px" :show-close="false" custom-class="custom_class">
 			<div slot="title" class="dialog_title" style="justify-content: flex-end;">
 				<img class="close_icon" src="../../static/close_icon.png" @click="enlarge_dialog = false">
 			</div>

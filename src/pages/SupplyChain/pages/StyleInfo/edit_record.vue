@@ -40,8 +40,7 @@
 					<el-table-column label="供应商" prop="supplier_name"></el-table-column>
 					<el-table-column label="图片" width="200">
 						<template slot-scope="scope">
-							<div v-if="scope.row.img == ''">未上传</div>
-							<el-image :z-index="2006" class="image" :src="domain + scope.row.img" fit="scale-down" :preview-src-list="[domain + scope.row.img]" v-else></el-image>
+							<el-image :z-index="2006" class="image" :src="domain + scope.row.img" fit="scale-down" :preview-src-list="[domain + scope.row.img]" v-if="scope.row.img != ''"></el-image>
 						</template>
 					</el-table-column>
 					<el-table-column label="原商品信息/修改后商品信息" width="400">
@@ -53,13 +52,12 @@
 										<div class="flex-1 flex-warp" v-if="scope.row.info_arr[index].length > 0">
 											<el-image :z-index="2006" class="edit_image" :src="iii" fit="scale-down":preview-src-list="scope.row.info_arr[index]" v-for="iii in scope.row.info_arr[index]"></el-image>
 										</div>
-										<div v-else>未上传</div>
 									</div>
 									<div style="width:180px;text-align: start;margin-right:10px" v-else>{{scope.row.info_arr[index]}}</div>
 
 									<div class="flex as" style="width:180px;text-align: start;margin-right:10px" v-if="scope.row.edit_info_arr[index].indexOf('：') == -1">
 										<div class="table_header_text">图片：</div>
-										<div class="flex-1 flex-warp">
+										<div class="flex-1 flex-warp" v-if="scope.row.edit_info_arr[index].length > 0">
 											<el-image :z-index="2006" class="edit_image" :src="iii" fit="scale-down" :preview-src-list="scope.row.edit_info_arr[index]" v-for="iii in scope.row.edit_info_arr[index]"></el-image>
 										</div>
 									</div>
