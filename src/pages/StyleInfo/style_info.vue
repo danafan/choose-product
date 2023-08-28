@@ -37,8 +37,8 @@
 					</el-date-picker>
 				</el-form-item>
 				<el-form-item label="款号">
-						<el-input placeholder="款号" v-model="style_name"></el-input>
-					</el-form-item>
+					<el-input placeholder="款号" v-model="style_name"></el-input>
+				</el-form-item>
 				<el-form-item class="form_item">
 					<el-button type="primary" @click="checkPage(1)">查询</el-button>
 				</el-form-item>
@@ -56,16 +56,24 @@
 				</el-table-column>
 				<el-table-column label="标题" prop="title"></el-table-column>
 				<el-table-column label="款号" prop="style_name"></el-table-column>
-				<el-table-column label="图片" width="120">
+				<el-table-column label="拍摄风格" width="180" >
 					<template slot-scope="scope">
-						<div v-if="scope.row.images.length == 0">暂无</div>
-						<el-image :z-index="2006" class="image" :src="scope.row.images[0]" fit="scale-down" :preview-src-list="scope.row.images" v-else></el-image>
+						<el-tabs size="mini" v-model="scope.row.active_index" @tab-click="handleClick($event,scope.$index)">
+							<el-tab-pane :label="item.shooting_style_name" :name="index.toString()" v-for="(item,index) in scope.row.shooting_style_list"></el-tab-pane>
+						</el-tabs>
+						<div :style="{'width':'100%','height':scope.row.style_loading?'100px':'0px'}" v-loading="scope.row.style_loading"></div>
+						<div v-if="scope.row.shooting_style_list[parseInt(scope.row.active_index)].img.length == 0 && !scope.row.style_loading">暂无</div>
+						<el-carousel trigger="hover" indicator-position="none" :autoplay="false" height="100px" v-if="scope.row.shooting_style_list[parseInt(scope.row.active_index)].img.length > 0 && !scope.row.style_loading">
+							<el-carousel-item v-for="(item,index) in scope.row.shooting_style_list[parseInt(scope.row.active_index)].img" :key="item">
+								<el-image :z-index="2006" class="image" :src="domain + item" fit="scale-down" @click="viewImage(scope.row.shooting_style_list,scope.row.active_index,index)"></el-image>
+							</el-carousel-item>
+						</el-carousel>
 					</template>
 				</el-table-column>
 				<el-table-column label="颜色" prop="color"></el-table-column>
 				<el-table-column label="成本价" prop="cost_price"></el-table-column>
 				<el-table-column label="尺码" prop="size"></el-table-column>
-				<el-table-column label="面料" prop="fabric"></el-table-column>
+				<el-table-column label="面料" prop="fabric" show-overflow-tooltip></el-table-column>
 				<el-table-column label="市场" prop="market"></el-table-column>
 				<el-table-column label="提供拍照" prop="common_text">
 					<template slot-scope="scope">
@@ -98,7 +106,7 @@
 							</el-button>
 							<el-dropdown-menu slot="dropdown">
 								<el-dropdown-item command="1">查看</el-dropdown-item>
-								<el-dropdown-item command="2">图片管理</el-dropdown-item>
+								<!-- <el-dropdown-item command="2">图片管理</el-dropdown-item> -->
 							</el-dropdown-menu>
 						</el-dropdown>
 						<el-button type="text" size="small" v-if="scope.row.check_status == 3" @click="$router.push('/gys_edit_goods?goods_type=5&style_id=' + scope.row.style_id)">重新提交</el-button>
@@ -142,58 +150,76 @@
 				<el-button size="mini" type="primary" @click="confirmOff">提交</el-button>
 			</div>
 		</el-dialog>
+		<!-- 图片放大 -->
+		<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" destroy-on-close :visible.sync="view_dialog">
+			<div class="remark_content">
+				<el-tabs size="mini" v-model="view_active_index" @tab-click="handleViewClick">
+					<el-tab-pane :label="item.shooting_style_name" :name="index.toString()" v-for="(item,index) in view_shooting_style_list"></el-tab-pane>
+				</el-tabs>
+				<el-carousel style="width: 100%;height: 310px;" trigger="hover" indicator-position="none" :autoplay="false" :initial-index="default_img_index" v-if="view_shooting_style_list.length > 0">
+					<el-carousel-item v-for="item in view_shooting_style_list[parseInt(view_active_index)].img" :key="item">
+						<el-image :z-index="2006" class="view_image" :src="domain + item" fit="scale-down"></el-image>
+					</el-carousel-item>
+				</el-carousel>
+				<div v-else>暂无</div>
+			</div>
+			<div slot="footer" class="dialog_footer">
+				<el-button size="mini" type="primary" @click="view_dialog = false">关闭</el-button>
+			</div>
+		</el-dialog>
 	</div>
 </template>
 <style lang="less" scoped>
-.chain_page_content{
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	padding: 20rem 98rem;
-	display: flex;
-	flex-direction: column;
-	.form_card{
-		margin-bottom: 16rem;
-		.form_item{
-			margin-bottom:0 !important;
-		}
-	}
-	.card_box{
-		padding-top: 15rem;
-		flex:1;
-		.image{
-			width: 58rem;
-			height: 58rem;
-		}
-	}
-	.down_box{
-		display:flex;
-		padding:30rem;
-		.upload_box{
-			margin-left: 10px;
-			position: relative;
-			.upload_file{
-				position: absolute;
-				top: 0;
-				bottom: 0;
-				left: 0;
-				right: 0;
-				width: 100%;
-				height: 100%;
-				opacity: 0;
+	.chain_page_content{
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		padding: 20rem 98rem;
+		display: flex;
+		flex-direction: column;
+		.form_card{
+			margin-bottom: 16rem;
+			.form_item{
+				margin-bottom:0 !important;
 			}
 		}
+		.card_box{
+			padding-top: 15rem;
+			flex:1;
+			.image{
+				width: 100px;
+				height: 100px;
+			}
+		}
+		.down_box{
+			display:flex;
+			padding:30rem;
+			.upload_box{
+				margin-left: 10px;
+				position: relative;
+				.upload_file{
+					position: absolute;
+					top: 0;
+					bottom: 0;
+					left: 0;
+					right: 0;
+					width: 100%;
+					height: 100%;
+					opacity: 0;
+				}
+			}
+		}
+		.remark_content{
+			padding:20rem;
+		}
 	}
-	.remark_content{
-		padding:20rem;
-	}
-}
 </style>
 <script>
 	import commonResource from '../../api/common_resource.js'
 	import resource from '../../api/supplier_resource.js'
+	import chainResource from '../../api/chain_resource.js'
 	import { getNowDate,getCurrentDate } from "../../api/date.js";
 
 	import TableTitle from '../SupplyChain/components/table_title.vue'
@@ -271,29 +297,33 @@
 				style_id:"",				//点击的style_id
 				down_dialog:false,			//下架原因弹窗
 				off_reason:"",				//下架原因
+				view_dialog:false,			//放大图片弹窗
+				view_active_index:'0',		//图片放大顶部标签的选中下标
+				default_img_index:0,		//图片放大默认图片下标
+				view_shooting_style_list:[],//放大图片列表
 			}
 		},
 		activated(){
 			if(!this.$route.meta.use_cache){
     			//获取类目列表
-    			this.ajaxCateList();
+				this.ajaxCateList();
     			//市场列表
-    			this.ajaxMarketList();
+				this.ajaxMarketList();
     			//拍摄风格列表
-    			this.ajaxStyleList();
+				this.ajaxStyleList();
     			//分类列表
-    			this.ajaxClassList();
+				this.ajaxClassList();
 
-    			this.category_ids = [];
-    			this.market_ids = [];
-    			this.classification_ids = [];
-    			this.shooting_style_ids = [];
-    			this.date = [];
-    			this.check_status_id = "";
-    			this.style_name = "";
-    			this.status_id = "";
-    			this.page = 1;
-    		}
+				this.category_ids = [];
+				this.market_ids = [];
+				this.classification_ids = [];
+				this.shooting_style_ids = [];
+				this.date = [];
+				this.check_status_id = "";
+				this.style_name = "";
+				this.status_id = "";
+				this.page = 1;
+			}
 			//获取列表
 			this.getGoodsList();
 		},
@@ -302,10 +332,10 @@
 		},
 		mounted() {
     		//获取表格最大高度
-    		this.onResize();
-    		window.addEventListener("resize", this.onResize());
-    	},
-    	computed:{
+			this.onResize();
+			window.addEventListener("resize", this.onResize());
+		},
+		computed:{
 			//图片前缀
 			domain(){
 				return this.$store.state.domain;
@@ -313,19 +343,19 @@
 		},
 		methods: {
     		//监听屏幕大小变化
-    		onResize() {
-    			this.$nextTick(() => {
-    				let card_box_height = document.getElementById("card_box").offsetHeight;
-    				let table_title_height = document.getElementById("table_title").offsetHeight;
-    				let bottom_row_height = document.getElementById("bottom_row").offsetHeight;
-    				this.max_height =
-    				card_box_height -
-    				table_title_height -
-    				bottom_row_height -
-    				45 +
-    				"px";
-    			});
-    		},
+			onResize() {
+				this.$nextTick(() => {
+					let card_box_height = document.getElementById("card_box").offsetHeight;
+					let table_title_height = document.getElementById("table_title").offsetHeight;
+					let bottom_row_height = document.getElementById("bottom_row").offsetHeight;
+					this.max_height =
+					card_box_height -
+					table_title_height -
+					bottom_row_height -
+					45 +
+					"px";
+				});
+			},
 			//获取类目列表
 			ajaxCateList(){
 				commonResource.ajaxCateList().then(res => {
@@ -413,22 +443,8 @@
 						this.total = res.data.data.total;
 						let data = res.data.data.data;
 						data.map(item => {
-							let images = [];
-							item.img.map(i => {
-								if(i != ''){
-									images.push(this.domain + i);
-								}
-							})
-							item.images = images;
-							let ksbm = [];
-							if(item.i_id){
-								item.i_id.split(',').map(i => {
-									ksbm.push(i);
-								})
-								item.ksbm = ksbm;
-							}else{
-								item.ksbm = [];
-							}
+							item['active_index'] = '0';
+							item['style_loading'] = false;
 						})
 						this.data = data;
 					}else{
@@ -564,7 +580,47 @@
 						this.$message.warning(res.data.msg);
 					}
 				})
-			}
+			},
+			//切换风格图展示
+			handleClick(event,index){
+				let current_row = JSON.parse(JSON.stringify(this.data[index]));
+				let style_id = current_row.shooting_style_list[event.index].style_id;
+				current_row.style_loading = true;
+				this.$set(this.data,index,current_row);
+				chainResource.getStyleImgs({style_id:style_id}).then(res => {
+					if(res.data.code == 1){
+						let data = res.data.data;
+						current_row.shooting_style_list[event.index].img = res.data.data;
+						current_row.active_index = event.index.toString();
+						current_row.style_loading = false;
+						this.$set(this.data,index,current_row);
+					}else{
+						this.$message.warning(res.data.msg);
+					}
+				})
+			},
+			//放大弹窗切换图片
+			handleViewClick(e){
+				let style_id = this.view_shooting_style_list[e.index].style_id;
+				chainResource.getStyleImgs({style_id:style_id}).then(res => {
+					if(res.data.code == 1){
+						let data = res.data.data;
+						let current_info = JSON.parse(JSON.stringify(this.view_shooting_style_list[e.index]));
+						current_info.img = res.data.data;
+						this.view_active_index = e.index.toString();
+						this.$set(this.view_shooting_style_list,e.index,current_info);
+					}else{
+						this.$message.warning(res.data.msg);
+					}
+				})
+			},
+			//点击放大查看图片
+			viewImage(shooting_style_list,active_index,default_img_index){
+				this.view_active_index = active_index.toString();
+				this.default_img_index = default_img_index;
+				this.view_shooting_style_list = shooting_style_list;
+				this.view_dialog = true;
+			},
 		},
 		components:{
 			TableTitle,

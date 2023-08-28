@@ -318,7 +318,7 @@
 							this.$message.warning(res.data.msg);
 						}
 					})
-				}else{
+				}else{								//编辑
 					resource.editProductStyleGet(arg).then(res => {
 						if(res.data.code == 1){
 							let data_info = res.data.data;

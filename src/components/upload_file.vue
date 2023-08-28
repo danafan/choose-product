@@ -2,7 +2,7 @@
 	<div>
 		<!-- 只读 -->
 		<div class="image_list" v-if="only_view">
-			<el-image :z-index="999999" :style="{width:`${size}px`,height:`${size}px`,marginRight:`${size/5}px`,marginBottom:`${size/5}px`}" :src="domain + item.urls" v-for="item in preview_images" fit="scale-down"></el-image>
+			<el-image :z-index="999999" :style="{width:`${size}px`,height:`${size}px`,marginRight:`${size/5}px`,marginBottom:`${size/5}px`}" :src="item" v-for="item in view_images" :preview-src-list="view_images" fit="scale-down"></el-image>
 		</div>
 		<!-- 上传 -->
 		<div class="image_list" v-else>
@@ -106,6 +106,7 @@
 		data(){
 			return{
 				preview_images:[],		//当前的图片列表
+				view_images:[],			//预览图片列表
 			}
 		},
 		computed:{
@@ -153,23 +154,27 @@
 		watch:{
 			img_list:function(n,o){
 				this.preview_images = [];
+				this.view_images = [];
 				this.img_list.map(item => {
 					let img_obj = {
 						urls:item,
 						show_icon:false
 					}
 					this.preview_images.push(img_obj)
+					this.view_images.push(this.domain + item)
 				})
 			}
 		},
 		created(){
 			this.preview_images = [];
+			this.view_images = [];
 			this.img_list.map(item => {
 				let img_obj = {
 					urls:item,
 					show_icon:false
 				}
 				this.preview_images.push(img_obj)
+				this.view_images.push(this.domain + item)
 			})
 		},
 		methods:{
