@@ -67,7 +67,8 @@
 					<el-button size="mini" type="primary" @click="allSetting('0')" v-if="button_list.in_out == 1">批量下架</el-button>
 					<el-button size="mini" type="primary" @click="allSetting('3')" v-if="button_list.del == 1">批量删除</el-button>
 					<el-button size="mini" type="primary" @click="allSetting('2')" v-if="button_list.abu == 1">批量对接推单</el-button>
-					<el-button size="mini" type="primary" @click="$router.push('/edit_goods?page_type=goods&goods_type=1')" v-if="button_list.add == 1">添加</el-button>
+					<!-- <el-button size="mini" type="primary" @click="$router.push('/edit_goods?page_type=goods&goods_type=1')" v-if="button_list.add == 1">添加</el-button> -->
+					<el-button size="mini" type="primary" @click="editFn('','添加商品','1')" v-if="button_list.add == 1">添加</el-button>
 					<el-button size="mini" type="primary" @click="importFn('2')" v-if="button_list.add == 1">导入</el-button>
 					<el-button size="mini" type="primary" @click="exportFn">导出</el-button>
 				</TableTitle>
@@ -152,11 +153,12 @@
 					</el-table-column>
 					<el-table-column label="操作" width="180" fixed="right">
 						<template slot-scope="scope">
-							<el-button type="text" size="small" v-if="(scope.row.check_status == 1 || scope.row.check_status == 4) && button_list.agree_refuse == 1" @click="$router.push('/edit_goods?page_type=goods&goods_type=4&goods_id=' + scope.row.goods_id)">审核</el-button>
+							<!-- <el-button type="text" size="small" v-if="(scope.row.check_status == 1 || scope.row.check_status == 4) && button_list.agree_refuse == 1" @click="$router.push('/edit_goods?page_type=goods&goods_type=4&goods_id=' + scope.row.goods_id)">审核</el-button> -->
+							<el-button type="text" size="small" v-if="(scope.row.check_status == 1 || scope.row.check_status == 4) && button_list.agree_refuse == 1" @click="editFn(scope.row.goods_id,'审核商品','4')">审核</el-button>
 							<el-button type="text" size="small" v-if="(scope.row.check_status == 2 || scope.row.check_status == 5 || scope.row.check_status == 6) && button_list.in_out == 1" @click="checkStatus(scope.row.goods_id,scope.row.check_status)">{{scope.row.check_status == 2 || scope.row.check_status == 6?'下架':'上架'}}</el-button>
 							<el-button size="small" type="text" @click="adjustAudit(scope.row.style_id,scope.row.cost_price,scope.row.edit_price)" v-if="scope.row.price_status == '1' && button_list.price_btn == 1">调价审批</el-button>
-							<el-button style="margin-right: 10px" type="text" size="small" v-if="scope.row.check_status != 3 && scope.row.check_status != 5 && button_list.edit == 1" @click="editFn(scope.row.goods_id,'编辑商品')">编辑</el-button>
-							<el-button type="text" size="small" v-if="(scope.row.check_status == 3 || scope.row.check_status == 5) && button_list.reset == 1"  @click="editFn(scope.row.goods_id,'重新提交')">重新提交</el-button>
+							<el-button style="margin-right: 10px" type="text" size="small" v-if="scope.row.check_status != 3 && scope.row.check_status != 5 && button_list.edit == 1" @click="editFn(scope.row.goods_id,'编辑商品','2')">编辑</el-button>
+							<el-button type="text" size="small" v-if="(scope.row.check_status == 3 || scope.row.check_status == 5) && button_list.reset == 1"  @click="editFn(scope.row.goods_id,'重新提交','5')">重新提交</el-button>
 							<el-dropdown style="margin-left: 10px;" size="small" @command="handleCommand($event,scope.row.goods_id,scope.row.style_name)" v-if="scope.row.check_status != 1 && scope.row.check_status != 4 && (button_list.info == 1 || button_list.del == 1)">
 								<el-button type="text" size="small">
 									更多<i class="el-icon-arrow-down el-icon--right"></i>
@@ -203,42 +205,47 @@
 				<img class="close_icon" src="../../../../static/close_icon.png" @click="delist_dialog = false">
 			</div>
 			<div class="remark_content">
-				
-			</div>
-			<div slot="footer" class="dialog_footer">
-				<el-button size="mini" @click="delist_dialog = false">取消</el-button>
-				<el-button size="mini" type="primary" @click="clickDelist">确认</el-button>
-			</div>
-		</el-dialog>
-		<!-- 图片放大 -->
-		<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" destroy-on-close :visible.sync="view_dialog">
-			<div class="remark_content">
-				<el-tabs size="mini" v-model="view_active_index" @tab-click="handleViewClick">
-					<el-tab-pane :label="item.shooting_style_name" :name="index.toString()" v-for="(item,index) in view_shooting_style_list"></el-tab-pane>
-				</el-tabs>
-				<el-carousel style="width: 100%;height: 310px;" trigger="hover" indicator-position="none" :autoplay="false" :initial-index="default_img_index" v-if="view_shooting_style_list.length > 0">
-					<el-carousel-item v-for="item in view_shooting_style_list[parseInt(view_active_index)].img" :key="item">
-						<el-image :z-index="2006" class="view_image" :src="domain + item" fit="scale-down"></el-image>
-					</el-carousel-item>
-				</el-carousel>
-				<div v-else>暂无</div>
-			</div>
-			<div slot="footer" class="dialog_footer">
-				<el-button size="mini" type="primary" @click="view_dialog = false">关闭</el-button>
-			</div>
-		</el-dialog>
-		<!-- 编辑/重新提交弹窗 -->
-		<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" width="65%" top="15px" :visible.sync="edit_dialog">
-			<div slot="title" class="dialog_title">
-				<div>{{edit_dialog_title}}</div>
-				<img class="close_icon" src="../../../../static/close_icon.png" @click="edit_dialog = false">
-			</div>
-			<div class="remark_content">
-				<EditGoods v-if="edit_dialog" :edit_goods_id="goods_id" @callBack="editCallBack"/>
-			</div>
-			<div slot="footer" class="dialog_footer">
+				<el-input
+				type="textarea"
+				autosize
+				placeholder="请输入下架原因"
+				v-model="off_reason">
+			</el-input>
+		</div>
+		<div slot="footer" class="dialog_footer">
+			<el-button size="mini" @click="delist_dialog = false">取消</el-button>
+			<el-button size="mini" type="primary" @click="clickDelist">确认</el-button>
+		</div>
+	</el-dialog>
+	<!-- 图片放大 -->
+	<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" destroy-on-close :visible.sync="view_dialog">
+		<div class="remark_content">
+			<el-tabs size="mini" v-model="view_active_index" @tab-click="handleViewClick">
+				<el-tab-pane :label="item.shooting_style_name" :name="index.toString()" v-for="(item,index) in view_shooting_style_list"></el-tab-pane>
+			</el-tabs>
+			<el-carousel style="width: 100%;height: 310px;" trigger="hover" indicator-position="none" :autoplay="false" :initial-index="default_img_index" v-if="view_shooting_style_list.length > 0">
+				<el-carousel-item v-for="item in view_shooting_style_list[parseInt(view_active_index)].img" :key="item">
+					<el-image :z-index="2006" class="view_image" :src="domain + item" fit="scale-down"></el-image>
+				</el-carousel-item>
+			</el-carousel>
+			<div v-else>暂无</div>
+		</div>
+		<div slot="footer" class="dialog_footer">
+			<el-button size="mini" type="primary" @click="view_dialog = false">关闭</el-button>
+		</div>
+	</el-dialog>
+	<!-- 编辑/重新提交弹窗 -->
+	<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" width="65%" top="15px" :visible.sync="edit_dialog">
+		<div slot="title" class="dialog_title">
+			<div>{{edit_dialog_title}}</div>
+			<img class="close_icon" src="../../../../static/close_icon.png" @click="edit_dialog = false">
+		</div>
+		<div class="remark_content">
+			<EditGoods v-if="edit_dialog" :edit_goods_id="goods_id" :goods_type="goods_type" @callBack="editCallBack"/>
+		</div>
+			<!-- <div slot="footer" class="dialog_footer">
 				<el-button size="mini" type="primary" @click="edit_dialog = false">关闭</el-button>
-			</div>
+			</div> -->
 		</el-dialog>
 	</div>
 </template>
@@ -399,6 +406,7 @@
 				view_shooting_style_list:[],//放大图片列表
 				edit_dialog:false,			//编辑/重新提交弹窗
 				edit_dialog_title:"",		//编辑/重新提交标题
+				goods_type:'',				//类型
 			}
 		},
 		created(){
@@ -861,12 +869,8 @@
 			//监听更多操作按钮
 			handleCommand(e,id,name){
 				if(e == '1'){	//查看
-					this.$router.push('/edit_goods?page_type=goods&goods_type=3&goods_id=' + id);
-				}
-				// else if(e == '2'){	//图片管理
-				// 	this.$router.push('/image_setting?goods_id=' + id + '&style_name=' + name)
-				// }
-				else if(e == '3'){	//删除
+					this.editFn(id,'商品详情','3')
+				}else if(e == '3'){	//删除
 					this.$confirm(`确认删除?`, '提示', {
 						confirmButtonText: '确定',
 						cancelButtonText: '取消',
@@ -919,6 +923,10 @@
 			},
 			//点击下架
 			clickDelist(){
+				if(this.off_reason == ''){
+					this.$message.warning('请输入下架原因!');
+					return;
+				}
 				let arg = {
 					goods_id:this.goods_id,
 					type:0,
@@ -947,10 +955,11 @@
 					window.open(url)
 				}
 			},
-			//点击编辑
-			editFn(goods_id,edit_dialog_title){
+			//点击添加、编辑、重新提交、审核、查看
+			editFn(goods_id,edit_dialog_title,goods_type){
 				this.edit_dialog_title = edit_dialog_title;
 				this.goods_id = goods_id.toString();
+				this.goods_type = goods_type;
 				this.edit_dialog = true;
 			},
 			//编辑和重新提交之后的回调
@@ -961,6 +970,12 @@
 			},
 			//获取更新后的商品信息
 			getRefreshInfo(goods_ids){
+				if(goods_ids == ''){	//添加，刷新列表
+					//获取列表
+					this.getGoodsList();
+					return;
+				}
+				//编辑、重新提交、审核、查看
 				resource.getRefreshInfo({goods_ids:goods_ids}).then(res => {
 					if(res.data.code == 1){
 						let update_data = res.data.data;
