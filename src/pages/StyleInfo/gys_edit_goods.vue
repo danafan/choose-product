@@ -11,35 +11,29 @@
 							<div>{{arg.add_admin_name}}</div>
 						</el-form-item>
 						<el-form-item label="类目：" required>
-							<el-select v-model="arg.category_id" clearable placeholder="请选择类目" :disabled="is_detail">
+							<el-select v-model="arg.category_id" clearable placeholder="请选择类目" :disabled="is_detail || info_edit_fields.indexOf('category_id') > -1">
 								<el-option v-for="item in cate_list" :key="item.category_id" :label="item.category_name" :value="item.category_id">
 								</el-option>
 							</el-select>
 						</el-form-item>
-						<el-form-item label="拍摄风格：">
-							<el-select v-model="shooting_style_ids" multiple filterable clearable placeholder="请选择拍摄风格" :disabled="is_detail || goods_type == '2' || goods_type == '5'">
-								<el-option v-for="item in style_list" :key="item.shooting_style_id" :label="item.shooting_style_name" :value="item.shooting_style_id">
-								</el-option>
-							</el-select>
-						</el-form-item>
 						<el-form-item label="面料：" required>
-							<el-input placeholder="面料" v-model="arg.fabric" :disabled="is_detail">
+							<el-input placeholder="面料" v-model="arg.fabric" :disabled="is_detail || info_edit_fields.indexOf('fabric') > -1">
 							</el-input>
 						</el-form-item>
 						<el-form-item label="成本价：" required>
-							<el-input type="number" v-model="arg.cost_price" :disabled="is_detail">
+							<el-input type="number" v-model="arg.cost_price" :disabled="is_detail || info_edit_fields.indexOf('cost_price') > -1">
 							</el-input>
 						</el-form-item>
 						<el-form-item label="控价：">
-							<el-input type="number" v-model="arg.price_control" :disabled="is_detail">
+							<el-input type="number" v-model="arg.price_control" :disabled="is_detail || info_edit_fields.indexOf('price_control') > -1">
 							</el-input>
 						</el-form-item>
 						<el-form-item label="网盘地址：">
-							<el-input :placeholder="is_detail?'':'网盘地址'" v-model="arg.net_disk_address" :disabled="is_detail">
+							<el-input :placeholder="is_detail?'':'网盘地址'" v-model="arg.net_disk_address" :disabled="is_detail || info_edit_fields.indexOf('net_disk_address') > -1">
 							</el-input>
 						</el-form-item>
 						<el-form-item label="备注：">
-							<el-input type="textarea" :rows="5" :placeholder="is_detail?'':'请输入备注'" v-model="arg.remark" :disabled="is_detail">
+							<el-input type="textarea" :rows="5" :placeholder="is_detail?'':'请输入备注'" v-model="arg.remark" :disabled="is_detail || info_edit_fields.indexOf('remark') > -1">
 							</el-input>
 						</el-form-item>
 						<el-form-item label="调价状态：" v-if="!!price_status">
@@ -49,37 +43,37 @@
 							{{edit_price}}
 						</el-form-item>
 						<el-form-item label="尺码：" required>
-							<el-input placeholder="尺码" v-model="arg.size" :disabled="is_detail">
+							<el-input placeholder="尺码" v-model="arg.size" :disabled="is_detail|| info_edit_fields.indexOf('size') > -1">
 							</el-input>
 						</el-form-item>
 						<el-form-item label="颜色：" required>
-							<el-input placeholder="颜色" v-model="arg.color" :disabled="is_detail">
+							<el-input placeholder="颜色" v-model="arg.color" :disabled="is_detail || info_edit_fields.indexOf('color') > -1">
 							</el-input>
 						</el-form-item>
 					</el-form>
 					<el-form size="small" label-width="100px" style="width:50%">
 						<el-form-item label="商品款号：" required>
-							<el-input placeholder="商品款号" style="width:190px" v-model="arg.style_name" :disabled="is_detail || goods_type == '2' || goods_type == '5'">
+							<el-input placeholder="商品款号" style="width:190px" v-model="arg.style_name" :disabled="is_detail || goods_type == '2' || goods_type == '5' || info_edit_fields.indexOf('style_name') > -1">
 							</el-input>
 						</el-form-item>
 						<el-form-item label="标题：" required>
-							<el-input placeholder="标题" v-model="arg.title" :disabled="is_detail">
+							<el-input placeholder="标题" v-model="arg.title" :disabled="is_detail || info_edit_fields.indexOf('title') > -1">
 							</el-input>
 						</el-form-item>
 						<el-form-item label="市场：" required>
-							<el-select v-model="arg.market_id" clearable placeholder="请选择市场" :disabled="is_detail">
+							<el-select v-model="arg.market_id" clearable placeholder="请选择市场" :disabled="is_detail || info_edit_fields.indexOf('market_id') > -1">
 								<el-option v-for="item in market_list" :key="item.market_id" :label="item.market_name" :value="item.market_id">
 								</el-option>
 							</el-select>
 						</el-form-item>
 						<el-form-item label="分类：" required>
-							<el-select v-model="arg.classification_id" clearable placeholder="请选择分类" :disabled="is_detail">
+							<el-select v-model="arg.classification_id" clearable placeholder="请选择分类" :disabled="is_detail || info_edit_fields.indexOf('classification_id') > -1">
 								<el-option v-for="item in class_list" :key="item.classification_id" :label="item.classification_name" :value="item.classification_id">
 								</el-option>
 							</el-select>
 						</el-form-item>
 						<el-form-item label="爆款：">
-							<el-radio-group v-model="arg.hot_style" :disabled="is_detail || hot_status === 0">
+							<el-radio-group v-model="arg.hot_style" :disabled="is_detail || hot_status === 0 || info_edit_fields.indexOf('hot_style') > -1">
 								<el-radio :label="1">是</el-radio>
 								<el-radio :label="0">否</el-radio>
 							</el-radio-group>
@@ -105,50 +99,50 @@
 							<UploadFile :img_list="bk_img_list" :is_multiple="true" :current_num="bk_img.length" :size="80" :max_num="9" @callbackFn="bkCallbackFn" v-else/>
 						</el-form-item>
 						<el-form-item label="主推款：">
-							<el-radio-group v-model="arg.data_style" :disabled="is_detail || data_status === 0">
+							<el-radio-group v-model="arg.data_style" :disabled="is_detail || data_status === 0 || info_edit_fields.indexOf('data_style') > -1">
 								<el-radio :label="1">是</el-radio>
 								<el-radio :label="0">否</el-radio>
 							</el-radio-group>
 						</el-form-item>
 						<el-form-item label="库存数：" v-if="arg.data_style">
-							<el-input type="number" v-model="kcs" :disabled="is_detail || default_data_style === 1">
+							<el-input type="number" v-model="kcs" :disabled="is_detail || default_data_style === 1 || info_edit_fields.indexOf('data_num') > -1">
 							</el-input>
 						</el-form-item>
 						<el-form-item label="调价：" v-if="arg.data_style">
-							<el-input type="number" v-model="tj" :disabled="is_detail || default_data_style === 1">
+							<el-input type="number" v-model="tj" :disabled="is_detail || default_data_style === 1 || info_edit_fields.indexOf('data_price') > -1">
 							</el-input>
 						</el-form-item>
 						<el-form-item label="备注：" v-if="arg.data_style">
-							<el-input type="textarea" :rows="3" :placeholder="is_detail?'':'请输入备注'" v-model="bz" :disabled="is_detail || default_data_style === 1">
+							<el-input type="textarea" :rows="3" :placeholder="is_detail?'':'请输入备注'" v-model="bz" :disabled="is_detail || default_data_style === 1 || info_edit_fields.indexOf('data_remark') > -1">
 							</el-input>
 						</el-form-item>
 						<el-form-item label="独家款：">
-							<el-radio-group v-model="arg.sole_style" :disabled="is_detail">
+							<el-radio-group v-model="arg.sole_style" :disabled="is_detail || info_edit_fields.indexOf('sole_style') > -1">
 								<el-radio :label="1">是</el-radio>
 								<el-radio :label="0">否</el-radio>
 							</el-radio-group>
 						</el-form-item>
 						<el-form-item label="自主款：">
-							<el-radio-group v-model="arg.again_style" :disabled="is_detail">
+							<el-radio-group v-model="arg.again_style" :disabled="is_detail || info_edit_fields.indexOf('again_style') > -1">
 								<el-radio :label="1">是</el-radio>
 								<el-radio :label="0">否</el-radio>
 							</el-radio-group>
 						</el-form-item>
 						<el-form-item label="深度库存 ：">
-							<el-radio-group v-model="arg.depth_inventory" :disabled="is_detail || depth_inventory_status === 0">
+							<el-radio-group v-model="arg.depth_inventory" :disabled="is_detail || depth_inventory_status === 0 || info_edit_fields.indexOf('depth_inventory') > -1">
 								<el-radio :label="1">是</el-radio>
 								<el-radio :label="0">否</el-radio>
 							</el-radio-group>
 						</el-form-item>
 						<el-form-item label="视频款：">
-							<el-radio-group v-model="arg.video_style" :disabled="is_detail || video_style_status === 0">
+							<el-radio-group v-model="arg.video_style" :disabled="is_detail || video_style_status === 0|| info_edit_fields.indexOf('video_style') > -1">
 								<el-radio :label="1">是</el-radio>
 								<el-radio :label="0">否</el-radio>
 							</el-radio-group>
 						</el-form-item>
 					</el-form>
 				</div>
-				<div class="form_row">
+				<!-- <div class="form_row">
 					<el-form size="small" label-width="100px">
 						<el-form-item label="商品图：">
 							<div v-if="is_detail">
@@ -157,7 +151,43 @@
 							<UploadFile :is_main="true" :img_list="img_list" :is_multiple="true" :current_num="arg.img.length" :max_num="99" @callbackFn="callbackFn" v-else/>
 						</el-form-item>
 					</el-form>
-				</div>
+				</div> -->
+				<div class="form_row">
+			<el-form size="small" label-width="100px">
+				<el-form-item label="拍摄风格：" required>
+					<div>
+						<div class="flex" style="margin-bottom:10px">
+							<el-popover ref="stylePopover" placement="right-start" width="400" trigger="click">
+								<div>
+									<el-select v-model="selected_style" multiple placeholder="全部风格">
+										<el-option
+										v-for="item in style_table_data"
+										:key="item.shooting_style_id"
+										:label="item.shooting_style_name"
+										:value="item.shooting_style_id">
+									</el-option>
+								</el-select>
+								<div class="dialog_footer">
+									<el-button size="small" type="primary" @click="setStyleFn">保存</el-button>
+								</div>
+							</div>
+							<el-button size="mini" type="primary" slot="reference" v-if="goods_type != '3' && goods_type != '4' && info_edit_fields.indexOf('styles_data') == -1">添加</el-button>
+						</el-popover>
+					</div>
+					<div class="flex" v-for="(item,index) in style_card_list">
+						<div class="relative style_item flex ac jc" >
+							<div>{{item.shooting_style_name}}</div>
+							<img class="delete_style_icon" src="../../static/delete_style_icon.png" v-if="goods_type != '3' && goods_type != '4' && info_edit_fields.indexOf('styles_data') == -1 && item.edit_status == 1" @click.stop="deleteStyleTab(index)">
+						</div>
+						<div class="flex-1">
+							<UploadFile :size="80" :is_multiple="true" :max_num="9" :current_num="style_card_list[index].image_arr.length" :img_list="style_card_list[index].image_arr" :only_view="goods_type == '3' || goods_type == '4' || info_edit_fields.indexOf('styles_data') > -1 || item.edit_status == 0" @callbackFn="currentStyleImgCallBackFn(index,arguments)"/>
+							</div>
+
+						</div>
+					</div>
+				</el-form-item>
+			</el-form>
+		</div>
 				<div class="bottom_row" v-if="goods_type == '1' || goods_type == '2' || goods_type == '5'">
 					<el-button size="small" type="primary" @click="commitEditGoods">提交</el-button>
 				</div>
@@ -185,7 +215,7 @@
 				preview_image:[],		//查看详情的图片列表
 				preview_bk_image:[],	//查看详情的爆款图片列表
 				img_list:[],			
-				style_id:"",			//商品ID
+				goods_id:"",			//商品ID
 				price_status:"",		//调价审核状态
 				edit_price:"",
 				max_height:0,
@@ -226,11 +256,15 @@
 				kcs:"",						//库存数
 				tj:"",						//调价
 				bz:"",						//备注
+				style_card_list:[],				//已选中的风格列表
+				style_table_data:[],			//未选中的风格列表
+				selected_style:[],				//已选中的风格ID列表
+				info_edit_fields:[],			//存在修改记录的字段（不可编辑）
 			}
 		},
 		created(){
 			//商品ID
-			this.style_id = this.$route.query.style_id;
+			this.goods_id = this.$route.query.goods_id;
 			this.is_detail = this.$route.query.goods_type == '3'?true:false;
 			//类型
 			this.goods_type = this.$route.query.goods_type;
@@ -296,7 +330,7 @@
 			//获取商品详情
 			getGoodsDetail(){
 				var arg = {
-					style_id:this.style_id
+					goods_id:this.goods_id
 				}
 				if(this.goods_type == '3'){	//查看
 					resource.getOnepro(arg).then(res => {
@@ -333,6 +367,7 @@
 			},
 			//处理详情
 			setInfo(data_info){
+				this.info_edit_fields = data_info.info_edit_fields;
 				this.price_status = data_info.price_status;
 				this.edit_price = data_info.edit_price;
 
@@ -347,14 +382,26 @@
 					this.img_list = data_info.img;
 				}
 
-				data_info.img.map(item => {
-					// let img_obj = {
-					// 	urls:item,
-					// 	show_icon:false
-					// }
-					// this.img_list.push(img_obj);
-					this.preview_image.push(this.domain + item);
+				//拍摄风格
+				let styles_data = data_info.styles_data;
+
+				styles_data.map(item => {
+					let style_card_item = {
+						shooting_style_id:item.shooting_style_id,
+						shooting_style_name:item.shooting_style_name,
+						image_arr:item.imgs,
+						edit_status:item.edit_status
+					}
+					this.style_card_list.push(style_card_item)
 				})
+				// data_info.img.map(item => {
+				// 	// let img_obj = {
+				// 	// 	urls:item,
+				// 	// 	show_icon:false
+				// 	// }
+				// 	// this.img_list.push(img_obj);
+				// 	this.preview_image.push(this.domain + item);
+				// })
 
 				this.link_urls = data_info.hot_url;
 				if(data_info.hot_img){
@@ -373,12 +420,12 @@
 				this.tj = data_info.data_price;
 				this.bz = data_info.data_remark;
 
-				if(data_info.shooting_style_id != ''){
-					let shooting_style_ids = data_info.shooting_style_id.split(',');
-					this.shooting_style_ids = shooting_style_ids.map(item => {
-						return parseInt(item);
-					})
-				}
+				// if(data_info.shooting_style_id != ''){
+				// 	let shooting_style_ids = data_info.shooting_style_id.split(',');
+				// 	this.shooting_style_ids = shooting_style_ids.map(item => {
+				// 		return parseInt(item);
+				// 	})
+				// }
 				for(let key in this.arg){
 					for(let k in data_info){
 						if(key == k){
@@ -418,13 +465,61 @@
 				return new Promise((resolve)=>{
 					commonResource.ajaxStyleList().then(res => {
 						if(res.data.code == 1){
-							this.style_list = res.data.data;
+							let style_list = res.data.data;
+							style_list.map(item => {
+								item['image_arr'] = [];
+							})
+							this.style_table_data = style_list;
 							resolve();
 						}else{
 							this.$message.warning(res.data.msg);
 						}
 					})
 				})
+			},
+			//确认商品风格多选
+			setStyleFn(){
+				this.selected_style.map(item => {
+					let name_arr = this.style_table_data.filter(i => {
+						return i.shooting_style_id == item;
+					})
+					let style_card_item = {
+						shooting_style_id:item,
+						shooting_style_name:name_arr[0].shooting_style_name,
+						image_arr:[]
+					}
+					this.style_card_list.push(style_card_item);
+				})
+				this.style_table_data = this.filterStyle(this.style_table_data,this.style_card_list);
+				this.selected_style = [];
+				this.$refs.stylePopover.doClose()
+			},
+			//点击删除已选的风格
+			deleteStyleTab(index){
+				let current_style = this.style_card_list[index];
+				this.$confirm(`确认删除【${current_style.shooting_style_name}】风格及包含的${current_style.image_arr.length}张图片?`, '提示', {
+					confirmButtonText: '确定',
+					cancelButtonText: '取消',
+					type: 'warning'
+				}).then(() => {
+					this.style_table_data.unshift(current_style);
+					this.style_card_list.splice(index,1);
+				}).catch(() => {
+					this.$message({
+						type: 'info',
+						message: '取消删除'
+					});          
+				});
+			},
+			//监听风格图列表回调
+			currentStyleImgCallBackFn(index,data){
+				let new_item = JSON.parse(JSON.stringify(this.style_card_list[index]));
+				new_item.image_arr = data[0];
+				this.$set(this.style_card_list,index,new_item);
+			},
+			//对比已选中的过滤右侧未选中的风格  
+			filterStyle(arr1, arr2) {
+				return arr1.filter((v) => arr2.every((val) => val.shooting_style_id!= v.shooting_style_id));
 			},
 			//分类列表
 			ajaxClassList(){
@@ -485,8 +580,30 @@
 				}else if(!this.arg.color){
 					this.$message.warning('请输入颜色!');
 				}else{
-					var arg = this.goods_type == '1'?this.arg:{...this.arg,...{style_id:this.style_id}};
-					arg.shooting_style_id = this.shooting_style_ids.join(',');
+					//处理拍摄风格参数
+					let style_imgs = [];
+					let null_arr = [];
+					this.style_card_list.map(item => {
+						if(item.image_arr.length == 0){
+							null_arr.push(item.shooting_style_name)
+						}else{
+							let img_arr = [];
+							item.image_arr.map(i => {
+								img_arr.push(i)
+							})
+							style_imgs.push(`${item.shooting_style_id}-${img_arr.join(',')}`)
+						}
+					})
+					if(null_arr.length > 0){
+						this.$message.warning(`【${null_arr.join(',')}】风格图片为空!`);
+						return;
+					}
+
+					var arg = this.goods_type == '1'?this.arg:{...this.arg,...{goods_id:this.goods_id}};
+
+					//拍摄风格参数
+					arg.style_imgs = style_imgs.join(';');
+					// arg.shooting_style_id = this.shooting_style_ids.join(',');
 
 					arg.hot_url = this.link_urls.join(',');
 					arg.hot_img = this.bk_img.join(',');
@@ -611,6 +728,28 @@
 				width: 160rem;
 				height: 160rem;
 			}
+			.style_item{
+			border: 1px solid #FFC998;
+			background: #FFFCFA;
+			color: #E47A1A;
+			font-size: 14rem;
+			width:80px;
+			height:80px;
+			margin-right:24px;
+			margin-bottom:16px;
+			.delete_style_icon{
+				position: absolute;
+				top: 0;
+				right: 0;
+				width: 14rem;
+				height: 14rem;
+			}
+			.add_style_icon{
+				margin-right: 6rem;
+				width: 14rem;
+				height: 14rem;
+			}
+		}
 		}
 		.bk_card_img{
 			margin-right: 16px;

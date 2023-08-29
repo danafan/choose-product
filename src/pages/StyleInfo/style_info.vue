@@ -99,8 +99,8 @@
 				<el-table-column label="操作" width="160" fixed="right">
 					<template slot-scope="scope">
 						<el-button type="text" size="small" v-if="scope.row.check_status == 2 || scope.row.check_status == 5 || scope.row.check_status == 6" @click="checkStatus(scope.row.style_id,scope.row.check_status)">{{scope.row.check_status == 2 || scope.row.check_status == 6?'下架':'上架'}}</el-button>
-						<el-button style="margin-right: 10px" type="text" size="small" v-if="scope.row.check_status == 2 || scope.row.check_status == 6" @click="$router.push('/gys_edit_goods?goods_type=2&style_id=' + scope.row.style_id)">编辑</el-button>
-						<el-dropdown size="small" v-if="scope.row.check_status == 2 || scope.row.check_status == 6" @command="handleCommand($event,scope.row.style_id,scope.row.style_name)">
+						<el-button style="margin-right: 10px" type="text" size="small" v-if="scope.row.check_status == 2 || scope.row.check_status == 6" @click="$router.push('/gys_edit_goods?goods_type=2&goods_id=' + scope.row.goods_id)">编辑</el-button>
+						<el-dropdown size="small" v-if="scope.row.check_status == 2 || scope.row.check_status == 6" @command="handleCommand($event,scope.row.goods_id,scope.row.style_name)">
 							<el-button type="text" size="small">
 								更多<i class="el-icon-arrow-down el-icon--right"></i>
 							</el-button>
@@ -109,7 +109,7 @@
 								<!-- <el-dropdown-item command="2">图片管理</el-dropdown-item> -->
 							</el-dropdown-menu>
 						</el-dropdown>
-						<el-button type="text" size="small" v-if="scope.row.check_status == 3" @click="$router.push('/gys_edit_goods?goods_type=5&style_id=' + scope.row.style_id)">重新提交</el-button>
+						<el-button type="text" size="small" v-if="scope.row.check_status == 3" @click="$router.push('/gys_edit_goods?goods_type=5&goods_id=' + scope.row.goods_id)">重新提交</el-button>
 					</template>
 				</el-table-column>
 			</el-table>
@@ -213,6 +213,10 @@
 		}
 		.remark_content{
 			padding:20rem;
+		}
+		.view_image{
+			width: 100%;
+			height: 320px;
 		}
 	}
 </style>
@@ -524,12 +528,13 @@
 				});
 			},
 			//监听更多操作按钮
-			handleCommand(e,id,name){
+			handleCommand(e,goods_id,name){
 				if(e == '1'){	//查看
-					this.$router.push('/gys_edit_goods?goods_type=3&style_id=' + id);
-				}else if(e == '2'){	//图片管理
-					this.$router.push('/gys_image_setting?style_id=' + id + '&style_name=' + name);
+					this.$router.push('/gys_edit_goods?goods_type=3&goods_id=' + goods_id);
 				}
+				// else if(e == '2'){	//图片管理
+				// 	this.$router.push('/gys_image_setting?style_id=' + id + '&style_name=' + name);
+				// }
 			},
 			//切换上架或下架
 			checkStatus(style_id,type){
