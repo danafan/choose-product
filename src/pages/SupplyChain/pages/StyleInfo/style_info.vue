@@ -260,7 +260,9 @@
 	.el-tooltip__popper {
 		max-width: 800px;
 	}
-
+	.import_loading{
+		z-index: 9999!important;
+	}
 </style>
 <style lang="less" scoped>
 	.card_box{
@@ -390,7 +392,6 @@
 				import_type:"1",		//导入弹窗类型
 				multiple_selection:[],
 				is_check:0,				//1:展示批量审核；0：不展示
-				fullscreenLoading:false,
 				style_id:"",				//点击的款式ID
 				goods_id:"",
 				cost_price:"",
@@ -518,6 +519,7 @@
 			importFn(type){
 				this.import_type = type;
 				this.import_dialog = true;
+				
 			},
 			//下载模版
 			downTemplate(){
@@ -531,12 +533,18 @@
 			uploadCsv(){
 				if (this.$refs.csvUpload.files.length > 0) {
 					let files = this.$refs.csvUpload.files;
-					this.fullscreenLoading = true;
+					const loading = this.$loading({
+						lock: true,
+						text: '正在导入，请稍候...',
+						spinner: 'el-icon-loading',
+						customClass:'import_loading',
+						background: 'rgba(0, 0, 0, 0.7)'
+					});
 					if(this.import_type == '1'){	//批量修改
 						resource.editGoodsIid({file:files[0]}).then(res => {
 							this.$refs.csvUpload.value = null;
 							this.import_dialog = false;
-							this.fullscreenLoading = false;
+							loading.close();
 							if(res.data.code == 1){
 								this.$message.success(res.data.msg);
 								this.page = 1;
@@ -550,7 +558,7 @@
 						resource.addAllProductStyle({file:files[0]}).then(res => {
 							this.$refs.csvUpload.value = null;
 							this.import_dialog = false;
-							this.fullscreenLoading = false;
+							loading.close();
 							if(res.data.code == 1){
 								this.$message.success(res.data.msg);
 								this.page = 1;

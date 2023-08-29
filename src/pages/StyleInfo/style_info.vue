@@ -98,7 +98,7 @@
 				<el-table-column label="拒绝备注" prop="refuse_reason"></el-table-column>
 				<el-table-column label="操作" width="160" fixed="right">
 					<template slot-scope="scope">
-						<el-button type="text" size="small" v-if="scope.row.check_status == 2 || scope.row.check_status == 5 || scope.row.check_status == 6" @click="checkStatus(scope.row.style_id,scope.row.check_status)">{{scope.row.check_status == 2 || scope.row.check_status == 6?'下架':'上架'}}</el-button>
+						<el-button type="text" size="small" v-if="scope.row.check_status == 2 || scope.row.check_status == 5 || scope.row.check_status == 6" @click="checkStatus(scope.row.goods_id,scope.row.check_status)">{{scope.row.check_status == 2 || scope.row.check_status == 6?'下架':'上架'}}</el-button>
 						<el-button style="margin-right: 10px" type="text" size="small" v-if="scope.row.check_status == 2 || scope.row.check_status == 6" @click="$router.push('/gys_edit_goods?goods_type=2&goods_id=' + scope.row.goods_id)">编辑</el-button>
 						<el-dropdown size="small" v-if="scope.row.check_status == 2 || scope.row.check_status == 6" @command="handleCommand($event,scope.row.goods_id,scope.row.style_name)">
 							<el-button type="text" size="small">
@@ -298,7 +298,7 @@
 				import_dialog:false,	//导入弹窗
 				multiple_selection:[],
 				fullscreenLoading:false,	//导入加载弹窗
-				style_id:"",				//点击的style_id
+				goods_id:"",				//点击的style_id
 				down_dialog:false,			//下架原因弹窗
 				off_reason:"",				//下架原因
 				view_dialog:false,			//放大图片弹窗
@@ -471,7 +471,7 @@
 				let title = "";			//提示标题
 				let total_num = this.multiple_selection.length;	//选中的总数
 				let unset_num = 0;	//不能操作的数量
-				let style_id = [];
+				let goods_id = [];
 				if(total_num == 0){
 					this.$message.warning('至少选择一条！');
 					return;
@@ -483,7 +483,7 @@
 						return item.check_status == 2 ||  item.check_status == 6;
 					})
 					unset_list.map(item => {
-						style_id.push(item.style_id)
+						goods_id.push(item.goods_id)
 					})
 					unset_num = total_num - unset_list.length;
 				}else if(type == '1'){	//上架
@@ -492,7 +492,7 @@
 						return item.check_status == 5;
 					})
 					unset_list.map(item => {
-						style_id.push(item.style_id)
+						goods_id.push(item.goods_id)
 					})
 					unset_num = total_num - unset_list.length;
 				}
@@ -507,7 +507,7 @@
 				}).then(() => {
 					if(type == '0' || type == '1'){	//上架或下架
 						let arg = {
-							style_id:style_id.join(','),
+							goods_id:goods_id.join(','),
 							type:type
 						}
 						resource.checkStatus(arg).then(res => {
@@ -537,8 +537,8 @@
 				// }
 			},
 			//切换上架或下架
-			checkStatus(style_id,type){
-				this.style_id = style_id;
+			checkStatus(goods_id,type){
+				this.goods_id = goods_id;
 				if(type == 5){	//上架
 					this.$confirm('确认上架?', '提示', {
 						confirmButtonText: '确定',
@@ -546,7 +546,7 @@
 						type: 'warning'
 					}).then(() => {
 						let arg = {
-							style_id:this.style_id,
+							goods_id:this.goods_id,
 							type:1
 						}
 						resource.checkStatus(arg).then(res => {
@@ -571,7 +571,7 @@
 			//确认下架
 			confirmOff(){
 				let arg = {
-					style_id:this.style_id,
+					goods_id:this.goods_id,
 					type:0,
 					off_reason:this.off_reason
 				}
