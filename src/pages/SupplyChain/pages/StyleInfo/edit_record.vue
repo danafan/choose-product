@@ -48,7 +48,10 @@
 							<div class="flex fc as">
 								<div class="flex" v-for="(item,index) in scope.row.info_arr.length">
 									<div class="flex as" style="width:180px;text-align: start;margin-right:10px" v-if="scope.row.info_arr[index].indexOf('：') == -1">
-										<div class="table_header_text">图片：</div>
+										<div class="flex fc ac">
+											<div style="color:red">（{{scope.row.shooting_style_name}}）</div>
+											<div>图片：</div>
+										</div>
 										<div class="flex-1 flex-warp" v-if="scope.row.info_arr[index].length > 0">
 											<el-image :z-index="2006" class="edit_image" :src="iii" fit="scale-down":preview-src-list="scope.row.info_arr[index]" v-for="iii in scope.row.info_arr[index]"></el-image>
 										</div>
@@ -56,7 +59,10 @@
 									<div style="width:180px;text-align: start;margin-right:10px" v-else>{{scope.row.info_arr[index]}}</div>
 
 									<div class="flex as" style="width:180px;text-align: start;margin-right:10px" v-if="scope.row.edit_info_arr[index].indexOf('：') == -1">
-										<div class="table_header_text">图片：</div>
+										<div class="flex fc ac">
+											<div style="color:red">（{{scope.row.shooting_style_name}}）</div>
+											<div>图片：</div>
+										</div>
 										<div class="flex-1 flex-warp" v-if="scope.row.edit_info_arr[index].length > 0">
 											<el-image :z-index="2006" class="edit_image" :src="iii" fit="scale-down" :preview-src-list="scope.row.edit_info_arr[index]" v-for="iii in scope.row.edit_info_arr[index]"></el-image>
 										</div>
