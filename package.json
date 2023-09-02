@@ -13,6 +13,7 @@
     "dingtalk-jsapi": "^3.0.20",
     "echarts": "^5.4.3",
     "element-ui": "^2.15.1",
+    "html2canvas": "^1.4.1",
     "js-base64": "^3.7.2",
     "js-md5": "^0.7.3",
     "js-pinyin": "^0.1.9",

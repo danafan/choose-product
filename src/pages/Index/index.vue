@@ -19,7 +19,7 @@
 					<el-card class="card_box" id="card_box">
 						<ScreeningWidget id="screen_widget" v-if="show_screen" :total_num="total" @callback="screenFn"/>
 						<div class="scroll_view" v-if="goods_list.length > 0">
-							<div class="goods_list">
+							<div class="goods_list" id='goods_list'>
 								<GoodsItem :info="item" @setStatus="setStatus" v-for="item in goods_list" @callback="getList" @enlargeFn="enlargeFn"/>
 								<div class="padding_item" v-for="i in 6-(goods_list.length%6) == 6?0:6-(goods_list.length%6)"></div>
 							</div>
@@ -30,6 +30,8 @@
 				</div>
 				<img class="scroll_top_icon" src="../../static/scroll_top_icon.png" @click="setScrollTop">
 				<CarWidget :is_fixed="true"/>
+
+				<img class="clipboard_icon" src="../../static/clipboard_icon.png" @click="toClipboard">
 			</div>
 			<!-- 点击放大 -->
 			<el-dialog :visible.sync="enlarge_dialog" top="15px" :show-close="false" custom-class="custom_class">
@@ -58,6 +60,14 @@
 					</div>
 				</div>
 			</el-dialog>
+			<!-- 生成截屏 -->
+			<el-dialog :visible.sync="clipboard_dialog">
+				<div slot="title" class="dialog_title">
+					<div>生成图片</div>
+					<img class="close_icon" src="../../static/close_icon.png" @click="clipboard_dialog = false">
+				</div>
+				<img style="width:100%" :src="clipboard_url">
+			</el-dialog>
 		</div>
 	</template>
 	<script>
@@ -70,6 +80,8 @@
 		import VogueWidget from '../../components/vogue_widget.vue'
 
 		import resource from '../../api/resource.js'
+
+		import html2canvas from 'html2canvas'
 		export default{
 			data(){
 				return{
@@ -92,7 +104,10 @@
 				seven_days:[],
 				seven_sale_nums:[],
 				thirty_days:[],
-				thirty_sale_nums:[]
+				thirty_sale_nums:[],
+				clipboard_dialog:false,
+				clipboard_url:""
+
 			}
 		},
 		created(){
@@ -288,7 +303,18 @@
 			//点击进入店铺详情
 			openStore(store_url){
 				window.open(store_url)
+			},
+			//一键截图
+			toClipboard() {
+				html2canvas(document.getElementById("goods_list"), {
+					useCORS: true, 
+					backgroundColor: '#ffffff', 
+				}).then((canvas) => {
+					this.clipboard_url = canvas.toDataURL("image/png");
+					this.clipboard_dialog = true;
+				});
 			}
+
 		},
 		components:{
 			SearchWidget,
@@ -375,6 +401,15 @@
 	.scroll_top_icon{
 		position: fixed;
 		top: 56%;
+		right: 8rem;
+		width: 82rem;
+		height: 82rem;
+		z-index: 9;
+		cursor:pointer;
+	}
+	.clipboard_icon{
+		position: fixed;
+		top: 42%;
 		right: 8rem;
 		width: 82rem;
 		height: 82rem;
