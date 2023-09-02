@@ -114,7 +114,7 @@
 						<div class="form_item">
 							<div class="lable"><span>*</span>发货类型：</div>
 							<div class="value">
-								<el-select v-model="send_type" size="mini" åmultiple collapse-tags filterable clearable placeholder="选择发货类型">
+								<el-select v-model="send_type" size="mini" multiple collapse-tags filterable clearable placeholder="选择发货类型">
 									<el-option v-for="item in delivery_type_list" :key="item.name" :label="item.name" :value="item.name">
 									</el-option>
 								</el-select>
