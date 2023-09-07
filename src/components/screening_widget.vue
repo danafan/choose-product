@@ -286,7 +286,30 @@
             				let fristName = pinyin.getCamelChars(cityName).substring(0, 1).toUpperCase();  
             				//	这里截取首字母的第一位
             				//给原json添加首字母键值对
-            				supplier_list[i].first = fristName;
+            				if(fristName == '1'){
+            					supplier_list[i].first = 'Y';
+            				}else if(fristName == '2'){
+            					supplier_list[i].first = 'E';
+            				}else if(fristName == '3'){
+            					supplier_list[i].first = 'S';
+            				}else if(fristName == '4'){
+            					supplier_list[i].first = 'S';
+            				}else if(fristName == '5'){
+            					supplier_list[i].first = 'W';
+            				}else if(fristName == '6'){
+            					supplier_list[i].first = 'L';
+            				}else if(fristName == '7'){
+            					supplier_list[i].first = 'Q';
+            				}else if(fristName == '8'){
+            					supplier_list[i].first = 'B';
+            				}else if(fristName == '9'){
+            					supplier_list[i].first = 'J';
+            				}else if(fristName == '0'){
+            					supplier_list[i].first = 'L';
+            				}else{
+            					supplier_list[i].first = fristName;
+            				}
+            				
             				//放入新数组
             				cityArr.push(supplier_list[i]);
             			}

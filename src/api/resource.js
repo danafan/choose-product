@@ -34,7 +34,8 @@ let path = {
   getUserName:'api/selected/getusername',                 //获取需求人
   hotSellGoods:'api/home/hotsellgoods',                   //爆款列表
   ajaxNum:'api/feedback/ajaxNum',                         //反馈待处理数量
-  styleSaleNum:'api/home/style_sale_num',                 //商品的销量趋势图和柱状图
+  styleSaleNum:'api/home/style_shop_list',                //商品在售店铺列表
+  styleDayChart:'api/home/style_day_chart',                   //商品的7天和30天销量趋势图
   exportCartKsbm:'api/selectcart/exportcartksbm',         //待选导出
 } 
 export default {
@@ -177,6 +178,10 @@ export default {
   //商品的销量趋势图和柱状图
   styleSaleNum(params) {
     return http.get(path.styleSaleNum, params);
+  },
+  //商品的7天和30天销量趋势图
+  styleDayChart(params) {
+    return http.get(path.styleDayChart, params);
   },
   //待选导出
   exportCartKsbm(params) {
