@@ -84,7 +84,7 @@
     				this.scroll_height =
     				card_box_height -
     				pagination_height -
-    				15 +
+    				45 +
     				"px";
     			});
     		},

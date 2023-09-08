@@ -7,7 +7,6 @@
 		<!-- 上传 -->
 		<div class="image_list" v-else>
 			<draggable
-			:group="{name:'view_card_img'}"
 			style="display: flex;flex-wrap:wrap;"
 			v-model="preview_images"
 			@end="emitFn"
@@ -31,6 +30,7 @@
 </div>
 </template>
 <style lang="less" scoped>
+	// :group="{name:'view_card_img'}"
 	.image_list {
 		flex:1;
 		display: flex;
@@ -164,6 +164,9 @@
 					this.preview_images.push(img_obj)
 					this.view_images.push(this.domain + item)
 				})
+			},
+			preview_images:function(n,o){
+				console.log(n)
 			}
 		},
 		created(){

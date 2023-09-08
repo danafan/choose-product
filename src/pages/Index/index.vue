@@ -69,9 +69,15 @@
 			<el-dialog :visible.sync="clipboard_dialog">
 				<div slot="title" class="dialog_title">
 					<div>生成图片</div>
-					<img class="close_icon" ref="foo" src="../../static/close_icon.png" @click="clipboard_dialog = false">
+					<div class="flex ac">
+						<el-tooltip class="item" effect="dark" content="下载" placement="top-start">
+							<img class="download_image pointer" @click="downLoadImage" src="../../static/download_image.png">
+						</el-tooltip>
+						
+						<img class="close_icon pointer" src="../../static/close_icon.png" @click="clipboard_dialog = false">
+					</div>
 				</div>
-				<img ref="foo" style="width:100%" :src="clipboard_url">
+				<img style="width:100%" :src="clipboard_url">
 			</el-dialog>
 		</div>
 	</template>
@@ -282,9 +288,6 @@
 			//折线图配置
 			lineSetOptions(title,x_axis,series_data){
 				return {
-					title: {
-						text: title
-					},
 					tooltip: {
 						trigger: 'axis',
 						formatter: function (params) {
@@ -303,6 +306,10 @@
 						axisPointer: {            
 							type: 'shadow'        
 						}
+					},
+					grid: {
+						top: '30',
+						bottom:'30'
 					},
 					xAxis: {
 						type: 'category',
@@ -338,19 +345,23 @@
 				}).then((canvas) => {
 					this.clipboard_url = canvas.toDataURL("image/png");
 					this.clipboard_dialog = true;
-					this.$nextTick(function () {//nextTick,当前dom渲染完毕的回调
-						const selection = window.getSelection()
-						const range = document.createRange()
-				        range.selectNode(this.$refs.foo)//传入dom
-				        selection.addRange(range)
-				        document.execCommand('copy')//copy是复制
-				        selection.removeAllRanges()
-				        this.$message.success('已生成截图并复制到剪切板');
-				    })
-
 				});
+			},
+			//下载图片
+			downLoadImage() {
+				const link = document.createElement('a');
+				link.style.display = 'none';
+				link.href = this.clipboard_url;
+				link.setAttribute('download', '商品列表');
+  				// 把a标签插入页面中
+				document.body.appendChild(link);
+				link.click();
+  				// 点击之后移除a标签
+				document.body.removeChild(link);
+  				// 释放掉blob对象
+				window.URL.revokeObjectURL(this.clipboard_url);
+				this.$message.success('截图已保存至本地')
 			}
-
 		},
 		components:{
 			SearchWidget,
@@ -367,8 +378,16 @@
 	.custom_class{
 		width: 960rem!important;
 	}
+	.custom_message{
+		z-index: 9999999!important;
+	}
 </style>
 <style lang="less" scoped>
+	.download_image{
+		margin-right: 20rem;
+		width: 18rem;
+		height: 18rem;
+	}
 	.carousel_box{
 		margin-right: 30rem;
 		width: 320rem;
@@ -406,7 +425,7 @@
 			}
 		}
 	}
-	
+
 	.index_container{
 		position: relative;
 		width: 1725rem;
@@ -456,7 +475,7 @@
 		width: 500rem;
 		.charts_div{
 			width: 500rem;
-			height: 300rem;
+			height: 350rem;
 		}
 	}
 </style>

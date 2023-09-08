@@ -156,9 +156,9 @@
 		methods:{
 			//鼠标移开延迟
 			closeFn(){
-				// setTimeout(()=>{
-				// 	this.show_history = false;
-				// },100);
+				setTimeout(()=>{
+					this.show_history = false;
+				},100);
 			},
 			//选中某一个历史记录
 			checkValue(search_value){
