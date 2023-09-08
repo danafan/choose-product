@@ -12,7 +12,7 @@ module.exports = {
 				changOlrigin: true,		
 			}
 		},
-		host:"10.88.88.65",  
+		host:"0.0.0.0",  
 	},
 	// assetsDir: "clothes",
 	// publicPath:'../',

@@ -14,6 +14,10 @@ import 'quill/dist/quill.bubble.css'
 
 import pinyin from 'js-pinyin'
 
+import VueClipboard from 'vue-clipboard2'   
+Vue.use(VueClipboard)
+
+
 Vue.use(ElementUI);
 Vue.use(VueQuillEditor);
 

@@ -7,6 +7,7 @@
 		<!-- 上传 -->
 		<div class="image_list" v-else>
 			<draggable
+			:group="{name:'view_card_img'}"
 			style="display: flex;flex-wrap:wrap;"
 			v-model="preview_images"
 			@end="emitFn"

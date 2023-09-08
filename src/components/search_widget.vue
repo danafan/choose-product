@@ -4,15 +4,18 @@
 		<div class="search_box">
 			<img class="search_icon" src="../static/search_icon.png">
 			<input class="search_input" ref="input" @focus="show_history = true" @blur="closeFn" v-model="search_value" :placeholder="placeholder" @keyup.enter="searchFn">
+			<img class="clear_value pointer" src="../static/clear_value.png" @click="search_value = ''" v-if="search_value != ''">
 			<div class="search_button" @click="searchFn">搜 索</div>
 			<div class="history_list" v-if="show_history">
 				<div class="history_item history_title">
 					<div class="title">最近搜索</div>
 					<div class="delete pointer" @mousedown="$refs.input.focus()" @mouseup="deleteHistory(-1)">全部删除</div>
 				</div>
-				<div class="history_item pointer" :class="{'border_none':index == history_list.length - 1}" v-for="(item,index) in history_list">
-					<div class="title" @mouseup="checkValue(item)">{{item}}</div>
-					<div class="delete" @mouseup="deleteHistory(index)">删除</div>
+				<div class="history_item pointer" :class="{'border_none':index == history_list.length - 1}" @click.stop v-for="(item,index) in history_list">
+					<div class="title" @click="checkValue(item)">{{item}}</div>
+					<!-- <div class="title" @click="checkValue(item)">{{item}}</div> -->
+					<div class="delete" @click="deleteHistory(index)">删除</div>
+					<!-- <div class="delete" @click="deleteHistory(index)">删除</div> -->
 				</div>
 			</div>
 		</div>
@@ -53,8 +56,13 @@
 			font-size: 14rem;
 			color: #333333;
 		}
-		.search_button{
+		.clear_value{
 			margin-left: 22rem;
+			width: 18rem;
+			height: 18rem;
+		}
+		.search_button{
+			margin-left: 4rem;
 			border-radius: 25rem;
 			background: var(--color);
 			width: 120rem;
@@ -88,6 +96,8 @@
 				color: #666666;
 				.title{
 					flex:1;
+					height: 30rem;
+					line-height: 30rem;
 					word-break: break-all;
 					text-overflow: ellipsis;
 					overflow: hidden;
@@ -146,9 +156,9 @@
 		methods:{
 			//鼠标移开延迟
 			closeFn(){
-				setTimeout(()=>{
-					this.show_history = false;
-				},100);
+				// setTimeout(()=>{
+				// 	this.show_history = false;
+				// },100);
 			},
 			//选中某一个历史记录
 			checkValue(search_value){

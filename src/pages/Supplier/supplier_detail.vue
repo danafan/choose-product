@@ -79,7 +79,7 @@
 					</div>
 					<ScreeningWidget id="screen_widget" v-if="show_screen" :total_num="total" page_type="supplier" @callback="screenFn"/>
 					<div class="scroll_view" v-if="goods_list.length > 0">
-						<div class="goods_list">
+						<div class="goods_list" id="goods_list">
 							<GoodsItem :info="item" @setStatus="setStatus" v-for="item in goods_list" @enlargeFn="enlargeFn"/>
 							<div class="padding_item" v-for="i in 6-(goods_list.length%6) == 6?0:6-(goods_list.length%6)"></div>
 						</div>
@@ -89,6 +89,7 @@
 				</el-card>
 			</div>
 			<CarWidget :is_fixed="true"/>
+			<img class="clipboard_icon" src="../../static/clipboard_icon.png" @click="toClipboard">
 		</div>
 		<!-- 点击放大 -->
 		<el-dialog :visible.sync="enlarge_dialog" @close="closeEnlarge" top="15px" :show-close="false" custom-class="custom_class">
@@ -102,9 +103,9 @@
 					<el-table size="mini" :data="shop_data" tooltip-effect="dark" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="280"v-loading="chart_loading">
 						<el-table-column label="店铺">
 							<template slot-scope="scope">
-									<el-button type="text" @click="checkStore('')" v-if="shop_name == scope.row.shop_name">{{scope.row.shop_name}}</el-button>
-									<div class="pointer" @click="checkStore(scope.row.shop_name)" v-else>{{scope.row.shop_name}}</div>
-								</template>
+								<el-button type="text" @click="checkStore('')" v-if="shop_name == scope.row.shop_name">{{scope.row.shop_name}}</el-button>
+								<div class="pointer" @click="checkStore(scope.row.shop_name)" v-else>{{scope.row.shop_name}}</div>
+							</template>
 						</el-table-column>
 						<el-table-column label="30天销量" prop="xssl_30"></el-table-column>
 						<el-table-column label="7天销量" prop="xssl_7"></el-table-column>
@@ -122,6 +123,14 @@
 				</div>
 			</div>
 		</el-dialog>
+		<!-- 生成截屏 -->
+		<el-dialog :visible.sync="clipboard_dialog">
+			<div slot="title" class="dialog_title">
+				<div>生成图片</div>
+				<img class="close_icon" src="../../static/close_icon.png" @click="clipboard_dialog = false">
+			</div>
+			<img ref="foo" style="width:100%" :src="clipboard_url">
+		</el-dialog>
 	</div>
 </template>
 <script>
@@ -133,6 +142,8 @@
 	import PaginationWidget from '../../components/pagination_widget.vue'
 	import CarWidget from '../../components/car_widget.vue'
 	import EmptyPage from '../../components/empty_page.vue'
+
+	import html2canvas from 'html2canvas'
 	export default{
 		data(){
 			return{
@@ -156,7 +167,9 @@
 				seven_days:[],
 				seven_sale_nums:[],
 				thirty_days:[],
-				thirty_sale_nums:[]
+				thirty_sale_nums:[],
+				clipboard_dialog:false,
+				clipboard_url:""
 			}
 		},
 		created(){
@@ -171,6 +184,25 @@
 			this.getList(arg);
 		},
 		methods:{
+			//一键截图
+			toClipboard() {
+				html2canvas(document.getElementById("goods_list"), {
+					useCORS: true, 
+					backgroundColor: '#ffffff', 
+				}).then((canvas) => {
+					this.clipboard_url = canvas.toDataURL("image/png");
+					this.clipboard_dialog = true;
+					this.$nextTick(function () {//nextTick,当前dom渲染完毕的回调
+						const selection = window.getSelection()
+						const range = document.createRange()
+				        range.selectNode(this.$refs.foo)//传入dom
+				        selection.addRange(range)
+				        document.execCommand('copy')//copy是复制
+				        selection.removeAllRanges()
+				        this.$message.success('已生成截图并复制到剪切板');
+				    })
+				});
+			},
 			//点击放大
 			enlargeFn(info){
 				this.enlarge_item = info;
@@ -415,6 +447,15 @@
 	}
 }
 .padding_page_content::-webkit-scrollbar{display:none}
+.clipboard_icon{
+	position: fixed;
+	top: 42%;
+	right: 8rem;
+	width: 82rem;
+	height: 82rem;
+	z-index: 9;
+	cursor:pointer;
+}
 .chart_box{
 	width: 500rem;
 	.charts_div{

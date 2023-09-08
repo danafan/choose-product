@@ -69,9 +69,9 @@
 			<el-dialog :visible.sync="clipboard_dialog">
 				<div slot="title" class="dialog_title">
 					<div>生成图片</div>
-					<img class="close_icon" src="../../static/close_icon.png" @click="clipboard_dialog = false">
+					<img class="close_icon" ref="foo" src="../../static/close_icon.png" @click="clipboard_dialog = false">
 				</div>
-				<img style="width:100%" :src="clipboard_url">
+				<img ref="foo" style="width:100%" :src="clipboard_url">
 			</el-dialog>
 		</div>
 	</template>
@@ -338,6 +338,16 @@
 				}).then((canvas) => {
 					this.clipboard_url = canvas.toDataURL("image/png");
 					this.clipboard_dialog = true;
+					this.$nextTick(function () {//nextTick,当前dom渲染完毕的回调
+						const selection = window.getSelection()
+						const range = document.createRange()
+				        range.selectNode(this.$refs.foo)//传入dom
+				        selection.addRange(range)
+				        document.execCommand('copy')//copy是复制
+				        selection.removeAllRanges()
+				        this.$message.success('已生成截图并复制到剪切板');
+				    })
+
 				});
 			}
 
