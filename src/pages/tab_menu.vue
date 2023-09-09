@@ -234,7 +234,6 @@
     data() {
       return {
         active_index:0,
-        // username: "",           //用户名
         edit_dialog:false,      //修改密码弹窗
         old_password:"",        //旧密码
         password:"",            //新密码
@@ -243,7 +242,6 @@
     },
     created() {
       this.getNotice();
-      // this.username = sessionStorage.getItem("ding_user_name");
       let path = window.location.hash.split('#/')[1].indexOf('?') > -1?window.location.hash.split('#/')[1].split('?')[0]:window.location.hash.split('#/')[1];
       if(path == 'tab_menu'){
         this.active_index = 0;
@@ -311,6 +309,7 @@
       //全局关闭筛选项下拉
     closeFn(){
       this.$store.commit("setScreen", false);
+      this.$store.commit("setHistory", false);
     },
       //获取公告列表
     getNotice(){

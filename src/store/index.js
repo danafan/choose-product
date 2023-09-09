@@ -19,6 +19,7 @@ const store = new Vuex.Store({
     active_path:sessionStorage.getItem("active_path")?sessionStorage.getItem("active_path"):"",       //当前的导航地址
     active_index:sessionStorage.getItem("active_index")?sessionStorage.getItem("active_index"):"",       //当前的导航地址
     screen_open:true,    //查询条件下拉框是否展开
+    show_history:false,    //搜索记录下拉框是否展开
     notice_list:[],       //公告列表
     nuread_num:0,         //未读公告数量
     feekback_num:0,       //反馈待处理数量
@@ -77,6 +78,10 @@ const store = new Vuex.Store({
     //设置查询条件是否展开
     setScreen(state, status){
       state.screen_open = status;
+    },
+    //设置搜索记录下拉框是否展开
+    setHistory(state, status){
+      state.show_history = status;
     },
   },
   actions: {

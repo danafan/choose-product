@@ -27,10 +27,10 @@
 					<div class="bottom_content flex-1">
 						<div class="content_top_tab">
 							<div class="content_top_tab_item" :class="{'active_content_top_tab_item':active_index == 0}" @click="active_index = 0">详情</div>
-							<!-- <div class="content_top_tab_item" :class="{'active_content_top_tab_item':active_index == 1}" @click="active_index = 1">选中记录</div> -->
+							<div class="content_top_tab_item" :class="{'active_content_top_tab_item':active_index == 1}" @click="active_index = 1">销售店铺</div>
 						</div>
 						<TabDetail :goods_info="goods_info" v-if="active_index == 0 && over_loading"/>
-						<TabRecord :selected_record="goods_info.info_log" v-if="active_index == 1"/>
+						<SalenumChart :style_id="goods_info.style_id" v-if="active_index == 1"/>
 					</div>
 				</div>
 			</div>
@@ -48,7 +48,7 @@
 	import GoodsInfo from './components/goods_info.vue'
 	import StoreInfo from './components/store_info.vue'
 	import TabDetail from './components/tab_detail.vue'
-	import TabRecord from './components/tab_record.vue'
+	import SalenumChart from './components/salenum_chart.vue'
 	import CarWidget from '../../components/car_widget.vue'
 	import FeekbackWidget from '../../components/feekback_widget.vue'
 	export default{
@@ -66,7 +66,6 @@
 			//获取商品详情
 			this.getGoodsInfo();
 		},
-		
 		computed:{
 			//图片前缀
 			domain(){
@@ -120,7 +119,7 @@
 			GoodsInfo,
 			StoreInfo,
 			TabDetail,
-			TabRecord,
+			SalenumChart,
 			CarWidget,
 			FeekbackWidget
 		}

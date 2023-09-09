@@ -190,7 +190,7 @@
 							<el-button size="mini" type="primary" slot="reference" v-if="goods_type != '3' && goods_type != '4' && info_edit_fields.indexOf('styles_data') == -1">添加</el-button>
 						</el-popover>
 					</div>
-					<div class="flex" v-for="(item,index) in style_card_list">
+					<div class="flex relative" v-for="(item,index) in style_card_list">
 						<div class="relative style_item flex ac jc" >
 							<div>{{item.shooting_style_name}}</div>
 							<img class="delete_style_icon" src="../../../../static/delete_style_icon.png" v-if="goods_type != '3' && goods_type != '4' && info_edit_fields.indexOf('styles_data') == -1 && item.edit_status == 1" @click.stop="deleteStyleTab(index)">
@@ -198,8 +198,9 @@
 						<div class="flex-1">
 							<UploadFile :size="80" :is_multiple="true" :max_num="9" :current_num="style_card_list[index].image_arr.length" :img_list="style_card_list[index].image_arr" :only_view="goods_type == '3' || goods_type == '4' || info_edit_fields.indexOf('styles_data') > -1 || item.edit_status == 0" @callbackFn="currentStyleImgCallBackFn(index,arguments)"/>
 							</div>
-
+							<div class="audit_ing" v-if="item.edit_status == 0">审核中</div>
 						</div>
+						
 					</div>
 				</el-form-item>
 			</el-form>
@@ -839,7 +840,7 @@
 <style lang="less" scoped>
 	.chain_page_content{
 		width: 100%;
-		max-height: 850rem;
+		max-height: 980rem;
 		padding: 24rem;
 		display: flex;
 		flex-direction: column;
@@ -869,9 +870,6 @@
 		.bottom_row{
 			display: flex;
 			justify-content: center;
-		}
-		.add_style{
-
 		}
 		.style_item{
 			border: 1px solid #FFC998;
@@ -907,6 +905,20 @@
 			display: initial;
 			font-size: 13rem;
 			color: #333333;
+		}
+		.audit_ing{
+			position: absolute;
+			top: 0;
+			right: 0;
+			width: 100%;
+			height: 100%;
+			background: rgba(71, 71, 71, 0.2);
+			font-size: 36rem;
+			color: #ffffff;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			z-index: 9;
 		}
 	}
 </style>

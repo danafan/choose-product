@@ -1,10 +1,10 @@
 <template>
-	<div class="search_widget" @click.stop>
+	<div class="search_widget" @click.stop="$store.commit('setHistory', false)">
 		<img class="logo_icon" src="../static/logo_icon.png">
 		<div class="search_box">
 			<img class="search_icon" src="../static/search_icon.png">
-			<input class="search_input" ref="input" @focus="show_history = true" @blur="closeFn" v-model="search_value" :placeholder="placeholder" @keyup.enter="searchFn">
-			<img class="clear_value pointer" src="../static/clear_value.png" @click="search_value = ''" v-if="search_value != ''">
+			<input class="search_input" ref="input" @focus="$store.commit('setHistory', true)" v-model="search_value" :placeholder="placeholder" @keyup.enter="searchFn" @click.stop>
+			<img class="clear_value pointer" src="../static/clear_value.png" @click.stop="clearValue" v-if="search_value != ''">
 			<div class="search_button" @click="searchFn">搜 索</div>
 			<div class="history_list" v-if="show_history">
 				<div class="history_item history_title">
@@ -13,9 +13,7 @@
 				</div>
 				<div class="history_item pointer" :class="{'border_none':index == history_list.length - 1}" @click.stop v-for="(item,index) in history_list">
 					<div class="title" @click="checkValue(item)">{{item}}</div>
-					<!-- <div class="title" @click="checkValue(item)">{{item}}</div> -->
 					<div class="delete" @click="deleteHistory(index)">删除</div>
-					<!-- <div class="delete" @click="deleteHistory(index)">删除</div> -->
 				</div>
 			</div>
 		</div>
@@ -127,7 +125,6 @@
 		data(){
 			return{
 				search_value:"",		//搜索框内容
-				show_history:false,		//搜索历史列表弹窗是否显示
 				history_list:[],		//搜索历史列表
 			}
 		},
@@ -143,6 +140,11 @@
 				default:''
 			}
 		},
+		computed: {
+			show_history() {
+				return this.$store.state.show_history;
+			},
+		},
 		watch:{
 			//每次打开历史列表都重新获取最新
 			show_history:function(n,o){
@@ -154,16 +156,10 @@
 			}
 		},
 		methods:{
-			//鼠标移开延迟
-			closeFn(){
-				setTimeout(()=>{
-					this.show_history = false;
-				},100);
-			},
 			//选中某一个历史记录
 			checkValue(search_value){
 				this.search_value = search_value;
-				this.show_history = false;
+				this.$store.commit("setHistory", false);
 				//点击搜索或回车
 				this.searchFn();
 			},
@@ -200,9 +196,15 @@
 						sessionStorage.setItem(this.page_path,JSON.stringify(history_list));
 					}
 				}
-				this.show_history = false;
+				this.$store.commit("setHistory", false);
 				this.$refs.input.blur();
 				this.$emit('callback',this.search_value)
+			},
+			// 点击清除搜索内容
+			clearValue(){
+				this.search_value = '';
+				this.$refs.input.focus();
+				// this.$store.commit("setHistory", true);
 			}
 		}
 	}
