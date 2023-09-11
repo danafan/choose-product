@@ -8,7 +8,9 @@
 		<div class="image_list" v-else>
 			<draggable
 			style="display: flex;flex-wrap:wrap;"
+			:group="{name:'view_card_img'}"
 			v-model="preview_images"
+			:move="moveDraggable"
 			@end="emitFn"
 			>
 			<div class="view_card_img" :style="{width:`${size}px`,height:`${size}px`,marginRight:`${size/5}px`,marginBottom:`${size/5}px`}" @mouseenter="item.show_icon = true" @mouseleave="item.show_icon = false" v-for="(item,index) in preview_images" :key="index">
@@ -234,6 +236,12 @@
 						this.$message.warning(res.data.msg);
 					}
 				});
+			},
+			//设置禁止移动
+			moveDraggable(e){
+				if(e.relatedContext.list.length >= 9){
+					return false;
+				}
 			},
     		//向父组件传递已选的图片列表
 			emitFn(){

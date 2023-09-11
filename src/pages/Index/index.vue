@@ -2,7 +2,7 @@
 	<div class="padding_page scroll-y" ref="paddingPageContent">
 		<div class="index_container">
 			<div class="padding_page_content">
-				<div class="flex ac">
+				<div class="flex ac" id="search_box">
 					<SearchWidget page_path="index_history" @callback="searchFn" placeholder="搜索款式编码、标题、款号、供应商"/>
 					<div class="carousel_box" v-if="new_notice_list.length > 0">
 						<img class="top_line" src="../../static/notice_top_line.png">
@@ -15,8 +15,8 @@
 							</el-carousel>
 						</div>
 					</div>
-					<VogueWidget/>
-					<el-card class="card_box" id="card_box">
+					<VogueWidget id="vogue_widget"/>
+					<el-card class="card_box" ref="card_box" id="card_box">
 						<ScreeningWidget id="screen_widget" v-if="show_screen" :total_num="total" @callback="screenFn"/>
 						<div class="scroll_view" v-if="goods_list.length > 0">
 							<div class="goods_list" id='goods_list'>
@@ -180,6 +180,8 @@
 				let obj = {...this.arg,...{page:this.page}};
 				//获取列表
 				this.getList(obj);
+				//设置定位到列表顶部
+				this.setListTop();
 			},
 			//翻页
 			checkPage(val) {
@@ -187,6 +189,8 @@
 				let obj = {...this.arg,...{page:this.page}};
 				//获取列表
 				this.getList(obj);
+				//设置定位到列表顶部
+				this.setListTop();
 			},
 			//获取列表
 			getList(arg){
@@ -201,6 +205,12 @@
 					}else{
 						this.$message.warning(res.data.msg);
 					}
+				})
+			},
+			//设置定位到列表顶部
+			setListTop(){
+				this.$nextTick(() => {
+					this.$refs.paddingPageContent.scrollTop = document.getElementById('search_box').offsetHeight + document.getElementById('vogue_widget').offsetHeight;
 				})
 			},
 			//设置已加入

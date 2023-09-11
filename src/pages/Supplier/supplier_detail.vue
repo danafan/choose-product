@@ -1,8 +1,8 @@
 <template>
-	<div class="padding_page ddd">
+	<div class="padding_page scroll-y" ref="paddingPageContent">
 		<div class="supplier_detail_container">
 			<div class="padding_page_content">
-				<SearchWidget page_path="supplier_detai" @callback="searchFn" placeholder="供应商详情搜索"/>
+				<SearchWidget id="search_box" page_path="supplier_detai" @callback="searchFn" placeholder="供应商详情搜索"/>
 				<el-card class="card_box" id="card_box">
 					<div class="top_content" id="top_content">
 						<div class="info_row">
@@ -99,29 +99,7 @@
 			<div class="flex">
 				<GoodsItem :info="enlarge_item" @setStatus="setStatus" :is_enlarge="true"/>
 				<div class="chart_box">
-					<div class="chart_box">
-						<SalenumChart :style_id="enlarge_item.style_id" v-if="enlarge_dialog"/>
-					</div>
-					<!-- <div>在售店铺数（含有销量）：{{shop_data.length}}个</div>
-					<el-table size="mini" :data="shop_data" tooltip-effect="dark" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="280"v-loading="chart_loading">
-						<el-table-column label="店铺">
-							<template slot-scope="scope">
-								<div class="underline pointer" :class="{'primary_color':shop_name == scope.row.shop_name}" @click="checkStore(shop_name == scope.row.shop_name?'':scope.row.shop_name)">{{scope.row.shop_name}}</div>
-							</template>
-						</el-table-column>
-						<el-table-column label="30天销量" prop="xssl_30"></el-table-column>
-						<el-table-column label="7天销量" prop="xssl_7"></el-table-column>
-						<el-table-column label="店铺链接">
-							<template slot-scope="scope">
-								<el-button type="text" @click="openStore(scope.row.url)">进入</el-button>
-							</template>
-						</el-table-column>
-					</el-table>
-					<el-radio-group size="small" @input="checkStore(shop_name)" v-model="chart_value">
-						<el-radio-button label="30">30天销量趋势图</el-radio-button>
-						<el-radio-button label="7">7天销量趋势图</el-radio-button>
-					</el-radio-group>
-					<div class="charts_div" id="chart" v-if="!chart_loading"></div> -->
+					<SalenumChart :style_id="enlarge_item.style_id" v-if="enlarge_dialog"/>
 				</div>
 			</div>
 		</el-dialog>
@@ -250,6 +228,8 @@
 				let obj = {...this.arg,...{page:this.page}};
 				//获取列表
 				this.getList(obj);
+				//设置定位到列表顶部
+				this.setListTop();
 			},
 			//翻页
 			checkPage(val) {
@@ -257,6 +237,8 @@
 				let obj = {...this.arg,...{page:this.page}};
 				//获取列表
 				this.getList(obj);
+				//设置定位到列表顶部
+				this.setListTop();
 			},
 			//获取列表
 			getList(arg){
@@ -273,6 +255,12 @@
 					}else{
 						this.$message.warning(res.data.msg);
 					}
+				})
+			},
+			//设置定位到列表顶部
+			setListTop(){
+				this.$nextTick(() => {
+					this.$refs.paddingPageContent.scrollTop = document.getElementById('search_box').offsetHeight + document.getElementById('top_content').offsetHeight + 30;
 				})
 			},
 			//设置已加入
@@ -309,9 +297,6 @@
 		width: 18rem;
 		height: 18rem;
 	}
-	.ddd{
-		overflow-y: scroll;
-	}
 	.supplier_detail_container{
 		position: relative;
 		width: 1725rem;
@@ -324,69 +309,68 @@
 		left: 0;
 		width: 100%;
 		height: 100%;
-	// overflow-y: scroll;
-	.card_box{
-		.top_content{
-			margin-bottom: 20rem;
-			border: 1px solid #DEDEDE;
-			padding-left: 10rem;
-			padding-right: 10rem;
-			.info_row{
-				display: flex;
-				align-items: center;
-				padding-top: 8rem;
-				padding-bottom: 8rem;
-				.info_item{
-					width: 220rem;
+		.card_box{
+			.top_content{
+				margin-bottom: 20rem;
+				border: 1px solid #DEDEDE;
+				padding-left: 10rem;
+				padding-right: 10rem;
+				.info_row{
 					display: flex;
 					align-items: center;
-					font-size: 12rem;
-					.info_lable{
-						color: #999999;
-					}
-					.info_value{
-						flex:1;
-						color: #333333;
-						overflow: hidden;
-						text-overflow: ellipsis;
-						white-space: nowrap;
+					padding-top: 8rem;
+					padding-bottom: 8rem;
+					.info_item{
+						width: 220rem;
+						display: flex;
+						align-items: center;
+						font-size: 12rem;
+						.info_lable{
+							color: #999999;
+						}
+						.info_value{
+							flex:1;
+							color: #333333;
+							overflow: hidden;
+							text-overflow: ellipsis;
+							white-space: nowrap;
+						}
 					}
 				}
+				.info_line{
+					width: 100%;
+					border-bottom: 1px solid #DEDEDE;
+				}
 			}
-			.info_line{
-				width: 100%;
-				border-bottom: 1px solid #DEDEDE;
-			}
-		}
-		.scroll_view{
-			.goods_list{
-				display: flex;
-				flex-wrap: wrap;
-				justify-content: space-between;
-				.padding_item{
-					width: 265rem;
+			.scroll_view{
+				.goods_list{
+					display: flex;
+					flex-wrap: wrap;
+					justify-content: space-between;
+					.padding_item{
+						width: 265rem;
+					}
 				}
 			}
 		}
 	}
-}
-.padding_page_content::-webkit-scrollbar{display:none}
-.clipboard_icon{
-	position: fixed;
-	top: 42%;
-	right: 8rem;
-	width: 82rem;
-	height: 82rem;
-	z-index: 9;
-	cursor:pointer;
-}
-.chart_box{
-	width: 500rem;
-	.charts_div{
+	.padding_page_content::-webkit-scrollbar{display:none}
+	.clipboard_icon{
+		position: fixed;
+		top: 42%;
+		right: 8rem;
+		width: 82rem;
+		height: 82rem;
+		z-index: 9;
+		cursor:pointer;
+	}
+	.chart_box{
 		width: 500rem;
-		height: 380rem;
+		.charts_div{
+			width: 500rem;
+			height: 380rem;
+		}
 	}
-}
 </style>
 
 
