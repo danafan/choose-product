@@ -190,13 +190,13 @@
 							<el-button size="mini" type="primary" slot="reference" v-if="goods_type != '3' && goods_type != '4' && info_edit_fields.indexOf('styles_data') == -1">添加</el-button>
 						</el-popover>
 					</div>
-					<div class="flex relative" v-for="(item,index) in style_card_list">
+					<div class="flex relative style_row" v-for="(item,index) in style_card_list">
 						<div class="relative style_item flex ac jc" >
 							<div>{{item.shooting_style_name}}</div>
 							<img class="delete_style_icon" src="../../../../static/delete_style_icon.png" v-if="goods_type != '3' && goods_type != '4' && info_edit_fields.indexOf('styles_data') == -1 && item.edit_status == 1" @click.stop="deleteStyleTab(index)">
 						</div>
 						<div class="flex-1">
-							<UploadFile :size="80" :is_multiple="true" :max_num="9" :current_num="style_card_list[index].image_arr.length" :img_list="style_card_list[index].image_arr" :only_view="goods_type == '3' || goods_type == '4' || info_edit_fields.indexOf('styles_data') > -1 || item.edit_status == 0" @callbackFn="currentStyleImgCallBackFn(index,arguments)"/>
+							<UploadFile :index="index" :size="80" :is_multiple="true" :max_num="9" :current_num="style_card_list[index].image_arr.length" :img_list="style_card_list[index].image_arr" :only_view="goods_type == '3' || goods_type == '4' || info_edit_fields.indexOf('styles_data') > -1 || item.edit_status == 0" @callbackFn="currentStyleImgCallBackFn(index,arguments)"/>
 							</div>
 							<div class="audit_ing" v-if="item.edit_status == 0">审核中</div>
 						</div>
@@ -285,14 +285,6 @@
 			}
 		},
 		created(){
-			//商品ID
-			// this.goods_id = this.$route.query.goods_id?this.$route.query.goods_id:this.edit_goods_id;
-			// this.is_detail = this.$route.query.goods_type == '3' || this.$route.query.goods_type == '4'?true:false;
-			// //页面来源
-			// this.page_type = this.$route.query.page_type?this.$route.query.page_type:'goods';
-			// //类型
-			// this.goods_type = this.$route.query.goods_type?this.$route.query.goods_type:'2';
-
 			//商品ID
 			this.goods_id = this.edit_goods_id;
 			//查看、审核展示不可编辑
@@ -562,9 +554,16 @@
 			},
 			//监听风格图列表回调
 			currentStyleImgCallBackFn(index,data){
-				let new_item = JSON.parse(JSON.stringify(this.style_card_list[index]));
-				new_item.image_arr = data[0];
-				this.$set(this.style_card_list,index,new_item);
+				let old_item = JSON.parse(JSON.stringify(this.style_card_list[index]));
+				old_item.image_arr = data[0].image_arr;
+				this.$set(this.style_card_list,index,old_item);
+
+				if(data[0].newIndex > -1){
+					let new_item = JSON.parse(JSON.stringify(this.style_card_list[data[0].newIndex]));
+					new_item.image_arr = data[0].new_image_arr;
+					this.$set(this.style_card_list,data[0].newIndex,new_item);
+				}
+				
 			},
 			//对比已选中的过滤右侧未选中的风格  
 			filterStyle(arr1, arr2) {
@@ -870,6 +869,9 @@
 		.bottom_row{
 			display: flex;
 			justify-content: center;
+		}
+		.style_row{
+			margin-bottom: 15rem;
 		}
 		.style_item{
 			border: 1px solid #FFC998;

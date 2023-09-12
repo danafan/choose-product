@@ -101,7 +101,8 @@
 					</el-table-column>
 					<el-table-column label="拍摄风格" width="180" >
 						<template slot-scope="scope">
-							<el-tabs size="mini" v-model="scope.row.active_index" @tab-click="handleClick($event,scope.$index)">
+							<div v-if="!loading">
+								<el-tabs size="mini" v-model="scope.row.active_index" @tab-click="handleClick($event,scope.$index)">
 								<el-tab-pane :label="item.shooting_style_name" :name="index.toString()" v-for="(item,index) in scope.row.shooting_style_list"></el-tab-pane>
 							</el-tabs>
 							<div :style="{'width':'100%','height':scope.row.style_loading?'100px':'0px'}" v-loading="scope.row.style_loading"></div>
@@ -111,6 +112,8 @@
 									<el-image :z-index="2006" class="image" :src="domain + item" fit="scale-down" @click="viewImage(scope.row.shooting_style_list,scope.row.active_index,index)"></el-image>
 								</el-carousel-item>
 							</el-carousel>
+							</div>
+							
 						</template>
 					</el-table-column>
 					<el-table-column label="网盘地址">

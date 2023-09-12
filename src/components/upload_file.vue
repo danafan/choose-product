@@ -32,7 +32,6 @@
 </div>
 </template>
 <style lang="less" scoped>
-	// :group="{name:'view_card_img'}"
 	.image_list {
 		flex:1;
 		display: flex;
@@ -119,6 +118,11 @@
 			}
 		},
 		props:{
+			//下标
+			index:{
+				type:Number,
+			default:0
+			},
 			img_list:{
 				type:Array,
 			default:[]
@@ -166,9 +170,6 @@
 					this.preview_images.push(img_obj)
 					this.view_images.push(this.domain + item)
 				})
-			},
-			preview_images:function(n,o){
-				console.log(n)
 			}
 		},
 		created(){
@@ -244,12 +245,26 @@
 				}
 			},
     		//向父组件传递已选的图片列表
-			emitFn(){
+			emitFn(e){
 				let image_arr = [];
 				this.preview_images.map(item => {
 					image_arr.push(item.urls);
 				})
-				this.$emit('callbackFn',image_arr);
+
+				var new_image_arr = [];
+				if(e){
+					e.to.__vue__.value.map(item => {
+						new_image_arr.push(item.urls);
+					})
+				}
+				
+
+				let arg = {
+					newIndex:e?e.to.__vue__.$parent.index:-1,
+					new_image_arr:new_image_arr,
+					image_arr:image_arr
+				}
+				this.$emit('callbackFn',arg);
 			}
 		},
 		components:{
