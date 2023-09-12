@@ -240,7 +240,7 @@
 			},
 			//设置禁止移动
 			moveDraggable(e){
-				if(e.relatedContext.list.length >= 9){
+				if(e.to.__vue__._uid != e.from.__vue__._uid && e.relatedContext.list.length >= 9){
 					return false;
 				}
 			},
