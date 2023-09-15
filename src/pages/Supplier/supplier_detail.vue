@@ -2,7 +2,7 @@
 	<div class="padding_page scroll-y" ref="paddingPageContent">
 		<div class="supplier_detail_container">
 			<div class="padding_page_content">
-				<SearchWidget id="search_box" page_path="supplier_detai" @callback="searchFn" placeholder="供应商详情搜索"/>
+				<SearchWidget id="search_box" page_path="supplier_detai" @callback="searchFn" placeholder="输入款式编码、款号、标题关键字、进行搜索 "/>
 				<el-card class="card_box" id="card_box">
 					<div class="top_content" id="top_content">
 						<div class="info_row">

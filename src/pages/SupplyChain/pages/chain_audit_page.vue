@@ -326,24 +326,24 @@
 	<!-- 批量审批 -->
 	<el-dialog :visible.sync="allAuditDialog" @close="allClose" width="30%">
 		<div slot="title" class="dialog_title">
-			<div>批量审批</div>
+			<div>批量审核</div>
 			<img class="close_icon" src="../../../static/close_icon.png" @click="allAuditDialog = false">
 		</div>
 		<div class="down_box">
 			<el-form :inline="true" size="mini">
 				<el-form-item label="类型：">
 					<el-radio-group v-model="audit_type">
-						<el-radio :label="1">同意</el-radio>
-						<el-radio :label="2">拒绝</el-radio>
+						<el-radio :label="1">确认需求</el-radio>
+						<el-radio :label="2">拒绝需求</el-radio>
 					</el-radio-group>
 				</el-form-item>
-				<el-form-item label="同意备注：" required v-if="audit_type == 1">
-					<el-input type="textarea" :rows="3" placeholder="请输入同意备注"
+				<el-form-item label="确认需求备注：" required v-if="audit_type == 1">
+					<el-input type="textarea" :rows="3" placeholder="请输入确认需求备注"
 					v-model="msg">
 				</el-input>
 			</el-form-item>
-			<el-form-item label="拒绝原因：" required v-if="audit_type == 2">
-				<el-input type="textarea" :rows="3" placeholder="请输入拒绝原因"
+			<el-form-item label="拒绝需求原因：" required v-if="audit_type == 2">
+				<el-input type="textarea" :rows="3" placeholder="请输入拒绝需求原因"
 				v-model="refuse_remark">
 			</el-input>
 		</el-form-item>

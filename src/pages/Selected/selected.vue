@@ -552,7 +552,7 @@
 	</style>
 	<style lang="less" scoped>
 		.padding_page_content{
-			width: 1680rem;
+			width: 1725rem;
 			height: 100%;
 			display: flex;
 			flex-direction: column;

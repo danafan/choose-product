@@ -96,7 +96,7 @@
 		<!-- 审批 -->
 		<el-dialog :visible.sync="audit_dialog" @close="audit_status = 1" width="30%">
 			<div slot="title" class="dialog_title">
-				<div>审批</div>
+				<div>审核</div>
 				<img class="close_icon" src="../../../../static/close_icon.png" @click="audit_dialog = false">
 			</div>
 			<div class="down_box">

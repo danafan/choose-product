@@ -1,7 +1,7 @@
 <template>
 	<div class="padding_page">
 		<div class="padding_page_content">
-			<SearchWidget @callback="searchFn" placeholder="输入供应商名称搜索"/>
+			<SearchWidget @callback="searchFn" placeholder="输入供应商名称、供应商编码进行搜索"/>
 			<el-card class="card_box" id="card_box" v-loading="loading">
 				<div ref="table" class="list_content" :style="{height: scroll_height}" v-if="supplier_list.length > 0">
 					<div class="supplier_item" v-for="item in supplier_list">
@@ -144,7 +144,7 @@
 </script>
 <style lang="less" scoped>
 .padding_page_content{
-	width: 1440rem;
+	width: 1725rem;
 	height: 100%;
 	display: flex;
 	flex-direction: column;

@@ -3,7 +3,7 @@
 		<div class="index_container">
 			<div class="padding_page_content">
 				<div class="flex ac" id="search_box">
-					<SearchWidget page_path="index_history" @callback="searchFn" placeholder="搜索款式编码、标题、款号、供应商"/>
+					<SearchWidget page_path="index_history" @callback="searchFn" placeholder="输入款式编码、款号、标题关键字、供应商进行搜索"/>
 					<div class="carousel_box" v-if="new_notice_list.length > 0">
 						<img class="top_line" src="../../static/notice_top_line.png">
 						<el-carousel class="custom_carousel" direction="vertical" indicator-position="none" :initial-index="initialIndex">
@@ -29,8 +29,7 @@
 					</el-card>
 				</div>
 				<img class="scroll_top_icon" src="../../static/scroll_top_icon.png" @click="setScrollTop">
-				<CarWidget :is_fixed="true"/>
-
+				<CarWidget/>
 				<img class="clipboard_icon" src="../../static/clipboard_icon.png" @click="toClipboard">
 			</div>
 			<!-- 点击放大 -->
@@ -348,7 +347,7 @@
 	.padding_page_content::-webkit-scrollbar{display:none}
 	.scroll_top_icon{
 		position: fixed;
-		top: 56%;
+		top: 58%;
 		right: 8rem;
 		width: 82rem;
 		height: 82rem;
@@ -357,7 +356,7 @@
 	}
 	.clipboard_icon{
 		position: fixed;
-		top: 42%;
+		top: 40%;
 		right: 8rem;
 		width: 82rem;
 		height: 82rem;
