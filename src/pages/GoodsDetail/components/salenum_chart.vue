@@ -7,8 +7,8 @@
 					<div class="underline pointer" :class="{'primary_color':shop_name == scope.row.shop_name}" @click="checkStore(shop_name == scope.row.shop_name?'':scope.row.shop_name)">{{scope.row.shop_name}}</div>
 				</template>
 			</el-table-column>
-			<el-table-column label="30天销量" prop="xssl_30"></el-table-column>
-			<el-table-column label="7天销量" prop="xssl_7"></el-table-column>
+			<el-table-column :label="`30天销量（${total_xssl_30})`" prop="xssl_30"></el-table-column>
+			<el-table-column :label="`7天销量（${total_xssl_7})`" prop="xssl_7"></el-table-column>
 			<el-table-column label="店铺链接">
 				<template slot-scope="scope">
 					<el-button type="text" @click="openStore(scope.row.url)">进入</el-button>
@@ -35,6 +35,8 @@
 				seven_sale_nums:[],
 				thirty_days:[],
 				thirty_sale_nums:[],
+				total_xssl_30:0,
+				total_xssl_7:0,
 			}
 		},
 		props:{
@@ -55,6 +57,10 @@
 					if(res.data.code == 1){
 						let data = res.data.data;
 						this.shop_data = data.shop;	
+						this.shop_data.map(item => {
+							this.total_xssl_30 += parseInt(item.xssl_30);
+							this.total_xssl_7 += parseInt(item.xssl_7);
+						})
 						//切换图表
 						this.checkChart('',this.style_id);
 					}else{
