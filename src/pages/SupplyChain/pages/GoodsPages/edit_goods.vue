@@ -193,7 +193,7 @@
 					<div class="flex relative style_row" v-for="(item,index) in style_card_list">
 						<div class="relative style_item flex ac jc" >
 							<div>{{item.shooting_style_name}}</div>
-							<img class="delete_style_icon" src="../../../../static/delete_style_icon.png" v-if="goods_type != '3' && goods_type != '4' && info_edit_fields.indexOf('styles_data') == -1 && item.edit_status == 1" @click.stop="deleteStyleTab(index)">
+							<img class="delete_style_icon" src="../../../../static/delete_style_icon.png" v-if="goods_type != '3' && goods_type != '4' && info_edit_fields.indexOf('styles_data') == -1 && (item.edit_status == 1 || !item.edit_status)" @click.stop="deleteStyleTab(index)">
 						</div>
 						<div class="flex-1">
 							<UploadFile :index="index" :size="80" :is_multiple="true" :max_num="9" :current_num="style_card_list[index].image_arr.length" :img_list="style_card_list[index].image_arr" :only_view="goods_type == '3' || goods_type == '4' || info_edit_fields.indexOf('styles_data') > -1 || item.edit_status == 0" @callbackFn="currentStyleImgCallBackFn(index,arguments)"/>
