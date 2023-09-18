@@ -99,8 +99,10 @@
 						<div class="flex jc">
 							<div>{{filterAuditStatus(scope.row.audit_status)}}</div>
 							<div v-if="scope.row.audit_real_name">（{{scope.row.audit_real_name}}）</div>
+							<div v-if="scope.row.revoke_real_name">（{{scope.row.revoke_real_name}}）</div>
 						</div>
 						<div v-if="scope.row.audit_time">{{scope.row.audit_time}}</div>
+						<div v-if="scope.row.revoke_time">{{scope.row.revoke_time}}</div>
 					</template>
 				</el-table-column>
 				<el-table-column label="操作" width="120" fixed="right">
@@ -227,7 +229,7 @@
 			</div>
 			<div class="detail_row">
 				<div class="lable">当前状态</div>
-				<div>{{filterAuditStatus(goods_info.audit_status)}}</div>
+				<div class="value">{{filterAuditStatus(goods_info.audit_status)}}</div>
 			</div>
 			<div class="detail_row" v-if="goods_info.audit_status == 4">
 				<div class="lable">拒绝原因</div>
@@ -285,16 +287,16 @@
 					id:''
 				},{
 					name:'待确认',
-					id:'1'
+					id:1
 				},{
 					name:'已确认',
-					id:'2'
+					id:2
 				},{
 					name:'已拒绝',
-					id:'4'
+					id:4
 				},{
 					name:'已撤销',
-					id:'0'
+					id:0
 				}],							//tab列表
 				active_index:0,				//当前选中的tab下标
 				search:"",					//搜索框的内容
@@ -537,7 +539,7 @@
 				//审核状态
 				filterAuditStatus(status){
 					let status_arr = this.tab_list.filter(item => {
-						return item.id == status;
+						return item.id === status;
 					})
 					return status_arr.length > 0?status_arr[0].name:'';
 				}

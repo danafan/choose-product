@@ -21,11 +21,12 @@
 							<div class="info_item">7天退货率：{{item.refund_rate}}</div>
 							<div class="info_item">30天退货率：{{item.refund_rate_30}}</div>
 						</div>
-						<div class="image_list">
+						<div class="image_list jsb">
 							<div v-for="i in item.goods_list" @click="getDetail(i.style_id)">
-								<el-image :z-index="2006" class="image_item" :src="domain + i.img" fit="scale-down" v-if='i.img'></el-image>
+								<el-image :z-index="2006" class="image_item pointer" :src="domain + i.img" fit="scale-down" v-if='i.img'></el-image>
 								<img class="image_item" src="../../static/load_failure.png" v-else>
 							</div>
+							<div class="image_item" v-for="i in 6 - item.goods_list.length"></div>
 						</div>
 						<div class="detail_box">
 							<div class="detail_button" @click="supplierDetail(item.supplier_id)">查看更多</div>
@@ -192,14 +193,12 @@
 					flex:1;
 					display: flex;
 					.image_item{
-						margin-right: 20rem;
 						width: 180rem;
 						height: 180rem;
-						cursor: pointer;
 					}
 				}
 				.detail_box{
-					width: 88rem;
+					width: 180rem;
 					display: flex;
 					align-items: center;
 					justify-content: center;

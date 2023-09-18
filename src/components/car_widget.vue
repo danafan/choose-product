@@ -99,6 +99,6 @@
 }
 .fixed_style{
 	position: fixed;
-	right: 20rem;
+	right: 17rem;
 }
 </style>

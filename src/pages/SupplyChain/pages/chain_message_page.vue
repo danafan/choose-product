@@ -2,7 +2,7 @@
 	<div class="chain_page_content">
 		<el-card class="card_box height-100 flex fc">
 			<div class="scroll_box flex-1 scroll-y" id="scroll_box">
-				<el-form style="padding-top: 20px;" :inline="true" size="mini" id="form_height">
+				<el-form style="padding-top: 20px;" :inline="true" size="mini" id="form_height" @submit.native.prevent>
 					<el-form-item class="form_item">
 						<el-input clearable v-model="keyword" placeholder="请输入关键字"></el-input>
 					</el-form-item>

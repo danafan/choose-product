@@ -11,11 +11,11 @@
         <img class="down_arrow" :class="{'rotate':screen_open == true}" src="../static/down_arrow.png">
       </div>
     </div>
-    <div class="carousel_box flex ac relative" v-if="screen_open">
+    <div class="carousel_box flex ac relative" v-loading="loading" v-if="screen_open">
       <img class="check_arrow pointer" src="../static/check_left_arrow.png" @click.stop="checkArrow('1')" v-if="goods_list.length > 0">
       <div class="flex-1 ac jc" :class="{'flex':goods_list.length == 0}">
-        <div v-if="goods_list.length == 0">暂无数据</div>
-        <el-carousel class="sss" indicator-position="none" arrow="never" ref="hotCarousel" :autoplay="false" @change="changeIndicator">
+        <div v-if="goods_list.length == 0 && !loading">暂无数据</div>
+        <el-carousel indicator-position="none" arrow="never" ref="hotCarousel" :autoplay="false" @change="changeIndicator">
           <el-carousel-item v-for="(array_item,index) in goods_list" :key="index">
             <div class="width-100 flex jsb">
               <div class="li-item pointer" v-for="item in array_item" :key="item.style_id" @click="getDetail(item.style_id)">
@@ -54,6 +54,7 @@
         new_list:[],              //新品热销
         reduction_price_list:[],  //降价精选
         screen_open:true,
+        loading:false,
       }
     },
     computed:{
@@ -87,8 +88,10 @@
     methods:{
       //爆款列表
       hotSellGoods(){
+        this.loading = true;
         resource.hotSellGoods().then(res => {
           if(res.data.code == 1){
+            this.loading = false;
             let hot_sell_goods = res.data.data;
             let hot_list = hot_sell_goods.hot_list;
             this.hot_list = this.groupArray(hot_list, 7);

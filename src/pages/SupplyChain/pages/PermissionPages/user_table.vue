@@ -1,7 +1,7 @@
 <template>
 	<div class="setting_content">
 		<el-card class="card_box" id="card_box">
-			<el-form :inline="true" size="mini">
+			<el-form :inline="true" size="mini" @submit.native.prevent>
 				<el-form-item>
 					<el-input placeholder="搜索姓名" clearable v-model="search">
 					</el-input>

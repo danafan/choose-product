@@ -1,7 +1,7 @@
 <template>
-	<div class="padding_page scroll-y" ref="paddingPageContent">
+	<div class="padding_page">
 		<div class="index_container">
-			<div class="padding_page_content">
+			<div class="padding_page_content scroll-y" ref="paddingPageContent">
 				<div class="flex ac" id="search_box">
 					<SearchWidget page_path="index_history" @callback="searchFn" placeholder="输入款式编码、款号、标题关键字、供应商进行搜索"/>
 					<div class="carousel_box" v-if="new_notice_list.length > 0">
@@ -32,6 +32,7 @@
 				<CarWidget/>
 				<img class="clipboard_icon" src="../../static/clipboard_icon.png" @click="toClipboard">
 			</div>
+
 			<!-- 点击放大 -->
 			<el-dialog :visible.sync="enlarge_dialog" top="15px" :show-close="false" custom-class="custom_class">
 				<div slot="title" class="dialog_title" style="justify-content: flex-end;">

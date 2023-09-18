@@ -437,7 +437,7 @@
 		mounted() {
     		//获取表格最大高度
 			this.onResize();
-			window.addEventListener("resize", this.onResize());
+			// window.addEventListener("resize", this.onResize());
 		},
 		computed:{
 			//图片前缀
