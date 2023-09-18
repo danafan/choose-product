@@ -330,14 +330,12 @@
 				}
 			},
 			//监听图片列表回调
-			callbackFn(img_arr) {
-				this.business_license = img_arr;
-				// this.business_license = img_arr.length > 0?img_arr[0]:'';
+			callbackFn(v) {
+				this.business_license = v.image_arr;
 			},
 			//监听公司图片列表回调
-			companyCallbackFn(img_arr) {
-				this.company_img = img_arr;
-				// this.company_img = img_arr.length > 0?img_arr[0]:'';
+			companyCallbackFn(v) {
+				this.company_img = v.image_arr;
 			},
 		},
 		components:{

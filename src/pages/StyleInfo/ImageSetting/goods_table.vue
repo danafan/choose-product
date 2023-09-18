@@ -164,8 +164,8 @@
 				this.show_dialog = true;
 			},
 			//监听图片列表回调
-			callbackFn(img_arr) {
-				this.img_list = img_arr;
+			callbackFn(v) {
+				this.img_list = v.image_arr;
 			},
 			//关闭弹窗
 			closeDialog(){

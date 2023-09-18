@@ -160,9 +160,10 @@
 		},
 		watch:{
 			img_list:function(n,o){
+				console.log(n)
 				this.preview_images = [];
 				this.view_images = [];
-				this.img_list.map(item => {
+				n.map(item => {
 					let img_obj = {
 						urls:item,
 						show_icon:false

@@ -191,8 +191,8 @@
 				});
 			},
 			//监听图片列表回调
-			callbackFn(img_arr) {
-				this.img_list = img_arr;
+			callbackFn(file) {
+				this.img_list = file.image_arr;
 			},
     		//公告列表
 			noticeList(){

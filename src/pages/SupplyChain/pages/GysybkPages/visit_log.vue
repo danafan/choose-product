@@ -378,8 +378,8 @@
 				}
 			},
 			//拜访图片回调
-			attachmentCallbackFn(img_arr){
-				this.attachment_img = img_arr;
+			attachmentCallbackFn(v){
+				this.attachment_img = v.image_arr;
 			},
 			//关闭添加/编辑弹窗
 			closeDialog(){

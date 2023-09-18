@@ -591,8 +591,8 @@
 				this.link_urls.splice(this.link_urls.indexOf(url), 1);
 			},
 			//监听爆款图片列表回调
-			bkCallbackFn(img_arr){
-				this.bk_img = img_arr;
+			bkCallbackFn(v){
+				this.bk_img = v.image_arr;
 			},
 			//点击新增爆款链接
 			showInput() {

@@ -50,7 +50,7 @@
 		methods:{
 			//上传图片回调
 			uploadFn(v) {
-				this.feedback_img = v;
+				this.feedback_img = v.image_arr;
 			},
 			//提交反馈
 			confirmFeekBack(){

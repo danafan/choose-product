@@ -267,8 +267,8 @@
 				}
 			},
 			//监听工商营业执照图片列表回调
-			imgCallbackFn(img_arr) {
-				this.imgs_list = img_arr;
+			imgCallbackFn(v) {
+				this.imgs_list = v.image_arr;
 			},
 			//关闭弹窗
 			closeDialog(){

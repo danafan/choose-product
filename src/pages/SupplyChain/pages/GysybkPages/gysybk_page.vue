@@ -954,8 +954,8 @@
 				}
 			},
 			//拜访图片回调
-			visitingImgsbackFn(img_arr) {
-				this.visiting_imgs = img_arr;
+			visitingImgsbackFn(v) {
+				this.visiting_imgs = v.image_arr;
 			},
 			//上传附件回调
 			callBackXlsx(file){
@@ -1215,12 +1215,12 @@
 				}
 			},
 			//监听工商营业执照图片列表回调
-			businessCallbackFn(img_arr) {
-				this.business_license_img = img_arr;
+			businessCallbackFn(v) {
+				this.business_license_img = v.image_arr;
 			},
 			//监听公司图片列表回调
-			companyCallbackFn(img_arr) {
-				this.company_img = img_arr;
+			companyCallbackFn(v) {
+				this.company_img = v.image_arr;
 			},
 			//提交/编辑转合格
 			commitZhuan(){
