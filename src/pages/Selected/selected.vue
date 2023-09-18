@@ -94,12 +94,13 @@
 						<div v-if="scope.row.abutment_type == 0">否</div>
 					</template>
 				</el-table-column>
-				<el-table-column label="当前状态">
+				<el-table-column label="当前状态" width="150">
 					<template slot-scope="scope">
-						<div v-if="scope.row.audit_status == 1">待确认</div>
-						<div v-if="scope.row.audit_status == 2">已确认</div>
-						<div v-if="scope.row.audit_status == 4">已拒绝</div>
-						<div v-if="scope.row.audit_status == 0">已撤销</div>
+						<div class="flex jc">
+							<div>{{filterAuditStatus(scope.row.audit_status)}}</div>
+							<div v-if="scope.row.audit_real_name">（{{scope.row.audit_real_name}}）</div>
+						</div>
+						<div v-if="scope.row.audit_time">{{scope.row.audit_time}}</div>
 					</template>
 				</el-table-column>
 				<el-table-column label="操作" width="120" fixed="right">
@@ -226,10 +227,7 @@
 			</div>
 			<div class="detail_row">
 				<div class="lable">当前状态</div>
-				<div class="value" v-if="goods_info.audit_status == 0">已撤销</div>
-				<div class="value" v-if="goods_info.audit_status == 1">待确认</div>
-				<div class="value" v-if="goods_info.audit_status == 2">已确认</div>
-				<div class="value" v-if="goods_info.audit_status == 4">已拒绝</div>
+				<div>{{filterAuditStatus(goods_info.audit_status)}}</div>
 			</div>
 			<div class="detail_row" v-if="goods_info.audit_status == 4">
 				<div class="lable">拒绝原因</div>
@@ -535,6 +533,13 @@
 							message: '已取消'
 						});          
 					});
+				},
+				//审核状态
+				filterAuditStatus(status){
+					let status_arr = this.tab_list.filter(item => {
+						return item.id == status;
+					})
+					return status_arr.length > 0?status_arr[0].name:'';
 				}
 			},
 			components:{
