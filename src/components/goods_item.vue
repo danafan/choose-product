@@ -108,14 +108,17 @@
 				<div class="dark">30天退货率：</div>
 				<div style="margin-right:3px">{{info.thl_30}}</div>
 				<el-tooltip class="item" effect="dark" content="30天退货率 = 30天实退数(退款成功) / 30天发货数" placement="top-end">
-					<i class="el-icon-question" style="color: #F37605;"></i>
+					<img class="question_icon" src="../static/question_icon.png">
 				</el-tooltip>
 			</div>
 		</div>
 		<div class="num_row">
-			<div class="flex">
+			<div class="flex ac">
 				<div class="dark">7天发货率：</div>
-				<div>{{info.fhl_7}}</div>
+				<div style="margin-right:3px">{{info.fhl_7}}</div>
+				<el-tooltip class="item" effect="dark" content="7天发货率(排除鱼塘) = 7天实发数 / 7天订单数" placement="top-end">
+					<img class="question_icon" src="../static/question_icon.png">
+				</el-tooltip>
 			</div>
 			<div class="flex">
 				<div class="dark">7天销量：</div>
@@ -427,6 +430,10 @@
 			}
 			.primary_color{
 				color: #F37605;
+			}
+			.question_icon{
+				width: 12rem;
+				height: 12rem;
 			}
 			.set_row{
 				margin-top: 10rem;
