@@ -172,197 +172,238 @@
 		<div class="flex">
 			<div class="dialog_content">
 				<div class="info_title">基础资料</div>
-				<div class="detail_row">
-					<div class="lable">标题</div>
-					<div class="value">{{goods_info.title}}</div>
-				</div>
-				<div class="detail_row">
-					<div class="lable">供应商</div>
-					<div class="value">{{goods_info.supplier_name}}</div>
-				</div>
-				<div class="detail_row">
-					<div class="lable">对接人</div>
-					<div class="value">{{goods_info.maintainer}}</div>
+				<div class="table_content">
+					<div class="detail_row">
+						<div class="lable">标题</div>
+						<div class="value">{{goods_info.title}}</div>
+					</div>
+					<div class="detail_row">
+						<div class="lable">供应商</div>
+						<div class="value">{{goods_info.supplier_name}}</div>
+					</div>
+					<div class="detail_row">
+						<div class="lable">对接人</div>
+						<div class="value">{{goods_info.maintainer}}</div>
+					</div>
+
+					<div class="detail_row">
+						<div class="lable">供应商款式编码</div>
+						<div class="value">{{goods_info.supplier_ksbm}}</div>
+					</div><div class="detail_row">
+						<div class="lable">内部款式编码</div>
+						<div class="value">{{goods_info.i_id}}</div>
+					</div><div class="detail_row">
+						<div class="lable">BD款式编码</div>
+						<div class="value">{{goods_info.bd_i_id}}</div>
+					</div>
+					<div class="detail_row">
+						<div class="lable">上新时间</div>
+						<div class="value">{{goods_info.market_name}}</div>
+					</div>
+					<div class="detail_row">
+						<div class="lable">市场</div>
+						<div class="value">{{goods_info.market_name}}</div>
+					</div>
+					<div class="detail_row">
+						<div class="lable">类目</div>
+						<div class="value">{{goods_info.category_name}}</div>
+					</div>
+					<div class="detail_row">
+						<div class="lable">分类</div>
+						<div class="value">{{goods_info.classification_name}}</div>
+					</div>
+					<div class="detail_row">
+						<div class="lable">尺码</div>
+						<div class="value">{{goods_info.size}}</div>
+					</div>
+					<div class="detail_row">
+						<div class="lable">颜色</div>
+						<div class="value">{{goods_info.size}}</div>
+					</div>
+					<div class="detail_row">
+						<div class="lable">面料</div>
+						<div class="value">{{goods_info.fabric}}</div>
+					</div>
+					<div class="detail_row">
+						<div class="lable">成本价</div>
+						<div class="value">{{goods_info.cost_price}}</div>
+					</div>
+					<div class="detail_row">
+						<div class="lable">控价</div>
+						<div class="value">{{goods_info.cost_price}}</div>
+					</div>
+					<div class="detail_row">
+						<div class="lable">档口批价</div>
+						<div class="value">{{goods_info.wholesale_price}}</div>
+					</div>
+					<div class="detail_row">
+						<div class="lable">网盘地址</div>
+						<div class="value">{{goods_info.net_disk_address}}</div>
+					</div>
+					<div class="detail_row">
+						<div class="lable">款式备注</div>
+						<div class="value">{{goods_info.net_disk_address}}</div>
+					</div>
+					<div class="detail_row">
+						<div class="lable">提供拍照</div>
+						<div class="value">{{goods_info.supply_photograph == 1?'是':'否'}}</div>
+					</div>
+					<div class="detail_row">
+						<div class="lable">提供退货</div>
+						<div class="value">{{goods_info.supply_return_goods == 1?'是':'否'}}</div>
+					</div>
+					<div class="detail_row">
+						<div class="lable">提供换货</div>
+						<div class="value">{{goods_info.supply_exchange_goods == 1?'是':'否'}}</div>
+					</div>
+					<div class="detail_row">
+						<div class="lable">提供代发</div>
+						<div class="value">{{goods_info.supply_replace_send == 1?'是':'否'}}</div>
+					</div>
+					<div class="detail_row">
+						<div class="lable">结算方式</div>
+						<div class="value">{{goods_info.supply_monthly_settlement == 1?'月结':'现结'}}</div>
+					</div>
+					<div class="detail_row">
+						<div class="lable">合作模式</div>
+						<div class="value">{{goods_info.mode}}</div>
+					</div>
 				</div>
 
-				<div class="detail_row">
-					<div class="lable">供应商款式编码</div>
-					<div class="value">{{goods_info.supplier_ksbm}}</div>
-				</div><div class="detail_row">
-					<div class="lable">内部款式编码</div>
-					<div class="value">{{goods_info.i_id}}</div>
-				</div><div class="detail_row">
-					<div class="lable">BD款式编码</div>
-					<div class="value">{{goods_info.bd_i_id}}</div>
-				</div>
+			</div>
+			<div class="dialog_content">
+				<div class="info_title">需求信息</div>
+				<div class="table_content">
+					<div class="detail_row">
+						<div class="lable">需求部门</div>
+						<div class="value">{{goods_info.remark}}</div>
+					</div>
+					<div class="detail_row">
+						<div class="lable">需求店铺</div>
+						<div class="value">{{goods_info.shop_name}}</div>
+					</div>
+					<div class="detail_row">
+						<div class="lable">需求类型</div>
+						<div class="value">{{goods_info.demand_type}}</div>
+					</div>
+					<div class="detail_row">
+						<div class="lable">发货类型</div>
+						<div class="value">{{goods_info.send_type}}</div>
+					</div>
+					<div class="detail_row">
+						<div class="lable">需求日期</div>
+						<div class="value">{{goods_info.demand_date}}</div>
+					</div>
+					<div class="detail_row">
+						<div class="lable">售卖价格</div>
+						<div class="value">{{goods_info.selling_price}}</div>
+					</div>
+					<div class="detail_row">
+						<div class="lable">选款要求</div>
+						<div class="value" v-html="goods_info.demand_remark"></div>
+					</div>
+					<div class="detail_row">
+						<div class="lable">需求人</div>
+						<div class="value">{{goods_info.selling_price}}</div>
+					</div>
+					<div class="detail_row">
+						<div class="lable">需求提交时间</div>
+						<div class="value">{{goods_info.selling_price}}</div>
+					</div>
+					<div class="detail_row">
+						<div class="lable">需求状态</div>
+						<div class="value">{{goods_info.selling_price}}</div>
+					</div>
+					<div class="detail_row" v-if="goods_info.audit_status == 2">
+						<div class="lable">审核备注</div>
+						<div class="value">{{goods_info.aff_reason}}</div>
+					</div>
+					<div class="detail_row">
+						<div class="lable">审核人</div>
+						<div class="value">{{goods_info.selling_price}}</div>
+					</div>
+					<div class="detail_row">
+						<div class="lable">审核时间</div>
+						<div class="value">{{goods_info.selling_price}}</div>
+					</div>
+
 				<!-- <div class="detail_row">
 					<div class="lable">供应商款号</div>
 					<div class="value">{{goods_info.style_name}}</div>
 				</div> -->
-				
-				<div class="detail_row">
-					<div class="lable">市场</div>
-					<div class="value">{{goods_info.market_name}}</div>
-				</div>
-				<div class="detail_row">
-					<div class="lable">提供拍照</div>
-					<div class="value">{{goods_info.supply_photograph == 1?'是':'否'}}</div>
-				</div>
-				<div class="detail_row">
-					<div class="lable">提供退货</div>
-					<div class="value">{{goods_info.supply_return_goods == 1?'是':'否'}}</div>
-				</div>
-				<div class="detail_row">
-					<div class="lable">提供换货</div>
-					<div class="value">{{goods_info.supply_exchange_goods == 1?'是':'否'}}</div>
-				</div>
-				<div class="detail_row">
-					<div class="lable">提供代发</div>
-					<div class="value">{{goods_info.supply_replace_send == 1?'是':'否'}}</div>
-				</div>
-				<div class="detail_row">
-					<div class="lable">结算方式</div>
-					<div class="value">{{goods_info.supply_monthly_settlement == 1?'月结':'现结'}}</div>
-				</div>
-			</div>
-			<div class="dialog_content">
-				<div class="info_title">需求信息</div>
-				<div class="detail_row">
-					<div class="lable">结算方式</div>
-					<div class="value">{{goods_info.supply_monthly_settlement == 1?'月结':'现结'}}</div>
-				</div>
-				<div class="detail_row">
-					<div class="lable">类目</div>
-					<div class="value">{{goods_info.category_name}}</div>
-				</div>
-				<div class="detail_row">
-					<div class="lable">分类</div>
-					<div class="value">{{goods_info.classification_name}}</div>
-				</div>
-				<div class="detail_row">
-					<div class="lable">合作模式</div>
-					<div class="value">{{goods_info.mode}}</div>
-				</div>
-				<div class="detail_row">
+				<!-- <div class="detail_row">
 					<div class="lable">商品说明</div>
 					<div class="value">{{goods_info.remark}}</div>
-				</div>
-				<div class="detail_row">
-					<div class="lable">面料</div>
-					<div class="value">{{goods_info.fabric}}</div>
-				</div>
-				<div class="detail_row">
-					<div class="lable">尺码</div>
-					<div class="value">{{goods_info.size}}</div>
-				</div>
-				<div class="detail_row">
-					<div class="lable">成本价</div>
-					<div class="value">{{goods_info.cost_price}}</div>
-				</div>
-				<div class="detail_row">
-					<div class="lable">档口批价</div>
-					<div class="value">{{goods_info.wholesale_price}}</div>
-				</div>
-				<div class="detail_row">
-					<div class="lable">百度网盘</div>
-					<div class="value">{{goods_info.net_disk_address}}</div>
-				</div>
-				<div class="detail_row">
-					<div class="lable">店铺</div>
-					<div class="value">{{goods_info.shop_name}}</div>
-				</div>
-				<div class="detail_row">
-					<div class="lable">需求类型</div>
-					<div class="value">{{goods_info.demand_type}}</div>
-				</div>
-				<div class="detail_row">
-					<div class="lable">发货类型</div>
-					<div class="value">{{goods_info.send_type}}</div>
-				</div>
-				<div class="detail_row">
-					<div class="lable">需求日期</div>
-					<div class="value">{{goods_info.demand_date}}</div>
-				</div>
-				<div class="detail_row">
-					<div class="lable">售卖价格</div>
-					<div class="value">{{goods_info.selling_price}}</div>
-				</div>
-				<div class="detail_row">
-					<div class="lable">选款要求</div>
-					<div class="value" v-html="goods_info.demand_remark"></div>
-				</div>
-				<div class="detail_row" v-if="goods_info.audit_status == 2">
-					<div class="lable">确认备注</div>
-					<div class="value">{{goods_info.aff_reason}}</div>
 				</div>
 				<div class="detail_row" v-if="goods_info.audit_status == 4">
 					<div class="lable">拒绝原因</div>
 					<div class="value">{{goods_info.refund_reason}}</div>
-				</div>
+				</div> -->
 			</div>
 		</div>
-		<div slot="footer" class="dialog_footer">
-			<el-button type="primary" size="small" @click="detail_dialog = false">关闭</el-button>
-		</div>
-	</el-dialog>
-	<!-- 备注弹窗 -->
-	<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" destroy-on-close @close="remark = ''" :visible.sync="remark_dialog" width="30%">
-		<div slot="title" class="dialog_title">
-			<div>备注</div>
-			<img class="close_icon" src="../../../static/close_icon.png" @click="remark_dialog = false">
-		</div>
-		<div class="remark_content">
-			<el-input type="textarea" :rows="3" placeholder="请输入备注" v-model="remark">
-			</el-input>
-		</div>
-		<div slot="footer" class="dialog_footer">
-			<el-button size="mini" @click="remark_dialog = false">关闭</el-button>
-			<el-button size="mini" type="primary" @click="confirmRemark">提交</el-button>
-		</div>
-	</el-dialog>
-	<!-- 单个审批弹窗 -->
-	<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" destroy-on-close @close="allClose" :visible.sync="refused_dialog" width="30%">
-		<div slot="title" class="dialog_title">
-			<div>确认{{`${audit_type == '1'?'同意':'拒绝'}`}}？</div>
-			<img class="close_icon" src="../../../static/close_icon.png" @click="refused_dialog = false">
-		</div>
-		<div class="remark_content">
-			<div style="color: red;margin-bottom: 5px">（*必填）</div>
-			<el-input type="textarea" :rows="3" placeholder="请输入同意备注" v-model="msg" v-if="audit_type == '1'">
-			</el-input>
-			<el-input type="textarea" :rows="3" placeholder="请输入拒绝原因" v-model="err_msg" v-if="audit_type == '2'">
-			</el-input>
-		</div>
-		<div slot="footer" class="dialog_footer">
-			<el-button size="mini" @click="refused_dialog = false">关闭</el-button>
-			<el-button size="mini" type="primary" @click="confirmRefused">提交</el-button>
-		</div>
-	</el-dialog>
-	<!-- 批量审批 -->
-	<el-dialog :visible.sync="allAuditDialog" @close="allClose" width="30%">
-		<div slot="title" class="dialog_title">
-			<div>批量审核</div>
-			<img class="close_icon" src="../../../static/close_icon.png" @click="allAuditDialog = false">
-		</div>
-		<div class="down_box">
-			<el-form :inline="true" size="mini">
-				<el-form-item label="类型：">
-					<el-radio-group v-model="audit_type">
-						<el-radio :label="1">确认需求</el-radio>
-						<el-radio :label="2">拒绝需求</el-radio>
-					</el-radio-group>
-				</el-form-item>
-				<el-form-item label="确认需求备注：" required v-if="audit_type == 1">
-					<el-input type="textarea" :rows="3" placeholder="请输入确认需求备注"
-					v-model="msg">
-				</el-input>
+	</div>
+	<div slot="footer" class="dialog_footer">
+		<el-button type="primary" size="small" @click="detail_dialog = false">关闭</el-button>
+	</div>
+</el-dialog>
+<!-- 备注弹窗 -->
+<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" destroy-on-close @close="remark = ''" :visible.sync="remark_dialog" width="30%">
+	<div slot="title" class="dialog_title">
+		<div>备注</div>
+		<img class="close_icon" src="../../../static/close_icon.png" @click="remark_dialog = false">
+	</div>
+	<div class="remark_content">
+		<el-input type="textarea" :rows="3" placeholder="请输入备注" v-model="remark">
+		</el-input>
+	</div>
+	<div slot="footer" class="dialog_footer">
+		<el-button size="mini" @click="remark_dialog = false">关闭</el-button>
+		<el-button size="mini" type="primary" @click="confirmRemark">提交</el-button>
+	</div>
+</el-dialog>
+<!-- 单个审批弹窗 -->
+<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" destroy-on-close @close="allClose" :visible.sync="refused_dialog" width="30%">
+	<div slot="title" class="dialog_title">
+		<div>确认{{`${audit_type == '1'?'同意':'拒绝'}`}}？</div>
+		<img class="close_icon" src="../../../static/close_icon.png" @click="refused_dialog = false">
+	</div>
+	<div class="remark_content">
+		<div style="color: red;margin-bottom: 5px">（*必填）</div>
+		<el-input type="textarea" :rows="3" placeholder="请输入同意备注" v-model="msg" v-if="audit_type == '1'">
+		</el-input>
+		<el-input type="textarea" :rows="3" placeholder="请输入拒绝原因" v-model="err_msg" v-if="audit_type == '2'">
+		</el-input>
+	</div>
+	<div slot="footer" class="dialog_footer">
+		<el-button size="mini" @click="refused_dialog = false">关闭</el-button>
+		<el-button size="mini" type="primary" @click="confirmRefused">提交</el-button>
+	</div>
+</el-dialog>
+<!-- 批量审批 -->
+<el-dialog :visible.sync="allAuditDialog" @close="allClose" width="30%">
+	<div slot="title" class="dialog_title">
+		<div>批量审核</div>
+		<img class="close_icon" src="../../../static/close_icon.png" @click="allAuditDialog = false">
+	</div>
+	<div class="down_box">
+		<el-form :inline="true" size="mini">
+			<el-form-item label="类型：">
+				<el-radio-group v-model="audit_type">
+					<el-radio :label="1">确认需求</el-radio>
+					<el-radio :label="2">拒绝需求</el-radio>
+				</el-radio-group>
 			</el-form-item>
-			<el-form-item label="拒绝需求原因：" required v-if="audit_type == 2">
-				<el-input type="textarea" :rows="3" placeholder="请输入拒绝需求原因"
-				v-model="refuse_remark">
+			<el-form-item label="确认需求备注：" required v-if="audit_type == 1">
+				<el-input type="textarea" :rows="3" placeholder="请输入确认需求备注"
+				v-model="msg">
 			</el-input>
 		</el-form-item>
-	</el-form>
+		<el-form-item label="拒绝需求原因：" required v-if="audit_type == 2">
+			<el-input type="textarea" :rows="3" placeholder="请输入拒绝需求原因"
+			v-model="refuse_remark">
+		</el-input>
+	</el-form-item>
+</el-form>
 </div>
 <div slot="footer" class="dialog_footer">
 	<el-button size="mini" @click="allAuditDialog = false">取消</el-button>
@@ -452,6 +493,7 @@
 		.dialog_content{
 			width: 50%;
 			border-right:1px solid #F0F0F0;
+			border-left:1px solid #F0F0F0;
 			.info_title{
 				width: 100%;
 				text-align: center;
@@ -462,8 +504,10 @@
 				font-size: 13px;
 				font-weight: bold;
 			}
-			max-height: 750px;
-			overflow-y: scroll;
+			.table_content{
+				max-height: 750px;
+				overflow-y: scroll;
+			}
 			.detail_row{
 				border-bottom:1px solid #F0F0F0;
 				display: flex;
