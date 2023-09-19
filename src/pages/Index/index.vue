@@ -38,7 +38,7 @@
 				<div slot="title" class="dialog_title" style="justify-content: flex-end;">
 					<img class="close_icon" src="../../static/close_icon.png" @click="enlarge_dialog = false">
 				</div>
-				<div class="flex">
+				<div class="flex jsb">
 					<GoodsItem :info="enlarge_item" @setStatus="setStatus" :is_enlarge="true"/>
 					<div class="chart_box">
 						<SalenumChart :style_id="enlarge_item.style_id" v-if="enlarge_dialog"/>
@@ -266,7 +266,7 @@
 </script>
 <style type="text/css" lang="less">
 	.custom_class{
-		width: 960rem!important;
+		width: 1160rem!important;
 	}
 	.custom_message{
 		z-index: 9999999!important;
@@ -365,7 +365,7 @@
 		cursor:pointer;
 	}
 	.chart_box{
-		width: 500rem;
+		width: 700rem;
 		.charts_div{
 			width: 500rem;
 			height: 350rem;

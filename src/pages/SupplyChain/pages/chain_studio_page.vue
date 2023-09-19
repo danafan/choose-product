@@ -35,6 +35,8 @@
 							</el-carousel>
 						</template>
 					</el-table-column>
+					<el-table-column label="添加时间" prop="add_time"></el-table-column>
+					<el-table-column label="添加人" prop="add_admin_name"></el-table-column>
 					<el-table-column label="操作">
 						<template slot-scope="scope">
 							<el-button type="text" size="small" @click="addFn('2',scope.row.studio_id)" v-if="button_list.edit == 1">编辑</el-button>

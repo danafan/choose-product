@@ -104,9 +104,12 @@
 				<div class="dark">选中：</div>
 				<div>{{info.select_num}}</div>
 			</div>
-			<div class="flex">
+			<div class="flex ac">
 				<div class="dark">30天退货率：</div>
-				<div>{{info.thl_30}}</div>
+				<div style="margin-right:3px">{{info.thl_30}}</div>
+				<el-tooltip class="item" effect="dark" content="30天退货率 = 30天实退数(退款成功) / 30天发货数" placement="top-end">
+					<i class="el-icon-question" style="color: #F37605;"></i>
+				</el-tooltip>
 			</div>
 		</div>
 		<div class="num_row">

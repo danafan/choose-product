@@ -94,7 +94,7 @@
 						<div v-if="scope.row.abutment_type == 0">否</div>
 					</template>
 				</el-table-column>
-				<el-table-column label="当前状态" width="150">
+				<el-table-column label="需求状态" width="150">
 					<template slot-scope="scope">
 						<div class="flex jc">
 							<div>{{filterAuditStatus(scope.row.audit_status)}}</div>

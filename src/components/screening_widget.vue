@@ -24,7 +24,7 @@
 					<div v-if="season_list.length > 0 && page_type == 'index'">季节（{{season_list[season_index].season_name}}）</div>
 
 					<img class="right_arrow" src="../static/down_arrow.png">
-					<div v-if="rating_list.length > 0 && page_type != 'gys_supplier'">等级（{{rating_list[rating_index].grade_name}}）</div>
+					<div v-if="rating_list.length > 0 && page_type != 'gys_supplier' && page_type != 'supplier'">等级（{{rating_list[rating_index].grade_name}}）</div>
 					<div class="reset_button" @click.stop="resetFn">重置选择</div>
 				</div>
 			</div>
@@ -81,7 +81,7 @@
 					<div class="item" :class="{'active_item':season_index == index}" v-for="(item,index) in season_list" @click.stop="checkIndex('season',index)">{{item.season_name}}</div>
 				</div>
 			</div>
-			<div class="conditions_row none_border" v-if="page_type != 'gys_supplier'">
+			<div class="conditions_row none_border" v-if="page_type != 'gys_supplier' && page_type != 'supplier'">
 				<div class="lable">供应商评级：</div>
 				<div class="list">
 					<div class="item" :class="{'active_item':rating_index == index}" v-for="(item,index) in rating_list" @click.stop="checkIndex('rating',index)">{{item.grade_name}}</div>
@@ -556,7 +556,7 @@
 					arg.season_id = this.season_list[this.season_index].season_id;
 				}
 				//处理评级
-				if(this.page_type != 'gys_supplier' && this.rating_index > 0){
+				if(this.page_type != 'gys_supplier' && this.page_type != 'supplier' && this.rating_index > 0){
 					arg.grade_id = this.rating_list[this.rating_index].grade_id;
 				}
 				this.$emit('callback',arg);

@@ -2,14 +2,28 @@
 	<div class="chart_box flex fc ac jsa" v-loading="chart_loading">
 		<div class="sale_num_title">在售店铺数（含有销量）：{{shop_data.length}}个</div>
 		<el-table style="margin-bottom: 30px;" size="mini" :data="shop_data" tooltip-effect="dark" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="580" v-loading="chart_loading">
-			<el-table-column label="店铺">
+			<el-table-column label="店铺" width="120">
 				<template slot-scope="scope">
 					<div class="underline pointer" :class="{'primary_color':shop_name == scope.row.shop_name}" @click="checkStore(shop_name == scope.row.shop_name?'':scope.row.shop_name)">{{scope.row.shop_name}}</div>
 				</template>
 			</el-table-column>
-			<el-table-column :label="`30天销量（${total_xssl_30})`" prop="xssl_30"></el-table-column>
-			<el-table-column :label="`7天销量（${total_xssl_7})`" prop="xssl_7"></el-table-column>
-			<el-table-column label="店铺链接">
+			<el-table-column width="160">
+				<template slot="header" slot-scope="scope">
+					<div class="auto_select">{{`30天销量（${total_xssl_30})`}}</div>
+				</template>
+				<template slot-scope="scope">
+					<div>{{scope.row.xssl_30}}</div>
+				</template>
+			</el-table-column>
+			<el-table-column width="160">
+				<template slot="header" slot-scope="scope">
+					<div class="auto_select">{{`7天销量（${total_xssl_7})`}}</div>
+				</template>
+				<template slot-scope="scope">
+					<div>{{scope.row.xssl_7}}</div>
+				</template>
+			</el-table-column>
+			<el-table-column label="店铺链接" width="100">
 				<template slot-scope="scope">
 					<el-button type="text" @click="openStore(scope.row.url)">进入</el-button>
 				</template>
@@ -149,6 +163,9 @@
 	}
 </script>
 <style lang="less" scoped>
+	.auto_select{
+		user-select: text;
+	}
 	.primary_color{
 		color:#F37605;
 	}
