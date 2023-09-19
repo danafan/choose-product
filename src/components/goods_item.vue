@@ -107,7 +107,7 @@
 			<div class="flex ac">
 				<div class="dark">30天退货率：</div>
 				<div style="margin-right:3px">{{info.thl_30}}</div>
-				<el-tooltip class="item" effect="dark" content="30天退货率 = 30天实退数(退款成功) / 30天发货数" placement="top-end">
+				<el-tooltip class="item" effect="dark" content="30天退货率（排除鱼塘）  = 30天实退数（售后退款成功）/ 30天实发数" placement="top-end">
 					<img class="question_icon" src="../static/question_icon.png">
 				</el-tooltip>
 			</div>
