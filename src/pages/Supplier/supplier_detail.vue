@@ -89,7 +89,10 @@
 				</el-card>
 			</div>
 			<CarWidget :is_fixed="true"/>
-			<img class="clipboard_icon" src="../../static/clipboard_icon.png" @click="toClipboard">
+			<div class="clipboard_img" @click="toClipboard">
+				<img class="clipboard_icon" src="../../static/clipboard_icon.png">
+				<div class="icon_text">截图</div>
+			</div>
 		</div>
 		<!-- 点击放大 -->
 		<el-dialog :visible.sync="enlarge_dialog" top="15px" :show-close="false" custom-class="custom_class">
@@ -355,15 +358,32 @@
 		}
 	}
 	.padding_page_content::-webkit-scrollbar{display:none}
-	.clipboard_icon{
+	.clipboard_img{
 		position: fixed;
 		top: 42%;
-		right: 8rem;
-		width: 82rem;
-		height: 82rem;
+		right: 16rem;
+		width: 60rem;
+		height: 60rem;
 		z-index: 9;
 		cursor:pointer;
+		display:flex;
+		flex-direction:column;
+		align-items:center;
+		justify-content: center;
+		background: #FFFFFF;
+		box-shadow: 0px 2px 11px 0px #FFEAD8;
+		border-radius: 30rem;
+		.clipboard_icon{
+			margin-bottom: 2rem;
+			width: 24rem;
+			height: 22rem;
+		}
+		.icon_text{
+			color: var(--color);
+			font-size: 12rem;
+		}
 	}
+
 	.chart_box{
 		width: 500rem;
 		.charts_div{

@@ -97,10 +97,6 @@
 					<img class="sort_icon" src="../static/sort_desc.png" v-if="item.sort == 'desc'">
 				</div>
 			</div>
-			<div class="style_row" v-if="page_type != 'gys_supplier'">
-				<div class="style_item" :class="{'active_color':item.is_selected === 1}" v-for="(item,index) in cate_style_list" @click="checkStyle(index)">{{item.name}}</div>
-			</div>
-			<el-checkbox :true-label="1" :false-label="0" v-model="is_merge" @change="callbackFn"><span class="f12">合并同款</span></el-checkbox>
 			<div class="price_row" v-if="page_type != 'gys_supplier'">
 				<div>价格：</div>
 				<el-input style="width: 50px;" size="mini" type="number" v-model="start_price"></el-input>&nbsp~&nbsp
@@ -108,16 +104,23 @@
 				&nbsp
 				<el-button size="mini" type="primary" @click="searchPrice">查询</el-button>
 			</div>
-			<el-checkbox-group v-model="up_type" @change="upTypeChange">
-				<el-checkbox :label="1">今日上新</el-checkbox>
-				<el-checkbox :label="3">三日上新</el-checkbox>
-				<el-checkbox :label="7">七日上新</el-checkbox>
-			</el-checkbox-group>
 			<div class="date_row">
+				<el-checkbox-group style="margin-right: 30px;" v-model="up_type" @change="upTypeChange">
+					<el-checkbox class="custom_checkbox" :label="1">今日上新</el-checkbox>
+					<el-checkbox class="custom_checkbox" :label="3">三日上新</el-checkbox>
+					<el-checkbox class="custom_checkbox" :label="7">七日上新</el-checkbox>
+				</el-checkbox-group>
 				<el-date-picker style="width: 220px;" v-model="date" size="mini" type="daterange" unlink-panels value-format="yyyy-MM-dd" range-separator="至" start-placeholder="上新时间" end-placeholder="上新时间" @change="changeDate">
 				</el-date-picker>
 			</div>
-			
+		</div>
+		<div class="cate_box_bottom">
+			<el-checkbox-group v-model="cate_style_ids" @change="callbackFn">
+				<el-checkbox class="custom_checkbox" v-for="item in cate_style_list"
+				:key="item.id"
+				:label="item.id"
+				:value="item.name">{{item.name}}</el-checkbox>
+			</el-checkbox-group>
 		</div>
 	</div>
 </template>
@@ -162,26 +165,29 @@
 				}],								//排序列表
 				cate_style_list:[{
 					name:'深度库存',
-					is_selected:0
+					id:1
 				},{
 					name:'视频款',
-					is_selected:0
+					id:2
 				},{
 					name:'爆款',
-					is_selected:0
+					id:3
 				},{
 					name:'主推款',
-					is_selected:0
+					id:4
 				},{
 					name:'独家款',
-					is_selected:0
+					id:5
 				},{
 					name:'自主款',
-					is_selected:0
-				}],								//款式列表
-				up_type:[],					//上新类型
+					id:6
+				},{
+					name:'合并同款',
+					id:7
+				}],								//款式类型列表
+				cate_style_ids:[],				//选中的款式类型
+				up_type:[],						//上新类型
 				date:[],						//上新日期 
-				is_merge:0,						//合并同款
 				start_price:"",
 				end_price:"",
 				FristPin: ["全部","A", "B", "C", "D", "E", "F", "G", "H", "I" ,"J", "K", "L", "M", "N", "O","P", "Q", "R", "S", "T", "U","V","W", "X", "Y", "Z","#"],
@@ -194,12 +200,12 @@
 			//index:首页；supplier:供应商；gys_supplier:供应商来源
 			page_type:{
 				type:String,
-				default:"index"
+			default:"index"
 			},
 			//商品总数量
 			total_num:{
 				type:Number,
-				default:0
+			default:0
 			}
 		},
 		created(){
@@ -245,22 +251,22 @@
 				}
 				if(this.up_type.length > 0){
 					switch(this.up_type[0]){
-						case 1:
+					case 1:
 						this.date = [getNowDate(),getNowDate()];
 						//获取当前条件并传递
 						this.callbackFn();
 						break;
-						case 3:
+					case 3:
 						this.date = [getCurrentDate(3),getNowDate()];
 						//获取当前条件并传递
 						this.callbackFn();
 						break;
-						case 7:
+					case 7:
 						this.date = [getCurrentDate(7),getNowDate()];
 						//获取当前条件并传递
 						this.callbackFn();
 						break;
-						default:
+					default:
 						return
 					}
 				}else{
@@ -281,88 +287,88 @@
 						let cityArr = [];
 						for (let i = 0; i < supplier_list.length; i++) {
             				//遍历数组,拿到城市名称
-            				let cityName = supplier_list[i].supplier_name;
+							let cityName = supplier_list[i].supplier_name;
             				//取全部城市的首字母
-            				let fristName = pinyin.getCamelChars(cityName).substring(0, 1).toUpperCase();  
+							let fristName = pinyin.getCamelChars(cityName).substring(0, 1).toUpperCase();  
             				//	这里截取首字母的第一位
             				//给原json添加首字母键值对
-            				if(fristName == '1'){
-            					supplier_list[i].first = 'Y';
-            				}else if(fristName == '2'){
-            					supplier_list[i].first = 'E';
-            				}else if(fristName == '3'){
-            					supplier_list[i].first = 'S';
-            				}else if(fristName == '4'){
-            					supplier_list[i].first = 'S';
-            				}else if(fristName == '5'){
-            					supplier_list[i].first = 'W';
-            				}else if(fristName == '6'){
-            					supplier_list[i].first = 'L';
-            				}else if(fristName == '7'){
-            					supplier_list[i].first = 'Q';
-            				}else if(fristName == '8'){
-            					supplier_list[i].first = 'B';
-            				}else if(fristName == '9'){
-            					supplier_list[i].first = 'J';
-            				}else if(fristName == '0'){
-            					supplier_list[i].first = 'L';
-            				}else{
-            					supplier_list[i].first = fristName;
-            				}
-            				
+							if(fristName == '1'){
+								supplier_list[i].first = 'Y';
+							}else if(fristName == '2'){
+								supplier_list[i].first = 'E';
+							}else if(fristName == '3'){
+								supplier_list[i].first = 'S';
+							}else if(fristName == '4'){
+								supplier_list[i].first = 'S';
+							}else if(fristName == '5'){
+								supplier_list[i].first = 'W';
+							}else if(fristName == '6'){
+								supplier_list[i].first = 'L';
+							}else if(fristName == '7'){
+								supplier_list[i].first = 'Q';
+							}else if(fristName == '8'){
+								supplier_list[i].first = 'B';
+							}else if(fristName == '9'){
+								supplier_list[i].first = 'J';
+							}else if(fristName == '0'){
+								supplier_list[i].first = 'L';
+							}else{
+								supplier_list[i].first = fristName;
+							}
+
             				//放入新数组
-            				cityArr.push(supplier_list[i]);
-            			}
-            			let cityJson = {};
+							cityArr.push(supplier_list[i]);
+						}
+						let cityJson = {};
         				//根据首字母键值对给原数据按首字母分类
-        				for (let i = 0; i < this.FristPin.length; i++) { 
-        					if(i == 0){
-        						cityJson[this.FristPin[i]] = cityArr;
-        					}else if(i == this.FristPin.length - 1){
-        						let zm_arr = ["A", "B", "C", "D", "E", "F", "G", "H", "I" ,"J", "K", "L", "M", "N", "O","P", "Q", "R", "S", "T", "U","V","W", "X", "Y", "Z"]
-        						cityJson[this.FristPin[i]] = cityArr.filter( (value) => {
-        							return zm_arr.indexOf(value.first) == -1;
-        						})
-        					} else{
-        						cityJson[this.FristPin[i]] = cityArr.filter( (value) => {
-        							return value.first === this.FristPin[i];
-        						})
-        					}
+						for (let i = 0; i < this.FristPin.length; i++) { 
+							if(i == 0){
+								cityJson[this.FristPin[i]] = cityArr;
+							}else if(i == this.FristPin.length - 1){
+								let zm_arr = ["A", "B", "C", "D", "E", "F", "G", "H", "I" ,"J", "K", "L", "M", "N", "O","P", "Q", "R", "S", "T", "U","V","W", "X", "Y", "Z"]
+								cityJson[this.FristPin[i]] = cityArr.filter( (value) => {
+									return zm_arr.indexOf(value.first) == -1;
+								})
+							} else{
+								cityJson[this.FristPin[i]] = cityArr.filter( (value) => {
+									return value.first === this.FristPin[i];
+								})
+							}
 
-        				}
-        				this.cityjson = cityJson;
-        				this.supplier_list = this.cityjson["全部"];
+						}
+						this.cityjson = cityJson;
+						this.supplier_list = this.cityjson["全部"];
 
-        				let market_list = data.market;
-        				market_list.unshift({
-        					market_name:'全部',
-        					market_id:''
-        				})
-        				this.market_list = market_list;
-        				let category_list = data.category;
-        				category_list.unshift({
-        					category_name:'全部',
-        					category_id:''
-        				})
-        				this.category_list = category_list;
-        				let class_list = data.classification;
-        				class_list.unshift({
-        					classification_name:'全部',
-        					classification_id:''
-        				})
-        				this.class_list = class_list;
-        				let style_list = data.shooting_style;
-        				style_list.unshift({
-        					shooting_style_name:'全部',
-        					shooting_style_id:''
-        				})
-        				this.style_list = style_list;
-        				let rating_list = data.grade;
-        				rating_list.unshift({
-        					grade_name:'全部',
-        					grade_id:''
-        				})
-        				this.rating_list = rating_list;
+						let market_list = data.market;
+						market_list.unshift({
+							market_name:'全部',
+							market_id:''
+						})
+						this.market_list = market_list;
+						let category_list = data.category;
+						category_list.unshift({
+							category_name:'全部',
+							category_id:''
+						})
+						this.category_list = category_list;
+						let class_list = data.classification;
+						class_list.unshift({
+							classification_name:'全部',
+							classification_id:''
+						})
+						this.class_list = class_list;
+						let style_list = data.shooting_style;
+						style_list.unshift({
+							shooting_style_name:'全部',
+							shooting_style_id:''
+						})
+						this.style_list = style_list;
+						let rating_list = data.grade;
+						rating_list.unshift({
+							grade_name:'全部',
+							grade_id:''
+						})
+						this.rating_list = rating_list;
 						//季节
 						let season_list = data.season;
 						season_list.unshift({
@@ -427,26 +433,26 @@
 			// 切换下拉框筛选条件
 			checkIndex(type,index){
 				switch(type){
-					case 'supplier':
+				case 'supplier':
 					this.a_item = "";
 					this.supplier_index = index;
 					break;
-					case 'market':
+				case 'market':
 					this.market_index = index;
 					break;
-					case 'category':
+				case 'category':
 					this.category_index = index;
 					break;
-					case 'class':
+				case 'class':
 					this.class_index = index;
 					break;
-					case 'style':
+				case 'style':
 					this.style_index = index;
 					break;
-					case 'season':
+				case 'season':
 					this.season_index = index;
 					break;
-					case 'rating':
+				case 'rating':
 					this.rating_index = index;
 					break;
 				}
@@ -458,25 +464,15 @@
 				this.sort_list.map((item,i) => {
 					if(index == i){
 						switch(item.sort){
-							case 'default':
+						case 'default':
 							item.sort = 'desc';
 							break;
-							case 'desc':
+						case 'desc':
 							item.sort = 'default';
 							break;
 						}
 					}else{
 						item.sort = 'default';
-					}
-				})
-				//获取当前条件并传递
-				this.callbackFn();
-			},
-			//点击切换款式
-			checkStyle(index){
-				this.cate_style_list.map((item,i) => {
-					if(index == i){
-						item.is_selected = item.is_selected == 1?0:1;
 					}
 				})
 				//获取当前条件并传递
@@ -510,7 +506,7 @@
 					end_time:this.date && this.date.length > 0?this.date[1]:"",
 					start_price:this.start_price?parseFloat(this.start_price):'',
 					end_price:this.end_price?parseFloat(this.end_price):'',
-					is_merge:this.is_merge
+					is_merge:this.cate_style_ids.indexOf(7) > -1?1:0
 				}
 
 				//处理排序
@@ -523,12 +519,12 @@
 
 				//处理款式分类
 				if(this.page_type != 'gys_supplier'){
-					arg.depth_inventory = this.cate_style_list[0].is_selected;
-					arg.video_style = this.cate_style_list[1].is_selected;
-					arg.hot_style = this.cate_style_list[2].is_selected;
-					arg.data_style = this.cate_style_list[3].is_selected;
-					arg.sole_style = this.cate_style_list[4].is_selected;
-					arg.again_style = this.cate_style_list[5].is_selected;
+					arg.depth_inventory = this.cate_style_ids.indexOf(1) > -1?1:0;
+					arg.video_style = this.cate_style_ids.indexOf(2) > -1?1:0;
+					arg.hot_style = this.cate_style_ids.indexOf(3) > -1?1:0;
+					arg.data_style = this.cate_style_ids.indexOf(4) > -1?1:0;
+					arg.sole_style = this.cate_style_ids.indexOf(5) > -1?1:0;
+					arg.again_style = this.cate_style_ids.indexOf(6) > -1?1:0;
 				}
 
 				//处理供应商
@@ -564,208 +560,222 @@
 		}
 	}
 </script>
+<style type="text/css">
+	.custom_checkbox .el-checkbox__label{
+		font-size: 12rem!important;
+		color: #666666!important;
+	}
+</style>
 <style lang="less" scoped>
-.total_num{
-	margin-bottom: 10rem;
-	text-align: end;
-	font-size: 12rem;
-	color: #666666;
-}
-.f12{
-	font-size: 12rem;
-	color: #666666;
-}
-.selected_box{
-	border: 1px solid #E8E8E8;
-	padding-left: 26rem;
-	padding-right: 26rem;
-	background: #F5F5F5;
-	height: 26rem;
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	color: #666666;
-	font-size: 12rem;
-	.selected_left{
+	.total_num{
+		margin-bottom: 10rem;
+		text-align: end;
+		font-size: 12rem;
+		color: #666666;
+	}
+	.f12{
+		font-size: 12rem;
+		color: #666666;
+	}
+	.selected_box{
+		border: 1px solid #E8E8E8;
+		padding-left: 26rem;
+		padding-right: 26rem;
+		background: #F5F5F5;
+		height: 26rem;
 		display: flex;
 		align-items: center;
-		.tj_row{
+		justify-content: space-between;
+		color: #666666;
+		font-size: 12rem;
+		.selected_left{
 			display: flex;
 			align-items: center;
-			.reset_button{
-				cursor: pointer;
-				margin-left: 30rem;
-				border-radius: 10rem;
-				border: 1px solid #F37605;
-				width: 74rem;
-				text-align: center;
-				height: 22rem;
-				line-height: 21rem;
-				color: #F37605;
-				font-size: 14rem;
+			.tj_row{
+				display: flex;
+				align-items: center;
+				.reset_button{
+					cursor: pointer;
+					margin-left: 30rem;
+					border-radius: 10rem;
+					border: 1px solid #F37605;
+					width: 74rem;
+					text-align: center;
+					height: 22rem;
+					line-height: 21rem;
+					color: #F37605;
+					font-size: 14rem;
+				}
+			}
+			.right_arrow{
+				margin-left: 5rem;
+				margin-right: 5rem;
+				transform: rotate(-90deg);
+				width: 7rem;
+				height: 4rem;
 			}
 		}
-		.right_arrow{
-			margin-left: 5rem;
-			margin-right: 5rem;
-			transform: rotate(-90deg);
-			width: 7rem;
-			height: 4rem;
-		}
-	}
-	.selected_right{
-		display: flex;
-		align-items: center;
-		cursor:pointer;
-		
-	}
-}
-.down_arrow{
-	margin-left: 5rem;
-	transform: rotate(-90deg);
-	width: 7rem;
-	height: 4rem;
-}
-.more_arrow{
-	margin-left: 5rem;
-	width: 7rem;
-	height: 4rem;
-}
-.rotate{
-	transform: rotate(0deg);
-}
-.up_rotate{
-	transform: rotate(180deg);
-}
-.conditions_box{
-	background: #ffffff;
-	font-size: 12rem;
-	.conditions_row{
-		border-bottom: 1px dashed #DEDEDE;
-		display: flex;
-		.lable{
-			white-space:normal;
-			width: 110rem;
-			color: #999999;
-		}
-		.szm_row{
+		.selected_right{
 			display: flex;
 			align-items: center;
-			.szm_item{
-				margin-right: 20px;
+			cursor:pointer;
+
+		}
+	}
+	.down_arrow{
+		margin-left: 5rem;
+		transform: rotate(-90deg);
+		width: 7rem;
+		height: 4rem;
+	}
+	.more_arrow{
+		margin-left: 5rem;
+		width: 7rem;
+		height: 4rem;
+	}
+	.rotate{
+		transform: rotate(0deg);
+	}
+	.up_rotate{
+		transform: rotate(180deg);
+	}
+	.conditions_box{
+		background: #ffffff;
+		font-size: 12rem;
+		.conditions_row{
+			border-bottom: 1px dashed #DEDEDE;
+			display: flex;
+			.lable{
+				white-space:normal;
+				width: 110rem;
+				color: #999999;
+			}
+			.szm_row{
+				display: flex;
+				align-items: center;
+				.szm_item{
+					margin-right: 20px;
+					font-size: 12px;
+					cursor: pointer;
+				}
+				.active_index{
+					font-weight: bold;
+					color: var(--color);
+				}
+			}
+
+			.list{
+				flex:1;
+				display: flex;
+				flex-wrap: wrap;
+				.item{
+					cursor:pointer;
+					padding: 4px 12px;
+					color: #333333;
+				}
+				.item:hover{
+					color:var(--color);
+				}
+				.active_item{
+					color: var(--color);
+				}
+			}
+			.supplier_list{
+				max-height: 50px;
+				overflow: hidden;
+			}
+			.more_text{
 				font-size: 12px;
-				cursor: pointer;
-			}
-			.active_index{
-				font-weight: bold;
-				color: var(--color);
+				color: #666666;
 			}
 		}
-		
-		.list{
-			flex:1;
+		.none_border{
+			border:none;
+		}
+	}
+	.cate_box{
+		margin-top: 8rem;
+		border:1px solid #E8E8E8;
+		background: #F5F5F5;
+		width: 100%;
+		padding-left: 26rem;
+		padding-right: 26rem;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		font-size: 12rem;
+		color: #666666;
+		.sort_row{
 			display: flex;
-			flex-wrap: wrap;
-			.item{
+			align-items: center;
+			.sort_item{
+				border-left:1px solid #F5F5F5;
+				border-right:1px solid #F5F5F5;
+				height: 40rem;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				margin-right: 25rem;
+				display: flex;
+				align-items: center;
+				padding-left: 3rem;
+				padding-right: 3rem;
 				cursor:pointer;
-				padding: 4px 12px;
-				color: #333333;
+				.sort_icon{
+					margin-left: 2rem;
+					width: 9rem;
+					height: 12rem;
+				}
 			}
-			.item:hover{
+			.sort_item:hover{
+				border:1px solid #e8e8e8;
+				background: #ffffff;
 				color:var(--color);
 			}
-			.active_item{
-				color: var(--color);
-			}
 		}
-		.supplier_list{
-			max-height: 50px;
-			overflow: hidden;
-		}
-		.more_text{
-			font-size: 12px;
-			color: #666666;
-		}
-	}
-	.none_border{
-		border:none;
-	}
-}
-.cate_box{
-	margin-top: 8rem;
-	margin-bottom: 10rem;
-	border:1px solid #E8E8E8;
-	background: #F5F5F5;
-	width: 100%;
-	height: 40rem;
-	padding-left: 26rem;
-	padding-right: 26rem;
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	font-size: 12rem;
-	color: #666666;
-	.sort_row{
-		display: flex;
-		align-items: center;
-		.sort_item{
-			border-left:1px solid #F5F5F5;
-			border-right:1px solid #F5F5F5;
-			height: 40rem;
+		.style_row{
 			display: flex;
 			align-items: center;
-			justify-content: center;
-			margin-right: 25rem;
-			display: flex;
-			align-items: center;
-			padding-left: 3rem;
-			padding-right: 3rem;
-			cursor:pointer;
-			.sort_icon{
-				margin-left: 2rem;
-				width: 9rem;
-				height: 12rem;
+			.style_item{
+				border-left:1px solid #F5F5F5;
+				border-right:1px solid #F5F5F5;
+				height: 40rem;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				margin-right: 25rem;
+				padding-left: 3rem;
+				padding-right: 3rem;
+				cursor:pointer;
+			}
+			.style_item:hover{
+				border:1px solid #e8e8e8;
+				background: #ffffff;
+				color:var(--color);
 			}
 		}
-		.sort_item:hover{
+		.price_row{
+			display: flex;
+			align-items: center;
+		}
+		.date_row{
+			display: flex;
+			align-items: center;
+		}
+		.active_color{
 			border:1px solid #e8e8e8;
 			background: #ffffff;
 			color:var(--color);
 		}
 	}
-	.style_row{
+	.cate_box_bottom{
+		padding-left: 26rem;
+		margin-bottom: 10rem;
+		border-left:1px solid #E8E8E8;
+		border-right:1px solid #E8E8E8;
+		border-bottom:1px solid #E8E8E8;
 		display: flex;
 		align-items: center;
-		.style_item{
-			border-left:1px solid #F5F5F5;
-			border-right:1px solid #F5F5F5;
-			height: 40rem;
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			margin-right: 25rem;
-			padding-left: 3rem;
-			padding-right: 3rem;
-			cursor:pointer;
-		}
-		.style_item:hover{
-			border:1px solid #e8e8e8;
-			background: #ffffff;
-			color:var(--color);
-		}
+		height: 40rem;
 	}
-	.price_row{
-		display: flex;
-		align-items: center;
-	}
-	.date_row{
-		display: flex;
-		align-items: center;
-	}
-	.active_color{
-		border:1px solid #e8e8e8;
-		background: #ffffff;
-		color:var(--color);
-	}
-}
 </style>

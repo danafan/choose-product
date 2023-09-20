@@ -34,7 +34,10 @@
 					</div>
 				</div>
 			</div>
-			<img class="scroll_top_icon" src="../../static/scroll_top_icon.png" @click="setScrollTop">
+			<div class="scroll_top" @click="setScrollTop">
+				<img class="scroll_top_icon" src="../../static/scroll_top_icon.png">
+				<div class="icon_text">置顶</div>
+			</div>
 			<CarWidget :is_fixed="true"/>
 			<FeekbackWidget :style_id="style_id" :is_fixed="true"/>
 		</div>
@@ -215,13 +218,29 @@
 		}
 	}
 	.white_back::-webkit-scrollbar{display:none}
-	.scroll_top_icon{
+	.scroll_top{
 		position: fixed;
 		top: 70%;
-		right: 8rem;
-		width: 82rem;
-		height: 82rem;
+		right: 16rem;
+		width: 60rem;
+		height: 60rem;
 		z-index: 9;
 		cursor:pointer;
+		display:flex;
+		flex-direction:column;
+		align-items:center;
+		justify-content: center;
+		background: #FFFFFF;
+		box-shadow: 0px 2px 11px 0px #FFEAD8;
+		border-radius: 30rem;
+		.scroll_top_icon{
+			margin-bottom: 2rem;
+			width: 20rem;
+			height: 14rem;
+		}
+		.icon_text{
+			color: var(--color);
+			font-size: 12rem;
+		}
 	}
 </style>

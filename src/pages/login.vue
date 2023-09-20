@@ -166,7 +166,7 @@
 	export default{
 		data() {
 			return {
-        active_tab:"gys",     //登录类型
+        active_tab:"sm",     //登录类型
         user_name:"",         //用户名
         password:"",          //密码
       };

@@ -28,11 +28,16 @@
 						<EmptyPage :is_loading="loading" v-else/>
 					</el-card>
 				</div>
-				<img class="scroll_top_icon" src="../../static/scroll_top_icon.png" @click="setScrollTop">
+				<div class="scroll_top" @click="setScrollTop">
+					<img class="scroll_top_icon" src="../../static/scroll_top_icon.png">
+					<div class="icon_text">置顶</div>
+				</div>
 				<CarWidget/>
-				<img class="clipboard_icon" src="../../static/clipboard_icon.png" @click="toClipboard">
+				<div class="clipboard_img" @click="toClipboard">
+					<img class="clipboard_icon" src="../../static/clipboard_icon.png">
+					<div class="icon_text">截图</div>
+				</div>
 			</div>
-
 			<!-- 点击放大 -->
 			<el-dialog :visible.sync="enlarge_dialog" top="15px" :show-close="false" custom-class="custom_class">
 				<div slot="title" class="dialog_title" style="justify-content: flex-end;">
@@ -346,24 +351,57 @@
 		}
 	}
 	.padding_page_content::-webkit-scrollbar{display:none}
-	.scroll_top_icon{
+	.scroll_top{
 		position: fixed;
 		top: 58%;
-		right: 8rem;
-		width: 82rem;
-		height: 82rem;
+		right: 16rem;
+		width: 60rem;
+		height: 60rem;
 		z-index: 9;
 		cursor:pointer;
+		display:flex;
+		flex-direction:column;
+		align-items:center;
+		justify-content: center;
+		background: #FFFFFF;
+		box-shadow: 0px 2px 11px 0px #FFEAD8;
+		border-radius: 30rem;
+		.scroll_top_icon{
+			margin-bottom: 2rem;
+			width: 20rem;
+			height: 14rem;
+		}
+		.icon_text{
+			color: var(--color);
+			font-size: 12rem;
+		}
 	}
-	.clipboard_icon{
+	.clipboard_img{
 		position: fixed;
-		top: 40%;
-		right: 8rem;
-		width: 82rem;
-		height: 82rem;
+		top: 41%;
+		right: 16rem;
+		width: 60rem;
+		height: 60rem;
 		z-index: 9;
 		cursor:pointer;
+		display:flex;
+		flex-direction:column;
+		align-items:center;
+		justify-content: center;
+		background: #FFFFFF;
+		box-shadow: 0px 2px 11px 0px #FFEAD8;
+		border-radius: 30rem;
+		.clipboard_icon{
+			margin-bottom: 2rem;
+			width: 24rem;
+			height: 22rem;
+		}
+		.icon_text{
+			color: var(--color);
+			font-size: 12rem;
+		}
 	}
+	
 	.chart_box{
 		width: 700rem;
 		.charts_div{

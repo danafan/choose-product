@@ -107,7 +107,7 @@
 						{{info_data.type | filterType}}
 					</el-form-item>
 					<el-form-item label="图片：" v-if="info_data.type == 1">
-						<el-image class="card_img" :z-index="2006" v-for="item in info_data.preview_image" :src="item" fit="scale-down" :preview-src-list="info_data.preview_image"></el-image>
+						<el-image class="card_img" z-index="2022" v-for="item in info_data.preview_image" :src="item" fit="scale-down" :preview-src-list="info_data.preview_image"></el-image>
 					</el-form-item>
 					<el-form-item label="链接：" v-if="info_data.type == 1">
 						<el-button type="text" size="small" v-for="item in info_data.new_hot_url" @click="openWindow(item.url)">{{item.name}}</el-button>
