@@ -122,122 +122,165 @@
 			<div>商品详情</div>
 			<img class="close_icon" src="../../static/close_icon.png" @click="detail_dialog = false">
 		</div>
-		<div class="dialog_content">
-			<div class="detail_row">
-				<div class="lable">标题</div>
-				<div class="value">{{goods_info.title}}</div>
-			</div>
-			<div class="detail_row">
-				<div class="lable">供应商款号</div>
-				<div class="value">{{goods_info.style_name}}</div>
-			</div>
-			<div class="detail_row">
-				<div class="lable">款式编码</div>
-				<div class="value">
-					<div>供应商款式编码：{{goods_info.supplier_ksbm}}</div>
-					<div>内部款式编码：{{goods_info.i_id}}</div>
-					<div>BD款式编码：{{goods_info.bd_i_id}}</div>
+		<div class="flex">
+			<div class="dialog_content">
+				<div class="info_title">基础资料</div>
+				<div class="table_content">
+					<div class="detail_row">
+						<div class="lable">标题</div>
+						<div class="value">{{goods_info.title}}</div>
+					</div>
+					<div class="detail_row">
+						<div class="lable">供应商</div>
+						<div class="value">{{goods_info.supplier_name}}</div>
+					</div>
+					<div class="detail_row">
+						<div class="lable">对接人</div>
+						<div class="value">{{goods_info.maintainer}}</div>
+					</div>
+
+					<div class="detail_row">
+						<div class="lable">供应商款式编码</div>
+						<div class="value">{{goods_info.supplier_ksbm}}</div>
+					</div><div class="detail_row">
+						<div class="lable">内部款式编码</div>
+						<div class="value">{{goods_info.i_id}}</div>
+					</div><div class="detail_row">
+						<div class="lable">BD款式编码</div>
+						<div class="value">{{goods_info.bd_i_id}}</div>
+					</div>
+					<div class="detail_row">
+						<div class="lable">上新时间</div>
+						<div class="value">{{goods_info.new_time_name}}</div>
+					</div>
+					<div class="detail_row">
+						<div class="lable">市场</div>
+						<div class="value">{{goods_info.market_name}}</div>
+					</div>
+					<div class="detail_row">
+						<div class="lable">类目</div>
+						<div class="value">{{goods_info.category_name}}</div>
+					</div>
+					<div class="detail_row">
+						<div class="lable">分类</div>
+						<div class="value">{{goods_info.classification_name}}</div>
+					</div>
+					<div class="detail_row">
+						<div class="lable">尺码</div>
+						<div class="value">{{goods_info.size}}</div>
+					</div>
+					<div class="detail_row">
+						<div class="lable">颜色</div>
+						<div class="value">{{goods_info.color}}</div>
+					</div>
+					<div class="detail_row">
+						<div class="lable">面料</div>
+						<div class="value">{{goods_info.fabric}}</div>
+					</div>
+					<div class="detail_row">
+						<div class="lable">成本价</div>
+						<div class="value">{{goods_info.cost_price}}</div>
+					</div>
+					<div class="detail_row">
+						<div class="lable">控价</div>
+						<div class="value">{{goods_info.price_control}}</div>
+					</div>
+					<div class="detail_row">
+						<div class="lable">档口批价</div>
+						<div class="value">{{goods_info.wholesale_price}}</div>
+					</div>
+					<div class="detail_row">
+						<div class="lable">网盘地址</div>
+						<div class="value">{{goods_info.net_disk_address}}</div>
+					</div>
+					<div class="detail_row">
+						<div class="lable">款式备注</div>
+						<div class="value">{{goods_info.remark}}</div>
+					</div>
+					<div class="detail_row">
+						<div class="lable">提供拍照</div>
+						<div class="value">{{goods_info.supply_photograph == 1?'是':'否'}}</div>
+					</div>
+					<div class="detail_row">
+						<div class="lable">提供退货</div>
+						<div class="value">{{goods_info.supply_return_goods == 1?'是':'否'}}</div>
+					</div>
+					<div class="detail_row">
+						<div class="lable">提供换货</div>
+						<div class="value">{{goods_info.supply_exchange_goods == 1?'是':'否'}}</div>
+					</div>
+					<div class="detail_row">
+						<div class="lable">提供代发</div>
+						<div class="value">{{goods_info.supply_replace_send == 1?'是':'否'}}</div>
+					</div>
+					<div class="detail_row">
+						<div class="lable">结算方式</div>
+						<div class="value">{{goods_info.supply_monthly_settlement == 1?'月结':'现结'}}</div>
+					</div>
+					<div class="detail_row">
+						<div class="lable">合作模式</div>
+						<div class="value">{{goods_info.mode}}</div>
+					</div>
 				</div>
+
 			</div>
-			<div class="detail_row">
-				<div class="lable">供应商</div>
-				<div class="value">{{goods_info.supplier_name}}</div>
-			</div>
-			<div class="detail_row">
-				<div class="lable">对接人</div>
-				<div class="value">{{goods_info.maintainer}}</div>
-			</div>
-			<div class="detail_row">
-				<div class="lable">市场</div>
-				<div class="value">{{goods_info.market_name}}</div>
-			</div>
-			<div class="detail_row">
-				<div class="lable">提供拍照</div>
-				<div class="value">{{goods_info.supply_photograph == 1?'是':'否'}}</div>
-			</div>
-			<div class="detail_row">
-				<div class="lable">提供退货</div>
-				<div class="value">{{goods_info.supply_return_goods == 1?'是':'否'}}</div>
-			</div>
-			<div class="detail_row">
-				<div class="lable">提供换货</div>
-				<div class="value">{{goods_info.supply_exchange_goods == 1?'是':'否'}}</div>
-			</div>
-			<div class="detail_row">
-				<div class="lable">提供代发</div>
-				<div class="value">{{goods_info.supply_replace_send == 1?'是':'否'}}</div>
-			</div>
-			<div class="detail_row">
-				<div class="lable">结算方式</div>
-				<div class="value">{{goods_info.supply_monthly_settlement == 1?'月结':'现结'}}</div>
-			</div>
-			<div class="detail_row">
-				<div class="lable">类目</div>
-				<div class="value">{{goods_info.category_name}}</div>
-			</div>
-			<div class="detail_row">
-				<div class="lable">分类</div>
-				<div class="value">{{goods_info.classification_name}}</div>
-			</div>
-			<div class="detail_row">
-				<div class="lable">合作模式</div>
-				<div class="value">{{goods_info.mode}}</div>
-			</div>
-			<div class="detail_row">
-				<div class="lable">备注</div>
-				<div class="value">{{goods_info.remark}}</div>
-			</div>
-			<div class="detail_row">
-				<div class="lable">面料</div>
-				<div class="value">{{goods_info.fabric}}</div>
-			</div>
-			<div class="detail_row">
-				<div class="lable">尺码</div>
-				<div class="value">{{goods_info.size}}</div>
-			</div>
-			<div class="detail_row">
-				<div class="lable">成本价</div>
-				<div class="value">{{goods_info.cost_price}}</div>
-			</div>
-			<div class="detail_row">
-				<div class="lable">档口批价</div>
-				<div class="value">{{goods_info.wholesale_price}}</div>
-			</div>
-			<div class="detail_row">
-				<div class="lable">百度网盘</div>
-				<div class="value">{{goods_info.net_disk_address}}</div>
-			</div>
-			<div class="detail_row">
-				<div class="lable">店铺</div>
-				<div class="value">{{goods_info.shop_name}}</div>
-			</div>
-			<div class="detail_row">
-				<div class="lable">需求类型</div>
-				<div class="value">{{goods_info.demand_type}}</div>
-			</div>
-			<div class="detail_row">
-				<div class="lable">发货类型</div>
-				<div class="value">{{goods_info.send_type}}</div>
-			</div>
-			<div class="detail_row">
-				<div class="lable">需求日期</div>
-				<div class="value">{{goods_info.demand_date}}</div>
-			</div>
-			<div class="detail_row">
-				<div class="lable">售卖价格</div>
-				<div class="value">{{goods_info.selling_price}}</div>
-			</div>
-			<div class="detail_row">
-				<div class="lable">当前状态</div>
-				<div class="value">{{filterAuditStatus(goods_info.audit_status)}}</div>
-			</div>
-			<div class="detail_row" v-if="goods_info.audit_status == 4">
-				<div class="lable">拒绝原因</div>
-				<div class="value">{{goods_info.refund_reason}}</div>
-			</div>
-			<div class="detail_row">
-				<div class="lable">选款要求</div>
-				<div class="value" v-html="goods_info.demand_remark"></div>
+			<div class="dialog_content">
+				<div class="info_title">需求信息</div>
+				<div class="table_content">
+					<div class="detail_row">
+						<div class="lable">需求部门</div>
+						<div class="value">{{goods_info.select_main_dept_name}}</div>
+					</div>
+					<div class="detail_row">
+						<div class="lable">需求店铺</div>
+						<div class="value">{{goods_info.shop_name}}</div>
+					</div>
+					<div class="detail_row">
+						<div class="lable">需求类型</div>
+						<div class="value">{{goods_info.demand_type}}</div>
+					</div>
+					<div class="detail_row">
+						<div class="lable">发货类型</div>
+						<div class="value">{{goods_info.send_type}}</div>
+					</div>
+					<div class="detail_row">
+						<div class="lable">需求日期</div>
+						<div class="value">{{goods_info.demand_date}}</div>
+					</div>
+					<div class="detail_row">
+						<div class="lable">售卖价格</div>
+						<div class="value">{{goods_info.selling_price}}</div>
+					</div>
+					<div class="detail_row">
+						<div class="lable">选款要求</div>
+						<div class="value" v-html="goods_info.demand_remark"></div>
+					</div>
+					<div class="detail_row">
+						<div class="lable">需求人</div>
+						<div class="value">{{goods_info.select_username}}</div>
+					</div>
+					<div class="detail_row">
+						<div class="lable">需求提交时间</div>
+						<div class="value">{{goods_info.select_time}}</div>
+					</div>
+					<div class="detail_row">
+						<div class="lable">需求状态</div>
+						<div class="value">{{filterAuditStatus(goods_info.audit_status)}}</div>
+					</div>
+					<div class="detail_row" v-if="goods_info.audit_status == 2 || goods_info.audit_status == 4">
+						<div class="lable">审核备注</div>
+						<div class="value" v-if="goods_info.audit_status == 2">{{goods_info.aff_reason}}</div>
+						<div class="value" v-if="goods_info.audit_status == 4">{{goods_info.refund_reason}}</div>
+					</div>
+					<div class="detail_row">
+						<div class="lable">审核人</div>
+						<div class="value">{{goods_info.audit_real_name}}</div>
+					</div>
+					<div class="detail_row">
+						<div class="lable">审核时间</div>
+						<div class="value">{{goods_info.audit_time}}</div>
+					</div>
+				</div>
 			</div>
 		</div>
 		<div slot="footer" class="dialog_footer">
@@ -610,9 +653,23 @@
 			}
 		}
 		.dialog_content{
-			max-height: 750px;
-			overflow-y: scroll;
-			padding:30rem;
+			width: 50%;
+			border-right:1px solid #F0F0F0;
+			border-left:1px solid #F0F0F0;
+			.info_title{
+				width: 100%;
+				text-align: center;
+				background: #cccccc;
+				height: 42px;
+				line-height: 42px;
+				color: #333333;
+				font-size: 13px;
+				font-weight: bold;
+			}
+			.table_content{
+				max-height: 750px;
+				overflow-y: scroll;
+			}
 			.detail_row{
 				border-bottom:1px solid #F0F0F0;
 				display: flex;
@@ -620,7 +677,7 @@
 				color: #333333;
 				.lable{
 					border-right:1px solid #F0F0F0;
-					width: 120rem;
+					width: 150rem;
 					padding:12rem 20rem;
 					display: flex;
 					align-items: center;

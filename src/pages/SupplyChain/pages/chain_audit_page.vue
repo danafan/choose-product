@@ -198,7 +198,7 @@
 					</div>
 					<div class="detail_row">
 						<div class="lable">上新时间</div>
-						<div class="value">{{goods_info.market_name}}</div>
+						<div class="value">{{goods_info.new_time_name}}</div>
 					</div>
 					<div class="detail_row">
 						<div class="lable">市场</div>
@@ -218,7 +218,7 @@
 					</div>
 					<div class="detail_row">
 						<div class="lable">颜色</div>
-						<div class="value">{{goods_info.size}}</div>
+						<div class="value">{{goods_info.color}}</div>
 					</div>
 					<div class="detail_row">
 						<div class="lable">面料</div>
@@ -230,7 +230,7 @@
 					</div>
 					<div class="detail_row">
 						<div class="lable">控价</div>
-						<div class="value">{{goods_info.cost_price}}</div>
+						<div class="value">{{goods_info.price_control}}</div>
 					</div>
 					<div class="detail_row">
 						<div class="lable">档口批价</div>
@@ -242,7 +242,7 @@
 					</div>
 					<div class="detail_row">
 						<div class="lable">款式备注</div>
-						<div class="value">{{goods_info.net_disk_address}}</div>
+						<div class="value">{{goods_info.remark}}</div>
 					</div>
 					<div class="detail_row">
 						<div class="lable">提供拍照</div>
@@ -276,7 +276,7 @@
 				<div class="table_content">
 					<div class="detail_row">
 						<div class="lable">需求部门</div>
-						<div class="value">{{goods_info.remark}}</div>
+						<div class="value">{{goods_info.select_main_dept_name}}</div>
 					</div>
 					<div class="detail_row">
 						<div class="lable">需求店铺</div>
@@ -304,41 +304,29 @@
 					</div>
 					<div class="detail_row">
 						<div class="lable">需求人</div>
-						<div class="value">{{goods_info.selling_price}}</div>
+						<div class="value">{{goods_info.select_username}}</div>
 					</div>
 					<div class="detail_row">
 						<div class="lable">需求提交时间</div>
-						<div class="value">{{goods_info.selling_price}}</div>
+						<div class="value">{{goods_info.select_time}}</div>
 					</div>
 					<div class="detail_row">
 						<div class="lable">需求状态</div>
-						<div class="value">{{goods_info.selling_price}}</div>
+						<div class="value">{{filterAuditStatus(goods_info.audit_status)}}</div>
 					</div>
-					<div class="detail_row" v-if="goods_info.audit_status == 2">
+					<div class="detail_row" v-if="goods_info.audit_status == 2 || goods_info.audit_status == 4">
 						<div class="lable">审核备注</div>
-						<div class="value">{{goods_info.aff_reason}}</div>
+						<div class="value" v-if="goods_info.audit_status == 2">{{goods_info.aff_reason}}</div>
+						<div class="value" v-if="goods_info.audit_status == 4">{{goods_info.refund_reason}}</div>
 					</div>
 					<div class="detail_row">
 						<div class="lable">审核人</div>
-						<div class="value">{{goods_info.selling_price}}</div>
+						<div class="value">{{goods_info.audit_real_name}}</div>
 					</div>
 					<div class="detail_row">
 						<div class="lable">审核时间</div>
-						<div class="value">{{goods_info.selling_price}}</div>
+						<div class="value">{{goods_info.audit_time}}</div>
 					</div>
-
-				<!-- <div class="detail_row">
-					<div class="lable">供应商款号</div>
-					<div class="value">{{goods_info.style_name}}</div>
-				</div> -->
-				<!-- <div class="detail_row">
-					<div class="lable">商品说明</div>
-					<div class="value">{{goods_info.remark}}</div>
-				</div>
-				<div class="detail_row" v-if="goods_info.audit_status == 4">
-					<div class="lable">拒绝原因</div>
-					<div class="value">{{goods_info.refund_reason}}</div>
-				</div> -->
 			</div>
 		</div>
 	</div>
