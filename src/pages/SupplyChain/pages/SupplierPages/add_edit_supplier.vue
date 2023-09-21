@@ -77,6 +77,12 @@
 					<el-form-item label="合作模式：">
 						<el-input clearable v-model="mode" placeholder="合作模式" style="width: 192px;"></el-input>
 					</el-form-item>
+					<el-form-item label="品牌：">
+						<el-select v-model="brand_ids" clearable multiple filterable collapse-tags placeholder="请选择品牌">
+							<el-option v-for="item in brand_list" :key="item.id" :label="item.name" :value="item.id">
+							</el-option>
+						</el-select>
+					</el-form-item>
 					<el-form-item label="供应商介绍：">
 						<el-input type="textarea" maxlength="500"
 						show-word-limit :rows="3" clearable v-model="description" placeholder="供应商介绍" style="width: 260px;"></el-input>
@@ -141,6 +147,8 @@
 				grade_list:[],			//供应商等级列表
 				grade_id:"",			//选中的供应商等级
 				mode:"",				//合作模式
+				brand_list:[],			//品牌列表
+				brand_ids:[],				//选中的品牌
 				business_license:[],	//营业执照图片列表
 				company_name:'',		//公司名称
 				company_img:[],			//公司图片
@@ -157,6 +165,8 @@
 				//获取详情
 				this.supplierManagerInfo();
 			}
+			//获取品牌列表下拉框筛选项
+			this.selectionMap();
 			//获取供应商等级列表
 			this.ajaxSupplierGradeList();
 			//获取用户列表
@@ -169,6 +179,17 @@
 			}
 		},
 		methods:{
+			//获取品牌列表下拉框筛选项
+			selectionMap(){
+				resource.selectionMap({type:8}).then(res => {
+					if(res.data.code == 1){
+						let data = res.data.data;
+						this.brand_list = data.brand;
+					}else{
+						this.$message.warning(res.data.msg);
+					}
+				})
+			},
 			//获取供应商等级列表
 			ajaxSupplierGradeList(){
 				commonResource.ajaxSupplierGradeList().then(res => {
@@ -224,34 +245,23 @@
 						this.weixin = data.weixin?data.weixin:"";
 						this.grade_id = data.grade_id?data.grade_id:'';
 						this.mode = data.mode?data.mode:'';
+						this.brand_ids = [];
+						if(data.brand_id){
+							data.brand_id.toString().split(',').map(item => {
+								this.brand_ids.push(parseInt(item));
+							})
+						}
 
 						//工商营业执照
 						if(data.business_license){
 							this.business_license = data.business_license.split(',');
 						}
-						
-						// business_license.map(item => {
-						// 	let img_obj = {
-						// 		urls:item,
-						// 		show_icon:false
-						// 	}
-						// 	this.business_license.push(img_obj);
-						// })
 
 						//公司照片
 						if(data.company_img){
 							this.company_img = data.company_img.split(',');
 						}
 						
-						// this.company_img = [];
-						// let company_img = data.company_img.split(',');
-						// company_img.map(item => {
-						// 	let img_obj = {
-						// 		urls:item,
-						// 		show_icon:false
-						// 	}
-						// 	this.company_img.push(img_obj);
-						// })
 					}else{
 						this.$message.warning(res.data.msg);
 					}
@@ -291,11 +301,10 @@
 						weixin:this.weixin,
 						grade_id:this.grade_id,
 						mode:this.mode,
+						brand:this.brand_ids.join(','),
 						maintainer:this.maintainer,
 						maintainer_id:this.maintainer_id
 					}
-					console.log(arg)
-					// return;
 					this.$confirm('确认提交?', '提示', {
 						confirmButtonText: '确定',
 						cancelButtonText: '取消',

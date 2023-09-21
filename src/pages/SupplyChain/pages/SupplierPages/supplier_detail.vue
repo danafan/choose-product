@@ -53,6 +53,9 @@
 					<el-form-item label="合作模式：">
 						{{data_info.mode}}
 					</el-form-item>
+					<el-form-item label="品牌：">
+						{{data_info.brand}}
+					</el-form-item>
 					<el-form-item label="供应商介绍：">
 						<div class="pre-line">{{data_info.description}}</div>
 					</el-form-item>

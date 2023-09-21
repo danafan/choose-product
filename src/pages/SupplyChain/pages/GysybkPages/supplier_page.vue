@@ -45,6 +45,12 @@
 							<el-option label="现结" :value="0"></el-option>
 						</el-select>
 					</el-form-item>
+					<el-form-item label="品牌：">
+						<el-select v-model="brand_ids" clearable multiple filterable collapse-tags placeholder="全部">
+							<el-option v-for="item in brand_list" :key="item.id" :label="item.name" :value="item.id">
+							</el-option>
+						</el-select>
+					</el-form-item>
 					<el-form-item class="form_item">
 						<el-input clearable v-model="search" placeholder="搜索供应商、主营"></el-input>
 					</el-form-item>
@@ -248,6 +254,8 @@
 				supply_monthly_settlement:'',	//结算方式
 				grade_list:[],			//供应商等级
 				grade_list_ids:[],		//选中的供应商等级
+				brand_list:[],			//品牌列表
+				brand_ids:[],				//选中的品牌
 				max_height:0,	
 				page:1,
 				data:{},				//获取的数据
@@ -276,6 +284,8 @@
 			if(!this.$route.meta.use_cache){
 				this.page = 1;
 			}
+			//获取品牌列表下拉框筛选项
+			this.selectionMap();
 			//供应商等级
 			this.ajaxSupplierGradeList();
 			//获取供应商列表
@@ -299,6 +309,17 @@
 					this.max_height = card_box_height - form_height + 60 + "px";
 				});
 			},
+			//获取品牌列表下拉框筛选项
+			selectionMap(){
+				resource.selectionMap({type:8}).then(res => {
+					if(res.data.code == 1){
+						let data = res.data.data;
+						this.brand_list = data.brand;
+					}else{
+						this.$message.warning(res.data.msg);
+					}
+				})
+			},
 			//供应商等级
 			ajaxSupplierGradeList(){
 				commonResource.ajaxSupplierGradeList().then(res => {
@@ -320,6 +341,7 @@
 					supply_warehousing:this.supply_warehousing,	//是否入仓
 					supply_monthly_settlement:this.supply_monthly_settlement,	//结算方式
 					grade_id:this.grade_list_ids.join(','),
+					brand:this.brand_ids.join(','),
 					pagesize:20,
 					page:this.page
 				}
@@ -352,6 +374,7 @@
 						supply_warehousing:this.supply_warehousing,	
 						supply_monthly_settlement:this.supply_monthly_settlement,
 						grade_id:this.grade_list_ids.join(','),
+						brand:this.brand_ids.join(','),
 					};
 					resource.supplierExport(arg).then((res) => {
 						if (res) {

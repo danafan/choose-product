@@ -81,6 +81,12 @@
 							<el-option :label="item.name" :value="item.id" v-for="item in cooperativeness_list"></el-option>
 						</el-select>
 					</el-form-item>
+					<el-form-item label="品牌：">
+						<el-select v-model="arg_brand_ids" clearable multiple filterable collapse-tags placeholder="全部">
+							<el-option v-for="item in brand_list" :key="item.id" :label="item.name" :value="item.id">
+							</el-option>
+						</el-select>
+					</el-form-item>
 					<el-form-item label="状态：">
 						<el-select v-model="status" clearable placeholder="全部">
 							<el-option label="填报后待审核" :value="0"></el-option>
@@ -256,6 +262,12 @@
 									<el-option :label="item.name" :value="item.id" v-for="item in scpl_list"></el-option>
 								</el-select>
 								<div v-else>{{info_scpl_value}}</div>
+							</el-form-item>
+							<el-form-item label="品牌：">
+								<el-select v-model="brand_ids" clearable multiple filterable collapse-tags placeholder="全部" v-if="add_type == '1' || add_type == '2'">
+									<el-option :label="item.name" :value="item.id" v-for="item in brand_list"></el-option>
+								</el-select>
+								<div v-else>{{brand}}</div>
 							</el-form-item>
 						</el-form>
 						<el-form size="mini" style="width: 360px;">
@@ -646,6 +658,8 @@
 				cost_performance:"",				//选中的性价比
 				cooperativeness_list:[],			//合作程度
 				cooperativeness:"",					//选中的合作程度
+				brand_list:[],						//品牌列表
+				arg_brand_ids:[],						//选中的品牌
 				main_business_list:[],				//主营列表
 				scpl_list:[],						//擅长品类
 				scm_list:[],						//scm列表
@@ -706,6 +720,8 @@
 				info_arg_main_business:[],		//主营
 				info_main_business_value:"",
 				info_arg_scpl:[],				//擅长品类
+				brand_ids:[],					//选中的品牌ID列表
+				brand:"",						//品牌
 				info_scpl_value:"",
 				attachment:{},					//附件文件
 				visiting_imgs:[],				//拜访图片
@@ -785,6 +801,7 @@
 						this.main_business_list = data.main_business;//主营
 						this.scpl_list = data.scpl;//擅长品类
 						this.scm_list = data.scm;//scm列表
+						this.brand_list = data.brand;//品牌列表
 					}else{
 						this.$message.warning(res.data.msg);
 					}
@@ -805,21 +822,22 @@
     		//获取供应商列表
 			supplierManagerList(){
 				let arg = {
-					supplier_name:this.supplier_name,				//供应商名称
-					developer:this.developer,					//开发人员姓名
-					classification:this.classification,				//分类
-					area:this.area,						//区域
-					main_business:this.main_business,				//主营
-					scpl:this.scpl,						//擅长品类
-					supply_free_factory:this.supply_free_factory,			//是否自有工厂
-					supply_design:this.supply_design,				//是否自有设计能力
+					supplier_name:this.supplier_name,					//供应商名称
+					developer:this.developer,							//开发人员姓名
+					classification:this.classification,					//分类
+					area:this.area,										//区域
+					main_business:this.main_business,					//主营
+					scpl:this.scpl,										//擅长品类
+					supply_free_factory:this.supply_free_factory,		//是否自有工厂
+					supply_design:this.supply_design,					//是否自有设计能力
 					settlement_method:this.settlement_method,			//结算方式
 					supply_return_goods:this.supply_return_goods,		//是否可退货
-					supply_exchange_goods:this.supply_exchange_goods,		//是否可换货
-					supply_replace_send:this.supply_replace_send,			//是否可代发
-					cost_performance:this.cost_performance,			//性价比
+					supply_exchange_goods:this.supply_exchange_goods,	//是否可换货
+					supply_replace_send:this.supply_replace_send,		//是否可代发
+					cost_performance:this.cost_performance,				//性价比
 					cooperativeness:this.cooperativeness,				//合作程度
-					status:this.status,			//合格状态
+					brand:this.arg_brand_ids.join(','),						//品牌列表
+					status:this.status,									//合格状态
 					pagesize:20,
 					page:this.page
 				}
@@ -927,6 +945,7 @@
 									this.info_arg[k] = data[k];
 								}
 							}
+
 							//主营
 							this.info_arg_main_business = [];
 							if(data.main_business != '0'){
@@ -939,6 +958,13 @@
 							if(data.scpl){
 								data.scpl.split(',').map(item => {
 									this.info_arg_scpl.push(parseInt(item));
+								})
+							}
+							//品牌
+							this.brand_ids = [];
+							if(data.brand){
+								data.brand.toString().split(',').map(item => {
+									this.brand_ids.push(parseInt(item));
 								})
 							}
 							//拜访图片
@@ -969,9 +995,9 @@
 					}else{
 						this.info_arg[k] = "";
 					}
-					
 				}
 				this.check_status = 1;					//填报审核状态
+				this.brand_ids = [];					//选中的品牌
 				this.remark = "";						//填报拒绝原因
 				this.company_name = ""					//公司名称
 				this.business_license_img = [];			//工商营业执照
@@ -1069,6 +1095,8 @@
 				arg['main_business'] = this.info_arg_main_business.join(',');
 				//擅长品类
 				arg['scpl'] = this.info_arg_scpl.join(',');
+				//品牌
+				arg['brand'] = this.brand_ids.join(',');
 
 				if(this.add_type == '1'){		//创建
 					resource.reserveAdd(arg).then(res => {
@@ -1115,6 +1143,8 @@
 						this.info_main_business_value = data.main_business;
 						//擅长品类
 						this.info_scpl_value = data.scpl;
+						//品牌
+						this.brand = data.brand;
 
 						this.company_name = data.company_name;				//公司名称
 
@@ -1137,11 +1167,6 @@
 						}
 
 						//拜访图片
-						//拜访图片
-							// if(data.visiting_imgs){
-							// 	this.visiting_imgs = data.visiting_imgs.split(',');
-							// }
-							// console.log()
 						this.visiting_imgs = [];
 						if(data.visiting_imgs){
 							let visiting_imgs = data.visiting_imgs.split(',');
@@ -1149,7 +1174,6 @@
 								this.visiting_imgs.push(this.domain + item);
 							})
 						}
-						console.log(this.visiting_imgs)
 					}else{
 						this.$message.warning(res.data.msg);
 					}

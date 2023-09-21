@@ -4,7 +4,7 @@
 		<div class="selected_box" @click.stop="checkFn">
 			<div class="selected_left">
 				<div>已选条件</div>
-				<div class="tj_row" v-if="supplier_index == -1 && market_index == 0 && category_index == 0 && class_index == 0 && style_index == 0 && rating_index == 0 && season_index == 0">
+				<div class="tj_row" v-if="supplier_index == -1 && market_index == 0 && category_index == 0 && brand_index == 0 && class_index == 0 && style_index == 0 && rating_index == 0 && season_index == 0">
 					<img class="right_arrow" src="../static/down_arrow.png">
 					<div>全部</div>
 				</div>
@@ -15,6 +15,7 @@
 					<div v-if="market_list.length > 0 && page_type == 'index'">市场（{{market_list[market_index].market_name}}）</div>
 					<img class="right_arrow" src="../static/down_arrow.png">
 					<div v-if="category_list.length > 0">类目（{{category_list[category_index].category_name}}）</div>
+					<div v-if="brand_list.length > 0">品牌（{{brand_list[brand_index].brand_name}}）</div>
 					<img class="right_arrow" src="../static/down_arrow.png">
 					<div v-if="class_list.length > 0">分类（{{class_list[class_index].classification_name}}）</div>
 					<img class="right_arrow" src="../static/down_arrow.png">
@@ -64,6 +65,12 @@
 				</div>
 			</div>
 			<div class="conditions_row">
+				<div class="lable">品牌：</div>
+				<div class="list">
+					<div class="item" :class="{'active_item':brand_index == index}" v-for="(item,index) in brand_list" @click.stop="checkIndex('brand',index)">{{item.brand_name}}</div>
+				</div>
+			</div>
+			<div class="conditions_row">
 				<div class="lable">分类：</div>
 				<div class="list">
 					<div class="item" :class="{'active_item':class_index == index}" v-for="(item,index) in class_list" @click.stop="checkIndex('class',index)">{{item.classification_name}}</div>
@@ -89,20 +96,22 @@
 			</div>
 		</el-card>
 		<div class="cate_box">
-			<div class="sort_row">
-				<div class="sort_item" :class="{'active_color':item.sort != 'default'}" v-for="(item,index) in sort_list" @click="sortFn(index)">
-					<div>{{item.name}}</div>
-					<img class="sort_icon" src="../static/sort_asc.png" v-if="item.sort == 'asc'">
-					<img class="sort_icon" src="../static/sort_default.png" v-if="item.sort == 'default'">
-					<img class="sort_icon" src="../static/sort_desc.png" v-if="item.sort == 'desc'">
+			<div class="flex">
+				<div class="sort_row">
+					<div class="sort_item" :class="{'active_color':item.sort != 'default'}" v-for="(item,index) in sort_list" @click="sortFn(index)">
+						<div>{{item.name}}</div>
+						<img class="sort_icon" src="../static/sort_asc.png" v-if="item.sort == 'asc'">
+						<img class="sort_icon" src="../static/sort_default.png" v-if="item.sort == 'default'">
+						<img class="sort_icon" src="../static/sort_desc.png" v-if="item.sort == 'desc'">
+					</div>
 				</div>
-			</div>
-			<div class="price_row" v-if="page_type != 'gys_supplier'">
-				<div>价格：</div>
-				<el-input style="width: 50px;" size="mini" type="number" v-model="start_price"></el-input>&nbsp~&nbsp
-				<el-input style="width: 50px;" size="mini" type="number" v-model="end_price"></el-input>
-				&nbsp
-				<el-button size="mini" type="primary" @click="searchPrice">查询</el-button>
+				<div class="price_row" v-if="page_type != 'gys_supplier'">
+					<div>价格：</div>
+					<el-input style="width: 50px;" size="mini" type="number" v-model="start_price"></el-input>&nbsp~&nbsp
+					<el-input style="width: 50px;" size="mini" type="number" v-model="end_price"></el-input>
+					&nbsp
+					<el-button size="mini" type="primary" @click="searchPrice">查询</el-button>
+				</div>
 			</div>
 			<div class="date_row">
 				<el-checkbox-group style="margin-right: 30px;" v-model="up_type" @change="upTypeChange">
@@ -139,6 +148,8 @@
 				market_list:[],			//市场列表
 				category_index:0,		//选中的类目下标
 				category_list:[],		//类目列表
+				brand_index:0,			//选中的品牌下标
+				brand_list:[],			//品牌列表
 				class_index:0,			//选中的分类下标
 				class_list:[],			//分类列表
 				style_index:0,			//选中的拍摄风格下标
@@ -339,30 +350,47 @@
 						this.cityjson = cityJson;
 						this.supplier_list = this.cityjson["全部"];
 
+						//市场
 						let market_list = data.market;
 						market_list.unshift({
 							market_name:'全部',
 							market_id:''
 						})
 						this.market_list = market_list;
+
+						// 类目
 						let category_list = data.category;
 						category_list.unshift({
 							category_name:'全部',
 							category_id:''
 						})
 						this.category_list = category_list;
+
+						// 品牌
+						let brand_list = data.brand;
+						brand_list.unshift({
+							brand_name:'全部',
+							brand_id:''
+						})
+						this.brand_list = brand_list;
+
+						//分类
 						let class_list = data.classification;
 						class_list.unshift({
 							classification_name:'全部',
 							classification_id:''
 						})
 						this.class_list = class_list;
+
+						//拍摄风格
 						let style_list = data.shooting_style;
 						style_list.unshift({
 							shooting_style_name:'全部',
 							shooting_style_id:''
 						})
 						this.style_list = style_list;
+
+						//供应商评级
 						let rating_list = data.grade;
 						rating_list.unshift({
 							grade_name:'全部',
@@ -419,6 +447,7 @@
 				this.supplier_index = -1;
 				this.market_index = 0;
 				this.category_index = 0;
+				this.brand_index = 0;
 				this.class_index = 0;
 				this.style_index = 0;
 				this.rating_index = 0;
@@ -442,6 +471,9 @@
 					break;
 				case 'category':
 					this.category_index = index;
+					break;
+				case 'brand':
+					this.brand_index = index;
 					break;
 				case 'class':
 					this.class_index = index;
@@ -538,6 +570,10 @@
 				//处理类目
 				if(this.category_index > 0){
 					arg.category_id = this.category_list[this.category_index].category_id;
+				}
+				//处理品牌
+				if(this.brand_index > 0){
+					arg.brand = this.brand_list[this.brand_index].brand_id;
 				}
 				//处理分类
 				if(this.class_index > 0){
