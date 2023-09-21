@@ -64,6 +64,7 @@
 				</div>
 				<img style="width:100%" :src="clipboard_url">
 			</el-dialog>
+			<!-- <FixedButtons/> -->
 		</div>
 	</template>
 	<script>
@@ -75,6 +76,7 @@
 		import EmptyPage from '../../components/empty_page.vue'
 		import VogueWidget from '../../components/vogue_widget.vue'
 		import SalenumChart from '../GoodsDetail/components/salenum_chart'
+		import FixedButtons from '../../components/fixed_buttons.vue'
 
 		import resource from '../../api/resource.js'
 
@@ -265,7 +267,8 @@
 			CarWidget,
 			EmptyPage,
 			VogueWidget,
-			SalenumChart
+			SalenumChart,
+			FixedButtons
 		}
 	}
 </script>
