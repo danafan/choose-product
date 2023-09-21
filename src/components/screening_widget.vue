@@ -173,6 +173,11 @@
 					key:'views',
 					val:'views_num',
 					sort:'default'
+				},{
+					name:'成本价',
+					key:'cost_price',
+					val:'cost_price',
+					sort:'default'
 				}],								//排序列表
 				cate_style_list:[{
 					name:'深度库存',

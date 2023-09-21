@@ -293,7 +293,7 @@
 			<div>导出</div>
 			<img class="close_icon" src="../../static/close_icon.png" @click="export_dialog = false">
 		</div>
-		<div class="dialog_content">
+		<div class="export_content">
 			<el-radio-group v-model="export_type">
 				<el-radio label="1">款式资料</el-radio>
 				<el-radio label="2">选品需求</el-radio>
@@ -687,6 +687,9 @@
 					padding: 12rem 20rem;
 				}
 			}
+		}
+		.export_content{
+			padding: 20rem;
 		}
 	</style>
 

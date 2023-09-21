@@ -63,6 +63,7 @@
 			<div class="button_item select" :class="{'drak_back':goods_info.cost_price == ''}" @click="selectStyle">
 				<div>立即选款</div>
 			</div>
+			<div class="button_row_dialog flex ac jc" v-if="goods_info.check_status == 5">款式已下架</div>
 		</div>
 		<!-- 选款弹窗 -->
 		<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" @close="closeDialog" destroy-on-close :visible.sync="show_select">
@@ -501,9 +502,11 @@
 			}
 		}
 		.button_row{
+			position: relative;
 			height: 88rem;
 			display: flex;
 			align-items: center;
+			justify-content:center;
 			.button_item{
 				border:1px solid var(--color);
 				border-radius: 4rem;
@@ -533,6 +536,17 @@
 				border:1px solid #999999;
 				background-color: #999999;
 			}
+		}
+		.button_row_dialog{
+			background: rgba(71, 71, 71, .4);
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			font-size: 16rem;
+			color: #ffffff;
+			font-weight: bold;
 		}
 		.select_content{
 			padding: 18rem;

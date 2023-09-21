@@ -4,7 +4,7 @@
 			<PageTitle title="待选记录"/>
 			<el-card class="card_box" id="card_box">
 				<TableTitle id="all_title" :title="`待选（全部${car_goods.length}）`">
-					<el-button size="mini" type="primary" :disabled="car_goods.length == 0" @click="exportFn">导出</el-button>
+					<el-button size="mini" type="primary" :disabled="disabledExport" @click="exportFn">导出</el-button>
 				</TableTitle>
 				<el-table ref="multipleTable" size="mini" :data="car_goods" tooltip-effect="dark" style="width: 100%" @selection-change="changeSelected" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" v-loading="loading">
 					<el-table-column type="selection" width="85" fixed="left" :selectable="setStatus">
@@ -207,6 +207,13 @@
 				})
 				disabled = arr.length > 0 || this.selected_list.length == 0;
 				return disabled;
+			},
+			//导出按钮是否可点击
+			disabledExport(){
+				let arr = this.car_goods.filter(item => {
+					return item.status == 1;
+				})
+				return this.car_goods.length == 0 || arr.length == this.car_goods.length;
 			},
 			//确认选择按钮是否可点击
 			confirmDisabled(){

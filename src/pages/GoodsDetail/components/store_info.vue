@@ -22,7 +22,10 @@
 				<div class="store_info_lable">供应商等级</div>
 				<div class="store_info_pj">{{goods_info.grade_name}}</div>
 			</div>
+		</div>
+		<div class="detail_box">
 			<div class="get_detail" @click="supplierDetail">查看详情</div>
+			<div class="button_row_dialog flex ac jc" v-if="goods_info.check_status == 5">款式已下架</div>
 		</div>
 	</div>
 </template>
@@ -31,7 +34,7 @@
 		props:{
 			goods_info:{
 				type:Object,
-				default:{}
+			default:{}
 			}
 		},
 		methods:{
@@ -45,57 +48,78 @@
 	}
 </script>
 <style lang="less" scoped>
-.store_info_container{
-	position: relative;
-	width: 198rem;
-	height: 308rem;
-	.store_info_back{
-		position: absolute;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100%;
-	}
-	.store_info{
-		position: absolute;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100%;
-		display: flex;
-		flex-direction: column;
-		padding: 40rem 30rem;
-		z-index: 9;
-		.store_info_row{
-			margin-bottom: 20rem;
+	.store_info_container{
+		position: relative;
+		width: 198rem;
+		height: 280rem;
+		.store_info_back{
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+		}
+		.store_info{
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
 			display: flex;
-			font-size:12rem;
-			.store_info_lable{
-				width: 80rem;
-				color: #666666;
-			}
-			.store_info_pj{
-				color: var(--color);
+			flex-direction: column;
+			padding: 40rem 30rem;
+			z-index: 9;
+			.store_info_row{
+				margin-bottom: 20rem;
+				display: flex;
 				font-size:12rem;
-				font-weight: normal;
-			}
-			.store_info_value{
-				color: #333333;
+				.store_info_lable{
+					width: 80rem;
+					color: #666666;
+				}
+				.store_info_pj{
+					color: var(--color);
+					font-size:12rem;
+					font-weight: normal;
+				}
+				.store_info_value{
+					color: #333333;
+				}
 			}
 		}
-		.get_detail{
-			margin: 0 auto;
-			border:1px solid var(--color);
-			border-radius: 4rem;
-			width: 120rem;
-			text-align: center;
-			height: 32rem;
-			line-height: 32rem;
-			font-size:12rem;
-			background: #FEEDDD;
-			color: var(--color);
-			cursor:pointer;
+		.detail_box{
+			position:absolute;
+			bottom:10rem;
+			left:50%;
+			transform: translate(-50%);
+			width:186rem;
+			height:50rem;
+			display:flex;
+			align-items:center;
+			justify-content:center;
+			.get_detail{
+				border:1px solid var(--color);
+				border-radius: 4rem;
+				width: 120rem;
+				text-align: center;
+				height: 32rem;
+				line-height: 32rem;
+				font-size:12rem;
+				background: #FEEDDD;
+				color: var(--color);
+				cursor:pointer;
+			}
+			.button_row_dialog{
+				background: rgba(71, 71, 71, .4);
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				font-size: 16rem;
+				color: #ffffff;
+				font-weight: bold;
+			}
 		}
 	}
-}
 </style>
