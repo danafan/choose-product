@@ -28,7 +28,7 @@
 						<EmptyPage :is_loading="loading" v-else/>
 					</el-card>
 				</div>
-				<div class="scroll_top" @click="setScrollTop">
+				<!-- <div class="scroll_top" @click="setScrollTop">
 					<img class="scroll_top_icon" src="../../static/scroll_top_icon.png">
 					<div class="icon_text">置顶</div>
 				</div>
@@ -36,7 +36,7 @@
 				<div class="clipboard_img" @click="toClipboard">
 					<img class="clipboard_icon" src="../../static/clipboard_icon.png">
 					<div class="icon_text">截图</div>
-				</div>
+				</div> -->
 			</div>
 			<!-- 点击放大 -->
 			<el-dialog :visible.sync="enlarge_dialog" top="15px" :show-close="false" custom-class="custom_class">
@@ -64,7 +64,7 @@
 				</div>
 				<img style="width:100%" :src="clipboard_url">
 			</el-dialog>
-			<!-- <FixedButtons/> -->
+			<FixedButtons/>
 		</div>
 	</template>
 	<script>
