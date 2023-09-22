@@ -34,12 +34,13 @@
 					</div>
 				</div>
 			</div>
-			<div class="scroll_top" @click="setScrollTop">
+			<!-- <div class="scroll_top" @click="setScrollTop">
 				<img class="scroll_top_icon" src="../../static/scroll_top_icon.png">
 				<div class="icon_text">置顶</div>
 			</div>
 			<CarWidget :is_fixed="true"/>
-			<FeekbackWidget :style_id="style_id" :is_fixed="true"/>
+			<FeekbackWidget :style_id="style_id" :is_fixed="true"/> -->
+			<FixedButtons :permission="[3,4,5]" :style_id="style_id" @scrollTopCallback="setScrollTop"/>
 		</div>
 	</div>
 </template>
@@ -54,6 +55,7 @@
 	import SalenumChart from './components/salenum_chart.vue'
 	import CarWidget from '../../components/car_widget.vue'
 	import FeekbackWidget from '../../components/feekback_widget.vue'
+	import FixedButtons from '../../components/fixed_buttons.vue'
 	export default{
 		data(){
 			return{
@@ -66,6 +68,8 @@
 		},
 		created(){
 			this.style_id = this.$route.query.style_id;
+		},
+		mounted(){
 			//获取商品详情
 			this.getGoodsInfo();
 		},
@@ -77,7 +81,6 @@
 		},
 		methods:{
 			setScrollTop(){
-				console.log(this.$refs.paddingPageContent.scrollTop)
 				this.$refs.paddingPageContent.scrollTop = 0;
 			},
 			//获取商品详情
@@ -124,7 +127,8 @@
 			TabDetail,
 			SalenumChart,
 			CarWidget,
-			FeekbackWidget
+			FeekbackWidget,
+			FixedButtons
 		}
 	}
 </script>

@@ -239,10 +239,24 @@
 			}
 		},
 		created(){
-			//获取供应商列表
-			this.ajaxSupplierList();
-			//获取列表
-			this.editLogList();
+			let new_menu_list = [];
+			let arr = this.menu_arr.filter(item => {
+				return item.web_url == 'supply_chain';
+			});
+			let child_list = arr[0].list;
+			let child_arr = child_list.filter(item => {
+				return item.web_url == 'chain_goods_page';
+			});
+			let tab_list = child_arr[0].list;
+			let edit_record_arr = tab_list.filter(item => {
+				return item.web_url == "edit_record";
+			})
+			if(edit_record_arr.length > 0){
+				//获取供应商列表
+				this.ajaxSupplierList();
+				//获取列表
+				this.editLogList();
+			}
 		},
 		props:{
 			//监听url变化
@@ -269,6 +283,9 @@
 			//图片前缀
 			domain(){
 				return this.$store.state.domain;
+			},
+			menu_arr() {
+				return this.$store.state.menu_list;
 			}
 		},
 		methods: {

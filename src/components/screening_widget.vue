@@ -64,7 +64,7 @@
 					<div class="item" :class="{'active_item':category_index == index}" v-for="(item,index) in category_list" @click.stop="checkIndex('category',index)">{{item.category_name}}</div>
 				</div>
 			</div>
-			<div class="conditions_row">
+			<div class="conditions_row" v-if="page_type == 'index'">
 				<div class="lable">品牌：</div>
 				<div class="list">
 					<div class="item" :class="{'active_item':brand_index == index}" v-for="(item,index) in brand_list" @click.stop="checkIndex('brand',index)">{{item.brand_name}}</div>
@@ -124,7 +124,13 @@
 			</div>
 		</div>
 		<div class="cate_box_bottom">
-			<el-checkbox-group v-model="cate_style_ids" @change="callbackFn">
+			<el-checkbox-group v-model="cate_style_ids" @change="callbackFn" v-if="page_type == 'gys_supplier'">
+				<el-checkbox class="custom_checkbox" v-for="item in gys_cate_style_list"
+				:key="item.id"
+				:label="item.id"
+				:value="item.name">{{item.name}}</el-checkbox>
+			</el-checkbox-group>
+			<el-checkbox-group v-model="cate_style_ids" @change="callbackFn" v-else>
 				<el-checkbox class="custom_checkbox" v-for="item in cate_style_list"
 				:key="item.id"
 				:label="item.id"
@@ -200,7 +206,11 @@
 				},{
 					name:'合并同款',
 					id:7
-				}],								//款式类型列表
+				}],								//普通款式类型列表
+				gys_cate_style_list:[{
+					name:'合并同款',
+					id:7
+				}],								//供应商款式类型列表
 				cate_style_ids:[],				//选中的款式类型
 				up_type:[],						//上新类型
 				date:[],						//上新日期 
@@ -448,6 +458,7 @@
 					}
 				})
 			},
+			//重置
 			resetFn(){
 				this.supplier_index = -1;
 				this.market_index = 0;

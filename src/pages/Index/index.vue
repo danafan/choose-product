@@ -64,7 +64,7 @@
 				</div>
 				<img style="width:100%" :src="clipboard_url">
 			</el-dialog>
-			<FixedButtons/>
+			<FixedButtons :permission="[1,2,3,5]" @clipboardCallback="toClipboard" @scrollTopCallback="setScrollTop"/>
 		</div>
 	</template>
 	<script>
