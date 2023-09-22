@@ -15,12 +15,12 @@
 					<div v-if="market_list.length > 0 && page_type == 'index'">市场（{{market_list[market_index].market_name}}）</div>
 					<img class="right_arrow" src="../static/down_arrow.png">
 					<div v-if="category_list.length > 0">类目（{{category_list[category_index].category_name}}）</div>
-					<div v-if="brand_list.length > 0">品牌（{{brand_list[brand_index].brand_name}}）</div>
 					<img class="right_arrow" src="../static/down_arrow.png">
+					<div v-if="brand_list.length > 0 && page_type == 'index'">品牌（{{brand_list[brand_index].brand_name}}）</div>
+					<img class="right_arrow" src="../static/down_arrow.png" v-if="page_type == 'index'">
 					<div v-if="class_list.length > 0">分类（{{class_list[class_index].classification_name}}）</div>
 					<img class="right_arrow" src="../static/down_arrow.png">
 					<div v-if="style_list.length > 0">拍摄风格（{{style_list[style_index].shooting_style_name}}）</div>
-
 					<img class="right_arrow" src="../static/down_arrow.png" v-if="page_type == 'index'">
 					<div v-if="season_list.length > 0 && page_type == 'index'">季节（{{season_list[season_index].season_name}}）</div>
 

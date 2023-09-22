@@ -81,10 +81,10 @@ export function middleWare(params, type) {
 
 
   //组织参数
-  // var req = { ...params, ...{ sign: sign, token: token } };
+  var req = { ...params, ...{ sign: sign, token: token } };
   // var req = { ...params, ...{ admin_id: "8318",utype:'1' } };
   // var req = { ...params, ...{ admin_id: "15605622534151979" ,utype:'1'} }; //测试
-  var req = { ...params, ...{ admin_id: "16161349938228000",utype:'1' } }; //陈鑫杰
+  // var req = { ...params, ...{ admin_id: "16161349938228000",utype:'1' } }; //陈鑫杰
   var get_arr = [];
   //post请求参数
   var form = new FormData();
