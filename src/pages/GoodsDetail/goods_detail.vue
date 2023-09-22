@@ -5,7 +5,7 @@
 			<div class="detail_content">
 				<div class="detail_top_row">
 					<!-- 主图部分 -->
-					<MainImage :image_list="banner_list" v-if="over_loading"/>
+					<MainImage :image_list="banner_list" v-if="over_loading && domain"/>
 					<!-- 商品信息 -->
 					<GoodsInfo :goods_info="goods_info"/>
 					<!-- 店铺信息 -->
@@ -29,17 +29,11 @@
 							<div class="content_top_tab_item" :class="{'active_content_top_tab_item':active_index == 0}" @click="active_index = 0">详情</div>
 							<div class="content_top_tab_item" :class="{'active_content_top_tab_item':active_index == 1}" @click="active_index = 1">销售店铺</div>
 						</div>
-						<TabDetail :goods_info="goods_info" v-if="active_index == 0 && over_loading"/>
+						<TabDetail :goods_info="goods_info" v-if="active_index == 0 && over_loading && domain"/>
 						<SalenumChart :style_id="goods_info.style_id" v-if="active_index == 1"/>
 					</div>
 				</div>
 			</div>
-			<!-- <div class="scroll_top" @click="setScrollTop">
-				<img class="scroll_top_icon" src="../../static/scroll_top_icon.png">
-				<div class="icon_text">置顶</div>
-			</div>
-			<CarWidget :is_fixed="true"/>
-			<FeekbackWidget :style_id="style_id" :is_fixed="true"/> -->
 			<FixedButtons :permission="[3,4,5]" :style_id="style_id" @scrollTopCallback="setScrollTop"/>
 		</div>
 	</div>
@@ -68,8 +62,6 @@
 		},
 		created(){
 			this.style_id = this.$route.query.style_id;
-		},
-		mounted(){
 			//获取商品详情
 			this.getGoodsInfo();
 		},

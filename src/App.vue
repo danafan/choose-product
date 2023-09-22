@@ -35,7 +35,7 @@
           dd.runtime.permission.requestAuthCode({
             corpId: "ding7828fff434921f5b",
             onSuccess: res =>{
-              //获取钉钉用户信息
+                //获取钉钉用户信息
               let code = res.code;
               this.GetDingUserInfo(code);
             },

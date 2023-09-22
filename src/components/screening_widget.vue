@@ -511,13 +511,27 @@
 			sortFn(index){
 				this.sort_list.map((item,i) => {
 					if(index == i){
-						switch(item.sort){
-						case 'default':
-							item.sort = 'desc';
-							break;
-						case 'desc':
-							item.sort = 'default';
-							break;
+						if(index == this.sort_list.length - 1){
+							switch(item.sort){
+							case 'default':
+								item.sort = 'desc';
+								break;
+							case 'desc':
+								item.sort = 'asc';
+								break;
+							case 'asc':
+								item.sort = 'default';
+								break;
+							}
+						}else{
+							switch(item.sort){
+							case 'default':
+								item.sort = 'desc';
+								break;
+							case 'desc':
+								item.sort = 'default';
+								break;
+							}
 						}
 					}else{
 						item.sort = 'default';

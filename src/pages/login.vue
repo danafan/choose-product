@@ -182,6 +182,9 @@
         }
       }
     },
+    created(){
+      this.getAppKey();
+    },
     methods: {
       getAppKey() {
         resource.getAppKey().then((res) => {
