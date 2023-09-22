@@ -76,7 +76,18 @@
 				default:[]
 			}
 		},
+		computed:{
+			//图片前缀
+			domain(){
+				return this.$store.state.domain;
+			}
+		},
 		created(){
+			this.image_list.map(item => {
+				item.map(i => {
+					i['url'] = this.domain + i.url;
+				})
+			})
 			this.current_image_list[0] = this.image_list[0][0].url;
 		},
 		methods:{

@@ -8,10 +8,10 @@
   import * as dd from 'dingtalk-jsapi';
   export default {
     created() {
-      // if(window.location.hash.split('#/')[1].split('?')[0] != 'gysybk_detail'){
-      //   this.getUserInfo();
-      // }
-      // return;
+      if(window.location.hash.split('#/')[1].split('?')[0] != 'gysybk_detail'){
+        this.getUserInfo();
+      }
+      return;
 
       let user_type = sessionStorage.getItem("user_type");
       if(user_type != '2'){ //内部

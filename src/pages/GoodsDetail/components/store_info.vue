@@ -97,6 +97,7 @@
 			display:flex;
 			align-items:center;
 			justify-content:center;
+			z-index: 9;
 			.get_detail{
 				border:1px solid var(--color);
 				border-radius: 4rem;

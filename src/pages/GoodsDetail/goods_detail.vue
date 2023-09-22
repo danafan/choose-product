@@ -88,7 +88,8 @@
 						let banner_list = [];
 						banner.map((item,index) => {
 							let img_obj = {
-								url:this.domain + item,
+								// url:this.domain + item,
+								url:item,
 								is_active:index == 0?true:false
 							}
 							banner_list.push(img_obj);
