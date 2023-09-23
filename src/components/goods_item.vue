@@ -108,6 +108,14 @@
 				<div class="dark">30天退货率：</div>
 				<div style="margin-right:3px">{{info.thl_30}}</div>
 				<el-tooltip class="item" effect="dark" content="30天退货率（排除鱼塘）  = 30天实退数（售后退款成功）/ 30天实发数" placement="top-end">
+					<div slot="content" class="flex ac">
+						<div>30天退货率（排除鱼塘）</div>
+						<div class="primary_color">{{info.thl_30}} =&nbsp</div>
+						<div>30天实退数（售后退款成功）</div>
+						<div class="primary_color">&nbsp{{info.fut_thsl_30}}</div>
+						<div>&nbsp/ 30天实发数</div>
+						<div class="primary_color">&nbsp{{info.sfsl_30}}</div>
+					</div>
 					<img class="question_icon" src="../static/question_icon.png">
 				</el-tooltip>
 			</div>
@@ -116,7 +124,15 @@
 			<div class="flex ac">
 				<div class="dark">7天发货率：</div>
 				<div style="margin-right:3px">{{info.fhl_7}}</div>
-				<el-tooltip class="item" effect="dark" content="7天发货率(排除鱼塘) = 7天实发数 / 7天订单数" placement="top-end">
+				<el-tooltip class="item" effect="dark" placement="top-end">
+					<div slot="content" class="flex ac">
+						<div>7天发货率（排除鱼塘）</div>
+						<div class="primary_color">{{info.fhl_7}} =&nbsp</div>
+						<div>7天实发数</div>
+						<div class="primary_color">&nbsp{{info.fh_7}}</div>
+						<div>&nbsp/ 7天订单数</div>
+						<div class="primary_color">&nbsp{{info.dd_7}}</div>
+					</div>
 					<img class="question_icon" src="../static/question_icon.png">
 				</el-tooltip>
 			</div>
@@ -311,6 +327,9 @@
 	}
 </style>
 <style lang="less" scoped>
+	.primary_color{
+				color: #F37605;
+			}
 	.default_width{
 		width: 265rem;
 	}
@@ -428,9 +447,7 @@
 			.dark{
 				color: #666666;
 			}
-			.primary_color{
-				color: #F37605;
-			}
+			
 			.question_icon{
 				width: 12rem;
 				height: 12rem;

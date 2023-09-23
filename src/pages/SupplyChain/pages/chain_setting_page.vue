@@ -10,6 +10,7 @@
 		<ClassTable v-if="web_url == 'class_table'"/>
 		<StyleTable v-if="web_url == 'style_table'"/>
 		<SeasonTable v-if="web_url == 'season_table'"/>
+		<BrandTable v-if="web_url == 'brand_table'"/>
 	</div>
 </template>
 <script>
@@ -17,6 +18,7 @@
 	import ClassTable from './SettingPages/class_table.vue'
 	import StyleTable from './SettingPages/style_table.vue'
 	import SeasonTable from './SettingPages/season_table.vue'
+	import BrandTable from './SettingPages/brand_table.vue'
 	export default{
 		data(){
 			return{
@@ -51,59 +53,60 @@
     				return true //当内部return true时跳出整个循环
     			}
     		})
-    		this.tab_list = tab_list;
+			this.tab_list = tab_list;
 			this.web_url = this.tab_list[0].web_url;
 		},
 		components:{
 			CategoryTable,
 			ClassTable,
 			StyleTable,
-			SeasonTable
+			SeasonTable,
+			BrandTable
 		}
 	}
 </script>
 <style lang="less" scoped>
-.chain_page_content{
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	padding: 24rem;
-	display: flex;
-	flex-direction: column;
-	.setting_tab{
-		margin-bottom: 18rem;
-		background: #ffffff;
+	.chain_page_content{
+		position: absolute;
+		top: 0;
+		left: 0;
 		width: 100%;
-		height: 64rem;
+		height: 100%;
+		padding: 24rem;
 		display: flex;
-		padding-left: 30rem;
-		.tab_item{
-			margin-right: 170rem;
-			position: relative;
+		flex-direction: column;
+		.setting_tab{
+			margin-bottom: 18rem;
+			background: #ffffff;
+			width: 100%;
 			height: 64rem;
-			line-height: 64rem;
-			width: 50rem;
-			text-align: center;
-			font-size: 16rem;
-			color: #333333;
-			font-weight: bold;
-			cursor:pointer;
-			.active_line{
-				background: var(--color);
-				position: absolute;
-				left: 0;
-				bottom:0;
-				width: 100%;
-				height: 2px;
+			display: flex;
+			padding-left: 30rem;
+			.tab_item{
+				margin-right: 170rem;
+				position: relative;
+				height: 64rem;
+				line-height: 64rem;
+				width: 50rem;
+				text-align: center;
+				font-size: 16rem;
+				color: #333333;
+				font-weight: bold;
+				cursor:pointer;
+				.active_line{
+					background: var(--color);
+					position: absolute;
+					left: 0;
+					bottom:0;
+					width: 100%;
+					height: 2px;
+				}
+			}
+			.active_tab_item{
+				color:var(--color);
 			}
 		}
-		.active_tab_item{
-			color:var(--color);
-		}
 	}
-}
 </style>
 
 

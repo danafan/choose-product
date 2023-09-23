@@ -120,6 +120,11 @@ let path = {
   delStudio:'api/supplier_manager/del_studio',              //删除工作室
   getStyleImgs:'api/productstyle/getstyleimgs',             //商品管理获取指定风格图片
   getRefreshInfo:'api/productstyle/getrefreshinfo',         //商品管理获取指定商品信息
+  setSupplierOnOff:'api/supplier_manager/onoff',            //设置供应商启用禁用
+  brandList:'api/setting/brand_list',                       //配置品牌列表接口
+  delBrand:'api/setting/del_brand',                         //删除品牌
+  addBrand:'api/setting/add_brand',                         //创建品牌
+  editBrand:'api/setting/edit_brand',                       //编辑品牌
 };    
 export default {
   //类目列表接口
@@ -657,5 +662,25 @@ export default {
   //商品管理获取指定商品信息
   getRefreshInfo(params) {
     return http.get(path.getRefreshInfo, params);
+  },
+  //设置供应商启用禁用
+  setSupplierOnOff(params) {
+    return http.post(path.setSupplierOnOff, params);
+  },
+  //配置品牌列表接口
+  brandList(params) {
+    return http.get(path.brandList, params);
+  },
+  //删除品牌
+  delBrand(params) {
+    return http.post(path.delBrand, params);
+  },
+  //创建品牌
+  addBrand(params) {
+    return http.post(path.addBrand, params);
+  },
+  //编辑品牌
+  editBrand(params) {
+    return http.post(path.editBrand, params);
   },
 };
