@@ -23,13 +23,14 @@
 						<div v-if="scope.row.type == 2">分类</div>
 						<div v-if="scope.row.type == 3">拍摄风格</div>
 						<div v-if="scope.row.type == 4">季节</div>
+						<div v-if="scope.row.type == 5">品牌</div>
 					</template>
 				</el-table-column>
 				<el-table-column label="修改内容" prop="content"></el-table-column>
 				<el-table-column label="修改人" prop="add_user_name" width="120" align="center"></el-table-column>
 				<el-table-column label="修改时间" prop="add_time" width="160" align="center"></el-table-column>
 			</el-table>
-			<PaginationWidget id="bottom_row" :total="total" :page="page" :show_multiple="false" @checkPage="checkPage"/>
+			<PaginationWidget id="bottom_row" :total="total" :page="page" :pagesize="20" :show_multiple="false" @checkPage="checkPage"/>
 		</el-card>
 	</div>
 </template>
@@ -53,6 +54,9 @@
 				},{
 					name:'季节',
 					id:4
+				},{
+					name:'品牌',
+					id:5
 				}],
 				type:"",
 				loading:false,
@@ -85,7 +89,7 @@
     				card_box_height -
     				table_title_height -
     				bottom_row_height -
-    				35 +
+    				20 +
     				"px";
     			});
     		},
@@ -93,7 +97,7 @@
 			getData(){
 				let arg = {
 					type:this.type,
-					pagesize:10,
+					pagesize:20,
 					page:this.page
 				}
 				this.loading = true;
@@ -101,7 +105,6 @@
 					if(res.data.code == 1){
 						this.loading = false;
 						this.data = res.data.data.data;
-						console.log(this.data)
 						this.total = res.data.data.total;
 					}else{
 						this.$message.warning(res.data.msg);
@@ -139,6 +142,7 @@
 		}
 	}
 	.card_box{
+		padding-top: 15rem;
 		flex:1;
 	}
 }

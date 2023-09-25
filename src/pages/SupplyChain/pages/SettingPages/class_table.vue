@@ -16,7 +16,7 @@
 					</template>
 				</el-table-column>
 			</el-table>
-			<PaginationWidget id="bottom_row" :total="total" :page="page" :show_multiple="false" @checkPage="checkPage"/>
+			<PaginationWidget id="bottom_row" :total="total" :page="page" :pagesize="20" :show_multiple="false" @checkPage="checkPage"/>
 		</el-card>
 		<!-- 添加或编辑 -->
 		<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" @close="closeDialog" :visible.sync="show_dialog" width="30%">
@@ -99,7 +99,7 @@
 			//获取分类列表
 			getData(){
 				let arg = {
-					pagesize:10,
+					pagesize:20,
 					page:this.page
 				}
 				this.loading = true;
@@ -254,7 +254,7 @@
 	flex:1;
 	position: relative;
 	.card_box{
-		padding-top: 20px;
+		padding-top: 15rem;
 		position: absolute;
 		top: 0;
 		left: 0;
