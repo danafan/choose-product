@@ -88,11 +88,6 @@
 					<EmptyPage :is_loading="loading" v-else/>
 				</el-card>
 			</div>
-			<!-- <CarWidget :is_fixed="true"/>
-			<div class="clipboard_img" @click="toClipboard">
-				<img class="clipboard_icon" src="../../static/clipboard_icon.png">
-				<div class="icon_text">截图</div>
-			</div> -->
 			<FixedButtons :permission="[2,3]" @clipboardCallback="toClipboard"/>
 		</div>
 		<!-- 点击放大 -->
@@ -130,7 +125,6 @@
 	import ScreeningWidget from '../../components/screening_widget.vue'
 	import GoodsItem from '../../components/goods_item.vue'
 	import PaginationWidget from '../../components/pagination_widget.vue'
-	import CarWidget from '../../components/car_widget.vue'
 	import EmptyPage from '../../components/empty_page.vue'
 	import SalenumChart from '../GoodsDetail/components/salenum_chart'
 	import FixedButtons from '../../components/fixed_buttons.vue'
@@ -282,7 +276,6 @@
 			ScreeningWidget,
 			GoodsItem,
 			PaginationWidget,
-			CarWidget,
 			EmptyPage,
 			SalenumChart,
 			FixedButtons

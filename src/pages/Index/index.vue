@@ -28,15 +28,6 @@
 						<EmptyPage :is_loading="loading" v-else/>
 					</el-card>
 				</div>
-				<!-- <div class="scroll_top" @click="setScrollTop">
-					<img class="scroll_top_icon" src="../../static/scroll_top_icon.png">
-					<div class="icon_text">置顶</div>
-				</div>
-				<CarWidget/>
-				<div class="clipboard_img" @click="toClipboard">
-					<img class="clipboard_icon" src="../../static/clipboard_icon.png">
-					<div class="icon_text">截图</div>
-				</div> -->
 			</div>
 			<!-- 点击放大 -->
 			<el-dialog :visible.sync="enlarge_dialog" top="15px" :show-close="false" custom-class="custom_class">
@@ -72,7 +63,6 @@
 		import ScreeningWidget from '../../components/screening_widget.vue'
 		import GoodsItem from '../../components/goods_item.vue'
 		import PaginationWidget from '../../components/pagination_widget.vue'
-		import CarWidget from '../../components/car_widget.vue'
 		import EmptyPage from '../../components/empty_page.vue'
 		import VogueWidget from '../../components/vogue_widget.vue'
 		import SalenumChart from '../GoodsDetail/components/salenum_chart'
@@ -264,7 +254,6 @@
 			ScreeningWidget,
 			GoodsItem,
 			PaginationWidget,
-			CarWidget,
 			EmptyPage,
 			VogueWidget,
 			SalenumChart,

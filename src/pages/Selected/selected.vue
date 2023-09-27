@@ -114,7 +114,6 @@
 			</el-table>
 			<PaginationWidget id="bottom_row" :total="total" :page="page" :show_multiple="false" @checkPage="checkPage"/>
 		</el-card>
-		<!-- <CarWidget/> -->
 		<FixedButtons :permission="[3]"/>
 	</div>
 	<!-- 详情弹窗 -->
@@ -316,7 +315,6 @@
 	import SearchWidget from '../../components/search_widget.vue'
 	import TableTitle from '../SupplyChain/components/table_title.vue'
 	import PaginationWidget from '../../components/pagination_widget.vue'
-	import CarWidget from '../../components/car_widget.vue'
 	import FixedButtons from '../../components/fixed_buttons.vue'
 	export default{
 		data(){
@@ -592,7 +590,6 @@
 			components:{
 				SearchWidget,
 				PaginationWidget,
-				CarWidget,
 				TableTitle,
 				FixedButtons
 			}

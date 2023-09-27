@@ -170,18 +170,6 @@
 					}
 				}
 			}
-		// 	flex:1;
-		// 	.image{
-		// 		width: 100px;
-		// 		height: 100px;
-		// 	}
-		// 	.item_row{
-		// 		display: flex;
-		// 		.item_label{
-		// 			width: 96px;
-		// 		// text-align:end;
-		// 	}
-		// }
 	}
 	.card_img{
 		width: 120rem;
@@ -248,17 +236,6 @@
 					let form_height = document.getElementById("form_height").offsetHeight;
 					this.max_height = card_box_height - form_height + 30 + "px";
 				});
-				// this.$nextTick(() => {
-				// 	let card_box_height = document.getElementById("card_box").offsetHeight;
-				// 	let table_title_height = document.getElementById("table_title").offsetHeight;
-				// 	let bottom_row_height = document.getElementById("bottom_row").offsetHeight;
-				// 	this.max_height =
-				// 	card_box_height -
-				// 	table_title_height -
-				// 	bottom_row_height -
-				// 	60 +
-				// 	"px";
-				// });
 			},
     		//获取列表
 			hotDataList(){

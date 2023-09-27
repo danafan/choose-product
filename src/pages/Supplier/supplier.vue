@@ -36,7 +36,6 @@
 				<EmptyPage :style="{height:scroll_height}" toast="暂无数据～" :is_loading="loading" v-else/>
 				<PaginationWidget id="pagination" :total="total" :page="page" :show_multiple="false" @checkPage="checkPage"/>
 			</el-card>
-			<!-- <CarWidget/> -->
 			<FixedButtons :permission="[3]"/>
 		</div>
 	</div>
@@ -46,7 +45,6 @@
 
 	import SearchWidget from '../../components/search_widget.vue'
 	import EmptyPage from '../../components/empty_page.vue'
-	import CarWidget from '../../components/car_widget.vue'
 	import PaginationWidget from '../../components/pagination_widget.vue'
 	import FixedButtons from '../../components/fixed_buttons.vue'
 	export default{
@@ -140,7 +138,6 @@
 		components:{
 			SearchWidget,
 			EmptyPage,
-			CarWidget,
 			PaginationWidget,
 			FixedButtons
 		}

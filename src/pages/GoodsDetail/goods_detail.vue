@@ -47,8 +47,6 @@
 	import StoreInfo from './components/store_info.vue'
 	import TabDetail from './components/tab_detail.vue'
 	import SalenumChart from './components/salenum_chart.vue'
-	import CarWidget from '../../components/car_widget.vue'
-	import FeekbackWidget from '../../components/feekback_widget.vue'
 	import FixedButtons from '../../components/fixed_buttons.vue'
 	export default{
 		data(){
@@ -119,8 +117,6 @@
 			StoreInfo,
 			TabDetail,
 			SalenumChart,
-			CarWidget,
-			FeekbackWidget,
 			FixedButtons
 		}
 	}
