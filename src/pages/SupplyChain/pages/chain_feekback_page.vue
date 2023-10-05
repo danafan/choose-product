@@ -51,7 +51,9 @@
 					<el-table-column prop="feedback_time" width="160" label="反馈时间" align="center"></el-table-column>
 					<el-table-column prop="feedback_time" width="160" label="处理状态" align="center">
 						<template slot-scope="scope">
-							<div>{{scope.row.feedback_status == 1?'待处理':'已处理'}}</div>
+							<div v-if="scope.row.feedback_status == 0">拒绝处理</div>
+							<div v-if="scope.row.feedback_status == 1">待处理</div>
+							<div v-if="scope.row.feedback_status == 2">确认处理</div>
 						</template>
 					</el-table-column>
 					<el-table-column prop="handler_remark" width="160" label="备注" align="center"></el-table-column>
@@ -59,7 +61,7 @@
 						<template slot-scope="scope">
 							<el-button type="text" size="small" v-if="scope.row.feedback_status == '1' && button_list.confirm == 1" @click="clickFn(scope.row.feedback_id,scope.row.style_name)">处理</el-button>
 							<el-button type="text" size="small" disabled v-if="scope.row.feedback_status == '2'">已处理</el-button>
-							<el-button type="text" size="small" @click="editGoods(scope.row.style_id)" v-if="button_list.edit == 1">编辑商品</el-button>
+							<el-button type="text" size="small" @click="editGoods(scope.row.goods_id)" v-if="button_list.edit == 1">编辑商品</el-button>
 						</template>
 					</el-table-column>
 				</el-table>
@@ -210,8 +212,8 @@
 				})
 			},
 			//点击编辑商品
-			editGoods(style_id){
-				this.$router.push(`/edit_goods?page_type=feedback&goods_type=2&style_id=${style_id}`);
+			editGoods(goods_id){
+				this.$router.push(`/edit_goods?page_type=feedback&goods_type=2&goods_id=${goods_id}`);
 			},
 			//分页
 			checkPage(v){

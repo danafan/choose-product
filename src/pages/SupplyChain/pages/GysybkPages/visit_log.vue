@@ -4,10 +4,8 @@
 			<div class="scroll_box flex-1 flex-scroll-y" id="scroll_box">
 				<el-form style="padding-top: 20px;" :inline="true" size="mini" id="form_height">
 					<el-form-item label="供应商：">
-						<el-select v-model="supplier_ids" clearable multiple filterable collapse-tags placeholder="全部">
-							<el-option v-for="item in supplier_list" :key="item.reserve_id" :label="item.supplier_name" :value="item.reserve_id">
-							</el-option>
-						</el-select>
+						<el-input placeholder="供应商名称" v-model="supplier_name">
+						</el-input>
 					</el-form-item>
 					<el-form-item label="区域：">
 						<el-select v-model="area" clearable placeholder="全部">
@@ -16,7 +14,7 @@
 					</el-form-item>
 					<el-form-item label="拜访员：">
 						<el-select v-model="visit_user_id" clearable filterable placeholder="全部">
-							<el-option v-for="item in user_list" :key="item.user_id" :label="item.real_name" :value="item.user_id">
+							<el-option v-for="item in user_list" :key="item.visit_user_id" :label="item.visit_user_name" :value="item.visit_user_id">
 							</el-option>
 						</el-select>
 					</el-form-item>
@@ -72,17 +70,9 @@
 			<div class="pt-15">
 				<el-form size="mini">
 					<el-form-item label="供应商名称：" :required="dialog_type == '1' || dialog_type == '3'">
-						<el-select v-model="dialog_arg.reserve_id" clearable filterable placeholder="请选择" v-if="dialog_type == '1' || dialog_type == '3'">
-							<el-option v-for="item in supplier_list" :key="item.reserve_id" :label="item.supplier_name" :value="item.reserve_id">
-							</el-option>
-						</el-select>
+						<el-input style="width: 192px;" placeholder="供应商名称" v-model="dialog_arg.supplier_name" v-if="dialog_type == '1' || dialog_type == '3'">
+						</el-input>
 						<div v-else>{{detail_info.supplier_name}}</div>
-					</el-form-item>
-					<el-form-item label="区域：" v-if="dialog_type == '2'">
-						<div>{{detail_info.area}}</div>
-					</el-form-item>
-					<el-form-item label="供应商地址：" v-if="dialog_type == '2'">
-						<div>{{detail_info.address}}</div>
 					</el-form-item>
 					<el-form-item label="拜访目的：" :required="dialog_type == '1' || dialog_type == '3'">
 						<el-input style="width: 192px;" type="textarea" :autosize="{ minRows: 1, maxRows: 4}" placeholder="拜访目的" v-model="dialog_arg.visit_purpose" v-if="dialog_type == '1' || dialog_type == '3'">
@@ -91,7 +81,7 @@
 					</el-form-item>
 					<el-form-item label="拜访员：" :required="dialog_type == '1' || dialog_type == '3'">
 						<el-select v-model="dialog_arg.visit_user_id" clearable filterable placeholder="全部" v-if="dialog_type == '1' || dialog_type == '3'">
-							<el-option v-for="item in user_list" :key="item.user_id" :label="item.real_name" :value="item.user_id">
+							<el-option v-for="item in user_list" :key="item.visit_user_id" :label="item.visit_user_name" :value="item.visit_user_id">
 							</el-option>
 						</el-select>
 						<div v-else>{{detail_info.visit_user_name}}</div>
@@ -105,6 +95,17 @@
 						<el-input style="width: 192px;" type="textarea" :autosize="{ minRows: 1, maxRows: 4}" placeholder="拜访过程描述" v-model="dialog_arg.description" v-if="dialog_type == '1' || dialog_type == '3'">
 						</el-input>
 						<div v-else>{{detail_info.description}}</div>
+					</el-form-item>
+					<el-form-item label="区域：">
+						<el-select v-model="dialog_arg.area" clearable placeholder="选择区域" v-if="dialog_type == '1' || dialog_type == '3'">
+							<el-option :label="item" :value="item" v-for="item in area_list"></el-option>
+						</el-select>
+						<div v-else>{{detail_info.area}}</div>
+					</el-form-item>
+					<el-form-item label="供应商地址：" :required="dialog_type == '1' || dialog_type == '3'">
+						<el-input style="width: 192px;" placeholder="供应商地址" v-model="dialog_arg.address" v-if="dialog_type == '1' || dialog_type == '3'">
+						</el-input>
+						<div v-else>{{detail_info.address}}</div>
 					</el-form-item>
 					<el-form-item label="备注：">
 						<el-input style="width: 192px;" type="textarea" :autosize="{ minRows: 1, maxRows: 4}" placeholder="备注" v-model="dialog_arg.remark" v-if="dialog_type == '1' || dialog_type == '3'">
@@ -179,8 +180,9 @@
 		data(){
 			return{
 				loading:false,
-				supplier_list:[],		//供应商列表
-				supplier_ids:[],		//选中的供应商
+				supplier_name:"",		//供应商名称
+				// supplier_list:[],		//供应商列表
+				// supplier_ids:[],		//选中的供应商
 				area_list:[],			//区域
 				area:"",				//选中的区域
 				user_list:[],			//拜访员列表
@@ -220,13 +222,15 @@
 				data:{},				//获取的数据
 				visit_log_id:"",		//点击的记录ID
 				edit_dialog:false,		//添加/编辑弹窗
-				dialog_type:'1',		//1:添加；2:编辑
+				dialog_type:'1',		//1:添加；2:查看；3:编辑
 				dialog_arg:{
-					reserve_id:"",
+					supplier_name:"",
 					visit_purpose:"",
 					visit_user_id:"",
 					description:"",
+					area:"",
 					remark:"",
+					address:"",
 					visit_time:""
 				},
 				attachment_img:[],				//编辑图片
@@ -236,9 +240,9 @@
 		},
 		created(){
 			//Ajax获取预备库供应商列表接口
-			this.ajaxReserveSupplier();
-			//获取用户列表
-			this.getUserList();
+			// this.ajaxReserveSupplier();
+			//拜访员工列表
+			this.ajaxVisitUser();
 			//预备库下拉框筛选项
 			this.selectionMap();
 			//获取列表
@@ -265,15 +269,15 @@
 				});
 			},
 			//Ajax获取预备库供应商列表接口
-			ajaxReserveSupplier(){
-				resource.ajaxReserveSupplier().then(res => {
-					if(res.data.code == 1){
-						this.supplier_list = res.data.data;
-					}else{
-						this.$message.warning(res.data.msg);
-					}
-				})
-			},
+			// ajaxReserveSupplier(){
+			// 	resource.ajaxReserveSupplier().then(res => {
+			// 		if(res.data.code == 1){
+			// 			this.supplier_list = res.data.data;
+			// 		}else{
+			// 			this.$message.warning(res.data.msg);
+			// 		}
+			// 	})
+			// },
 			//预备库下拉框筛选项
 			selectionMap(){
 				resource.selectionMap().then(res => {
@@ -286,8 +290,8 @@
 				})
 			},
 			//获取用户列表
-			getUserList(){
-				resource.supplierAjaxUser().then(res => {
+			ajaxVisitUser(){
+				resource.ajaxVisitUser().then(res => {
 					if(res.data.code == 1){
 						this.user_list = res.data.data;
 					}else{
@@ -299,7 +303,7 @@
 			getVisitList(){
 				let arg = {
 					visit_user_id:this.visit_user_id,
-					reserve_id:this.supplier_ids.join(','),
+					supplier_name:this.supplier_name,
 					area:this.area,
 					start_date:this.date && this.date.length > 0?this.date[0]:"",
 					end_date:this.date && this.date.length > 0?this.date[1]:"",
@@ -384,11 +388,13 @@
 			//关闭添加/编辑弹窗
 			closeDialog(){
 				this.dialog_arg = {
-					reserve_id:"",
+					supplier_name:"",
 					visit_purpose:"",
 					visit_user_id:"",
 					description:"",
+					area:"",
 					remark:"",
+					address:"",
 					visit_time:""
 				};
 				this.attachment_img = [];				//编辑图片
@@ -398,7 +404,7 @@
 			//添加/编辑提交
 			saveFn(){
 				if(this.dialog_arg.reserve_id == ''){
-					this.$message.warning('请选择供应商');
+					this.$message.warning('请填写供应商');
 					return;
 				}else if(this.dialog_arg.visit_purpose == ''){
 					this.$message.warning('请输入拜访目的');
@@ -408,6 +414,9 @@
 					return;
 				}else if(!this.dialog_arg.visit_time){
 					this.$message.warning('请选择拜访时间');
+					return;
+				}else if(!this.dialog_arg.address){
+					this.$message.warning('请输入供应商地址');
 					return;
 				}
 				let arg = JSON.parse(JSON.stringify(this.dialog_arg));

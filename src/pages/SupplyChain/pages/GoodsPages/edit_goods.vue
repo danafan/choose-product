@@ -18,7 +18,7 @@
 					</el-input>
 				</el-form-item>
 				<el-form-item label="供应商：" required>
-					<el-select v-model="arg.supplier_id" filterable clearable placeholder="请选择供应商" :disabled="is_detail || goods_type == '2' || goods_type == '5' || info_edit_fields.indexOf('supplier_id') > -1">
+					<el-select v-model="arg.supplier_id" filterable clearable placeholder="请选择供应商" :disabled="is_detail || goods_type == '2' || goods_type == '5' || info_edit_fields.indexOf('supplier_id') > -1 || page_type == 'feedback'">
 						<el-option v-for="item in supplier_list" :key="item.supplier_id" :label="item.supplier_name" :value="item.supplier_id">
 						</el-option>
 					</el-select>
@@ -68,7 +68,7 @@
 			</el-form>
 			<el-form size="small" style="width: 50%" label-width="120px">
 				<el-form-item label="供应商款号：" required>
-					<el-input placeholder="供应商款号" v-model="arg.style_name" :disabled="is_detail || goods_type == '2' || goods_type == '5' || info_edit_fields.indexOf('style_name') > -1">
+					<el-input placeholder="供应商款号" v-model="arg.style_name" :disabled="is_detail || goods_type == '2' || goods_type == '5' || info_edit_fields.indexOf('style_name') > -1 || page_type == 'feedback'">
 					</el-input>
 				</el-form-item>
 				<el-form-item label="标题：">
@@ -205,7 +205,7 @@
 				</el-form-item>
 			</el-form>
 		</div>
-		<div class="bottom_row" v-if="goods_type == '1' || goods_type == '2' || goods_type == '5'">
+		<div class="bottom_row" v-if="goods_type == '1' || goods_type == '2' || goods_type == '5' || page_type == 'feedback'">
 			<el-button size="small" type="primary" @click="commitEditGoods">提交</el-button>
 		</div>
 		<div class="bottom_row" v-if="goods_type == '4'">
@@ -286,7 +286,7 @@
 		},
 		created(){
 			//商品ID
-			this.goods_id = this.edit_goods_id;
+			this.goods_id = this.$route.query.page_type == 'feedback'?this.$route.query.goods_id:this.edit_goods_id;
 			//查看、审核展示不可编辑
 			this.is_detail = this.goods_type == '3' || this.goods_type == '4'?true:false;
 			//页面来源
@@ -325,7 +325,7 @@
 				await this.ajaxStyleList();
 				//分类列表
 				await this.ajaxClassList();
-				if(this.goods_type == '2' || this.goods_type == '3' || this.goods_type == '4' || this.goods_type == '5'){	//2:编辑;3:详情；4:审核；5:重新提交
+				if(this.goods_type == '2' || this.goods_type == '3' || this.goods_type == '4' || this.goods_type == '5' || this.page_type == 'feedback'){	//2:编辑;3:详情；4:审核；5:重新提交
 					//获取商品详情
 					this.getGoodsDetail();
 				}
@@ -381,24 +381,27 @@
 					resource.feedBackEditGoodsGet(arg).then(res => {
 						if(res.data.code == 1){
 							let data_info = res.data.data;
-							if(data_info.img){
-								this.img_list = data_info.img;
-							}
-							this.add_admin_name = data_info.add_admin_name;
-							this.check_status = data_info.check_status;
-							this.off_reason = data_info.off_reason;
-							this.refuse_reason = data_info.refuse_reason;
-							for(let key in this.arg){
-								for(let k in data_info){
-									if(key == k){
-										//款式编码逗号转分号
-										if((k == 'i_id' || k == 'bd_i_id' || k == 'supplier_ksbm') && data_info[k].indexOf(',') > -1){
-											data_info[k] = data_info[k].replaceAll(",", ";");
-										}
-										this.arg[key] = data_info[k];
-									}
-								}
-							}
+							//处理详情
+							this.setInfo(data_info);
+							return;
+							// if(data_info.img){
+							// 	this.img_list = data_info.img;
+							// }
+							// this.add_admin_name = data_info.add_admin_name;
+							// this.check_status = data_info.check_status;
+							// this.off_reason = data_info.off_reason;
+							// this.refuse_reason = data_info.refuse_reason;
+							// for(let key in this.arg){
+							// 	for(let k in data_info){
+							// 		if(key == k){
+							// 			//款式编码逗号转分号
+							// 			if((k == 'i_id' || k == 'bd_i_id' || k == 'supplier_ksbm') && data_info[k].indexOf(',') > -1){
+							// 				data_info[k] = data_info[k].replaceAll(",", ";");
+							// 			}
+							// 			this.arg[key] = data_info[k];
+							// 		}
+							// 	}
+							// }
 						}else{
 							this.$message.warning(res.data.msg);
 						}
@@ -839,7 +842,8 @@
 <style lang="less" scoped>
 	.chain_page_content{
 		width: 100%;
-		max-height: 980rem;
+		// max-height: 980rem;
+		max-height: 820rem;
 		padding: 24rem;
 		display: flex;
 		flex-direction: column;

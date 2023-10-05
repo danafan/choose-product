@@ -191,7 +191,7 @@
 					</div>
 					<div class="detail_row">
 						<div class="lable">网盘地址</div>
-						<div class="value">{{goods_info.net_disk_address}}</div>
+						<div class="value net_disk_address pointer" @click="openWindow(goods_info.net_disk_address_url)">{{goods_info.net_disk_address}}</div>
 					</div>
 					<div class="detail_row">
 						<div class="lable">款式备注</div>
@@ -585,6 +585,10 @@
 						return item.id === status;
 					})
 					return status_arr.length > 0?status_arr[0].name:'';
+				},
+				//点击打开网盘地址
+				openWindow(net_disk_address){
+					window.open(net_disk_address);
 				}
 			},
 			components:{
@@ -685,6 +689,9 @@
 				.value{
 					flex:1;
 					padding: 12rem 20rem;
+				}
+				.net_disk_address{
+					color: #f37605;
 				}
 			}
 		}

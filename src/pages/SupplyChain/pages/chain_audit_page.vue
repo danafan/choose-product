@@ -238,7 +238,7 @@
 					</div>
 					<div class="detail_row">
 						<div class="lable">网盘地址</div>
-						<div class="value">{{goods_info.net_disk_address}}</div>
+						<div class="value net_disk_address pointer" @click="openWindow(goods_info.net_disk_address_url)">{{goods_info.net_disk_address}}</div>
 					</div>
 					<div class="detail_row">
 						<div class="lable">款式备注</div>
@@ -327,71 +327,71 @@
 						<div class="lable">审核时间</div>
 						<div class="value">{{goods_info.audit_time}}</div>
 					</div>
+				</div>
 			</div>
 		</div>
-	</div>
-	<div slot="footer" class="dialog_footer">
-		<el-button type="primary" size="small" @click="detail_dialog = false">关闭</el-button>
-	</div>
-</el-dialog>
-<!-- 备注弹窗 -->
-<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" destroy-on-close @close="remark = ''" :visible.sync="remark_dialog" width="30%">
-	<div slot="title" class="dialog_title">
-		<div>备注</div>
-		<img class="close_icon" src="../../../static/close_icon.png" @click="remark_dialog = false">
-	</div>
-	<div class="remark_content">
-		<el-input type="textarea" :rows="3" placeholder="请输入备注" v-model="remark">
-		</el-input>
-	</div>
-	<div slot="footer" class="dialog_footer">
-		<el-button size="mini" @click="remark_dialog = false">关闭</el-button>
-		<el-button size="mini" type="primary" @click="confirmRemark">提交</el-button>
-	</div>
-</el-dialog>
-<!-- 单个审批弹窗 -->
-<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" destroy-on-close @close="allClose" :visible.sync="refused_dialog" width="30%">
-	<div slot="title" class="dialog_title">
-		<div>确认{{`${audit_type == '1'?'同意':'拒绝'}`}}？</div>
-		<img class="close_icon" src="../../../static/close_icon.png" @click="refused_dialog = false">
-	</div>
-	<div class="remark_content">
-		<div style="color: red;margin-bottom: 5px">（*必填）</div>
-		<el-input type="textarea" :rows="3" placeholder="请输入同意备注" v-model="msg" v-if="audit_type == '1'">
-		</el-input>
-		<el-input type="textarea" :rows="3" placeholder="请输入拒绝原因" v-model="err_msg" v-if="audit_type == '2'">
-		</el-input>
-	</div>
-	<div slot="footer" class="dialog_footer">
-		<el-button size="mini" @click="refused_dialog = false">关闭</el-button>
-		<el-button size="mini" type="primary" @click="confirmRefused">提交</el-button>
-	</div>
-</el-dialog>
-<!-- 批量审批 -->
-<el-dialog :visible.sync="allAuditDialog" @close="allClose" width="30%">
-	<div slot="title" class="dialog_title">
-		<div>批量审核</div>
-		<img class="close_icon" src="../../../static/close_icon.png" @click="allAuditDialog = false">
-	</div>
-	<div class="down_box">
-		<el-form :inline="true" size="mini">
-			<el-form-item label="类型：">
-				<el-radio-group v-model="audit_type">
-					<el-radio :label="1">确认需求</el-radio>
-					<el-radio :label="2">拒绝需求</el-radio>
-				</el-radio-group>
+		<div slot="footer" class="dialog_footer">
+			<el-button type="primary" size="small" @click="detail_dialog = false">关闭</el-button>
+		</div>
+	</el-dialog>
+	<!-- 备注弹窗 -->
+	<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" destroy-on-close @close="remark = ''" :visible.sync="remark_dialog" width="30%">
+		<div slot="title" class="dialog_title">
+			<div>备注</div>
+			<img class="close_icon" src="../../../static/close_icon.png" @click="remark_dialog = false">
+		</div>
+		<div class="remark_content">
+			<el-input type="textarea" :rows="3" placeholder="请输入备注" v-model="remark">
+			</el-input>
+		</div>
+		<div slot="footer" class="dialog_footer">
+			<el-button size="mini" @click="remark_dialog = false">关闭</el-button>
+			<el-button size="mini" type="primary" @click="confirmRemark">提交</el-button>
+		</div>
+	</el-dialog>
+	<!-- 单个审批弹窗 -->
+	<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" destroy-on-close @close="allClose" :visible.sync="refused_dialog" width="30%">
+		<div slot="title" class="dialog_title">
+			<div>确认{{`${audit_type == '1'?'同意':'拒绝'}`}}？</div>
+			<img class="close_icon" src="../../../static/close_icon.png" @click="refused_dialog = false">
+		</div>
+		<div class="remark_content">
+			<div style="color: red;margin-bottom: 5px">（*必填）</div>
+			<el-input type="textarea" :rows="3" placeholder="请输入同意备注" v-model="msg" v-if="audit_type == '1'">
+			</el-input>
+			<el-input type="textarea" :rows="3" placeholder="请输入拒绝原因" v-model="err_msg" v-if="audit_type == '2'">
+			</el-input>
+		</div>
+		<div slot="footer" class="dialog_footer">
+			<el-button size="mini" @click="refused_dialog = false">关闭</el-button>
+			<el-button size="mini" type="primary" @click="confirmRefused">提交</el-button>
+		</div>
+	</el-dialog>
+	<!-- 批量审批 -->
+	<el-dialog :visible.sync="allAuditDialog" @close="allClose" width="30%">
+		<div slot="title" class="dialog_title">
+			<div>批量审核</div>
+			<img class="close_icon" src="../../../static/close_icon.png" @click="allAuditDialog = false">
+		</div>
+		<div class="down_box">
+			<el-form :inline="true" size="mini">
+				<el-form-item label="类型：">
+					<el-radio-group v-model="audit_type">
+						<el-radio :label="1">确认需求</el-radio>
+						<el-radio :label="2">拒绝需求</el-radio>
+					</el-radio-group>
+				</el-form-item>
+				<el-form-item label="确认需求备注：" required v-if="audit_type == 1">
+					<el-input type="textarea" :rows="3" placeholder="请输入确认需求备注"
+					v-model="msg">
+				</el-input>
 			</el-form-item>
-			<el-form-item label="确认需求备注：" required v-if="audit_type == 1">
-				<el-input type="textarea" :rows="3" placeholder="请输入确认需求备注"
-				v-model="msg">
+			<el-form-item label="拒绝需求原因：" required v-if="audit_type == 2">
+				<el-input type="textarea" :rows="3" placeholder="请输入拒绝需求原因"
+				v-model="refuse_remark">
 			</el-input>
 		</el-form-item>
-		<el-form-item label="拒绝需求原因：" required v-if="audit_type == 2">
-			<el-input type="textarea" :rows="3" placeholder="请输入拒绝需求原因"
-			v-model="refuse_remark">
-		</el-input>
-	</el-form-item>
-</el-form>
+	</el-form>
 </div>
 <div slot="footer" class="dialog_footer">
 	<el-button size="mini" @click="allAuditDialog = false">取消</el-button>
@@ -511,6 +511,9 @@
 				.value{
 					flex:1;
 					padding: 12rem 20rem;
+				}
+				.net_disk_address{
+					color: #f37605;
 				}
 			}
 		}
@@ -1039,6 +1042,10 @@
 					return item.id == v
 				})
 				return arr.length > 0?arr[0].name:'';
+			},
+			//点击打开网盘地址
+			openWindow(net_disk_address){
+				window.open(net_disk_address);
 			}
 		},
 		components:{

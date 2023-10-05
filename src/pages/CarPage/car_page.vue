@@ -476,7 +476,7 @@
 			},
 			//点击删除
 			deleteFn(type,style_id){
-				this.$confirm('确认删除商品图?', '提示', {
+				this.$confirm('确认移除商品图?', '提示', {
 					confirmButtonText: '确定',
 					cancelButtonText: '取消',
 					type: 'warning'

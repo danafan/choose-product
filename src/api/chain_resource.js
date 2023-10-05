@@ -103,7 +103,8 @@ let path = {
   reserveQualifiedEdit:'api/supplier_manager/reserve_qualified_edit', //编辑供应商（转合格阶段）
   visitList:'api/supplier_manager/visit_list',            //拜访记录列表
   ajaxReserveSupplier:'api/supplier_manager/ajax_reserve_supplier', //Ajax获取预备库供应商列表接口
-  addVisit:'api/supplier_manager/add_visit',               //创建拜访记录
+  ajaxVisitUser:'api/supplier_manager/ajaxVisitUser',       //拜访员列表
+  addVisit:'api/supplier_manager/add_visit',                //创建拜访记录
   editVisit:'api/supplier_manager/edit_visit',              //编辑拜访记录
   visitInfo:'api/supplier_manager/visit_info',              //拜访记录详情
   delVisit:'api/supplier_manager/del_visit',                //删除拜访记录
@@ -586,6 +587,10 @@ export default {
   //Ajax获取预备库供应商列表接口
   ajaxReserveSupplier(params) {
     return http.get(path.ajaxReserveSupplier, params);
+  },
+  //拜访员列表
+  ajaxVisitUser(params) {
+    return http.get(path.ajaxVisitUser, params);
   },
   //创建拜访记录
   addVisit(params) {
