@@ -6,7 +6,8 @@
 					<el-form-item label="处理状态：">
 						<el-select v-model="status" clearable placeholder="全部">
 							<el-option label="待处理" value="1"></el-option>
-							<el-option label="已处理" value="2"></el-option>
+							<el-option label="确认处理" value="2"></el-option>
+							<el-option label="拒绝处理" value="0"></el-option>
 						</el-select>
 					</el-form-item>
 					<el-form-item class="form_item">
@@ -53,9 +54,10 @@
 							<div>{{scope.row.feedback_status == 1?'待处理':'已处理'}}</div>
 						</template>
 					</el-table-column>
+					<el-table-column prop="handler_remark" width="160" label="备注" align="center"></el-table-column>
 					<el-table-column label="操作" align="center" width="160" fixed="right">
 						<template slot-scope="scope">
-							<el-button type="text" size="small" v-if="scope.row.feedback_status == '1' && button_list.confirm == 1" @click="confirmFn(scope.row.feedback_id)">确认处理</el-button>
+							<el-button type="text" size="small" v-if="scope.row.feedback_status == '1' && button_list.confirm == 1" @click="clickFn(scope.row.feedback_id,scope.row.style_name)">处理</el-button>
 							<el-button type="text" size="small" disabled v-if="scope.row.feedback_status == '2'">已处理</el-button>
 							<el-button type="text" size="small" @click="editGoods(scope.row.style_id)" v-if="button_list.edit == 1">编辑商品</el-button>
 						</template>
@@ -64,6 +66,31 @@
 			</div>
 			<PaginationWidget id="bottom_row" :total="total" :page="page" :show_multiple="false" @checkPage="checkPage"/>
 		</el-card>
+		<!-- 处理弹窗 -->
+		<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" destroy-on-close @close="handleClose" :visible.sync="handle_dialog" width="25%">
+			<div slot="title" class="dialog_title">
+				<div>款号：{{style_name}}</div>
+				<img class="close_icon" src="../../../static/close_icon.png" @click="handle_dialog = false">
+			</div>
+			<div>
+				<el-form style="padding-top: 20px;" :inline="true" size="mini">
+					<el-form-item>
+						<el-radio-group v-model="type">
+							<el-radio :label="1">确认处理</el-radio>
+							<el-radio :label="2">拒绝处理</el-radio>
+						</el-radio-group>
+					</el-form-item>
+					<el-form-item>
+						<el-input type="textarea" :rows="3" placeholder="请输入备注" v-model="remark">
+						</el-input>
+					</el-form-item>
+				</el-form>
+			</div>
+			<div slot="footer" class="dialog_footer">
+				<el-button size="mini" @click="handle_dialog = false">关闭</el-button>
+				<el-button size="mini" type="primary" @click="confirmFn">提交</el-button>
+			</div>
+		</el-dialog>
 	</div>
 </template>
 <script>
@@ -81,6 +108,11 @@
 				max_height:0,			//表格最大高度
 				status:"",				//处理状态
 				page:1,					//当前页码
+				handle_dialog:false,	//处理弹窗
+				feedback_id:"",			//点击的id
+				style_name:"",			//款号
+				type:1,					//处理类型（1:同意；2:拒绝）
+				remark:"",				//处理备注
 			}
 		},
 		created(){
@@ -147,32 +179,35 @@
 					}
 				})
 			},
+			//关闭处理弹窗
+			handleClose(){
+				this.type = 1;
+				this.remark = "";
+			},
 			//确认处理
-			confirmFn(feedback_id){
-				this.$confirm('确认处理?', '提示', {
-					confirmButtonText: '确定',
-					cancelButtonText: '取消',
-					type: 'warning'
-				}).then(() => {
-					let arg = {
-						feedback_id:feedback_id
-					}
-					resource.feedBackHandle(arg).then(res => {
-						if(res.data.code == 1){
-							this.$message.success(res.data.msg);
+			clickFn(feedback_id,style_name){
+				this.style_name = style_name;
+				this.feedback_id = feedback_id;
+				this.handle_dialog = true;
+			},
+			//确认处理
+			confirmFn(){
+				let arg = {
+					feedback_id:this.feedback_id,
+					type:this.type,
+					remark:this.remark
+				}
+				resource.feedBackHandle(arg).then(res => {
+					if(res.data.code == 1){
+						this.$message.success(res.data.msg);
 							//获取列表
-							this.getData();
-							this.$store.dispatch('ajaxNum')
-						}else{
-							this.$message.warning(res.data.msg);
-						}
-					})
-				}).catch(() => {
-					this.$message({
-						type: 'info',
-						message: '已取消'
-					});          
-				});
+						this.getData();
+						this.handle_dialog = false;
+						this.$store.dispatch('ajaxNum')
+					}else{
+						this.$message.warning(res.data.msg);
+					}
+				})
 			},
 			//点击编辑商品
 			editGoods(style_id){

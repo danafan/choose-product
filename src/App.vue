@@ -8,13 +8,14 @@
   import * as dd from 'dingtalk-jsapi';
   export default {
     created() {
-      // if(window.location.hash.split('#/')[1].split('?')[0] != 'gysybk_detail'){
-      //   this.getUserInfo();
-      // }
-      // return;
+      if(window.location.hash.split('#/')[1].split('?')[0] != 'gysybk_detail'){
+        this.getUserInfo();
+      }
+      return;
 
       let user_type = sessionStorage.getItem("user_type");
-      if(!!user_type && user_type != '2'){ //内部
+      console.log(user_type)
+      if(!user_type || (!!user_type && user_type != '2')){ //内部
         if(dd.env.platform != 'notInDingTalk'){ //是钉钉环境
           //获取code
           this.getCode();
@@ -77,8 +78,10 @@
             let domain = data.img_domain;
             this.$store.commit('setDomain',domain);
             sessionStorage.setItem("domain",domain);
-              //获取导航
-            this.getMenuNotice();
+            //获取导航（只有内部才会获取）
+            if(data.user_type == '1'){
+              this.getMenuNotice();
+            }
           } else {
             this.$message.warning(res.data.msg);
           }
