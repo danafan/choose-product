@@ -156,7 +156,7 @@
 						</el-table-column>
 						<el-table-column label="拜访次数">
 							<template slot-scope="scope">
-								<el-button type="text" size="small" @click="getVisit(scope.row.reserve_id)">{{scope.row.visit_num}}</el-button>
+								<el-button type="text" size="small" @click="getVisit(scope.row.supplier_name)">{{scope.row.visit_num}}</el-button>
 							</template>
 						</el-table-column>
 						<el-table-column label="评价记录">
@@ -737,6 +737,7 @@
 				audit_remark:"",				//转合格审核拒绝原因
 				show_upload_file:true,
 				visit_dialog:false,				//供应商拜访记录弹窗
+				log_supplier_name:"",			//获取拜访记录的供应商名称
 				visit_data:{},					//拜访记录数据
 				visit_page:1,					
 				visit_loading:false,
@@ -1426,8 +1427,8 @@
 				})
 			},
 			//点击查看拜访记录
-			getVisit(reserve_id){
-				this.reserve_id = reserve_id;
+			getVisit(supplier_name){
+				this.log_supplier_name = supplier_name;
 				this.visit_dialog = true;
 				this.visit_loading = true;
 				//拜访记录列表
@@ -1442,7 +1443,8 @@
 			//获取拜访记录列表
 			getBfjl(){
 				let arg = {
-					reserve_id:this.reserve_id,
+					supplier_name:this.log_supplier_name,
+					from:2,
 					page:this.visit_page,
 					pagesize:10
 				}

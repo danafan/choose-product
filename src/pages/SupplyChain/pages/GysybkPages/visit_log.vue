@@ -307,6 +307,7 @@
 					area:this.area,
 					start_date:this.date && this.date.length > 0?this.date[0]:"",
 					end_date:this.date && this.date.length > 0?this.date[1]:"",
+					from:1,
 					page:this.page,
 					pagesize:10
 				}
