@@ -107,7 +107,7 @@
 								<el-button type="text" size="small" @click="getEvaluate(scope.row.reserve_id,scope.row.supplier_name)">{{scope.row.evaluate_num}}</el-button>
 							</template>
 						</el-table-column>
-						<el-table-column label="是否启用">
+						<el-table-column label="是否启用" v-if='button_list.onoff'>
 							<template slot-scope="scope">
 								<el-switch
 								@change="changeStatus($event,scope.row,scope.$index)"
