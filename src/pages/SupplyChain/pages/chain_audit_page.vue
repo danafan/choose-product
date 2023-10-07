@@ -131,7 +131,9 @@
 					</template>
 				</el-table-column>
 				<el-table-column label="成本价" prop="cost_price"></el-table-column>
-				<el-table-column label="售卖价" prop="selling_price"></el-table-column>
+				<el-table-column label="颜色" prop="color"></el-table-column>
+				<el-table-column label="尺码" prop="size"></el-table-column>
+				<el-table-column label="面料" prop="fabric"></el-table-column>
 				<el-table-column label="需求人" prop="ding_user_name"></el-table-column>
 				<el-table-column label="需求店铺" prop="shop_name"></el-table-column>
 				<el-table-column label="需求部门" prop="select_main_dept_name"></el-table-column>

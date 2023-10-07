@@ -103,15 +103,15 @@
 						<template slot-scope="scope">
 							<div v-if="!loading">
 								<el-tabs size="mini" v-model="scope.row.active_index" @tab-click="handleClick($event,scope.$index)">
-								<el-tab-pane :label="item.shooting_style_name" :name="index.toString()" v-for="(item,index) in scope.row.shooting_style_list"></el-tab-pane>
-							</el-tabs>
-							<div :style="{'width':'100%','height':scope.row.style_loading?'100px':'0px'}" v-loading="scope.row.style_loading"></div>
-							<div v-if="scope.row.shooting_style_list[parseInt(scope.row.active_index)].img.length == 0 && !scope.row.style_loading">暂无</div>
-							<el-carousel trigger="hover" indicator-position="none" :autoplay="false" height="100px" v-if="scope.row.shooting_style_list[parseInt(scope.row.active_index)].img.length > 0 && !scope.row.style_loading">
-								<el-carousel-item v-for="(item,index) in scope.row.shooting_style_list[parseInt(scope.row.active_index)].img" :key="item">
-									<el-image :z-index="2006" class="image" :src="domain + item" fit="scale-down" @click="viewImage(scope.row.shooting_style_list,scope.row.active_index,index)"></el-image>
-								</el-carousel-item>
-							</el-carousel>
+									<el-tab-pane :label="item.shooting_style_name" :name="index.toString()" v-for="(item,index) in scope.row.shooting_style_list"></el-tab-pane>
+								</el-tabs>
+								<div :style="{'width':'100%','height':scope.row.style_loading?'100px':'0px'}" v-loading="scope.row.style_loading"></div>
+								<div v-if="scope.row.shooting_style_list[parseInt(scope.row.active_index)].img.length == 0 && !scope.row.style_loading">暂无</div>
+								<el-carousel trigger="hover" indicator-position="none" :autoplay="false" height="100px" v-if="scope.row.shooting_style_list[parseInt(scope.row.active_index)].img.length > 0 && !scope.row.style_loading">
+									<el-carousel-item v-for="(item,index) in scope.row.shooting_style_list[parseInt(scope.row.active_index)].img" :key="item">
+										<el-image :z-index="2006" class="image" :src="domain + item" fit="scale-down" @click="viewImage(scope.row.shooting_style_list,scope.row.active_index,index)"></el-image>
+									</el-carousel-item>
+								</el-carousel>
 							</div>
 							
 						</template>
@@ -226,8 +226,8 @@
 				<el-tab-pane :label="item.shooting_style_name" :name="index.toString()" v-for="(item,index) in view_shooting_style_list"></el-tab-pane>
 			</el-tabs>
 			<el-carousel style="width: 100%;height: 310px;" trigger="hover" indicator-position="none" :autoplay="false" :initial-index="default_img_index" v-if="view_shooting_style_list.length > 0">
-				<el-carousel-item v-for="item in view_shooting_style_list[parseInt(view_active_index)].img" :key="item">
-					<el-image :z-index="2006" class="view_image" :src="domain + item" fit="scale-down"></el-image>
+				<el-carousel-item v-for="item in view_shooting_style_list[parseInt(view_active_index)].view_img" :key="item">
+					<el-image :z-index="2999" class="view_image" :src="item" fit="scale-down" :preview-src-list="view_shooting_style_list[parseInt(view_active_index)].view_img"></el-image>
 				</el-carousel-item>
 			</el-carousel>
 			<div v-else>暂无</div>
@@ -245,11 +245,8 @@
 		<div class="remark_content">
 			<EditGoods v-if="edit_dialog" :edit_goods_id="goods_id" :goods_type="goods_type" @callBack="editCallBack"/>
 		</div>
-			<!-- <div slot="footer" class="dialog_footer">
-				<el-button size="mini" type="primary" @click="edit_dialog = false">关闭</el-button>
-			</div> -->
-		</el-dialog>
-	</div>
+	</el-dialog>
+</div>
 </template>
 <style type="text/css">
 	.card_box .el-card__body{
@@ -436,7 +433,6 @@
 		mounted() {
     		//获取表格最大高度
 			this.onResize();
-			// window.addEventListener("resize", this.onResize());
 		},
 		computed:{
 			//图片前缀
@@ -861,7 +857,11 @@
 					if(res.data.code == 1){
 						let data = res.data.data;
 						let current_info = JSON.parse(JSON.stringify(this.view_shooting_style_list[e.index]));
-						current_info.img = res.data.data;
+						let view_img = [];
+						data.map(item => {
+							view_img.push(this.domain + item)
+						})
+						current_info.view_img = view_img;
 						this.view_active_index = e.index.toString();
 						this.$set(this.view_shooting_style_list,e.index,current_info);
 					}else{
@@ -873,6 +873,12 @@
 			viewImage(shooting_style_list,active_index,default_img_index){
 				this.view_active_index = active_index.toString();
 				this.default_img_index = default_img_index;
+				shooting_style_list.map(item => {
+					item['view_img'] = [];
+					item.img.map(img_item => {
+						item.view_img.push(this.domain + img_item);
+					})
+				})
 				this.view_shooting_style_list = shooting_style_list;
 				this.view_dialog = true;
 			},

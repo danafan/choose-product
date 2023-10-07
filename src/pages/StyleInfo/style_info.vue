@@ -106,7 +106,6 @@
 							</el-button>
 							<el-dropdown-menu slot="dropdown">
 								<el-dropdown-item command="1">查看</el-dropdown-item>
-								<!-- <el-dropdown-item command="2">图片管理</el-dropdown-item> -->
 							</el-dropdown-menu>
 						</el-dropdown>
 						<el-button type="text" size="small" v-if="scope.row.check_status == 3" @click="$router.push('/gys_edit_goods?goods_type=5&goods_id=' + scope.row.goods_id)">重新提交</el-button>
@@ -157,8 +156,8 @@
 					<el-tab-pane :label="item.shooting_style_name" :name="index.toString()" v-for="(item,index) in view_shooting_style_list"></el-tab-pane>
 				</el-tabs>
 				<el-carousel style="width: 100%;height: 310px;" trigger="hover" indicator-position="none" :autoplay="false" :initial-index="default_img_index" v-if="view_shooting_style_list.length > 0">
-					<el-carousel-item v-for="item in view_shooting_style_list[parseInt(view_active_index)].img" :key="item">
-						<el-image :z-index="2006" class="view_image" :src="domain + item" fit="scale-down"></el-image>
+					<el-carousel-item v-for="item in view_shooting_style_list[parseInt(view_active_index)].view_img" :key="item">
+						<el-image :z-index="2999" class="view_image" :src="item" fit="scale-down" :preview-src-list="view_shooting_style_list[parseInt(view_active_index)].view_img"></el-image>
 					</el-carousel-item>
 				</el-carousel>
 				<div v-else>暂无</div>
@@ -532,9 +531,6 @@
 				if(e == '1'){	//查看
 					this.$router.push('/gys_edit_goods?goods_type=3&goods_id=' + goods_id);
 				}
-				// else if(e == '2'){	//图片管理
-				// 	this.$router.push('/gys_image_setting?style_id=' + id + '&style_name=' + name);
-				// }
 			},
 			//切换上架或下架
 			checkStatus(goods_id,type){
@@ -592,7 +588,7 @@
 				let style_id = current_row.shooting_style_list[event.index].style_id;
 				current_row.style_loading = true;
 				this.$set(this.data,index,current_row);
-				chainResource.getStyleImgs({style_id:style_id}).then(res => {
+				resource.getStyleImgs({style_id:style_id}).then(res => {
 					if(res.data.code == 1){
 						let data = res.data.data;
 						current_row.shooting_style_list[event.index].img = res.data.data;
@@ -611,7 +607,11 @@
 					if(res.data.code == 1){
 						let data = res.data.data;
 						let current_info = JSON.parse(JSON.stringify(this.view_shooting_style_list[e.index]));
-						current_info.img = res.data.data;
+						let view_img = [];
+						data.map(item => {
+							view_img.push(this.domain + item)
+						})
+						current_info.view_img = view_img;
 						this.view_active_index = e.index.toString();
 						this.$set(this.view_shooting_style_list,e.index,current_info);
 					}else{
@@ -623,6 +623,12 @@
 			viewImage(shooting_style_list,active_index,default_img_index){
 				this.view_active_index = active_index.toString();
 				this.default_img_index = default_img_index;
+				shooting_style_list.map(item => {
+					item['view_img'] = [];
+					item.img.map(img_item => {
+						item.view_img.push(this.domain + img_item);
+					})
+				})
 				this.view_shooting_style_list = shooting_style_list;
 				this.view_dialog = true;
 			},
