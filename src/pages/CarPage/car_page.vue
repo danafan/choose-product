@@ -519,11 +519,8 @@
 					type: "warning",
 				})
 				.then(() => {
-					resource.exportCartKsbm().then((res) => {
-						if (res) {
-							exportPost("\ufeff" + res.data, "待选记录");
-						}
-					});
+					let baseURL = `${location.origin}/api/selectcart/exportcartksbm`
+					window.open(baseURL)
 				})
 				.catch(() => {
 					Message({

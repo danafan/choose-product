@@ -20,8 +20,6 @@ let path = {
   removeCarGoods:'api/selectcart/removewaitselect',       //删除购物车
   addSelected:'api/selectcart/addselected',
   getSelected:'api/selected/getselected',                 //获取已选列表
-  selectedExport:'api/selected/allselectedderive',        //已选导出(选品需求)
-  exportSelectedKsbm:'api/selected/exportselectedksbm',   //已选导出(款式资料)
   selectedInfo:'api/selected/selectedinfo',               //已选详情
   undoSelected:'api/selected/revocationselected',         //撤销已选
   cancelSelected:'api/selected/cancelselected',           //取消已选
@@ -36,7 +34,6 @@ let path = {
   ajaxNum:'api/feedback/ajaxNum',                         //反馈待处理数量
   styleSaleNum:'api/home/style_shop_list',                //商品在售店铺列表
   styleDayChart:'api/home/style_day_chart',                   //商品的7天和30天销量趋势图
-  exportCartKsbm:'api/selectcart/exportcartksbm',         //待选导出
 } 
 export default {
   //钉钉登陆
@@ -119,14 +116,6 @@ export default {
   getSelected(params) {
     return http.get(path.getSelected, params);
   },
-  //已选导出（选品需求）
-  selectedExport(params) {
-    return http.get(path.selectedExport, params);
-  },
-  //已选导出（款式资料）
-  exportSelectedKsbm(params) {
-    return http.post(path.exportSelectedKsbm, params);
-  },
   //已选详情
   selectedInfo(params) {
     return http.get(path.selectedInfo, params);
@@ -182,9 +171,5 @@ export default {
   //商品的7天和30天销量趋势图
   styleDayChart(params) {
     return http.get(path.styleDayChart, params);
-  },
-  //待选导出
-  exportCartKsbm(params) {
-    return http.post(path.exportCartKsbm, params);
   },
 };

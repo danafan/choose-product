@@ -445,20 +445,21 @@
 					start_time:this.date_time && this.date_time.length> 0?this.date_time[0]:"",
 					end_time:this.date_time && this.date_time.length> 0?this.date_time[1]:"",
 				};
+				var arr = [];
+				for(let k in arg){
+					if(arg[k]){
+						arr.push(`${k}=${arg[k]}`)
+					}
+				}
+
 					if(this.export_type == '1'){		//款式资料
-						resource.exportSelectedKsbm(arg).then((res) => {
-							if (res) {
-								exportPost("\ufeff" + res.data, "已选商品（款式资料）");
-								this.export_dialog = false;
-							}
-						});
+						let baseURL = `${location.origin}/api/selected/exportselectedksbm?${arr.join('&')}`
+						window.open(baseURL)
+						this.export_dialog = false;
 					}else{								//选品需求
-						resource.selectedExport(arg).then((res) => {
-							if (res) {
-								exportPost("\ufeff" + res.data, "已选商品（选品需求）");
-								this.export_dialog = false;
-							}
-						});
+						let baseURL = `${location.origin}/api/selected/allselectedderive?${arr.join('&')}`
+						window.open(baseURL)
+						this.export_dialog = false;
 					}
 				},
 			//获取列表

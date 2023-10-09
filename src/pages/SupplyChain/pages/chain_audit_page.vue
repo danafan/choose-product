@@ -952,12 +952,14 @@
 						end_time:this.date && this.date.length > 0?this.date[1]:"",
 						i_id:this.i_id,
 					}
-					
-					resource.deriveSelected(arg).then((res) => {
-						if (res) {
-							exportPost("\ufeff" + res.data, "已选商品");
+					var arr = [];
+					for(let k in arg){
+						if(arg[k]){
+							arr.push(`${k}=${arg[k]}`)
 						}
-					});
+					}
+					let baseURL = `${location.origin}/api/selected/deriveselected?${arr.join('&')}`
+					window.open(baseURL)
 				})
 				.catch(() => {
 					Message({

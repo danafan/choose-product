@@ -76,7 +76,6 @@ let path = {
   affirmSelected:'api/selected/affirmselected',           //确认需求
   refuseSelected:'api/selected/refuseselected',           //拒绝需求
   addSelectRemark:'api/selected/addselectremark',         //添加备注
-  deriveSelected:'api/selected/deriveselected',           //导出
   setAbutmentType:'api/productstyle/setabutmenttype',     //设置对接推单
   accountList:'api/supplier_manager/account_list',        //供应商账号列表
   addAccount:'api/supplier_manager/add_account',          //创建账号
@@ -467,10 +466,6 @@ export default {
   //添加备注
   addSelectRemark(params) {
     return http.post(path.addSelectRemark, params);
-  },
-  //导出
-  deriveSelected(params) {
-    return http.get(path.deriveSelected, params);
   },
   //设置对接推单
   setAbutmentType(params) {
