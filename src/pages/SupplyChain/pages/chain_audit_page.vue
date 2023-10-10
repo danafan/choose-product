@@ -133,7 +133,7 @@
 				<el-table-column label="成本价" prop="cost_price"></el-table-column>
 				<el-table-column label="颜色" prop="color"></el-table-column>
 				<el-table-column label="尺码" prop="size"></el-table-column>
-				<el-table-column label="面料" prop="fabric"></el-table-column>
+				<el-table-column label="面料" width="120" show-overflow-tooltip prop="fabric"></el-table-column>
 				<el-table-column label="需求人" prop="ding_user_name"></el-table-column>
 				<el-table-column label="需求店铺" prop="shop_name"></el-table-column>
 				<el-table-column label="需求部门" prop="select_main_dept_name"></el-table-column>
@@ -151,14 +151,14 @@
 						</div>
 					</template>
 				</el-table-column>
-				<el-table-column label="审核备注" prop="select_remark"></el-table-column>
+				<!-- <el-table-column label="审核备注" prop="select_remark"></el-table-column> -->
 				<el-table-column label="操作" width="160" fixed="right">
 					<template slot-scope="scope">
 						<el-button type="text" size="small" v-if="button_list.info == 1" @click="selectedInfo(scope.row.select_id)">查看</el-button>
 						<el-button type="text" size="small" v-if="button_list.edit_i_id == 1" @click="editInfo(scope.row.select_id,scope.row.i_id,scope.row.bd_i_id,scope.row.supplier_ksbm)">编辑</el-button>
 						<el-button type="text" size="small" v-if="scope.row.audit_status == 1 && button_list.aff == 1" @click="auditFn('1',scope.row.select_id)">确认需求</el-button>
 						<el-button type="text" size="small" v-if="(scope.row.audit_status == 1 || scope.row.audit_status == 2) && button_list.ref == 1" @click="auditFn('2',scope.row.select_id)">拒绝需求</el-button>
-						<el-button type="text" size="small" v-if="button_list.addre == 1" @click="addRemark(scope.row.select_id,scope.row.select_remark)">备注</el-button>
+						<!-- <el-button type="text" size="small" v-if="button_list.addre == 1" @click="addRemark(scope.row.select_id,scope.row.select_remark)">备注</el-button> -->
 					</template>
 				</el-table-column>
 			</el-table>
@@ -337,7 +337,7 @@
 		</div>
 	</el-dialog>
 	<!-- 备注弹窗 -->
-	<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" destroy-on-close @close="remark = ''" :visible.sync="remark_dialog" width="30%">
+	<!-- <el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" destroy-on-close @close="remark = ''" :visible.sync="remark_dialog" width="30%">
 		<div slot="title" class="dialog_title">
 			<div>备注</div>
 			<img class="close_icon" src="../../../static/close_icon.png" @click="remark_dialog = false">
@@ -350,7 +350,7 @@
 			<el-button size="mini" @click="remark_dialog = false">关闭</el-button>
 			<el-button size="mini" type="primary" @click="confirmRemark">提交</el-button>
 		</div>
-	</el-dialog>
+	</el-dialog> -->
 	<!-- 单个审批弹窗 -->
 	<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" destroy-on-close @close="allClose" :visible.sync="refused_dialog" width="30%">
 		<div slot="title" class="dialog_title">
@@ -424,7 +424,7 @@
 	</div>
 	<div slot="footer" class="dialog_footer">
 		<el-button size="mini" @click="edit_dialog = false">取消</el-button>
-		<el-button size="mini" type="primary" @click="commitEdit">确认</el-button>
+		<el-button size="mini" type="primary" @click="commitEdit">保存</el-button>
 	</div>
 </el-dialog>
 </div>
@@ -579,9 +579,9 @@
 				button_list:{},
 				detail_dialog:false,	//详情弹窗
 				goods_info:{},			//详情
-				remark_dialog:false,
+				// remark_dialog:false,
 				select_id:"",			//当前点击的记录ID
-				remark:"",				//备注内容
+				// remark:"",				//备注内容
 				refused_dialog:false,	//拒绝弹窗
 				err_msg:"",				//拒绝备注
 				multiple_selection:[],
@@ -907,28 +907,28 @@
 				})
 			},
 			//点击添加备注
-			addRemark(select_id,remark){
-				this.select_id = select_id;
-				this.remark = remark?remark:'';
-				this.remark_dialog = true;
-			},
+			// addRemark(select_id,remark){
+			// 	this.select_id = select_id;
+			// 	this.remark = remark?remark:'';
+			// 	this.remark_dialog = true;
+			// },
 			//提交备注
-			confirmRemark(){
-				let arg = {
-					select_id:this.select_id,
-					remark:this.remark
-				}
-				resource.addSelectRemark(arg).then(res => {
-					if(res.data.code == 1){
-						this.$message.success(res.data.msg);
-						this.remark_dialog = false;
-							//获取列表
-						this.getGoodsList();
-					}else{
-						this.$message.warning(res.data.msg);
-					}
-				})
-			},
+			// confirmRemark(){
+			// 	let arg = {
+			// 		select_id:this.select_id,
+			// 		remark:this.remark
+			// 	}
+			// 	resource.addSelectRemark(arg).then(res => {
+			// 		if(res.data.code == 1){
+			// 			this.$message.success(res.data.msg);
+			// 			this.remark_dialog = false;
+			// 				//获取列表
+			// 			this.getGoodsList();
+			// 		}else{
+			// 			this.$message.warning(res.data.msg);
+			// 		}
+			// 	})
+			// },
 			//导出
 			exportFn() {
 				MessageBox.confirm("确认导出?", "提示", {

@@ -98,6 +98,9 @@
 				<el-form-item label="审核状态：" v-if="is_detail">
 					{{check_status | checkStatus}}
 				</el-form-item>
+				<el-form-item label="下架原因：" v-if="is_detail && check_status == 5	">
+					{{arg.off_reason}}
+				</el-form-item>
 				<el-form-item label="爆款：">
 					<el-radio-group v-model="arg.hot_style" :disabled="is_detail || hot_status === 0 || info_edit_fields.indexOf('hot_style') > -1">
 						<el-radio :label="1">是</el-radio>

@@ -25,6 +25,7 @@ const store = new Vuex.Store({
     feekback_num:0,       //反馈待处理数量
     hot_num:0,            //爆款主推款审核待处理数量
     notice_num:"",        //待处理公告数量
+    refund_num:0,         //已选款式被拒绝的数量
   },
   mutations: {
     //设置用户信息
@@ -53,6 +54,10 @@ const store = new Vuex.Store({
       state.feekback_num = data.feedback_num;
       state.hot_num = data.hot_num;
       state.notice_num = data.notice_num;
+    },
+    //已选款式被拒绝的数量
+    setRefundNum(state, refund_num){
+      state.refund_num = refund_num;
     },
     //设置购物车
     setCarGoods(state, arg) {
@@ -101,6 +106,16 @@ const store = new Vuex.Store({
       resource.ajaxNum().then(res => {
        if(res.data.code == 1){
          context.commit('setFeekbackNum', res.data.data);
+       }else{
+        Message.warning(res.data.msg);
+       }
+     })
+    },
+    //已选款式被拒绝的数量
+    getRefundNum(context) {
+      resource.getRefundNum().then(res => {
+       if(res.data.code == 1){
+         context.commit('setRefundNum', res.data.data.num);
        }else{
         Message.warning(res.data.msg);
        }

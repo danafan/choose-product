@@ -5,7 +5,10 @@
 			<el-card class="card_box" id="card_box">
 				<div class="tab_row" id="tab_row">
 					<div class="tab_item" :class="{'active_item':active_index == index}" v-for="(item,index) in tab_list" @click="active_index = index">
-						<div>{{item.name}}</div>
+						<div class="flex ac">
+							<div>{{item.name}}</div>
+							<div style="color:red" v-if="item.show_num && refund_num > 0">（{{refund_num}}）</div>
+						</div>
 						<div class="active_line" v-if="active_index == index"></div>
 					</div>
 				</div>
@@ -103,6 +106,12 @@
 						</div>
 						<div v-if="scope.row.audit_time">{{scope.row.audit_time}}</div>
 						<div v-if="scope.row.revoke_time">{{scope.row.revoke_time}}</div>
+					</template>
+				</el-table-column>
+				<el-table-column label="审核备注" show-overflow-tooltip>
+					<template slot-scope="scope">
+						<div v-if="scope.row.audit_status == 2">{{scope.row.aff_reason}}</div>
+						<div v-if="scope.row.audit_status == 4">{{scope.row.refund_reason}}</div>
 					</template>
 				</el-table-column>
 				<el-table-column label="操作" width="120" fixed="right">
@@ -336,7 +345,8 @@
 					id:2
 				},{
 					name:'已拒绝',
-					id:4
+					id:4,
+					show_num:true
 				},{
 					name:'已撤销',
 					id:0
@@ -365,6 +375,7 @@
 			}
 		},
 		created(){
+			this.$store.dispatch('getRefundNum');
 			//获取所有店铺列表
 			this.ajaxViewShop();
 			//获取所有需求人
@@ -381,6 +392,10 @@
 			//图片前缀
 			domain(){
 				return this.$store.state.domain;
+			},
+			//被拒绝的数量
+			refund_num(){
+				return this.$store.state.refund_num;
 			}
 		},
 		methods: {

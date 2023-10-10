@@ -33,8 +33,9 @@ let path = {
   hotSellGoods:'api/home/hotsellgoods',                   //爆款列表
   ajaxNum:'api/feedback/ajaxNum',                         //反馈待处理数量
   styleSaleNum:'api/home/style_shop_list',                //商品在售店铺列表
-  styleDayChart:'api/home/style_day_chart',                   //商品的7天和30天销量趋势图
-} 
+  styleDayChart:'api/home/style_day_chart',               //商品的7天和30天销量趋势图
+  getRefundNum:'api/selected/getrefundnum',               //获取已选款式被拒绝的数量
+}   
 export default {
   //钉钉登陆
   dingLogin(params) {
@@ -171,5 +172,9 @@ export default {
   //商品的7天和30天销量趋势图
   styleDayChart(params) {
     return http.get(path.styleDayChart, params);
+  },
+  //获取已选款式被拒绝的数量
+  getRefundNum(params) {
+    return http.get(path.getRefundNum, params);
   },
 };

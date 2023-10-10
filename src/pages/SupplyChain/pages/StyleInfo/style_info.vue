@@ -222,9 +222,12 @@
 	<!-- 图片放大 -->
 	<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" destroy-on-close :visible.sync="view_dialog">
 		<div class="remark_content">
-			<el-tabs size="mini" v-model="view_active_index" @tab-click="handleViewClick">
-				<el-tab-pane :label="item.shooting_style_name" :name="index.toString()" v-for="(item,index) in view_shooting_style_list"></el-tab-pane>
-			</el-tabs>
+			<div class="flex jsb">
+				<el-tabs size="mini" v-model="view_active_index" @tab-click="handleViewClick">
+					<el-tab-pane :label="item.shooting_style_name" :name="index.toString()" v-for="(item,index) in view_shooting_style_list"></el-tab-pane>
+				</el-tabs>
+				<img class="close_icon view_close_icon" src="../../../../static/close_icon.png" @click="view_dialog = false">
+			</div>
 			<el-carousel style="width: 100%;height: 310px;" trigger="hover" indicator-position="none" :autoplay="false" :initial-index="default_img_index" v-if="view_shooting_style_list.length > 0">
 				<el-carousel-item v-for="item in view_shooting_style_list[parseInt(view_active_index)].view_img" :key="item">
 					<el-image :z-index="2999" class="view_image" :src="item" fit="scale-down" :preview-src-list="view_shooting_style_list[parseInt(view_active_index)].view_img"></el-image>
@@ -278,6 +281,10 @@
 				text-align:end;
 			}
 		}
+	}
+	.view_close_icon{
+		position: absolute;
+		right: 18px;
 	}
 	.down_box{
 		display:flex;
