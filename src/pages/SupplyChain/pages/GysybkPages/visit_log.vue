@@ -14,7 +14,7 @@
 					</el-form-item>
 					<el-form-item label="拜访员：">
 						<el-select v-model="visit_user_id" clearable filterable placeholder="全部">
-							<el-option v-for="item in user_list" :key="item.visit_user_id" :label="item.visit_user_name" :value="item.visit_user_id">
+							<el-option v-for="item in visit_list" :key="item.visit_user_id" :label="item.visit_user_name" :value="item.visit_user_id">
 							</el-option>
 						</el-select>
 					</el-form-item>
@@ -81,7 +81,7 @@
 					</el-form-item>
 					<el-form-item label="拜访员：" :required="dialog_type == '1' || dialog_type == '3'">
 						<el-select v-model="dialog_arg.visit_user_id" clearable filterable placeholder="全部" v-if="dialog_type == '1' || dialog_type == '3'">
-							<el-option v-for="item in user_list" :key="item.visit_user_id" :label="item.visit_user_name" :value="item.visit_user_id">
+							<el-option v-for="item in user_list" :key="item.user_id" :label="item.real_name" :value="item.user_id">
 							</el-option>
 						</el-select>
 						<div v-else>{{detail_info.visit_user_name}}</div>
@@ -181,11 +181,9 @@
 			return{
 				loading:false,
 				supplier_name:"",		//供应商名称
-				// supplier_list:[],		//供应商列表
-				// supplier_ids:[],		//选中的供应商
 				area_list:[],			//区域
 				area:"",				//选中的区域
-				user_list:[],			//拜访员列表
+				visit_list:[],			//拜访员列表
 				visit_user_id:"",		//选中的拜访员
 				date:[],				//上新日期
 				pickerOptions: {
@@ -221,6 +219,7 @@
 				button_list:{},
 				data:{},				//获取的数据
 				visit_log_id:"",		//点击的记录ID
+				user_list:[],			//获取所有用户列表
 				edit_dialog:false,		//添加/编辑弹窗
 				dialog_type:'1',		//1:添加；2:查看；3:编辑
 				dialog_arg:{
@@ -243,6 +242,8 @@
 			// this.ajaxReserveSupplier();
 			//拜访员工列表
 			this.ajaxVisitUser();
+			//获取添加/编辑拜访员（用户）列表
+			this.getUserList();
 			//预备库下拉框筛选项
 			this.selectionMap();
 			//获取列表
@@ -268,16 +269,6 @@
 					this.max_height = card_box_height - form_height + 70 + "px";
 				});
 			},
-			//Ajax获取预备库供应商列表接口
-			// ajaxReserveSupplier(){
-			// 	resource.ajaxReserveSupplier().then(res => {
-			// 		if(res.data.code == 1){
-			// 			this.supplier_list = res.data.data;
-			// 		}else{
-			// 			this.$message.warning(res.data.msg);
-			// 		}
-			// 	})
-			// },
 			//预备库下拉框筛选项
 			selectionMap(){
 				resource.selectionMap().then(res => {
@@ -289,9 +280,19 @@
 					}
 				})
 			},
-			//获取用户列表
+			//获取拜访员列表
 			ajaxVisitUser(){
 				resource.ajaxVisitUser().then(res => {
+					if(res.data.code == 1){
+						this.visit_list = res.data.data;
+					}else{
+						this.$message.warning(res.data.msg);
+					}
+				})
+			},
+			//获取添加/编辑拜访员（用户）列表
+			getUserList(){
+				resource.supplierAjaxUser().then(res => {
 					if(res.data.code == 1){
 						this.user_list = res.data.data;
 					}else{

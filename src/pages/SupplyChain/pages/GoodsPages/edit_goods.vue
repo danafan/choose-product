@@ -59,9 +59,6 @@
 					<el-input type="textarea" :rows="5" :placeholder="is_detail?'':'请输入备注'" v-model="arg.remark" :disabled="is_detail || info_edit_fields.indexOf('remark') > -1">
 					</el-input>
 				</el-form-item>
-				<el-form-item label="下架原因：" v-if="check_status == 4">
-					<div>{{off_reason}}</div>
-				</el-form-item>
 				<el-form-item label="拒绝原因：" v-if="check_status == 3 || check_status == 6 || price_status == 3">
 					<div>{{refuse_reason}}</div>
 				</el-form-item>
@@ -266,6 +263,7 @@
 					net_disk_address:"",	//网盘地址
 					img:[],					//图片列表
 					remark:"",				//备注
+					off_reason:"",			//下架原因
 				},							//可传递的参数
 				default_hot_style:0,		//默认是否爆款
 				default_data_style:0,		//默认是否主推款
