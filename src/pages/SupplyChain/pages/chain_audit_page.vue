@@ -133,6 +133,7 @@
 				<el-table-column label="成本价" prop="cost_price"></el-table-column>
 				<el-table-column label="颜色" prop="color"></el-table-column>
 				<el-table-column label="尺码" prop="size"></el-table-column>
+				<el-table-column label="分类" prop="classification_name"></el-table-column>
 				<el-table-column label="面料" width="120" show-overflow-tooltip prop="fabric"></el-table-column>
 				<el-table-column label="需求人" prop="ding_user_name"></el-table-column>
 				<el-table-column label="需求店铺" prop="shop_name"></el-table-column>
@@ -151,7 +152,7 @@
 						</div>
 					</template>
 				</el-table-column>
-				<!-- <el-table-column label="审核备注" prop="select_remark"></el-table-column> -->
+				<el-table-column label="商品备注" prop="remark"></el-table-column>
 				<el-table-column label="操作" width="160" fixed="right">
 					<template slot-scope="scope">
 						<el-button type="text" size="small" v-if="button_list.info == 1" @click="selectedInfo(scope.row.select_id)">查看</el-button>
