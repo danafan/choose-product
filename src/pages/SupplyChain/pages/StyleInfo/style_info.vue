@@ -203,14 +203,14 @@
 		<!-- 下架弹窗 -->
 		<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" destroy-on-close @close="off_reason = ''" :visible.sync="delist_dialog" width="30%">
 			<div slot="title" class="dialog_title">
-				<div>确认下架？</div>
+				<div>{{off_title}}</div>
 				<img class="close_icon" src="../../../../static/close_icon.png" @click="delist_dialog = false">
 			</div>
 			<div class="remark_content">
 				<el-input
 				type="textarea"
 				autosize
-				placeholder="请输入下架原因"
+				placeholder="请输入下架原因（必填）"
 				v-model="off_reason">
 			</el-input>
 		</div>
@@ -414,6 +414,7 @@
 				edit_dialog:false,			//编辑/重新提交弹窗
 				edit_dialog_title:"",		//编辑/重新提交标题
 				goods_type:'',				//类型
+				off_title:'确认下架？',			//下架弹窗标题
 			}
 		},
 		created(){
@@ -783,12 +784,19 @@
 					this.$message.warning('没有符合操作条件的记录！');
 					return;
 				}
+				if(type == '0'){	//下架
+					this.off_title = `您选择了${total_num}项，其中不可操作${unset_num}项，${title}`;
+					this.goods_id = style_id.join(',');
+					this.delist_dialog = true;
+					return;
+				}
+
 				this.$confirm(`您选择了${total_num}项，其中不可操作${unset_num}项，${title}`, '提示', {
 					confirmButtonText: '确定',
 					cancelButtonText: '取消',
 					type: 'warning'
 				}).then(() => {
-					if(type == '0' || type == '1'){	//上架或下架
+					if(type == '1'){	//上架
 						let arg = {
 							goods_id:style_id.join(','),
 							type:type
@@ -941,6 +949,7 @@
 						});          
 					});
 				}else{				//下架
+					this.off_title = '确认下架？';
 					this.delist_dialog = true;
 				}	
 			},

@@ -49,6 +49,7 @@
 							</el-carousel>
 						</template>
 					</el-table-column>
+					<el-table-column label="创建时间" width="160" prop="add_time"></el-table-column>
 					<el-table-column label="操作" width="180" fixed="right">
 						<template slot-scope="scope">
 							<el-button size="mini" type="text" @click="addFn('2',scope.row.visit_log_id)" v-if="button_list.detail == 1">查看</el-button>

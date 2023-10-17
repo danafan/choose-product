@@ -175,7 +175,7 @@
 						<div class="flex" style="margin-bottom:10px">
 							<el-popover ref="stylePopover" placement="right-start" width="400" trigger="click">
 								<div>
-									<el-select v-model="selected_style" multiple placeholder="全部风格">
+									<el-select v-model="selected_style" multiple filterable placeholder="全部风格">
 										<el-option
 										v-for="item in style_table_data"
 										:key="item.shooting_style_id"
@@ -453,7 +453,22 @@
 					}
 					this.style_card_list.push(style_card_item)
 				})
-				
+				//找到审核中的拍摄风格并删除
+				let shz_arr = this.style_card_list.filter(item => {
+					return item.edit_status == 0
+				})
+				let shz_ids = shz_arr.map(item => {
+					return item.shooting_style_id;
+				})
+				shz_ids.map(item => {
+					this.style_table_data.map((iii,index) => {
+						if(item == iii.shooting_style_id){
+							console.log(iii.shooting_style_name)
+							this.style_table_data.splice(index,1);
+						}
+					})
+				})
+
 				for(let key in this.arg){
 					for(let k in data_info){
 						if(key == k){
@@ -571,7 +586,7 @@
 			},
 			//对比已选中的过滤右侧未选中的风格  
 			filterStyle(arr1, arr2) {
-				return arr1.filter((v) => arr2.every((val) => val.shooting_style_id!= v.shooting_style_id));
+				return arr1.filter((v) => arr2.every((val) => val.shooting_style_id != v.shooting_style_id));
 			},
 			//分类列表
 			ajaxClassList(){

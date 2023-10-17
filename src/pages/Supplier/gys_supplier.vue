@@ -182,6 +182,7 @@
 	height: 100%;
 	// overflow-y: scroll;
 	.card_box{
+		padding-top: 10rem;
 		.top_content{
 			margin-bottom: 20rem;
 			border: 1px solid #DEDEDE;

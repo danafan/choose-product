@@ -65,6 +65,7 @@
 	padding: 20rem 98rem;
 	overflow-y: scroll;
 	.card_box{
+		padding-top: 10rem;
 		width: 1725rem;
 		.card_title{
 			margin-bottom: 20px;
