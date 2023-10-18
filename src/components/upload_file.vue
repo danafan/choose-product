@@ -152,6 +152,11 @@
 				type:Boolean,
 			default:false
 			},
+			//是否调用删除接口
+			request_del:{
+				type:Boolean,
+			default:true
+			},
 			//是否只读
 			only_view:{
 				type:Boolean,
@@ -226,7 +231,8 @@
 			},
     		//删除文件
 			deleteFile(url, index) {
-				let arg = {
+				if(this.request_del){
+					let arg = {
 					url: url,
 				};
 				resource.delFile(arg).then((res) => {
@@ -238,6 +244,12 @@
 						this.$message.warning(res.data.msg);
 					}
 				});
+				}else{
+					this.preview_images.splice(index, 1);
+    					//向父组件传递已选的图片列表
+						this.emitFn();
+				}
+				
 			},
 			//设置禁止移动
 			moveDraggable(e){

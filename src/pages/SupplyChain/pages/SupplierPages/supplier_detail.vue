@@ -42,7 +42,9 @@
 				</el-form>
 				<el-form style="width: 50%" size="small" label-width="140px">
 					<el-form-item label="结算方式：">
-						{{data_info.supply_monthly_settlement==1?'月结':'现结'}}
+						<div v-if="data_info.supply_monthly_settlement==0">现结</div>
+						<div v-if="data_info.supply_monthly_settlement==1">月结</div>
+						<div v-if="data_info.supply_monthly_settlement==2">半月结</div>
 					</el-form-item>
 					<el-form-item label="核心供应商：">
 						{{data_info.is_core==1?'是':'否'}}

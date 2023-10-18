@@ -456,7 +456,7 @@
 						</el-form>
 					</div>
 					<div slot="footer" class="dialog_footer">
-						<el-button size="small" @click="edit_dialog = false">取消</el-button>
+						<el-button size="small" @click="edit_dialog = false">{{add_type == '3'?'关闭':'取消'}}</el-button>
 						<!-- 添加/编辑 -->
 						<el-button type="primary" size="small" @click="submitAddEdit" v-if="add_type == '1' || add_type == '2'">提交</el-button>
 						<!-- 填报审核 -->

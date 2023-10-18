@@ -41,8 +41,9 @@
 					</el-form-item>
 					<el-form-item label="结算方式：">
 						<el-select v-model="supply_monthly_settlement" clearable placeholder="全部">
-							<el-option label="月结" :value="1"></el-option>
 							<el-option label="现结" :value="0"></el-option>
+							<el-option label="月结" :value="1"></el-option>
+							<el-option label="半月结" :value="2"></el-option>
 						</el-select>
 					</el-form-item>
 					<el-form-item label="品牌：">
@@ -102,7 +103,9 @@
 						</el-table-column>
 						<el-table-column label="结算">
 							<template slot-scope="scope">
-								{{scope.row.supply_monthly_settlement == 1?'月结':'现结'}}
+								<div v-if="scope.row.supply_monthly_settlement == 0">现结</div>
+								<div v-if="scope.row.supply_monthly_settlement == 1">月结</div>
+								<div v-if="scope.row.supply_monthly_settlement == 2">半月结</div>
 							</template>
 						</el-table-column>
 						<el-table-column label="供应商等级" prop="grade_name"></el-table-column>

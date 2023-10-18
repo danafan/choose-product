@@ -248,6 +248,9 @@
 		<div class="remark_content">
 			<EditGoods v-if="edit_dialog" :edit_goods_id="goods_id" :goods_type="goods_type" @callBack="editCallBack"/>
 		</div>
+		<div slot="footer" class="dialog_footer" v-if="goods_type == '3'">
+			<el-button size="small" @click="edit_dialog = false">关闭</el-button>
+		</div>
 	</el-dialog>
 </div>
 </template>

@@ -125,7 +125,7 @@
 			<div slot="footer" class="dialog_footer">
 				<el-button size="small" @click="edit_dialog = false" v-if="dialog_type == '1' || dialog_type == '3'">取消</el-button>
 				<el-button type="primary" size="small" @click="saveFn" v-if="dialog_type == '1' || dialog_type == '3'">保存</el-button>
-				<el-button type="primary" size="small" @click="edit_dialog = false" v-if="dialog_type == '2'">关闭</el-button>
+				<el-button size="small" @click="edit_dialog = false" v-if="dialog_type == '2'">关闭</el-button>
 			</div>
 		</el-dialog>
 	</div>

@@ -588,7 +588,7 @@
 				let style_id = current_row.shooting_style_list[event.index].style_id;
 				current_row.style_loading = true;
 				this.$set(this.data,index,current_row);
-				resource.getStyleImgs({style_id:style_id}).then(res => {
+				chainResource.getStyleImgs({style_id:style_id}).then(res => {
 					if(res.data.code == 1){
 						let data = res.data.data;
 						current_row.shooting_style_list[event.index].img = res.data.data;

@@ -141,6 +141,9 @@
 				},{
 					name:'月结',
 					id:1
+				},{
+					name:'半月结',
+					id:2
 				}],						//结算方式
 				supply_monthly_settlement:"",//选中的结算方式
 				is_core:0,				//核心供应商

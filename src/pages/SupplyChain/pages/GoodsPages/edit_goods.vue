@@ -196,7 +196,7 @@
 							<img class="delete_style_icon" src="../../../../static/delete_style_icon.png" v-if="goods_type != '3' && goods_type != '4' && info_edit_fields.indexOf('styles_data') == -1 && (item.edit_status == 1 || !item.edit_status)" @click.stop="deleteStyleTab(index)">
 						</div>
 						<div class="flex-1">
-							<UploadFile :index="index" :size="80" :is_multiple="true" :max_num="9" :current_num="style_card_list[index].image_arr.length" :img_list="style_card_list[index].image_arr" :only_view="goods_type == '3' || goods_type == '4' || info_edit_fields.indexOf('styles_data') > -1 || item.edit_status == 0" @callbackFn="currentStyleImgCallBackFn(index,arguments)"/>
+							<UploadFile :index="index" :size="80" :request_del="goods_type == '1'" :is_multiple="true" :max_num="9" :current_num="style_card_list[index].image_arr.length" :img_list="style_card_list[index].image_arr" :only_view="goods_type == '3' || goods_type == '4' || info_edit_fields.indexOf('styles_data') > -1 || item.edit_status == 0" @callbackFn="currentStyleImgCallBackFn(index,arguments)"/>
 							</div>
 							<div class="audit_ing" v-if="item.edit_status == 0">审核中</div>
 						</div>
@@ -463,11 +463,12 @@
 				shz_ids.map(item => {
 					this.style_table_data.map((iii,index) => {
 						if(item == iii.shooting_style_id){
-							console.log(iii.shooting_style_name)
 							this.style_table_data.splice(index,1);
 						}
 					})
 				})
+				//确认商品风格多选
+				this.setStyleFn();
 
 				for(let key in this.arg){
 					for(let k in data_info){
