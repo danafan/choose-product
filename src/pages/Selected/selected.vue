@@ -224,7 +224,11 @@
 					</div>
 					<div class="detail_row">
 						<div class="lable">结算方式</div>
-						<div class="value">{{goods_info.supply_monthly_settlement == 1?'月结':'现结'}}</div>
+						<div class="value">
+							<div v-if="goods_info.supply_monthly_settlement == 0">现结</div>
+							<div v-if="goods_info.supply_monthly_settlement == 1">月结</div>
+							<div v-if="goods_info.supply_monthly_settlement == 2">半月结</div>
+						</div>
 					</div>
 					<div class="detail_row">
 						<div class="lable">合作模式</div>

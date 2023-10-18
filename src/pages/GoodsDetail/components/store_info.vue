@@ -16,7 +16,9 @@
 			</div>
 			<div class="store_info_row">
 				<div class="store_info_lable">结算方式</div>
-				<div class="store_info_value">{{goods_info.supply_monthly_settlement}}</div>
+				<div class="store_info_value" v-if="goods_info.supply_monthly_settlement == 0">现结</div>
+				<div class="store_info_value" v-if="goods_info.supply_monthly_settlement == 1">月结</div>
+				<div class="store_info_value" v-if="goods_info.supply_monthly_settlement == 2">半月结</div>
 			</div>
 			<div class="store_info_row">
 				<div class="store_info_lable">供应商等级</div>

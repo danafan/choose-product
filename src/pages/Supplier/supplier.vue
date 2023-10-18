@@ -9,7 +9,11 @@
 							<div class="info_item">供应商：{{item.supplier_name}}</div>
 							<div class="info_item">供应商编码：{{item.supplier_code}}{{item.supplier_code}}{{item.supplier_code}}{{item.supplier_code}}</div>
 							<div class="info_item">主营：{{item.main_business}}</div>
-							<div class="info_item">结算方式：{{item.supply_monthly_settlement == 1?'月结':'现结'}}</div>
+							<div class="info_item">结算方式：
+								<span v-if="item.supply_monthly_settlement == 0">现结</span>
+								<span v-if="item.supply_monthly_settlement == 1">月结</span>
+								<span v-if="item.supply_monthly_settlement == 2">半月结</span>
+							</div>
 							<div class="info_item">供应商等级：<span>{{item.grade_name}}</span></div>
 							<div class="info_item">介绍：{{item.description}}</div>
 						</div>

@@ -24,7 +24,9 @@
 							</div>
 							<div class="info_item">
 								<div class="info_lable">结算方式：</div>
-								<div class="info_value">{{supplier_info.supply_monthly_settlement == 1?'月结':'现结'}}</div>
+								<div class="info_value" v-if="supplier_info.supply_monthly_settlement == 0">现结</div>
+								<div class="info_value" v-if="supplier_info.supply_monthly_settlement == 1">月结</div>
+								<div class="info_value" v-if="supplier_info.supply_monthly_settlement == 2">半月结</div>
 							</div>
 							<div class="info_item">
 								<div class="info_lable">介绍：</div>
