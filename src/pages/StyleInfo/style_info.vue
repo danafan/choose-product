@@ -401,7 +401,8 @@
 			},
 			//下载模版
 			downTemplate(){
-				window.open(`${this.downLoadUrl}/file/供应商商品批量导入模板.xls`);
+				// window.open(`${this.downLoadUrl}/file/供应商商品批量导入模板.xls`);
+				window.open(`${this.downLoadUrl}/file/供应商商品批量导入模板.xlsx`);
 			},
 			//导入
 			uploadCsv(){

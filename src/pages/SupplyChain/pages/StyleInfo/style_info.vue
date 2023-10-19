@@ -535,7 +535,8 @@
 				if(this.import_type == '1'){
 					window.open(`${this.downLoadUrl}/file/批量更新款式编码模板.xlsx`);
 				}else{
-					window.open(`${this.downLoadUrl}/file/商品批量导入模板.xls`);
+					// window.open(`${this.downLoadUrl}/file/商品批量导入模板.xls`);
+					window.open(`${this.downLoadUrl}/file/商品批量导入模板.xlsx`);
 				}
 			},
 			//导入
