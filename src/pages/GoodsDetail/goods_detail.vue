@@ -9,7 +9,9 @@
 					<!-- 商品信息 -->
 					<GoodsInfo :goods_info="goods_info"/>
 					<!-- 店铺信息 -->
-					<StoreInfo :goods_info="goods_info"/>
+					<div>
+						<StoreInfo :goods_info="goods_info"/>
+					</div>
 				</div>
 				<div class="flex as">
 					<!-- 推荐商品 -->
@@ -127,7 +129,9 @@
 		overflow-y: scroll;
 	}
 	.padding_page_content{
-		width: 1330rem;
+		// width: 1330rem;
+		width: 1430rem;
+		// width: 1725rem;
 		height: 100%;
 		display: flex;
 		flex-direction: column;
@@ -137,6 +141,7 @@
 			padding-left: 100rem;
 			.detail_top_row{
 				display: flex;
+				// align-items: flex-start;
 				justify-content: space-between;
 			}
 			.recommended{

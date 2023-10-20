@@ -27,6 +27,13 @@
 				<div class="row_value">{{goods_info.style_name}}</div>
 			</div>
 			<div class="content_row">
+				<div class="row_lable">替代款款号</div>
+				<div class="flex">
+					<div class="row_value" :class="{'link':item.style_id > 0}" @click="getDetail(item.style_id)" v-for="(item,index) in goods_info.replace_ksbm_data">{{item.ksbm}}<span v-if="index < goods_info.replace_ksbm_data.length - 1">，</span>
+					</div>
+				</div>
+			</div>
+			<div class="content_row">
 				<div class="row_lable">类目</div>
 				<div class="row_value">{{goods_info.category_name}}</div>
 			</div>
@@ -443,6 +450,14 @@
 				}else{
 					window.open(url)
 				}
+			},
+			//点击替换款号跳转详情
+			getDetail(style_id){
+				if(style_id > 0){
+					let active_path = `/goods_detail?style_id=${style_id}`;
+					const routeData = this.$router.resolve(active_path);
+					window.open(routeData.href);
+				}
 			}
 		},
 		components:{
@@ -459,6 +474,7 @@
 <style lang="less" scoped>
 	.goods_info{
 		width: 512rem;
+		// width: 912rem;
 		display: flex;
 		flex-direction: column;
 		.goods_name{

@@ -92,6 +92,10 @@
 					<el-input :placeholder="is_detail?'':'颜色'"  v-model="arg.color" :disabled="is_detail || info_edit_fields.indexOf('color') > -1">
 					</el-input>
 				</el-form-item>
+				<el-form-item label="替代款号：">
+					<el-input type="textarea" autosize :placeholder="is_detail?'':'多个请用分号间隔'" v-model="arg.replace_ksbm" :disabled="is_detail || info_edit_fields.indexOf('replace_ksbm') > -1">
+					</el-input>
+				</el-form-item>
 				<el-form-item label="审核状态：" v-if="is_detail">
 					{{check_status | checkStatus}}
 				</el-form-item>
@@ -254,6 +258,7 @@
 					wholesale_price:"",		//档口批价
 					size:"",				//尺码
 					color:"",				//颜色
+					replace_ksbm:"",		//替代款号
 					hot_style:0,			//爆款
 					sole_style:0,			//独家款
 					data_style:0,			//主推款

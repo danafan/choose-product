@@ -52,8 +52,8 @@
 <style lang="less" scoped>
 	.store_info_container{
 		position: relative;
-		width: 198rem;
-		height: 280rem;
+		width: 298rem;
+		height: 330rem;
 		.store_info_back{
 			position: absolute;
 			top: 0;
@@ -85,13 +85,14 @@
 					font-weight: normal;
 				}
 				.store_info_value{
+					flex:1;
 					color: #333333;
 				}
 			}
 		}
 		.detail_box{
 			position:absolute;
-			bottom:10rem;
+			bottom:20rem;
 			left:50%;
 			transform: translate(-50%);
 			width:186rem;

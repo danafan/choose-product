@@ -448,6 +448,8 @@
 					return '控价'
 				case 'all_imgs':
 					return '图片'
+				case 'replace_ksbm':
+					return '替代款'
 				}
 			},
 			//切换页码
