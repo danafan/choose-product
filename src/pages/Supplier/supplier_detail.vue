@@ -19,8 +19,10 @@
 								<div class="info_value">{{supplier_info.is_core==1?'是':'否'}}</div>
 							</div>
 							<div class="info_item">
-								<div class="info_lable">主营：</div>
-								<div class="info_value">{{supplier_info.main_business}}</div>
+								<div class="info_lable space-nowrap">主营：</div>
+								<el-tooltip popper-class="tooltip_class" effect="dark" :content="supplier_info.main_business" placement="top-end">
+									<div class="info_value table_header_text">{{supplier_info.main_business}}</div>
+								</el-tooltip>
 							</div>
 							<div class="info_item">
 								<div class="info_lable">结算方式：</div>
@@ -29,9 +31,9 @@
 								<div class="info_value" v-if="supplier_info.supply_monthly_settlement == 2">半月结</div>
 							</div>
 							<div class="info_item">
-								<div class="info_lable">介绍：</div>
-								<el-tooltip class="item" effect="dark" :content="supplier_info.description" placement="top-end">
-									<div class="info_value">{{supplier_info.description}}</div>
+								<div class="info_lable space-nowrap">介绍：</div>
+								<el-tooltip popper-class="tooltip_class" effect="dark" :content="supplier_info.description" placement="top-end">
+									<div class="info_value table_header_text">{{supplier_info.description}}</div>
 								</el-tooltip>
 							</div>
 						</div>
@@ -288,6 +290,9 @@
 	.custom_class{
 		width: 960rem!important;
 	}
+	.tooltip_class{
+		max-width: 660rem!important;
+	}
 </style>
 <style lang="less" scoped>
 	.primary_color{
@@ -322,7 +327,7 @@
 					padding-top: 8rem;
 					padding-bottom: 8rem;
 					.info_item{
-						width: 220rem;
+						width: 260rem;
 						display: flex;
 						align-items: center;
 						font-size: 12rem;
@@ -330,11 +335,8 @@
 							color: #999999;
 						}
 						.info_value{
-							flex:1;
+							padding-right: 15rem;
 							color: #333333;
-							overflow: hidden;
-							text-overflow: ellipsis;
-							white-space: nowrap;
 						}
 					}
 				}

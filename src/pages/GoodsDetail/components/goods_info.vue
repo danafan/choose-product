@@ -27,10 +27,10 @@
 				<div class="row_value">{{goods_info.style_name}}</div>
 			</div>
 			<div class="content_row">
-				<div class="row_lable">替代款款号</div>
-				<div class="flex">
-					<div class="row_value" :class="{'link':item.style_id > 0}" @click="getDetail(item.style_id)" v-for="(item,index) in goods_info.replace_ksbm_data">{{item.ksbm}}<span v-if="index < goods_info.replace_ksbm_data.length - 1">，</span>
-					</div>
+				<div class="row_lable space-nowrap">替代款款号</div>
+				<div class="flex-1 pre_wrap">
+					<span class="row_value" :class="{'link':item.style_id > 0}" @click="getDetail(item.style_id)" v-for="(item,index) in goods_info.replace_ksbm_data">{{item.ksbm}}<span v-if="index < goods_info.replace_ksbm_data.length - 1">，</span>
+					</span>
 				</div>
 			</div>
 			<div class="content_row">
