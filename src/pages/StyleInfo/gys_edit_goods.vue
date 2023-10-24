@@ -513,9 +513,15 @@
 			},
 			//监听风格图列表回调
 			currentStyleImgCallBackFn(index,data){
-				let new_item = JSON.parse(JSON.stringify(this.style_card_list[index]));
-				new_item.image_arr = data[0];
-				this.$set(this.style_card_list,index,new_item);
+				let old_item = JSON.parse(JSON.stringify(this.style_card_list[index]));
+				old_item.image_arr = data[0].image_arr;
+				this.$set(this.style_card_list,index,old_item);
+
+				if(data[0].newIndex > -1){
+					let new_item = JSON.parse(JSON.stringify(this.style_card_list[data[0].newIndex]));
+					new_item.image_arr = data[0].new_image_arr;
+					this.$set(this.style_card_list,data[0].newIndex,new_item);
+				}
 			},
 			//对比已选中的过滤右侧未选中的风格  
 			filterStyle(arr1, arr2) {

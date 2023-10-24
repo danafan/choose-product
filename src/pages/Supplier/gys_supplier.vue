@@ -19,7 +19,7 @@
 								<div class="info_value">{{supplier_info.is_core==1?'是':'否'}}</div>
 							</div>
 							<div class="info_item">
-								<div class="info_lable">主营：</div>
+								<div class="info_lable space-nowrap">主营：</div>
 								<div class="info_value">{{supplier_info.main_business}}</div>
 							</div>
 							<div class="info_item">
@@ -196,7 +196,7 @@
 				padding-top: 8rem;
 				padding-bottom: 8rem;
 				.info_item{
-					width: 220rem;
+					width: 260rem;
 					display: flex;
 					align-items: center;
 					font-size: 12rem;
@@ -204,6 +204,7 @@
 						color: #999999;
 					}
 					.info_value{
+						padding-right: 15rem;
 						color: #333333;
 					}
 				}

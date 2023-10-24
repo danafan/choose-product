@@ -1,48 +1,54 @@
 <template>
-	<div class="chart_box flex fc ac jsa" v-loading="chart_loading">
+	<div class="chart_box flex fc ac jc" v-loading="chart_loading">
 		<div class="sale_num_title">在售店铺数（含有销量）：{{shop_data.length}}个</div>
-		<el-table style="margin-bottom: 30px;" size="mini" :data="shop_data" tooltip-effect="dark" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="580" v-loading="chart_loading">
-			<el-table-column label="店铺" width="120">
-				<template slot-scope="scope">
-					<div class="underline pointer" :class="{'primary_color':shop_name == scope.row.shop_name}" @click="checkStore(shop_name == scope.row.shop_name?'':scope.row.shop_name)">{{scope.row.shop_name}}</div>
+		<div class="table_padding">
+			<el-table style="margin-bottom: 30px;" size="mini" :data="shop_data" tooltip-effect="dark" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="580" v-loading="chart_loading">
+				<!-- <el-table-column label="店铺" width="120"> -->
+					<el-table-column label="店铺">
+						<template slot-scope="scope">
+							<div class="underline pointer" :class="{'primary_color':shop_name == scope.row.shop_name}" @click="checkStore(shop_name == scope.row.shop_name?'':scope.row.shop_name)">{{scope.row.shop_name}}</div>
+						</template>
+					</el-table-column>
+					<!-- <el-table-column width="160"> -->
+						<el-table-column>
+							<template slot="header" slot-scope="scope">
+								<div class="auto_select">{{`30天销量（${total_xssl_30})`}}</div>
+							</template>
+							<template slot-scope="scope">
+								<div>{{scope.row.xssl_30}}</div>
+							</template>
+						</el-table-column>
+						<!-- <el-table-column width="160"> -->
+							<el-table-column>
+								<template slot="header" slot-scope="scope">
+									<div class="auto_select">{{`7天销量（${total_xssl_7})`}}</div>
+								</template>
+								<template slot-scope="scope">
+									<div>{{scope.row.xssl_7}}</div>
+								</template>
+							</el-table-column>
+							<!-- <el-table-column label="店铺链接" width="100"> -->
+								<el-table-column label="店铺链接">
+									<template slot-scope="scope">
+										<el-button type="text" @click="openStore(scope.row.url)">进入</el-button>
+									</template>
+								</el-table-column>
+							</el-table>
+						</div>
+						<el-radio-group size="small" @input="checkStore(shop_name)" v-model="chart_value">
+							<el-radio-button label="30">30天销量趋势图</el-radio-button>
+							<el-radio-button label="7">7天销量趋势图</el-radio-button>
+						</el-radio-group>
+						<div class="charts_div" id="chart" v-if="!chart_loading"></div>
+					</div>
 				</template>
-			</el-table-column>
-			<el-table-column width="160">
-				<template slot="header" slot-scope="scope">
-					<div class="auto_select">{{`30天销量（${total_xssl_30})`}}</div>
-				</template>
-				<template slot-scope="scope">
-					<div>{{scope.row.xssl_30}}</div>
-				</template>
-			</el-table-column>
-			<el-table-column width="160">
-				<template slot="header" slot-scope="scope">
-					<div class="auto_select">{{`7天销量（${total_xssl_7})`}}</div>
-				</template>
-				<template slot-scope="scope">
-					<div>{{scope.row.xssl_7}}</div>
-				</template>
-			</el-table-column>
-			<el-table-column label="店铺链接" width="100">
-				<template slot-scope="scope">
-					<el-button type="text" @click="openStore(scope.row.url)">进入</el-button>
-				</template>
-			</el-table-column>
-		</el-table>
-		<el-radio-group size="small" @input="checkStore(shop_name)" v-model="chart_value">
-			<el-radio-button label="30">30天销量趋势图</el-radio-button>
-			<el-radio-button label="7">7天销量趋势图</el-radio-button>
-		</el-radio-group>
-		<div class="charts_div" id="chart" v-if="!chart_loading"></div>
-	</div>
-</template>
-<script type="text/javascript">
-	import resource from '../../../api/resource.js'
-	export default{
-		data(){
-			return{
-				chart_loading:false,
-				shop_data:[],
+				<script type="text/javascript">
+					import resource from '../../../api/resource.js'
+					export default{
+						data(){
+							return{
+								chart_loading:false,
+								shop_data:[],
 				shop_name:"",						//点击的店铺名称
 				chart_value:'30',					//趋势图表切换
 				seven_days:[],
@@ -182,5 +188,10 @@
 			width: 100%;
 			height: 350rem;
 		}
+	}
+	.table_padding{
+		width:100%;
+		padding-left: 30rem;
+		padding-right: 30rem;
 	}
 </style>

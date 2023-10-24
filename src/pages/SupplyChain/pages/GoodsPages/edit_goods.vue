@@ -93,7 +93,8 @@
 					</el-input>
 				</el-form-item>
 				<el-form-item label="替代款号：">
-					<el-input type="textarea" autosize :placeholder="is_detail?'':'多个请用分号间隔'" v-model="arg.replace_ksbm" :disabled="is_detail || info_edit_fields.indexOf('replace_ksbm') > -1">
+					<el-input type="textarea" :placeholder="is_detail?'':'多个请用分号间隔'" v-model="arg.replace_ksbm" :disabled="is_detail || info_edit_fields.indexOf('replace_ksbm') > -1" maxlength="100"
+						show-word-limit>
 					</el-input>
 				</el-form-item>
 				<el-form-item label="审核状态：" v-if="is_detail">
@@ -389,25 +390,6 @@
 							let data_info = res.data.data;
 							//处理详情
 							this.setInfo(data_info);
-							return;
-							// if(data_info.img){
-							// 	this.img_list = data_info.img;
-							// }
-							// this.add_admin_name = data_info.add_admin_name;
-							// this.check_status = data_info.check_status;
-							// this.off_reason = data_info.off_reason;
-							// this.refuse_reason = data_info.refuse_reason;
-							// for(let key in this.arg){
-							// 	for(let k in data_info){
-							// 		if(key == k){
-							// 			//款式编码逗号转分号
-							// 			if((k == 'i_id' || k == 'bd_i_id' || k == 'supplier_ksbm') && data_info[k].indexOf(',') > -1){
-							// 				data_info[k] = data_info[k].replaceAll(",", ";");
-							// 			}
-							// 			this.arg[key] = data_info[k];
-							// 		}
-							// 	}
-							// }
 						}else{
 							this.$message.warning(res.data.msg);
 						}
@@ -479,7 +461,7 @@
 					for(let k in data_info){
 						if(key == k){
 							//款式编码逗号转分号
-							if((k == 'i_id' || k == 'bd_i_id' || k == 'supplier_ksbm') && data_info[k].indexOf(',') > -1){
+							if((k == 'i_id' || k == 'bd_i_id' || k == 'supplier_ksbm' || k == 'replace_ksbm') && data_info[k].indexOf(',') > -1){
 								data_info[k] = data_info[k].replaceAll(",", ";");
 							}
 							this.arg[key] = data_info[k];
@@ -675,6 +657,9 @@
 					}
 					if (arg.supplier_ksbm.indexOf(";") > -1) {
 						arg.supplier_ksbm = arg.supplier_ksbm.replaceAll(";", ",");
+					}
+					if (arg.replace_ksbm.indexOf(";") > -1) {
+						arg.replace_ksbm = arg.replace_ksbm.replaceAll(";", ",");
 					}
 
 					//拍摄风格参数

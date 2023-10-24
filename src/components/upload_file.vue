@@ -165,7 +165,6 @@
 		},
 		watch:{
 			img_list:function(n,o){
-				console.log(n)
 				this.preview_images = [];
 				this.view_images = [];
 				n.map(item => {
