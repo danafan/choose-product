@@ -26,7 +26,7 @@
         </div>
       </el-popover>
       <div class="header_right">
-        <div class="tab_item" :class="{'active_tab':active_index == index}" v-for="(item,index) in menu_list" @click="checkIndex(index)">{{item.menu_name}}</div>
+        <div class="tab_item" :class="{'active_tab':active_index == index}" v-for="(item,index) in menu_list" @click.stop="checkIndex(index)">{{item.menu_name}}</div>
         <div v-if="user_type == 2">
           <el-dropdown @command="edit_dialog = true">
             <div style="display: flex;align-items: center">
@@ -233,7 +233,7 @@
   export default {
     data() {
       return {
-        active_index:0,
+        // active_index:0,
         edit_dialog:false,      //修改密码弹窗
         old_password:"",        //旧密码
         password:"",            //新密码
@@ -244,21 +244,27 @@
       this.getNotice();
       let path = window.location.hash.split('#/')[1].indexOf('?') > -1?window.location.hash.split('#/')[1].split('?')[0]:window.location.hash.split('#/')[1];
       if(path == 'tab_menu'){
-        this.active_index = 0;
+        // this.active_index = 0;
+        this.$store.commit('setIndex',0);
       }else if(path == 'goods_detail'){
         if(this.$route.query.page_path == 'supplier'){
-          this.active_index = 2;
+          // this.active_index = 2;
+          this.$store.commit('setIndex',2);
         }else{
-          this.active_index = 0;
+          // this.active_index = 0;
+          this.$store.commit('setIndex',0);
         }
       }else if(this.user_type == '1' && this.getActiveIndex(path) == -1){
         if(path == 'supplier_detail'){  //供应商详情
-          this.active_index = 2;
+          // this.active_index = 2;
+          this.$store.commit('setIndex',2);
         }else if(path == 'chain_audit_page' || path == 'chain_goods_page' || path == 'b_z_promotion_page' || path == 'chain_supplier_page' || path == 'chain_message_page' || path == 'chain_setting_page' || path == 'chain_feekback_page' || path == 'chain_permissions_page' || path == 'setting_record_page'){
-          this.active_index = 3;
+          // this.active_index = 3;
+          this.$store.commit('setIndex',3);
         }
       }else{
-        this.active_index = this.getActiveIndex(path);
+        // this.active_index = this.getActiveIndex(path);
+        this.$store.commit('setIndex',this.getActiveIndex(path));
       }
       //判断是刚登录进来的直接进入首页
       if(path == 'tab_menu'){
@@ -294,6 +300,10 @@
     active_path() {
       return this.$store.state.active_path;
     },
+    //当前路由下标
+    active_index() {
+      return this.$store.state.active_index;
+    },
       //用户名称
     ding_user_name() {
       return this.$store.state.ding_user_name;
@@ -317,7 +327,8 @@
     },
       //点击切换导航
     checkIndex(index){
-      this.active_index = index;
+      // this.active_index = index;
+      this.$store.commit('setIndex',index);
       let active_path = this.menu_list[index].web_url;
       this.$router.push(active_path);
     },

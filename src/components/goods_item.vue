@@ -12,7 +12,7 @@
 		</el-popover>
 	</div>
 	<img class="image_box" :class="[{'default_img_width':!is_enlarge},{'enlarge_img_width':is_enlarge}]" src="../static/load_failure.png" @click="getMoreImage" v-else>
-	<div class="goods_info" @click="getDetail" @mousedown="mouseDownFn" @mouseup="mouseUpFn">
+	<div class="goods_info" @click.stop="getDetail" @mousedown="mouseDownFn" @mouseup="mouseUpFn">
 		<div class="price_cate">
 			<el-tooltip class="item" effect="dark" content="七天内降价款" placement="top-start" v-if="info.is_price_reduction == 1">
 				<div style="color: green;font-weight: bold;"v-if="info.is_price_reduction == 1">↓</div>

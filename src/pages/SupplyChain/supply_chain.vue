@@ -45,7 +45,7 @@
 	export default{
 		data(){
 			return{
-				is_collapse:true,	//左侧导航是否收起
+				is_collapse:false,	//左侧导航是否收起
 				menu_list:[],
 				active_index:0,		//当前选中的导航下标
 				title:"",			//标题
