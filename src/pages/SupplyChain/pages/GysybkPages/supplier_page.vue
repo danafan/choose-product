@@ -68,7 +68,7 @@
 						<el-input clearable v-model="search" placeholder="搜索供应商、主营"></el-input>
 					</el-form-item>
 					<el-form-item class="form_item">
-						<el-input clearable v-model="address" placeholder="搜索地址"></el-input>
+						<el-input clearable v-model="address" placeholder="搜索供应商地址"></el-input>
 					</el-form-item>
 					<el-form-item class="form_item">
 						<el-button type="primary" @click="checkPage(1)">查询</el-button>
@@ -187,7 +187,7 @@
 		</div>
 	</el-dialog>
 	<!-- 编辑 -->
-	<el-dialog :visible.sync="edit_dialog" width="80%">
+	<el-dialog :visible.sync="edit_dialog" width="80%" top="0">
 		<div slot="title" class="dialog_title">
 			<div>{{dialog_name}}</div>
 			<img class="close_icon" src="../../../../static/close_icon.png" @click="edit_dialog = false">

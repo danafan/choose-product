@@ -198,7 +198,7 @@
 				</div>
 			</el-dialog>
 			<!-- 添加/编辑/审核/详情 -->
-			<el-dialog :visible.sync="edit_dialog" @close="closeEdit" width="80%">
+			<el-dialog :visible.sync="edit_dialog" @close="closeEdit" width="80%" top="0">
 				<div slot="title" class="dialog_title">
 					<div>{{add_title}}</div>
 					<img class="close_icon" src="../../../../static/close_icon.png" @click="edit_dialog = false">

@@ -1,6 +1,6 @@
 <template>
 	<div class="search_widget" @click.stop="$store.commit('setHistory', false)">
-		<img class="logo_icon" src="../static/logo_icon.png" @click.stop="goIndex">
+		<img class="logo_icon pointer" src="../static/logo_icon.png" @click.stop="goIndex">
 		<div class="search_box">
 			<img class="search_icon" src="../static/search_icon.png">
 			<input class="search_input" ref="input" @focus="$store.commit('setHistory', true)" v-model="search_value" :placeholder="placeholder" @keyup.enter="searchFn" @click.stop>

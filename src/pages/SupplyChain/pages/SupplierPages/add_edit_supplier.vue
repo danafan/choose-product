@@ -394,6 +394,7 @@
 		width: 100%;
 		display: flex;
 		justify-content: space-around;
+		// padding: 40rem 30rem 60rem;
 		padding-top: 40rem;
 		padding-bottom: 60rem;
 		.view_card_img {

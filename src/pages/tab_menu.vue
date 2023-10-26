@@ -2,7 +2,7 @@
   <div class="container" @click="closeFn">
     <div class="page_header">
       <!-- logo -->
-      <img class="logo_icon" src="../static/logo_icon.png" v-if="active_path == '/supply_chain' || notice_list.length == 0">
+      <img class="logo_icon pointer" src="../static/logo_icon.png" v-if="active_path == '/supply_chain' || notice_list.length == 0" @click="checkIndex(0)">
       <!-- 公告 -->
       <el-popover placement="bottom-end" width="420" trigger="click" v-else>
         <el-table :data="notice_list" max-height="180px" size="mini" :show-header="false" @row-click="noticeDetail">
