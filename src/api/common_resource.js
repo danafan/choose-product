@@ -16,6 +16,7 @@ let path = {
   getAllDemandSendType:'api/home/getalldemandsendtype',         //获取所有需求/发货类型
   getUserList:'api/selected/getuserlist',                       //获取所有用户列表
   getDeptList:'api/selected/getdeptlist',                       //获取部门列表
+  ajaxSupplierMaintainer:'api/supplier_manager/ajax_supplier_maintainer', //供应商维护人
 }
 export default {
   //类目列表
@@ -82,5 +83,8 @@ export default {
   getDeptList(params) {
     return http.get(path.getDeptList, params);
   },
-  
+  //供应商维护人
+  ajaxSupplierMaintainer(params) {
+    return http.get(path.ajaxSupplierMaintainer, params);
+  },
 };

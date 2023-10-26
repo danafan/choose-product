@@ -9,6 +9,12 @@
 							</el-option>
 						</el-select>
 					</el-form-item>
+					<el-form-item label="供应商维护人：">
+						<el-select v-model="maintainer_ids" clearable multiple filterable collapse-tags placeholder="全部">
+							<el-option v-for="item in maintainer_list" :key="item.maintainer_id" :label="item.maintainer" :value="item.maintainer_id">
+							</el-option>
+						</el-select>
+					</el-form-item>
 					<el-form-item label="提供拍照：">
 						<el-select v-model="supply_photograph" clearable placeholder="全部">
 							<el-option label="是" :value="1"></el-option>
@@ -62,142 +68,137 @@
 						<el-input clearable v-model="search" placeholder="搜索供应商、主营"></el-input>
 					</el-form-item>
 					<el-form-item class="form_item">
+						<el-input clearable v-model="address" placeholder="搜索地址"></el-input>
+					</el-form-item>
+					<el-form-item class="form_item">
 						<el-button type="primary" @click="checkPage(1)">查询</el-button>
 					</el-form-item>
 				</el-form>
 				<el-divider></el-divider>
 				<TableTitle title="数据列表" id="table_title">
 					<el-button size="mini" type="primary" @click="exportFn" v-if="button_list.export == 1">导出</el-button>
-					</TableTitle>
-					<el-table ref="table" size="mini" :data="table_data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" v-loading="loading">
-						<el-table-column label="供应商名称" prop="supplier_name"></el-table-column>
-						<el-table-column label="供应商地址" prop="address"></el-table-column>
-						<el-table-column label="联系人" width="120" prop="contactor"></el-table-column>
-						<el-table-column label="联系方式" width="120" prop="contact_information"></el-table-column>
-						<el-table-column label="主营" prop="main_business"></el-table-column>
-						<el-table-column label="微信" prop="weixin"></el-table-column>
-						<el-table-column label="拍照">
-							<template slot-scope="scope">
-								{{scope.row.supply_photograph == 1?'是':'否'}}
-							</template>
-						</el-table-column>
-						<el-table-column label="退货">
-							<template slot-scope="scope">
-								{{scope.row.supply_return_goods == 1?'是':'否'}}
-							</template>
-						</el-table-column>
-						<el-table-column label="换货">
-							<template slot-scope="scope">
-								{{scope.row.supply_exchange_goods == 1?'是':'否'}}
-							</template>
-						</el-table-column>
-						<el-table-column label="代发">
-							<template slot-scope="scope">
-								{{scope.row.supply_replace_send == 1?'是':'否'}}
-							</template>
-						</el-table-column>
-						<el-table-column label="入仓">
-							<template slot-scope="scope">
-								{{scope.row.supply_warehousing == 1?'是':'否'}}
-							</template>
-						</el-table-column>
-						<el-table-column label="结算">
-							<template slot-scope="scope">
-								<div v-if="scope.row.supply_monthly_settlement == 0">现结</div>
-								<div v-if="scope.row.supply_monthly_settlement == 1">月结</div>
-								<div v-if="scope.row.supply_monthly_settlement == 2">半月结</div>
-							</template>
-						</el-table-column>
-						<el-table-column label="供应商等级" prop="grade_name"></el-table-column>
-						<el-table-column label="评价记录">
-							<template slot-scope="scope">
-								<el-button type="text" size="small" @click="getEvaluate(scope.row.reserve_id,scope.row.supplier_name)">{{scope.row.evaluate_num}}</el-button>
-							</template>
-						</el-table-column>
-						<el-table-column label="是否启用" v-if='button_list.onoff'>
-							<template slot-scope="scope">
-								<el-switch
-								@change="changeStatus($event,scope.row,scope.$index)"
-								size="mini"
-								v-model="scope.row.is_enable"
-								:active-value="1"
-								:inactive-value="0"
-								>
-							</el-switch>
-						</template>
-					</el-table-column>
-					<el-table-column label="操作" width="180" fixed="right">
+				</TableTitle>
+				<el-table ref="table" size="mini" :data="table_data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" v-loading="loading">
+					<el-table-column label="供应商名称" prop="supplier_name"></el-table-column>
+					<el-table-column label="供应商地址" prop="address"></el-table-column>
+					<el-table-column label="联系人" width="120" prop="contactor"></el-table-column>
+					<el-table-column label="联系方式" width="120" prop="contact_information"></el-table-column>
+					<el-table-column label="主营" prop="main_business"></el-table-column>
+					<el-table-column label="微信" prop="weixin"></el-table-column>
+					<el-table-column label="拍照">
 						<template slot-scope="scope">
-							<el-button type="text" size="small" @click="getDetail(scope.row.supplier_id)" v-if="button_list.view == 1">查看</el-button>
-							<el-button type="text" size="small" @click="addFn('2',scope.row.supplier_id)" v-if="button_list.edit == 1">编辑</el-button>
-							<el-button type="text" size="small" @click="deleteFn(scope.row.supplier_id)" v-if="button_list.del == 1">删除</el-button>
-							<el-button type="text" size="small" @click="$router.push(`/account_list?supplier_id=${scope.row.supplier_id}&supplier_name=${scope.row.supplier_name}`)" v-if="button_list.add_account == 1">账号管理</el-button>
+							{{scope.row.supply_photograph == 1?'是':'否'}}
 						</template>
 					</el-table-column>
-				</el-table>
-			</div>
-			<PaginationWidget id="bottom_row" :total="total" :page="page" :pagesize="20" :show_multiple="false" @checkPage="checkPage"/>
-		</el-card>
-		<!-- 导入 -->
-		<el-dialog :visible.sync="import_dialog" width="30%">
+					<el-table-column label="退货">
+						<template slot-scope="scope">
+							{{scope.row.supply_return_goods == 1?'是':'否'}}
+						</template>
+					</el-table-column>
+					<el-table-column label="换货">
+						<template slot-scope="scope">
+							{{scope.row.supply_exchange_goods == 1?'是':'否'}}
+						</template>
+					</el-table-column>
+					<el-table-column label="代发">
+						<template slot-scope="scope">
+							{{scope.row.supply_replace_send == 1?'是':'否'}}
+						</template>
+					</el-table-column>
+					<el-table-column label="入仓">
+						<template slot-scope="scope">
+							{{scope.row.supply_warehousing == 1?'是':'否'}}
+						</template>
+					</el-table-column>
+					<el-table-column label="结算">
+						<template slot-scope="scope">
+							<div v-if="scope.row.supply_monthly_settlement == 0">现结</div>
+							<div v-if="scope.row.supply_monthly_settlement == 1">月结</div>
+							<div v-if="scope.row.supply_monthly_settlement == 2">半月结</div>
+						</template>
+					</el-table-column>
+					<el-table-column label="供应商等级" prop="grade_name"></el-table-column>
+					<el-table-column label="评价记录">
+						<template slot-scope="scope">
+							<el-button type="text" size="small" @click="getEvaluate(scope.row.reserve_id,scope.row.supplier_name)">{{scope.row.evaluate_num}}</el-button>
+						</template>
+					</el-table-column>
+					<el-table-column label="是否启用" v-if='button_list.onoff'>
+						<template slot-scope="scope">
+							<el-switch
+							@change="changeStatus($event,scope.row,scope.$index)"
+							size="mini"
+							v-model="scope.row.is_enable"
+							:active-value="1"
+							:inactive-value="0"
+							>
+						</el-switch>
+					</template>
+				</el-table-column>
+				<el-table-column label="操作" width="180" fixed="right">
+					<template slot-scope="scope">
+						<el-button type="text" size="small" @click="detailEditFn(scope.row.supplier_id,'1')" v-if="button_list.view == 1">查看</el-button>
+						<el-button type="text" size="small" @click="detailEditFn(scope.row.supplier_id,'2')" v-if="button_list.edit == 1">编辑</el-button>
+						<el-button type="text" size="small" @click="deleteFn(scope.row.supplier_id)" v-if="button_list.del == 1">删除</el-button>
+						<el-button type="text" size="small" @click="$router.push(`/account_list?supplier_id=${scope.row.supplier_id}&supplier_name=${scope.row.supplier_name}`)" v-if="button_list.add_account == 1">账号管理</el-button>
+					</template>
+				</el-table-column>
+			</el-table>
+		</div>
+		<PaginationWidget id="bottom_row" :total="total" :page="page" :pagesize="20" :show_multiple="false" @checkPage="checkPage"/>
+	</el-card>
+	<!-- 评价记录 -->
+	<el-dialog :visible.sync="evaluate_dialog" @close="evaluate_page = 1">
+		<div slot="title" class="dialog_title">
+			<div>【{{supplier_name}}】评价记录</div>
+			<img class="close_icon" src="../../../../static/close_icon.png" @click="evaluate_dialog = false">
+		</div>
+		<!-- 内容 -->
+		<div class="pt-15">
+			<TableTitle title="数据列表" id="table_title"></TableTitle>
+			<el-table ref="table" size="mini" :data="evaluate_data.data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" v-loading="evaluate_loading">
+				<el-table-column label="评价内容" prop="evaluate_content">
+					<template slot-scope="scope">
+						<el-button type="text" size="small" @click="addEvakuateFn('评价内容',scope.row.evaluate_content)"><p style="text-decoration:underline">{{scope.row.evaluate_content}}</p></el-button>
+					</template>
+				</el-table-column>
+				<el-table-column label="评价时间" prop="add_time"></el-table-column>
+			</el-table>
+			<PaginationWidget :total="evaluate_data.total" :page="evaluate_page" :show_multiple="false" :pagesize="10" @checkPage="checkEvaluatePage"/>
+		</div>
+		<!-- 添加或查看评价内容 -->
+		<el-dialog width="30%" :visible.sync="evaluate_info_dialog" append-to-body>
 			<div slot="title" class="dialog_title">
-				<div>导入</div>
-				<img class="close_icon" src="../../../../static/close_icon.png" @click="import_dialog = false">
+				<div>{{evaluate_info_title}}</div>
+				<img class="close_icon" src="../../../../static/close_icon.png" @click="evaluate_info_dialog = false">
 			</div>
-			<div class="down_box">
-				<el-button type="primary" plain size="small" @click="downTemplate">下载模版<i class="el-icon-download el-icon--right"></i></el-button>
-				<div class="upload_box">
-					<el-button type="primary" size="small">
-						导入
-						<i class="el-icon-upload el-icon--right"></i>
-					</el-button>
-					<input type="file" ref="csvUpload" class="upload_file" accept=".csv, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" @change="uploadCsv">
-				</div>
+			<div class="pt-15 pb-15">
+				<el-input type="textarea" :rows="4" :disabled="evaluate_info_title == '评价内容'" placeholder="请输入评价内容" v-model="evaluate_content" maxlength="300" show-word-limit v-if="evaluate_info_title == '添加评价'">
+				</el-input>
+				<div v-else>{{evaluate_content}}</div>
 			</div>
 			<div slot="footer" class="dialog_footer">
-				<el-button size="small" @click="import_dialog = false">取消</el-button>
+				<el-button size="small" @click="evaluate_info_dialog = false">取消</el-button>
+				<el-button size="mini" type="primary" @click="evaluateSaveInfo" v-if="evaluate_info_title == '添加评价'">保存</el-button>
 			</div>
 		</el-dialog>
-		<!-- 评价记录 -->
-		<el-dialog :visible.sync="evaluate_dialog" @close="evaluate_page = 1">
-			<div slot="title" class="dialog_title">
-				<div>【{{supplier_name}}】评价记录</div>
-				<img class="close_icon" src="../../../../static/close_icon.png" @click="evaluate_dialog = false">
-			</div>
-			<!-- 内容 -->
-			<div class="pt-15">
-				<TableTitle title="数据列表" id="table_title"></TableTitle>
-				<el-table ref="table" size="mini" :data="evaluate_data.data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" v-loading="evaluate_loading">
-					<el-table-column label="评价内容" prop="evaluate_content">
-						<template slot-scope="scope">
-							<el-button type="text" size="small" @click="addEvakuateFn('评价内容',scope.row.evaluate_content)"><p style="text-decoration:underline">{{scope.row.evaluate_content}}</p></el-button>
-						</template>
-					</el-table-column>
-					<el-table-column label="评价时间" prop="add_time"></el-table-column>
-				</el-table>
-				<PaginationWidget :total="evaluate_data.total" :page="evaluate_page" :show_multiple="false" :pagesize="10" @checkPage="checkEvaluatePage"/>
-			</div>
-			<!-- 添加或查看评价内容 -->
-			<el-dialog width="30%" :visible.sync="evaluate_info_dialog" append-to-body>
-				<div slot="title" class="dialog_title">
-					<div>{{evaluate_info_title}}</div>
-					<img class="close_icon" src="../../../../static/close_icon.png" @click="evaluate_info_dialog = false">
-				</div>
-				<div class="pt-15 pb-15">
-					<el-input type="textarea" :rows="4" :disabled="evaluate_info_title == '评价内容'" placeholder="请输入评价内容" v-model="evaluate_content" maxlength="300" show-word-limit v-if="evaluate_info_title == '添加评价'">
-					</el-input>
-					<div v-else>{{evaluate_content}}</div>
-				</div>
-				<div slot="footer" class="dialog_footer">
-					<el-button size="small" @click="evaluate_info_dialog = false">取消</el-button>
-					<el-button size="mini" type="primary" @click="evaluateSaveInfo" v-if="evaluate_info_title == '添加评价'">保存</el-button>
-				</div>
-			</el-dialog>
-			<div slot="footer" class="dialog_footer">
-				<el-button size="small" @click="evaluate_dialog = false">关闭</el-button>
-			</div>
-		</el-dialog>
-	</div>
+		<div slot="footer" class="dialog_footer">
+			<el-button size="small" @click="evaluate_dialog = false">关闭</el-button>
+		</div>
+	</el-dialog>
+	<!-- 编辑 -->
+	<el-dialog :visible.sync="edit_dialog" width="80%">
+		<div slot="title" class="dialog_title">
+			<div>{{dialog_name}}</div>
+			<img class="close_icon" src="../../../../static/close_icon.png" @click="edit_dialog = false">
+		</div>
+		<AddEditSupplier ref="addEditSupplier" v-if="edit_dialog" :supplier_type="supplier_type" :supplier_id="supplier_id" @onLoad="supplierManagerList"/>
+		<div slot="footer" class="dialog_footer">
+			<el-button size="small" @click="edit_dialog = false">关闭</el-button>
+			<el-button size="small" type="primary" @click="commitFn" v-if="supplier_type == '2'">提交</el-button>
+		</div>
+	</el-dialog>
+</div>
 </template>
 <style type="text/css">
 	.card_box .el-card__body{
@@ -260,11 +261,13 @@
 
 	import TableTitle from '../../components/table_title.vue'
 	import PaginationWidget from '../../../../components/pagination_widget.vue'
+	import AddEditSupplier from '../SupplierPages/add_edit_supplier'
 	export default{
 		data(){
 			return{
 				loading:false,
 				search:"",				//供应商、主营
+				address:"",				//地址
 				supply_photograph:'',	//是否拍照
 				supply_return_goods:'',	//是否退货
 				supply_exchange_goods:'',//是否换货
@@ -275,6 +278,8 @@
 				grade_list_ids:[],		//选中的供应商等级
 				brand_list:[],			//品牌列表
 				brand_ids:[],				//选中的品牌
+				maintainer_list:[],			//供应商维护人列表
+				maintainer_ids:[],			//选中的供应商维护人列表
 				is_enable:"",				//是否启用
 				max_height:0,	
 				page:1,
@@ -282,7 +287,6 @@
 				table_data:[],			//获取的数据
 				total:0,				//总数量
 				button_list:{},
-				import_dialog:false,		//导入弹窗
 				evaluate_dialog:false,		//评价列表弹窗
 				supplier_name:"",			//供应商名称
 				evaluate_data:{},			//评价列表数据
@@ -292,27 +296,21 @@
 				evaluate_info_dialog:false,	//添加或查看评价弹窗
 				evaluate_info_title:"",		//添加或查看评价弹窗标题
 				evaluate_content:"",		//评价内容
+				supplier_id:"",				//点击的供应商
+				supplier_type:'1',			//弹窗类型（1:详情；2:编辑）
+				dialog_name:"",				//详情或编辑弹窗标题
+				edit_dialog:false,			//编辑弹窗
 			}
-		},
-		beforeRouteLeave(to,from,next){
-			if(to.path == '/chain_supplier_detail' || to.path == '/add_edit_supplier' || to.path == '/account_list'){	
-				from.meta.use_cache = true;
-			}else{
-				from.meta.use_cache = false;
-			}
-			next();
 		},
 		created(){
-			if(!this.$route.meta.use_cache){
-				this.page = 1;
-			}
 			//获取品牌列表下拉框筛选项
 			this.selectionMap();
 			//供应商等级
 			this.ajaxSupplierGradeList();
+			//供应商维护人
+			this.ajaxSupplierMaintainer();
 			//获取供应商列表
 			this.supplierManagerList();
-			this.$route.meta.use_cache = false;
 		},
 		destroyed() {
 			window.removeEventListener("resize", () => {});
@@ -352,10 +350,21 @@
 					}
 				})
 			},
+			//供应商维护人
+			ajaxSupplierMaintainer(){
+				commonResource.ajaxSupplierMaintainer().then(res => {
+					if(res.data.code == 1){
+						this.maintainer_list = res.data.data;
+					}else{
+						this.$message.warning(res.data.msg);
+					}
+				})
+			},
     		//获取供应商列表
 			supplierManagerList(){
 				let arg = {
 					search:this.search,
+					address:this.address,
     				supply_photograph:this.supply_photograph,	//是否拍照
 					supply_return_goods:this.supply_return_goods,	//是否退货
 					supply_exchange_goods:this.supply_exchange_goods,//是否换货
@@ -363,12 +372,14 @@
 					supply_warehousing:this.supply_warehousing,	//是否入仓
 					supply_monthly_settlement:this.supply_monthly_settlement,	//结算方式
 					grade_id:this.grade_list_ids.join(','),
+					maintainer_id:this.maintainer_ids.join(','),
 					brand:this.brand_ids.join(','),
 					is_enable:this.is_enable,
 					pagesize:20,
 					page:this.page
 				}
 				this.loading = true;
+				this.edit_dialog = false;
 				resource.supplierManagerList(arg).then(res => {
 					if(res.data.code == 1){
 						this.loading = false;
@@ -376,7 +387,6 @@
 						this.table_data = data.data;
 						this.total = data.total;
 						this.button_list =  res.data.data.button_list;
-						this.$refs.table.bodyWrapper.scrollTop = 0;
 					}else{
 						this.$message.warning(res.data.msg);
 					}
@@ -392,6 +402,7 @@
 				.then(() => {
 					let arg = {
 						search:this.search,
+						address:this.address,
 						supply_photograph:this.supply_photograph,	
 						supply_return_goods:this.supply_return_goods,	
 						supply_exchange_goods:this.supply_exchange_goods,
@@ -399,6 +410,7 @@
 						supply_warehousing:this.supply_warehousing,	
 						supply_monthly_settlement:this.supply_monthly_settlement,
 						grade_id:this.grade_list_ids.join(','),
+						maintainer_id:this.maintainer_ids.join(','),
 						brand:this.brand_ids.join(','),
 						is_enable:this.is_enable,
 					};
@@ -415,45 +427,18 @@
 					});
 				});
 			},
-    		//下载模版
-			downTemplate(){
-				window.open(`${this.downLoadUrl}/template/供应商上传模板.xlsx`);
-			},
-    		//导入
-			uploadCsv(){
-				if (this.$refs.csvUpload.files.length > 0) {
-					let files = this.$refs.csvUpload.files;
-					resource.batchAdd({file:files[0]}).then(res => {
-						this.$refs.csvUpload.value = null;
-						this.import_dialog = false;
-						if(res.data.code == 1){
-							this.$message.success(res.data.msg);
-							this.page = 1;
-							//获取列表
-							this.supplierManagerList();
-						}else{
-							this.$message.warning(res.data.msg);
-						}
-					})
-				}
-			},
 			//切换页码
 			checkPage(v){
 				this.page = v;
 				//获取供应商列表
 				this.supplierManagerList();
 			},
-			//点击查看
-			getDetail(supplier_id){
-				this.$router.push(`/chain_supplier_detail?supplier_id=${supplier_id}`);
-			},
-			//点击添加或编辑
-			addFn(type,supplier_id){
-				if(type == '1'){
-					this.$router.push('/add_edit_supplier?supplier_type=1')
-				}else{
-					this.$router.push(`/add_edit_supplier?supplier_type=2&supplier_id=${supplier_id}`);
-				}
+			//点击查看/编辑
+			detailEditFn(supplier_id,supplier_type){
+				this.supplier_id = supplier_id;
+				this.supplier_type = supplier_type;
+				this.dialog_name = supplier_type == '1'?'供应商详情':'编辑供应商';
+				this.edit_dialog = true;
 			},
 			//点击删除
 			deleteFn(supplier_id){
@@ -601,11 +586,16 @@
 						this.$message.warning(res.data.msg);
 					}
 				})
+			},
+			//编辑提交
+			commitFn(){
+				this.$refs.addEditSupplier.commitFn();
 			}
 		},
 		components:{
 			TableTitle,
-			PaginationWidget
+			PaginationWidget,
+			AddEditSupplier
 		}
 	}
 </script>

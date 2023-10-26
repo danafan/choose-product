@@ -1,114 +1,130 @@
 <template>
-	<div class="chain_page_content">
-		<el-card class="card_box flex-scroll-y">
-			<div class="form_row">
-				<el-form style="width: 50%" size="small" label-width="140px">
-					<el-form-item label="供应商名称：" required>
-						<el-input clearable v-model="supplier_name" style="width: 192px;" placeholder="供应商名称"></el-input>
-					</el-form-item>
-					<el-form-item label="供应商地址：" required>
-						<el-input clearable v-model="address" placeholder="供应商地址" style="width: 192px;"></el-input>
-					</el-form-item>
-					<el-form-item label="主营：" required>
-						<el-input type="textarea" :autosize="{ minRows: 1, maxRows: 4}" clearable v-model="main_business" placeholder="主营" style="width: 192px;"></el-input>
-					</el-form-item>
-					<el-form-item label="提供拍照：">
-						<el-radio-group v-model="supply_photograph">
-							<el-radio :label="0">否</el-radio>
-							<el-radio :label="1">是</el-radio>
-						</el-radio-group>
-					</el-form-item>
-					<el-form-item label="提供退货：">
-						<el-radio-group v-model="supply_return_goods">
-							<el-radio :label="0">否</el-radio>
-							<el-radio :label="1">是</el-radio>
-						</el-radio-group>
-					</el-form-item>
-					<el-form-item label="提供换货：">
-						<el-radio-group v-model="supply_exchange_goods">
-							<el-radio :label="0">否</el-radio>
-							<el-radio :label="1">是</el-radio>
-						</el-radio-group>
-					</el-form-item>
-					<el-form-item label="提供代发：">
-						<el-radio-group v-model="supply_replace_send">
-							<el-radio :label="0">否</el-radio>
-							<el-radio :label="1">是</el-radio>
-						</el-radio-group>
-					</el-form-item>
-					<el-form-item label="提供入仓：">
-						<el-radio-group v-model="supply_warehousing">
-							<el-radio :label="0">否</el-radio>
-							<el-radio :label="1">是</el-radio>
-						</el-radio-group>
-					</el-form-item>
-					<el-form-item label="供应商编码：">
-						<el-input clearable v-model="supplier_code" placeholder="供应商编码" style="width: 192px;"></el-input>
-					</el-form-item>
-					<el-form-item label="供应商联系方式：" required>
-						<el-input clearable v-model="contact_information" placeholder="供应商联系方式" style="width: 192px;"></el-input>
-					</el-form-item>
-					<el-form-item label="联系人：">
-						<el-input clearable v-model="contactor" placeholder="联系人" style="width: 192px;"></el-input>
-					</el-form-item>
-					<el-form-item label="供应商微信：">
-						<el-input clearable v-model="weixin" placeholder="供应商微信" style="width: 192px;"></el-input>
-					</el-form-item>
-				</el-form>
-				<el-form style="width: 50%" size="small" label-width="140px">
-					<el-form-item label="结算方式："required>
-						<el-select v-model="supply_monthly_settlement" clearable placeholder="请选择结算方式">
-							<el-option v-for="item in payment_method" :key="item.id" :label="item.name" :value="item.id">
-							</el-option>
-						</el-select>
-					</el-form-item>
-					<el-form-item label="核心供应商：">
-						<el-radio-group v-model="is_core">
-							<el-radio :label="0">否</el-radio>
-							<el-radio :label="1">是</el-radio>
-						</el-radio-group>
-					</el-form-item>
-					<el-form-item label="供应商等级：">
-						<el-select v-model="grade_id" clearable placeholder="请选择供应商等级">
-							<el-option v-for="item in grade_list" :key="item.grade_id" :label="item.grade_name" :value="item.grade_id">
-							</el-option>
-						</el-select>
-					</el-form-item>
-					<el-form-item label="合作模式：">
-						<el-input clearable v-model="mode" placeholder="合作模式" style="width: 192px;"></el-input>
-					</el-form-item>
-					<el-form-item label="品牌：">
-						<el-select v-model="brand_ids" clearable multiple filterable collapse-tags placeholder="请选择品牌">
-							<el-option v-for="item in brand_list" :key="item.id" :label="item.name" :value="item.id">
-							</el-option>
-						</el-select>
-					</el-form-item>
-					<el-form-item label="供应商介绍：">
-						<el-input type="textarea" maxlength="500"
-						show-word-limit :rows="3" clearable v-model="description" placeholder="供应商介绍" style="width: 260px;"></el-input>
-					</el-form-item>
-					<el-form-item label="营业执照：">
-						<UploadFile v-if="loading" :img_list="business_license" :is_multiple="true" :current_num="business_license.length" :max_num="3" @callbackFn="callbackFn"/>
-					</el-form-item>
-					<el-form-item label="公司名称：">
-						<el-input clearable v-model="company_name" placeholder="公司名称" style="width: 192px;"></el-input>
-					</el-form-item>
-					<el-form-item label="公司照片：">
-						<UploadFile v-if="loading" :img_list="company_img" :is_multiple="true" :current_num="company_img.length" :max_num="6" @callbackFn="companyCallbackFn"/>
-					</el-form-item>
-					<el-form-item label="供应商维护人：">
-						<el-select v-model="maintainer_id" clearable filterable placeholder="全部" @change="changeUser">
-							<el-option v-for="item in user_list" :key="item.ding_user_id" :label="item.ding_user_name" :value="item.ding_user_id">
-							</el-option>
-						</el-select>
-					</el-form-item>
-				</el-form>
-			</div>
-			<div class="flex jc" style="padding-bottom: 15px;">
-				<el-button size="small" type="primary" @click="commitFn">提交</el-button>
-			</div>
-			
-		</el-card>
+	<div class="form_row">
+		<el-form style="width: 50%" size="small" label-width="140px">
+			<el-form-item label="供应商名称：" :required="supplier_type == '2'">
+				<el-input clearable v-model="supplier_name" style="width: 192px;" placeholder="供应商名称" v-if="supplier_type == '2'"></el-input>
+				<div v-else>{{supplier_name}}</div>
+			</el-form-item>
+			<el-form-item label="供应商地址：" :required="supplier_type == '2'">
+				<el-input clearable v-model="address" placeholder="供应商地址" style="width: 192px;" v-if="supplier_type == '2'"></el-input>
+				<div v-else>{{address}}</div>
+			</el-form-item>
+			<el-form-item label="主营：" :required="supplier_type == '2'">
+				<el-input type="textarea" :autosize="{ minRows: 1, maxRows: 4}" clearable v-model="main_business" placeholder="主营" style="width: 192px;" v-if="supplier_type == '2'"></el-input>
+				<div v-else>{{main_business}}</div>
+			</el-form-item>
+			<el-form-item label="提供拍照：">
+				<el-radio-group v-model="supply_photograph" v-if="supplier_type == '2'">
+					<el-radio :label="0">否</el-radio>
+					<el-radio :label="1">是</el-radio>
+				</el-radio-group>
+				<div v-else>{{supply_photograph==1?'是':'否'}}</div>
+			</el-form-item>
+			<el-form-item label="提供退货：">
+				<el-radio-group v-model="supply_return_goods" v-if="supplier_type == '2'">
+					<el-radio :label="0">否</el-radio>
+					<el-radio :label="1">是</el-radio>
+				</el-radio-group>
+				<div v-else>{{supply_return_goods==1?'是':'否'}}</div>
+			</el-form-item>
+			<el-form-item label="提供换货：">
+				<el-radio-group v-model="supply_exchange_goods" v-if="supplier_type == '2'">
+					<el-radio :label="0">否</el-radio>
+					<el-radio :label="1">是</el-radio>
+				</el-radio-group>
+				<div v-else>{{supply_exchange_goods==1?'是':'否'}}</div>
+			</el-form-item>
+			<el-form-item label="提供代发：">
+				<el-radio-group v-model="supply_replace_send" v-if="supplier_type == '2'">
+					<el-radio :label="0">否</el-radio>
+					<el-radio :label="1">是</el-radio>
+				</el-radio-group>
+				<div v-else>{{supply_replace_send==1?'是':'否'}}</div>
+			</el-form-item>
+			<el-form-item label="提供入仓：">
+				<el-radio-group v-model="supply_warehousing" v-if="supplier_type == '2'">
+					<el-radio :label="0">否</el-radio>
+					<el-radio :label="1">是</el-radio>
+				</el-radio-group>
+				<div v-else>{{supply_warehousing==1?'是':'否'}}</div>
+			</el-form-item>
+			<el-form-item label="供应商编码：">
+				<el-input clearable v-model="supplier_code" placeholder="供应商编码" style="width: 192px;" v-if="supplier_type == '2'"></el-input>
+				<div v-else>{{supplier_code}}</div>
+			</el-form-item>
+			<el-form-item label="供应商联系方式："  :required="supplier_type == '2'">
+				<el-input clearable v-model="contact_information" placeholder="供应商联系方式" style="width: 192px;" v-if="supplier_type == '2'"></el-input>
+				<div v-else>{{contact_information}}</div>
+			</el-form-item>
+			<el-form-item label="联系人：">
+				<el-input clearable v-model="contactor" placeholder="联系人" style="width: 192px;" v-if="supplier_type == '2'"></el-input>
+				<div v-else>{{contactor}}</div>
+			</el-form-item>
+			<el-form-item label="供应商微信：">
+				<el-input clearable v-model="weixin" placeholder="供应商微信" style="width: 192px;" v-if="supplier_type == '2'"></el-input>
+				<div v-else>{{weixin}}</div>
+			</el-form-item>
+		</el-form>
+		<el-form style="width: 50%" size="small" label-width="140px">
+			<el-form-item label="结算方式：" :required="supplier_type == '2'">
+				<el-select v-model="supply_monthly_settlement" clearable placeholder="请选择结算方式" v-if="supplier_type == '2'">
+					<el-option v-for="item in payment_method" :key="item.id" :label="item.name" :value="item.id">
+					</el-option>
+				</el-select>
+				<div v-else>
+					<div v-if="supply_monthly_settlement==0">现结</div>
+					<div v-if="supply_monthly_settlement==1">月结</div>
+					<div v-if="supply_monthly_settlement==2">半月结</div>
+				</div>
+			</el-form-item>
+			<el-form-item label="核心供应商：">
+				<el-radio-group v-model="is_core" v-if="supplier_type == '2'">
+					<el-radio :label="0">否</el-radio>
+					<el-radio :label="1">是</el-radio>
+				</el-radio-group>
+				<div v-else>{{is_core==1?'是':'否'}}</div>
+			</el-form-item>
+			<el-form-item label="供应商等级：">
+				<el-select v-model="grade_id" clearable placeholder="请选择供应商等级" v-if="supplier_type == '2'">
+					<el-option v-for="item in grade_list" :key="item.grade_id" :label="item.grade_name" :value="item.grade_id">
+					</el-option>
+				</el-select>
+				<div v-else>{{grade_name}}</div>
+			</el-form-item>
+			<el-form-item label="合作模式：">
+				<el-input clearable v-model="mode" placeholder="合作模式" style="width: 192px;" v-if="supplier_type == '2'"></el-input>
+				<div v-else>{{mode}}</div>
+			</el-form-item>
+			<el-form-item label="品牌：">
+				<el-select v-model="brand_ids" clearable multiple filterable collapse-tags placeholder="请选择品牌" v-if="supplier_type == '2'">
+					<el-option v-for="item in brand_list" :key="item.id" :label="item.name" :value="item.id">
+					</el-option>
+				</el-select>
+				<div v-else>{{brand}}</div>
+			</el-form-item>
+			<el-form-item label="供应商介绍：">
+				<el-input type="textarea" maxlength="500"
+				show-word-limit :rows="3" clearable v-model="description" placeholder="供应商介绍" style="width: 260px;" v-if="supplier_type == '2'"></el-input>
+				<div v-else>{{description}}</div>
+			</el-form-item>
+			<el-form-item label="营业执照：">
+				<UploadFile v-if="loading" :img_list="business_license" :is_multiple="true" :current_num="business_license.length" :max_num="3" @callbackFn="callbackFn" :only_view="supplier_type == '1'"/>
+			</el-form-item>
+			<el-form-item label="公司名称：">
+				<el-input clearable v-model="company_name" placeholder="公司名称" style="width: 192px;" v-if="supplier_type == '2'"></el-input>
+				<div v-else>{{company_name}}</div>
+			</el-form-item>
+			<el-form-item label="公司照片：">
+				<UploadFile v-if="loading" :img_list="company_img" :is_multiple="true" :current_num="company_img.length" :max_num="6" @callbackFn="companyCallbackFn" :only_view="supplier_type == '1'"/>
+			</el-form-item>
+			<el-form-item label="供应商维护人：">
+				<el-select v-model="maintainer_id" clearable filterable placeholder="全部" @change="changeUser" v-if="supplier_type == '2'">
+					<el-option v-for="item in user_list" :key="item.ding_user_id" :label="item.ding_user_name" :value="item.ding_user_id">
+					</el-option>
+				</el-select>
+				<div v-else>{{maintainer}}</div>
+			</el-form-item>
+		</el-form>
 	</div>
 </template>
 <script>
@@ -120,8 +136,6 @@
 		data(){
 			return{
 				loading:true,
-				type:"",				//页面类型（1:添加；2:编辑）
-				supplier_id:"",			//供应商id
 				supplier_name:"",		//供应商名称
 				address:"",				//供应商地址
 				main_business:"",		//主营
@@ -148,10 +162,12 @@
 				supply_monthly_settlement:"",//选中的结算方式
 				is_core:0,				//核心供应商
 				grade_list:[],			//供应商等级列表
-				grade_id:"",			//选中的供应商等级
+				grade_id:"",			//选中的供应商等级id
+				grade_name:"",			//选中的供应商等级名称
 				mode:"",				//合作模式
 				brand_list:[],			//品牌列表
-				brand_ids:[],				//选中的品牌
+				brand_ids:[],			//选中的品牌ids
+				brand:"",				//选中的品牌名称
 				business_license:[],	//营业执照图片列表
 				company_name:'',		//公司名称
 				company_img:[],			//公司图片
@@ -160,14 +176,21 @@
 				maintainer:"",			//供应商维护人姓名
 			}
 		},
-		created(){
-			//页面类型
-			this.type = this.$route.query.supplier_type;
-			if(this.type == '2'){
-				this.supplier_id = this.$route.query.supplier_id;
-				//获取详情
-				this.supplierManagerInfo();
+		props:{
+			//页面类型（1:详情；2:编辑）
+			supplier_type:{
+				type:String,
+			default:'1'
+			},
+			//供应商id
+			supplier_id:{
+				type:Number,
+			default:''
 			}
+		},
+		created(){
+			//获取详情
+			this.supplierManagerInfo();
 			//获取品牌列表下拉框筛选项
 			this.selectionMap();
 			//获取供应商等级列表
@@ -242,11 +265,12 @@
 						this.supply_replace_send = data.supply_replace_send;
 						this.supply_warehousing = data.supply_warehousing;
 						this.supply_monthly_settlement = data.supply_monthly_settlement;
-						this.company_name = data.company_name;
+						this.company_name = data.company_name?data.company_name:'';
 						this.maintainer = data.maintainer?data.maintainer:'';
 						this.maintainer_id = data.maintainer_id?data.maintainer_id:'';
 						this.weixin = data.weixin?data.weixin:"";
 						this.grade_id = data.grade_id?data.grade_id:'';
+						this.grade_name = data.grade_name?data.grade_name:'';
 						this.mode = data.mode?data.mode:'';
 						this.brand_ids = [];
 						if(data.brand_id){
@@ -254,6 +278,7 @@
 								this.brand_ids.push(parseInt(item));
 							})
 						}
+						this.brand = data.brand?data.brand:'';
 
 						//工商营业执照
 						if(data.business_license){
@@ -313,26 +338,35 @@
 						cancelButtonText: '取消',
 						type: 'warning'
 					}).then(() => {
-						if(this.type == '1'){		//添加
-							resource.addSupplierManager(arg).then(res => {
-								if(res.data.code == 1){
-									this.$message.success(res.data.msg);
-									this.$router.go(-1);
-								}else{
-									this.$message.warning(res.data.msg);
-								}
-							})
-						}else{	//编辑
-							arg.supplier_id = this.supplier_id;
-							resource.supplierManagerEdit(arg).then(res => {
-								if(res.data.code == 1){
-									this.$message.success(res.data.msg);
-									this.$router.go(-1);
-								}else{
-									this.$message.warning(res.data.msg);
-								}
-							})
-						}
+						arg.supplier_id = this.supplier_id;
+						resource.supplierManagerEdit(arg).then(res => {
+							if(res.data.code == 1){
+								this.$message.success(res.data.msg);
+								this.$emit('onLoad');
+							}else{
+								this.$message.warning(res.data.msg);
+							}
+						})
+						// if(this.type == '1'){		//添加
+						// 	resource.addSupplierManager(arg).then(res => {
+						// 		if(res.data.code == 1){
+						// 			this.$message.success(res.data.msg);
+						// 			this.$router.go(-1);
+						// 		}else{
+						// 			this.$message.warning(res.data.msg);
+						// 		}
+						// 	})
+						// }else{	//编辑
+						// 	arg.supplier_id = this.supplier_id;
+						// 	resource.supplierManagerEdit(arg).then(res => {
+						// 		if(res.data.code == 1){
+						// 			this.$message.success(res.data.msg);
+						// 			this.$router.go(-1);
+						// 		}else{
+						// 			this.$message.warning(res.data.msg);
+						// 		}
+						// 	})
+						// }
 					}).catch(() => {
 						this.$message({
 							type: 'info',
@@ -356,52 +390,84 @@
 	}
 </script>
 <style lang="less" scoped>
-	.chain_page_content{
-		position: absolute;
-		top: 0;
-		left: 0;
+	.form_row{
 		width: 100%;
-		height: 100%;
-		padding: 24rem;
 		display: flex;
-		flex-direction: column;
-		.card_box{
-			display: flex;
-			flex-direction: column;
-			align-items: center;
-			overflow-y: scroll;
-			.form_row{
+		justify-content: space-around;
+		padding-top: 40rem;
+		padding-bottom: 60rem;
+		.view_card_img {
+			margin-right: 40rem;
+			margin-bottom: 20rem;
+			border-radius: 2rem;
+			position: relative;
+			width: 160rem;
+			height: 160rem;
+			.card_img,
+			.delete_img {
+				border-radius: 2rem;
+				position: absolute;
 				width: 100%;
+				height: 100%;
+			}
+			.delete_img {
+				background: rgba(0, 0, 0, 0.4);
 				display: flex;
-				justify-content: space-around;
-				padding-top: 40rem;
-				padding-bottom: 60rem;
-				.view_card_img {
-					margin-right: 40rem;
-					margin-bottom: 20rem;
-					border-radius: 2rem;
-					position: relative;
-					width: 160rem;
-					height: 160rem;
-					.card_img,
-					.delete_img {
-						border-radius: 2rem;
-						position: absolute;
-						width: 100%;
-						height: 100%;
-					}
-					.delete_img {
-						background: rgba(0, 0, 0, 0.4);
-						display: flex;
-						align-items: center;
-						justify-content: center;
-						.delete_icon {
-							width: 40rem;
-							height: 40rem;
-						}
-					}
+				align-items: center;
+				justify-content: center;
+				.delete_icon {
+					width: 40rem;
+					height: 40rem;
 				}
 			}
 		}
 	}
+	// .chain_page_content{
+	// 	position: absolute;
+	// 	top: 0;
+	// 	left: 0;
+	// 	width: 100%;
+	// 	height: 100%;
+	// 	padding: 24rem;
+	// 	display: flex;
+	// 	flex-direction: column;
+	// 	.card_box{
+	// 		display: flex;
+	// 		flex-direction: column;
+	// 		align-items: center;
+	// 		overflow-y: scroll;
+	// 		.form_row{
+	// 			width: 100%;
+	// 			display: flex;
+	// 			justify-content: space-around;
+	// 			padding-top: 40rem;
+	// 			padding-bottom: 60rem;
+	// 			.view_card_img {
+	// 				margin-right: 40rem;
+	// 				margin-bottom: 20rem;
+	// 				border-radius: 2rem;
+	// 				position: relative;
+	// 				width: 160rem;
+	// 				height: 160rem;
+	// 				.card_img,
+	// 				.delete_img {
+	// 					border-radius: 2rem;
+	// 					position: absolute;
+	// 					width: 100%;
+	// 					height: 100%;
+	// 				}
+	// 				.delete_img {
+	// 					background: rgba(0, 0, 0, 0.4);
+	// 					display: flex;
+	// 					align-items: center;
+	// 					justify-content: center;
+	// 					.delete_icon {
+	// 						width: 40rem;
+	// 						height: 40rem;
+	// 					}
+	// 				}
+	// 			}
+	// 		}
+	// 	}
+	// }
 </style>
