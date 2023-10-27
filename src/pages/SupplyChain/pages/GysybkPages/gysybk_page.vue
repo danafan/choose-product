@@ -8,7 +8,7 @@
 					</el-form-item>
 					<el-form-item label="开发员：">
 						<el-select v-model="developer" clearable filterable placeholder="全部">
-							<el-option v-for="item in user_list" :key="item.user_id" :label="item.real_name" :value="item.real_name">
+							<el-option v-for="item in developer_list" :key="item" :label="item" :value="item">
 							</el-option>
 						</el-select>
 					</el-form-item>
@@ -644,6 +644,7 @@
 				return{
 					loading:false,
 				supplier_name:"",				//供应商名称
+				developer_list:[],				//开发员列表（筛选项）
 				user_list:[],					//所有用户列表
 				developer:"",					//开发人员姓名
 				classification_list:[],				//分类
@@ -752,6 +753,8 @@
 			}
 		},
 		created(){
+			//开发员筛选项
+			this.ajaxSupplierDeveloper();
 			//获取用户列表
 			this.getUserList();
 			//预备库下拉框筛选项
@@ -778,6 +781,16 @@
 					let form_height = document.getElementById("form_height").offsetHeight;
 					this.max_height = card_box_height - form_height + 110 + "px";
 				});
+			},
+			//开发员筛选项
+			ajaxSupplierDeveloper(){
+				resource.ajaxSupplierDeveloper().then(res => {
+					if(res.data.code == 1){
+						this.developer_list = res.data.data;
+					}else{
+						this.$message.warning(res.data.msg);
+					}
+				})
 			},
 			//获取用户列表
 			getUserList(){

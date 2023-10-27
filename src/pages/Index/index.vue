@@ -1,5 +1,5 @@
 <template>
-	<div class="padding_page">
+	<div class="padding_page" @click.stop>
 		<div class="index_container">
 			<div class="padding_page_content scroll-y" ref="paddingPageContent">
 				<div class="flex ac" id="search_box">

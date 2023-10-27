@@ -1,5 +1,5 @@
 <template>
-	<div class="padding_page scroll-y" ref="paddingPageContent">
+	<div class="padding_page scroll-y" ref="paddingPageContent" @click.stop>
 		<div class="supplier_detail_container">
 			<div class="padding_page_content">
 				<SearchWidget id="search_box" page_path="supplier_detai" @callback="searchFn" placeholder="输入款式编码、款号、标题关键字、进行搜索 "/>
