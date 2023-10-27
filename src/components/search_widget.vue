@@ -144,6 +144,10 @@
 			show_history() {
 				return this.$store.state.show_history;
 			},
+			//导航列表
+			menu_list() {
+				return this.$store.state.menu_list;
+			},
 		},
 		watch:{
 			//每次打开历史列表都重新获取最新
@@ -207,9 +211,11 @@
 			},
 			//点击logo跳转至首页
 			goIndex(){
-				this.$router.push('/index');
-				this.$store.commit('setIndex',0);
-				this.$store.commit('setPath','/index');
+				let active_path = this.menu_list[0].web_url;
+				this.$router.push(active_path);
+      			this.$store.commit('setIndex',0);
+      			this.$store.commit('setPath',active_path);
+      			
 			}
 		}
 	}

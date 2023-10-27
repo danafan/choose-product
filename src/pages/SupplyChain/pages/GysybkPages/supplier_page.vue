@@ -148,7 +148,7 @@
 		<PaginationWidget id="bottom_row" :total="total" :page="page" :pagesize="20" :show_multiple="false" @checkPage="checkPage"/>
 	</el-card>
 	<!-- 评价记录 -->
-	<el-dialog :visible.sync="evaluate_dialog" @close="evaluate_page = 1">
+	<el-dialog :visible.sync="evaluate_dialog" @close="evaluate_page = 1" :show-close="false">
 		<div slot="title" class="dialog_title">
 			<div>【{{supplier_name}}】评价记录</div>
 			<img class="close_icon" src="../../../../static/close_icon.png" @click="evaluate_dialog = false">
@@ -167,7 +167,7 @@
 			<PaginationWidget :total="evaluate_data.total" :page="evaluate_page" :show_multiple="false" :pagesize="10" @checkPage="checkEvaluatePage"/>
 		</div>
 		<!-- 添加或查看评价内容 -->
-		<el-dialog width="30%" :visible.sync="evaluate_info_dialog" append-to-body>
+		<el-dialog width="30%" :visible.sync="evaluate_info_dialog" append-to-body :show-close="false">
 			<div slot="title" class="dialog_title">
 				<div>{{evaluate_info_title}}</div>
 				<img class="close_icon" src="../../../../static/close_icon.png" @click="evaluate_info_dialog = false">
@@ -187,7 +187,7 @@
 		</div>
 	</el-dialog>
 	<!-- 编辑 -->
-	<el-dialog :visible.sync="edit_dialog" width="80%" top="0">
+	<el-dialog :visible.sync="edit_dialog" width="80%" top="0" :show-close="false">
 		<div slot="title" class="dialog_title">
 			<div>{{dialog_name}}</div>
 			<img class="close_icon" src="../../../../static/close_icon.png" @click="edit_dialog = false">

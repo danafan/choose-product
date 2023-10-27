@@ -198,7 +198,7 @@
 				</div>
 			</el-dialog>
 			<!-- 添加/编辑/审核/详情 -->
-			<el-dialog :visible.sync="edit_dialog" @close="closeEdit" width="80%" top="0">
+			<el-dialog :visible.sync="edit_dialog" @close="closeEdit" width="80%" top="0" :show-close="false">
 				<div slot="title" class="dialog_title">
 					<div>{{add_title}}</div>
 					<img class="close_icon" src="../../../../static/close_icon.png" @click="edit_dialog = false">
@@ -264,7 +264,7 @@
 								<div v-else>{{info_scpl_value}}</div>
 							</el-form-item>
 							<el-form-item label="品牌：">
-								<el-select v-model="brand_ids" clearable multiple filterable collapse-tags placeholder="全部" v-if="add_type == '1' || add_type == '2'">
+								<el-select v-model="brand_id" clearable filterable placeholder="全部" v-if="add_type == '1' || add_type == '2'">
 									<el-option :label="item.name" :value="item.id" v-for="item in brand_list"></el-option>
 								</el-select>
 								<div v-else>{{brand}}</div>
@@ -466,7 +466,7 @@
 					</div>
 				</el-dialog>
 				<!-- 转合格 -->
-				<el-dialog :visible.sync="zhuan_dialog" @close="closeZhuan">
+				<el-dialog :visible.sync="zhuan_dialog" @close="closeZhuan" :show-close="false">
 					<div slot="title" class="dialog_title">
 						<div>请{{zhuan_type == '1'?'填写':'编辑'}}转正资料</div>
 						<img class="close_icon" src="../../../../static/close_icon.png" @click="zhuan_dialog = false">
@@ -491,7 +491,7 @@
 					</div>
 				</el-dialog>
 				<!-- 拜访记录详情 -->
-				<el-dialog :visible.sync="visit_dialog" @close="visit_page = 1" width="65%">
+				<el-dialog :visible.sync="visit_dialog" @close="visit_page = 1" width="65%" :show-close="false">
 					<div slot="title" class="dialog_title">
 						<div>拜访记录</div>
 						<img class="close_icon" src="../../../../static/close_icon.png" @click="visit_dialog = false">
@@ -525,7 +525,7 @@
 					</div>
 				</el-dialog>
 				<!-- 评价记录 -->
-				<el-dialog :visible.sync="evaluate_dialog" @close="evaluate_page = 1">
+				<el-dialog :visible.sync="evaluate_dialog" @close="evaluate_page = 1" :show-close="false">
 					<div slot="title" class="dialog_title">
 						<div>【{{supplier_name_title}}】评价记录</div>
 						<img class="close_icon" src="../../../../static/close_icon.png" @click="evaluate_dialog = false">
@@ -551,7 +551,7 @@
 						<PaginationWidget :total="evaluate_data.total" :page="evaluate_page" :show_multiple="false" :pagesize="10" @checkPage="checkEvaluatePage"/>
 					</div>
 					<!-- 添加或查看评价内容 -->
-					<el-dialog width="30%" :visible.sync="evaluate_info_dialog" append-to-body>
+					<el-dialog width="30%" :visible.sync="evaluate_info_dialog" append-to-body :show-close="false">
 						<div slot="title" class="dialog_title">
 							<div>{{evaluate_info_title}}</div>
 							<img class="close_icon" src="../../../../static/close_icon.png" @click="evaluate_info_dialog = false">
@@ -659,7 +659,7 @@
 				cooperativeness_list:[],			//合作程度
 				cooperativeness:"",					//选中的合作程度
 				brand_list:[],						//品牌列表
-				arg_brand_ids:[],						//选中的品牌
+				arg_brand_ids:[],					//选中的品牌
 				main_business_list:[],				//主营列表
 				scpl_list:[],						//擅长品类
 				scm_list:[],						//scm列表
@@ -720,7 +720,7 @@
 				info_arg_main_business:[],		//主营
 				info_main_business_value:"",
 				info_arg_scpl:[],				//擅长品类
-				brand_ids:[],					//选中的品牌ID列表
+				brand_id:"",					//选中的品牌ID
 				brand:"",						//品牌
 				info_scpl_value:"",
 				attachment:{},					//附件文件
@@ -962,12 +962,13 @@
 								})
 							}
 							//品牌
-							this.brand_ids = [];
-							if(data.brand){
-								data.brand.toString().split(',').map(item => {
-									this.brand_ids.push(parseInt(item));
-								})
-							}
+							this.brand_id = data.brand?data.brand:'';
+							// this.brand_ids = [];
+							// if(data.brand){
+							// 	data.brand.toString().split(',').map(item => {
+							// 		this.brand_ids.push(parseInt(item));
+							// 	})
+							// }
 							//拜访图片
 							if(data.visiting_imgs){
 								this.visiting_imgs = data.visiting_imgs.split(',');
@@ -998,7 +999,7 @@
 					}
 				}
 				this.check_status = 1;					//填报审核状态
-				this.brand_ids = [];					//选中的品牌
+				this.brand_id = "";					//选中的品牌
 				this.remark = "";						//填报拒绝原因
 				this.company_name = ""					//公司名称
 				this.business_license_img = [];			//工商营业执照
@@ -1097,7 +1098,7 @@
 				//擅长品类
 				arg['scpl'] = this.info_arg_scpl.join(',');
 				//品牌
-				arg['brand'] = this.brand_ids.join(',');
+				arg['brand'] = this.brand_id;
 
 				if(this.add_type == '1'){		//创建
 					resource.reserveAdd(arg).then(res => {

@@ -34,8 +34,8 @@
 				<img class="down_arrow" :class="{'rotate':screen_open == true}" src="../static/down_arrow.png">
 			</div>
 		</div>
-		<el-card class="conditions_box" v-if="screen_open">
-			<div class="conditions_row" v-if="page_type == 'index'">
+		<el-card class="conditions_box" v-if="screen_open" @click.stop>
+			<div class="conditions_row" v-if="page_type == 'index'" @click.stop>
 				<div class="lable">供应商：</div>
 				<div style="flex:1">
 					<div class="list">
@@ -52,43 +52,43 @@
 					</div>
 				</div>
 			</div>
-			<div class="conditions_row" v-if="page_type == 'index'">
+			<div class="conditions_row" v-if="page_type == 'index'" @click.stop>
 				<div class="lable">市场：</div>
 				<div class="list">
 					<div class="item" :class="{'active_item':market_index == index}" v-for="(item,index) in market_list" @click.stop="checkIndex('market',index)">{{item.market_name}}</div>
 				</div>
 			</div>
-			<div class="conditions_row">
+			<div class="conditions_row" @click.stop>
 				<div class="lable">类目：</div>
 				<div class="list">
 					<div class="item" :class="{'active_item':category_index == index}" v-for="(item,index) in category_list" @click.stop="checkIndex('category',index)">{{item.category_name}}</div>
 				</div>
 			</div>
-			<div class="conditions_row" v-if="page_type == 'index'">
+			<div class="conditions_row" v-if="page_type == 'index'" @click.stop>
 				<div class="lable">品牌：</div>
 				<div class="list">
 					<div class="item" :class="{'active_item':brand_index == index}" v-for="(item,index) in brand_list" @click.stop="checkIndex('brand',index)">{{item.brand_name}}</div>
 				</div>
 			</div>
-			<div class="conditions_row">
+			<div class="conditions_row" @click.stop>
 				<div class="lable">分类：</div>
 				<div class="list">
 					<div class="item" :class="{'active_item':class_index == index}" v-for="(item,index) in class_list" @click.stop="checkIndex('class',index)">{{item.classification_name}}</div>
 				</div>
 			</div>
-			<div class="conditions_row">
+			<div class="conditions_row" @click.stop>
 				<div class="lable">拍摄风格：</div>
 				<div class="list">
 					<div class="item" :class="{'active_item':style_index == index}" v-for="(item,index) in style_list" @click.stop="checkIndex('style',index)">{{item.shooting_style_name}}</div>
 				</div>
 			</div>
-			<div class="conditions_row" v-if="page_type == 'index'">
+			<div class="conditions_row" v-if="page_type == 'index'" @click.stop>
 				<div class="lable">季节：</div>
 				<div class="list">
 					<div class="item" :class="{'active_item':season_index == index}" v-for="(item,index) in season_list" @click.stop="checkIndex('season',index)">{{item.season_name}}</div>
 				</div>
 			</div>
-			<div class="conditions_row none_border" v-if="page_type != 'gys_supplier' && page_type != 'supplier'">
+			<div class="conditions_row none_border" v-if="page_type != 'gys_supplier' && page_type != 'supplier'" @click.stop>
 				<div class="lable">供应商评级：</div>
 				<div class="list">
 					<div class="item" :class="{'active_item':rating_index == index}" v-for="(item,index) in rating_list" @click.stop="checkIndex('rating',index)">{{item.grade_name}}</div>
@@ -96,9 +96,9 @@
 			</div>
 		</el-card>
 		<div class="cate_box">
-			<div class="flex">
+			<div class="flex" @click.stop>
 				<div class="sort_row">
-					<div class="sort_item" :class="{'active_color':item.sort != 'default'}" v-for="(item,index) in sort_list" @click="sortFn(index)">
+					<div class="sort_item" :class="{'active_color':item.sort != 'default'}" v-for="(item,index) in sort_list" @click.stop="sortFn(index)">
 						<div>{{item.name}}</div>
 						<img class="sort_icon" src="../static/sort_asc.png" v-if="item.sort == 'asc'">
 						<img class="sort_icon" src="../static/sort_default.png" v-if="item.sort == 'default'">
@@ -110,10 +110,10 @@
 					<el-input style="width: 50px;" size="mini" type="number" v-model="start_price"></el-input>&nbsp~&nbsp
 					<el-input style="width: 50px;" size="mini" type="number" v-model="end_price"></el-input>
 					&nbsp
-					<el-button size="mini" type="primary" @click="searchPrice">查询</el-button>
+					<el-button size="mini" type="primary" @click.stop="searchPrice">查询</el-button>
 				</div>
 			</div>
-			<div class="date_row">
+			<div class="date_row" @click.stop>
 				<el-checkbox-group style="margin-right: 30px;" v-model="up_type" @change="upTypeChange">
 					<el-checkbox class="custom_checkbox" :label="1">今日上新</el-checkbox>
 					<el-checkbox class="custom_checkbox" :label="3">三日上新</el-checkbox>
@@ -123,7 +123,7 @@
 				</el-date-picker>
 			</div>
 		</div>
-		<div class="cate_box_bottom">
+		<div class="cate_box_bottom" @click.stop>
 			<el-checkbox-group v-model="cate_style_ids" @change="callbackFn" v-if="page_type == 'gys_supplier'">
 				<el-checkbox class="custom_checkbox" v-for="item in gys_cate_style_list"
 				:key="item.id"

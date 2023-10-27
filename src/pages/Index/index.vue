@@ -18,14 +18,14 @@
 					<VogueWidget id="vogue_widget"/>
 					<el-card class="card_box" ref="card_box" id="card_box">
 						<ScreeningWidget id="screen_widget" v-if="show_screen" :total_num="total" @callback="screenFn"/>
-						<div class="scroll_view" v-if="goods_list.length > 0">
+						<div class="scroll_view" v-if="goods_list.length > 0 || loading" v-loading='loading'>
 							<div class="goods_list" id='goods_list'>
 								<GoodsItem :info="item" @setStatus="setStatus" v-for="item in goods_list" @callback="getList" @enlargeFn="enlargeFn"/>
 								<div class="padding_item" v-for="i in 6-(goods_list.length%6) == 6?0:6-(goods_list.length%6)"></div>
 							</div>
-							<PaginationWidget :total="total" :page="page" :pagesize="pagesize" :show_multiple="false" @checkPage="checkPage"/>
+							<PaginationWidget :total="total" :page="page" :pagesize="pagesize" :show_multiple="false" @checkPage="checkPage" v-if="goods_list.length > 0"/>
 						</div>
-						<EmptyPage :is_loading="loading" v-else/>
+						<EmptyPage :is_loading="loading" v-if="!loading && goods_list.length == 0"/>
 					</el-card>
 				</div>
 			</div>
@@ -331,6 +331,7 @@
 		.card_box{
 			padding-top:10px;
 			.scroll_view{
+				min-height:254rem;
 				.goods_list{
 					display: flex;
 					flex-wrap: wrap;

@@ -18,7 +18,7 @@
         <el-carousel indicator-position="none" arrow="never" ref="hotCarousel" :autoplay="false" @change="changeIndicator">
           <el-carousel-item v-for="(array_item,index) in goods_list" :key="index">
             <div class="width-100 flex jsb">
-              <div class="li-item pointer" v-for="item in array_item" :key="item.style_id" @click="getDetail(item.style_id)">
+              <div class="li-item pointer" v-for="item in array_item" :key="item.style_id" @click.stop="getDetail(item.style_id)">
                 <img class="goods_img" :data-obj="JSON.stringify(item)" :src="domain + item.img" style="object-fit: scale-down;">
                 <div class="hot_sell_item_title table_header_text" :data-obj="JSON.stringify(item)">{{item.title}}</div>
                 <div class="flex jc ac">

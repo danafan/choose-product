@@ -96,7 +96,7 @@
 				<div v-else>{{mode}}</div>
 			</el-form-item>
 			<el-form-item label="品牌：">
-				<el-select v-model="brand_ids" clearable multiple filterable collapse-tags placeholder="请选择品牌" v-if="supplier_type == '2'">
+				<el-select v-model="brand_id" clearable filterable placeholder="请选择品牌" v-if="supplier_type == '2'">
 					<el-option v-for="item in brand_list" :key="item.id" :label="item.name" :value="item.id">
 					</el-option>
 				</el-select>
@@ -166,7 +166,7 @@
 				grade_name:"",			//选中的供应商等级名称
 				mode:"",				//合作模式
 				brand_list:[],			//品牌列表
-				brand_ids:[],			//选中的品牌ids
+				brand_id:"",			//选中的品牌id
 				brand:"",				//选中的品牌名称
 				business_license:[],	//营业执照图片列表
 				company_name:'',		//公司名称
@@ -272,12 +272,7 @@
 						this.grade_id = data.grade_id?data.grade_id:'';
 						this.grade_name = data.grade_name?data.grade_name:'';
 						this.mode = data.mode?data.mode:'';
-						this.brand_ids = [];
-						if(data.brand_id){
-							data.brand_id.toString().split(',').map(item => {
-								this.brand_ids.push(parseInt(item));
-							})
-						}
+						this.brand_id = data.brand_id?data.brand_id:'';
 						this.brand = data.brand?data.brand:'';
 
 						//工商营业执照
@@ -329,7 +324,7 @@
 						weixin:this.weixin,
 						grade_id:this.grade_id,
 						mode:this.mode,
-						brand:this.brand_ids.join(','),
+						brand:this.brand_id,
 						maintainer:this.maintainer,
 						maintainer_id:this.maintainer_id
 					}
