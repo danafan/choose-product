@@ -6,52 +6,52 @@
 					<div>{{add_admin_name}}</div>
 				</el-form-item>
 				<el-form-item label="内部款式编码：">
-					<div v-if="is_detail || info_edit_fields.indexOf('i_id') > -1">{{arg.i_id}}</div>
-					<el-input type="textarea" autosize placeholder="多个请用分号间隔" v-model="arg.i_id" v-else>
+					<div v-if="is_detail">{{arg.i_id}}</div>
+					<el-input type="textarea" autosize placeholder="多个请用分号间隔" v-model="arg.i_id" :disabled="info_edit_fields.indexOf('i_id') > -1" v-else>
 					</el-input>
 				</el-form-item>
 				<el-form-item label="BD款式编码：">
-					<div v-if="is_detail || info_edit_fields.indexOf('bd_i_id') > -1">{{arg.bd_i_id}}</div>
-					<el-input type="textarea" autosize placeholder="多个请用分号间隔" v-model="arg.bd_i_id" v-else>
+					<div v-if="is_detail">{{arg.bd_i_id}}</div>
+					<el-input type="textarea" autosize placeholder="多个请用分号间隔" v-model="arg.bd_i_id" :disabled="info_edit_fields.indexOf('bd_i_id') > -1" v-else>
 					</el-input>
 				</el-form-item>
 				<el-form-item label="供应商款式编码：">
-					<div v-if="is_detail || info_edit_fields.indexOf('supplier_ksbm') > -1">{{arg.supplier_ksbm}}</div>
-					<el-input type="textarea" autosize placeholder="多个请用分号间隔" v-model="arg.supplier_ksbm" v-else>
+					<div v-if="is_detail">{{arg.supplier_ksbm}}</div>
+					<el-input type="textarea" autosize placeholder="多个请用分号间隔" v-model="arg.supplier_ksbm" :disabled="info_edit_fields.indexOf('supplier_ksbm') > -1" v-else>
 					</el-input>
 				</el-form-item>
 				<el-form-item label="供应商：" :required="!is_detail && goods_type != '2' && goods_type != '5' && info_edit_fields.indexOf('supplier_id') == -1 && page_type != 'feedback'">
-					<div v-if="is_detail || goods_type == '2' || goods_type == '5' || info_edit_fields.indexOf('supplier_id') > -1 || page_type == 'feedback'">{{arg.supplier_id | filterSupplier}}</div>
-					<el-select v-model="arg.supplier_id" filterable clearable placeholder="请选择供应商" v-else>
+					<div v-if="is_detail || page_type == 'feedback'">{{arg.supplier_id | filterSupplier}}</div>
+					<el-select v-model="arg.supplier_id" filterable clearable placeholder="请选择供应商" :disabled="info_edit_fields.indexOf('supplier_id') > -1 || goods_type == '2' || goods_type == '5'" v-else>
 						<el-option v-for="item in supplier_list" :key="item.supplier_id" :label="item.supplier_name" :value="item.supplier_id">
 						</el-option>
 					</el-select>
 				</el-form-item>
 				<el-form-item label="类目：" :required="!is_detail && info_edit_fields.indexOf('category_id') == -1">
-					<div v-if="is_detail || info_edit_fields.indexOf('category_id') > -1">{{arg.category_id | filterCate}}</div>
-					<el-select v-model="arg.category_id" clearable placeholder="请选择类目" v-else>
+					<div v-if="is_detail">{{arg.category_id | filterCate}}</div>
+					<el-select v-model="arg.category_id" clearable placeholder="请选择类目" :disabled="info_edit_fields.indexOf('category_id') > -1" v-else>
 						<el-option v-for="item in cate_list" :key="item.category_id" :label="item.category_name" :value="item.category_id">
 						</el-option>
 					</el-select>
 				</el-form-item>
 				<el-form-item label="面料：">
-					<div v-if="is_detail || info_edit_fields.indexOf('fabric') > -1">{{arg.fabric}}</div>
-					<el-input placeholder="面料" v-model="arg.fabric" v-else>
+					<div v-if="is_detail">{{arg.fabric}}</div>
+					<el-input placeholder="面料" v-model="arg.fabric" :disabled="info_edit_fields.indexOf('fabric') > -1" v-else>
 					</el-input>
 				</el-form-item>
 				<el-form-item label="成本价：">
-					<div v-if="is_detail || info_edit_fields.indexOf('cost_price') > -1">{{arg.cost_price}}</div>
-					<el-input type="number" placeholder="成本价" v-model="arg.cost_price" v-else>
+					<div v-if="is_detail">{{arg.cost_price}}</div>
+					<el-input type="number" placeholder="成本价" v-model="arg.cost_price" :disabled="info_edit_fields.indexOf('cost_price') > -1" v-else>
 					</el-input>
 				</el-form-item>
 				<el-form-item label="控价：">
-					<div v-if="is_detail || info_edit_fields.indexOf('price_control') > -1">{{arg.price_control}}</div>
-					<el-input type="number" placeholder="控价" v-model="arg.price_control" v-else>
+					<div v-if="is_detail">{{arg.price_control}}</div>
+					<el-input type="number" placeholder="控价" v-model="arg.price_control" :disabled="info_edit_fields.indexOf('price_control') > -1" v-else>
 					</el-input>
 				</el-form-item>
 				<el-form-item label="档口批价：">
-					<div v-if="is_detail || info_edit_fields.indexOf('wholesale_price') > -1">{{arg.wholesale_price}}</div>
-					<el-input type="number" placeholder="档口批价" v-model="arg.wholesale_price" v-else>
+					<div v-if="is_detail">{{arg.wholesale_price}}</div>
+					<el-input type="number" placeholder="档口批价" v-model="arg.wholesale_price" :disabled="info_edit_fields.indexOf('wholesale_price') > -1" v-else>
 					</el-input>
 				</el-form-item>
 				<el-form-item label="调价状态：" v-if="!!price_status">
@@ -61,13 +61,13 @@
 					{{edit_price}}
 				</el-form-item>
 				<el-form-item label="网盘地址：">
-					<div v-if="is_detail || info_edit_fields.indexOf('net_disk_address') > -1">{{arg.net_disk_address}}</div>
-					<el-input placeholder="网盘地址" v-model="arg.net_disk_address" v-else>
+					<div v-if="is_detail">{{arg.net_disk_address}}</div>
+					<el-input placeholder="网盘地址" v-model="arg.net_disk_address" :disabled="info_edit_fields.indexOf('net_disk_address') > -1" v-else>
 					</el-input>
 				</el-form-item>
 				<el-form-item label="备注：">
-					<div v-if="is_detail || info_edit_fields.indexOf('remark') > -1">{{arg.remark}}</div>
-					<el-input type="textarea" :rows="5" placeholder="请输入备注" v-model="arg.remark" v-else>
+					<div v-if="is_detail">{{arg.remark}}</div>
+					<el-input type="textarea" :rows="5" placeholder="请输入备注" v-model="arg.remark" :disabled="info_edit_fields.indexOf('remark') > -1" v-else>
 					</el-input>
 				</el-form-item>
 				<el-form-item label="拒绝原因：" v-if="check_status == 3 || check_status == 6 || price_status == 3">
@@ -76,42 +76,42 @@
 			</el-form>
 			<el-form size="small" style="width: 50%" label-width="120px">
 				<el-form-item label="供应商款号：" required>
-					<div v-if="is_detail || goods_type == '2' || goods_type == '5' || info_edit_fields.indexOf('style_name') > -1 || page_type == 'feedback'">{{arg.style_name}}</div>
-					<el-input placeholder="供应商款号" v-model="arg.style_name" v-else>
+					<div v-if="is_detail || page_type == 'feedback'">{{arg.style_name}}</div>
+					<el-input placeholder="供应商款号" v-model="arg.style_name" :disabled="goods_type == '2' || goods_type == '5' || info_edit_fields.indexOf('style_name') > -1" v-else>
 					</el-input>
 				</el-form-item>
 				<el-form-item label="标题：">
-					<div v-if="is_detail || info_edit_fields.indexOf('title') > -1">{{arg.title}}</div>
-					<el-input placeholder="标题" v-model="arg.title" v-else>
+					<div v-if="is_detail">{{arg.title}}</div>
+					<el-input placeholder="标题" v-model="arg.title" :disabled="info_edit_fields.indexOf('title') > -1" v-else>
 					</el-input>
 				</el-form-item>
 				<el-form-item label="市场：" required>
-					<div v-if="is_detail || info_edit_fields.indexOf('market_id') > -1">{{arg.market_id | filterMarket}}</div>
-					<el-select v-model="arg.market_id" clearable placeholder="请选择市场"v-else>
+					<div v-if="is_detail">{{arg.market_id | filterMarket}}</div>
+					<el-select v-model="arg.market_id" clearable placeholder="请选择市场" :disabled="info_edit_fields.indexOf('market_id') > -1" v-else>
 						<el-option v-for="item in market_list" :key="item.market_id" :label="item.market_name" :value="item.market_id">
 						</el-option>
 					</el-select>
 				</el-form-item>
 				<el-form-item label="分类：">
-					<div v-if="is_detail || info_edit_fields.indexOf('classification_id') > -1">{{arg.classification_id | filterClass}}</div>
-					<el-select v-model="arg.classification_id" clearable placeholder="请选择分类" v-else>
+					<div v-if="is_detail">{{arg.classification_id | filterClass}}</div>
+					<el-select v-model="arg.classification_id" clearable placeholder="请选择分类" :disabled="info_edit_fields.indexOf('classification_id') > -1" v-else>
 						<el-option v-for="item in class_list" :key="item.classification_id" :label="item.classification_name" :value="item.classification_id">
 						</el-option>
 					</el-select>
 				</el-form-item>
 				<el-form-item label="尺码：">
-					<div v-if="is_detail || info_edit_fields.indexOf('size') > -1">{{arg.size}}</div>
-					<el-input placeholder="尺码" v-model="arg.size" v-else>
+					<div v-if="is_detail">{{arg.size}}</div>
+					<el-input placeholder="尺码" v-model="arg.size" :disabled="info_edit_fields.indexOf('size') > -1" v-else>
 					</el-input>
 				</el-form-item>
 				<el-form-item label="颜色：">
-					<div v-if="is_detail || info_edit_fields.indexOf('color') > -1">{{arg.color}}</div>
-					<el-input placeholder="颜色"  v-model="arg.color" v-else>
+					<div v-if="is_detail">{{arg.color}}</div>
+					<el-input placeholder="颜色" v-model="arg.color" :disabled="info_edit_fields.indexOf('color') > -1" v-else>
 					</el-input>
 				</el-form-item>
 				<el-form-item label="替代款号：">
-					<div v-if="is_detail || info_edit_fields.indexOf('replace_ksbm') > -1">{{arg.replace_ksbm}}</div>
-					<el-input type="textarea" placeholder="多个请用分号间隔" v-model="arg.replace_ksbm" v-else maxlength="100"
+					<div v-if="is_detail">{{arg.replace_ksbm}}</div>
+					<el-input type="textarea" placeholder="多个请用分号间隔" v-model="arg.replace_ksbm" :disabled="info_edit_fields.indexOf('replace_ksbm') > -1" v-else maxlength="100"
 						show-word-limit>
 					</el-input>
 				</el-form-item>
@@ -122,8 +122,8 @@
 					{{arg.off_reason}}
 				</el-form-item>
 				<el-form-item label="爆款：">
-					<div v-if="is_detail || hot_status === 0 || info_edit_fields.indexOf('hot_style') > -1">{{arg.hot_style == 1?'是':'否'}}</div>
-					<el-radio-group v-model="arg.hot_style" v-else>
+					<div v-if="is_detail || hot_status === 0">{{arg.hot_style == 1?'是':'否'}}</div>
+					<el-radio-group v-model="arg.hot_style" :disabled="info_edit_fields.indexOf('hot_style') > -1" v-else>
 						<el-radio :label="1">是</el-radio>
 						<el-radio :label="0">否</el-radio>
 					</el-radio-group>
@@ -132,7 +132,10 @@
 					<div style="display: flex;flex-wrap: wrap">
 						<div :key="url" v-for="url in link_urls">
 							<el-tooltip class="item" effect="dark" :content="url" placement="top-start">
-								<el-tag size="small" :closable="!is_detail && default_hot_style === 0" :disable-transitions="false" @close="handleClose(url)">
+								<!-- <el-tag size="small" :closable="!is_detail && default_hot_style === 0" :disable-transitions="false" @close="handleClose(url)">
+									{{url}}
+								</el-tag> -->
+								<el-tag size="small" :closable="!is_detail" :disable-transitions="false" @close="handleClose(url)">
 									{{url}}
 								</el-tag>
 							</el-tooltip>
@@ -140,60 +143,67 @@
 					</div>
 					<el-input class="input-new-tag" v-if="inputVisible" v-model="inputValue" ref="saveTagInput" size="small" @keyup.enter.native="handleInputConfirm" @blur="handleInputConfirm">
 					</el-input>
-					<el-button size="mini" v-if="!inputVisible && !is_detail && default_hot_style === 0" type="primary" icon="el-icon-plus" @click="showInput">新增</el-button>
+					<!-- <el-button size="mini" v-if="!inputVisible && !is_detail && default_hot_style === 0" type="primary" icon="el-icon-plus" @click="showInput">新增</el-button> -->
+					<el-button size="mini" v-if="!inputVisible && !is_detail" type="primary" icon="el-icon-plus" @click="showInput">新增</el-button>
 				</el-form-item>
 				<el-form-item label="爆款图片：" v-if="arg.hot_style">
-					<div v-if="is_detail || default_hot_style === 1">
+					<!-- <div v-if="is_detail || default_hot_style === 1">
+						<el-image class="bk_card_img" v-for="item in preview_bk_image" :src="item" fit="scale-down" :preview-src-list="preview_bk_image" z-index="9999"></el-image>
+					</div> -->
+					<div v-if="is_detail">
 						<el-image class="bk_card_img" v-for="item in preview_bk_image" :src="item" fit="scale-down" :preview-src-list="preview_bk_image" z-index="9999"></el-image>
 					</div>
 					<UploadFile :img_list="bk_img_list" :is_multiple="true" :current_num="bk_img.length" :size="80" :max_num="9" @callbackFn="bkCallbackFn" v-else/>
 				</el-form-item>
 				<el-form-item label="主推款：">
-					<div v-if="is_detail || data_status === 0 || info_edit_fields.indexOf('data_style') > -1">{{arg.data_style == 1?'是':'否'}}</div>
-					<el-radio-group v-model="arg.data_style" v-else>
+					<div v-if="is_detail || data_status === 0">{{arg.data_style == 1?'是':'否'}}</div>
+					<el-radio-group v-model="arg.data_style" :disabled="info_edit_fields.indexOf('data_style') > -1" v-else>
 						<el-radio :label="1">是</el-radio>
 						<el-radio :label="0">否</el-radio>
 					</el-radio-group>
 				</el-form-item>
 				<el-form-item label="库存数：" v-if="arg.data_style">
-					<div v-if="is_detail || default_data_style === 1 || info_edit_fields.indexOf('data_num') > -1">{{kcs}}</div>
+					<!-- <div v-if="is_detail || default_data_style === 1 || info_edit_fields.indexOf('data_num') > -1">{{kcs}}</div> -->
+					<div v-if="is_detail || info_edit_fields.indexOf('data_num') > -1">{{kcs}}</div>
 					<el-input type="number" v-model="kcs" v-else>
 					</el-input>
 				</el-form-item>
 				<el-form-item label="调价：" v-if="arg.data_style">
-					<div v-if="is_detail || default_data_style === 1 || info_edit_fields.indexOf('data_price') > -1">{{tj}}</div>
+					<!-- <div v-if="is_detail || default_data_style === 1 || info_edit_fields.indexOf('data_price') > -1">{{tj}}</div> -->
+					<div v-if="is_detail || info_edit_fields.indexOf('data_price') > -1">{{tj}}</div>
 					<el-input type="number" v-model="tj" v-else>
 					</el-input>
 				</el-form-item>
 				<el-form-item label="备注：" v-if="arg.data_style">
-					<div v-if="is_detail || default_data_style === 1 || info_edit_fields.indexOf('data_remark') > -1">{{bz}}</div>
+					<!-- <div v-if="is_detail || default_data_style === 1 || info_edit_fields.indexOf('data_remark') > -1">{{bz}}</div> -->
+					<div v-if="is_detail || info_edit_fields.indexOf('data_remark') > -1">{{bz}}</div>
 					<el-input type="textarea" :rows="3" placeholder="请输入备注" v-model="bz" v-else>
 					</el-input>
 				</el-form-item>
 				<el-form-item label="独家款：">
-					<div v-if="is_detail || info_edit_fields.indexOf('sole_style') > -1">{{arg.sole_style == 1?'是':'否'}}</div>
-					<el-radio-group v-model="arg.sole_style" v-else>
+					<div v-if="is_detail">{{arg.sole_style == 1?'是':'否'}}</div>
+					<el-radio-group v-model="arg.sole_style" :disabled="info_edit_fields.indexOf('sole_style') > -1" v-else>
 						<el-radio :label="1">是</el-radio>
 						<el-radio :label="0">否</el-radio>
 					</el-radio-group>
 				</el-form-item>
 				<el-form-item label="自主款：">
-					<div v-if="is_detail || info_edit_fields.indexOf('again_style') > -1">{{arg.again_style == 1?'是':'否'}}</div>
-					<el-radio-group v-model="arg.again_style" v-else>
+					<div v-if="is_detail">{{arg.again_style == 1?'是':'否'}}</div>
+					<el-radio-group v-model="arg.again_style" :disabled="info_edit_fields.indexOf('again_style') > -1" v-else>
 						<el-radio :label="1">是</el-radio>
 						<el-radio :label="0">否</el-radio>
 					</el-radio-group>
 				</el-form-item>
 				<el-form-item label="深度库存 ：">
-					<div v-if="is_detail || depth_inventory_status === 0 || info_edit_fields.indexOf('depth_inventory') > -1">{{arg.depth_inventory == 1?'是':'否'}}</div>
-					<el-radio-group v-model="arg.depth_inventory" v-else>
+					<div v-if="is_detail || depth_inventory_status === 0">{{arg.depth_inventory == 1?'是':'否'}}</div>
+					<el-radio-group v-model="arg.depth_inventory" :disabled="info_edit_fields.indexOf('depth_inventory') > -1" v-else>
 						<el-radio :label="1">是</el-radio>
 						<el-radio :label="0">否</el-radio>
 					</el-radio-group>
 				</el-form-item>
 				<el-form-item label="视频款：">
-					<div v-if="is_detail || video_style_status === 0 || info_edit_fields.indexOf('video_style') > -1">{{arg.video_style == 1?'是':'否'}}</div>
-					<el-radio-group v-model="arg.video_style" v-else>
+					<div v-if="is_detail || video_style_status === 0">{{arg.video_style == 1?'是':'否'}}</div>
+					<el-radio-group v-model="arg.video_style" :disabled="info_edit_fields.indexOf('video_style') > -1" v-else>
 						<el-radio :label="1">是</el-radio>
 						<el-radio :label="0">否</el-radio>
 					</el-radio-group>
