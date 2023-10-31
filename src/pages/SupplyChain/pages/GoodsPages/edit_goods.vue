@@ -123,7 +123,7 @@
 				</el-form-item>
 				<el-form-item label="爆款：">
 					<div v-if="is_detail || hot_status === 0">{{arg.hot_style == 1?'是':'否'}}</div>
-					<el-radio-group v-model="arg.hot_style" :disabled="info_edit_fields.indexOf('hot_style') > -1" v-else>
+					<el-radio-group v-model="arg.hot_style" :disabled="info_edit_fields.indexOf('hot_style') > -1 || info_edit_fields.indexOf('hot_url') > -1 || info_edit_fields.indexOf('hot_img') > -1" v-else>
 						<el-radio :label="1">是</el-radio>
 						<el-radio :label="0">否</el-radio>
 					</el-radio-group>
@@ -132,10 +132,7 @@
 					<div style="display: flex;flex-wrap: wrap">
 						<div :key="url" v-for="url in link_urls">
 							<el-tooltip class="item" effect="dark" :content="url" placement="top-start">
-								<!-- <el-tag size="small" :closable="!is_detail && default_hot_style === 0" :disable-transitions="false" @close="handleClose(url)">
-									{{url}}
-								</el-tag> -->
-								<el-tag size="small" :closable="!is_detail" :disable-transitions="false" @close="handleClose(url)">
+								<el-tag size="small" :closable="!is_detail && info_edit_fields.indexOf('hot_style') == -1 && info_edit_fields.indexOf('hot_url') == -1 && info_edit_fields.indexOf('hot_img') == -1" :disable-transitions="false" @close="handleClose(url)">
 									{{url}}
 								</el-tag>
 							</el-tooltip>
@@ -143,40 +140,30 @@
 					</div>
 					<el-input class="input-new-tag" v-if="inputVisible" v-model="inputValue" ref="saveTagInput" size="small" @keyup.enter.native="handleInputConfirm" @blur="handleInputConfirm">
 					</el-input>
-					<!-- <el-button size="mini" v-if="!inputVisible && !is_detail && default_hot_style === 0" type="primary" icon="el-icon-plus" @click="showInput">新增</el-button> -->
-					<el-button size="mini" v-if="!inputVisible && !is_detail" type="primary" icon="el-icon-plus" @click="showInput">新增</el-button>
+					<el-button size="mini" v-if="!inputVisible && !is_detail && info_edit_fields.indexOf('hot_style') == -1 && info_edit_fields.indexOf('hot_url') == -1 && info_edit_fields.indexOf('hot_img') == -1" type="primary" icon="el-icon-plus" @click="showInput">新增</el-button>
 				</el-form-item>
 				<el-form-item label="爆款图片：" v-if="arg.hot_style">
-					<!-- <div v-if="is_detail || default_hot_style === 1">
-						<el-image class="bk_card_img" v-for="item in preview_bk_image" :src="item" fit="scale-down" :preview-src-list="preview_bk_image" z-index="9999"></el-image>
-					</div> -->
-					<div v-if="is_detail">
-						<el-image class="bk_card_img" v-for="item in preview_bk_image" :src="item" fit="scale-down" :preview-src-list="preview_bk_image" z-index="9999"></el-image>
-					</div>
-					<UploadFile :img_list="bk_img_list" :is_multiple="true" :current_num="bk_img.length" :size="80" :max_num="9" @callbackFn="bkCallbackFn" v-else/>
+					<UploadFile :img_list="bk_img_list" :is_multiple="true" :current_num="bk_img.length" :size="80" :max_num="9" :only_view="is_detail || info_edit_fields.indexOf('hot_style') > -1 || info_edit_fields.indexOf('hot_url') > -1 || info_edit_fields.indexOf('hot_img') > -1" @callbackFn="bkCallbackFn"/>
 				</el-form-item>
 				<el-form-item label="主推款：">
 					<div v-if="is_detail || data_status === 0">{{arg.data_style == 1?'是':'否'}}</div>
-					<el-radio-group v-model="arg.data_style" :disabled="info_edit_fields.indexOf('data_style') > -1" v-else>
+					<el-radio-group v-model="arg.data_style" :disabled="info_edit_fields.indexOf('data_style') > -1 || info_edit_fields.indexOf('data_num') > -1 || info_edit_fields.indexOf('data_price') > -1 || info_edit_fields.indexOf('data_remark') > -1" v-else>
 						<el-radio :label="1">是</el-radio>
 						<el-radio :label="0">否</el-radio>
 					</el-radio-group>
 				</el-form-item>
 				<el-form-item label="库存数：" v-if="arg.data_style">
-					<!-- <div v-if="is_detail || default_data_style === 1 || info_edit_fields.indexOf('data_num') > -1">{{kcs}}</div> -->
-					<div v-if="is_detail || info_edit_fields.indexOf('data_num') > -1">{{kcs}}</div>
+					<div v-if="is_detail || info_edit_fields.indexOf('data_style') > -1 || info_edit_fields.indexOf('data_num') > -1 || info_edit_fields.indexOf('data_price') > -1 || info_edit_fields.indexOf('data_remark') > -1">{{kcs}}</div>
 					<el-input type="number" v-model="kcs" v-else>
 					</el-input>
 				</el-form-item>
 				<el-form-item label="调价：" v-if="arg.data_style">
-					<!-- <div v-if="is_detail || default_data_style === 1 || info_edit_fields.indexOf('data_price') > -1">{{tj}}</div> -->
-					<div v-if="is_detail || info_edit_fields.indexOf('data_price') > -1">{{tj}}</div>
+					<div v-if="is_detail || info_edit_fields.indexOf('data_style') > -1 || info_edit_fields.indexOf('data_num') > -1 || info_edit_fields.indexOf('data_price') > -1 || info_edit_fields.indexOf('data_remark') > -1">{{tj}}</div>
 					<el-input type="number" v-model="tj" v-else>
 					</el-input>
 				</el-form-item>
 				<el-form-item label="备注：" v-if="arg.data_style">
-					<!-- <div v-if="is_detail || default_data_style === 1 || info_edit_fields.indexOf('data_remark') > -1">{{bz}}</div> -->
-					<div v-if="is_detail || info_edit_fields.indexOf('data_remark') > -1">{{bz}}</div>
+					<div v-if="is_detail || info_edit_fields.indexOf('data_style') > -1 || info_edit_fields.indexOf('data_num') > -1 || info_edit_fields.indexOf('data_price') > -1 || info_edit_fields.indexOf('data_remark') > -1">{{bz}}</div>
 					<el-input type="textarea" :rows="3" placeholder="请输入备注" v-model="bz" v-else>
 					</el-input>
 				</el-form-item>
