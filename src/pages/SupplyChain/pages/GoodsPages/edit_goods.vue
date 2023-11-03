@@ -856,7 +856,7 @@
 			filterSupplier:function(supplier_id){
 				if(supplier_id && that.supplier_list.length > 0){
 					let supplier_obj = that.supplier_list.find(item => {
-						return item.supplier_id = supplier_id;
+						return item.supplier_id == supplier_id;
 					});
 					return supplier_obj.supplier_name;
 				}
@@ -865,7 +865,7 @@
 			filterCate:function(category_id){
 				if(category_id && that.cate_list.length > 0){
 					let category_obj = that.cate_list.find(item => {
-						return item.category_id = category_id;
+						return item.category_id == category_id;
 					});
 					return category_obj.category_name;
 				}
@@ -874,7 +874,7 @@
 			filterMarket:function(market_id){
 				if(market_id && that.market_list.length > 0){
 					let market_obj = that.market_list.find(item => {
-						return item.market_id = market_id;
+						return item.market_id == market_id;
 					});
 					return market_obj.market_name;
 				}
@@ -883,7 +883,7 @@
 			filterClass:function(classification_id){
 				if(classification_id && that.class_list.length > 0){
 					let class_obj = that.class_list.find(item => {
-						return item.classification_id = classification_id;
+						return item.classification_id == classification_id;
 					});
 					return class_obj.classification_name;
 				}
