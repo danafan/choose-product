@@ -159,6 +159,10 @@
 						<div class="value">{{goods_info.bd_i_id}}</div>
 					</div>
 					<div class="detail_row">
+						<div class="lable">拍摄风格</div>
+						<div class="value">{{goods_info.shooting_style_name}}</div>
+					</div>
+					<div class="detail_row">
 						<div class="lable">上新时间</div>
 						<div class="value">{{goods_info.new_time_name}}</div>
 					</div>

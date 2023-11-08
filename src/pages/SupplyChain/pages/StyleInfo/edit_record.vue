@@ -25,6 +25,10 @@
 					<el-form-item label="提交人">
 						<el-input placeholder="提交人" v-model="username"></el-input>
 					</el-form-item>
+					<el-form-item label="对接人：">
+						<el-input placeholder="对接人" v-model="maintainer">
+						</el-input>
+					</el-form-item>
 					<el-form-item class="form_item">
 						<el-button type="primary" @click="checkPage(1)">查询</el-button>
 					</el-form-item>
@@ -184,6 +188,7 @@
 				supplier_ids:[],		//选中的供应商
 				style_name:"",			//款式编码
 				username:"",			//提交人
+				maintainer:"",			//对接人
 				status_list:[{
 					name:'待审核',
 					id:1
@@ -316,6 +321,7 @@
 					start_date:this.date && this.date.length > 0?this.date[0]:"",
 					end_date:this.date && this.date.length > 0?this.date[1]:"",
 					username:this.username,
+					maintainer:this.maintainer,
 					page:this.page,
 					pagesize:100
 				}

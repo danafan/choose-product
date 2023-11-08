@@ -33,6 +33,10 @@
 							</el-option>
 						</el-select>
 					</el-form-item>
+					<el-form-item label="对接人：">
+						<el-input placeholder="对接人" v-model="maintainer">
+						</el-input>
+					</el-form-item>
 					<el-form-item label="分类：">
 						<el-select v-model="classification_ids" clearable multiple filterable collapse-tags placeholder="全部">
 							<el-option v-for="item in class_list" :key="item.classification_id" :label="item.classification_name" :value="item.classification_id">
@@ -200,6 +204,10 @@
 						<div class="value">{{goods_info.bd_i_id}}</div>
 					</div>
 					<div class="detail_row">
+						<div class="lable">拍摄风格</div>
+						<div class="value">{{goods_info.shooting_style_name}}</div>
+					</div>
+					<div class="detail_row">
 						<div class="lable">上新时间</div>
 						<div class="value">{{goods_info.new_time_name}}</div>
 					</div>
@@ -339,21 +347,6 @@
 			<el-button type="primary" size="small" @click="detail_dialog = false">关闭</el-button>
 		</div>
 	</el-dialog>
-	<!-- 备注弹窗 -->
-	<!-- <el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" destroy-on-close @close="remark = ''" :visible.sync="remark_dialog" width="30%">
-		<div slot="title" class="dialog_title">
-			<div>备注</div>
-			<img class="close_icon" src="../../../static/close_icon.png" @click="remark_dialog = false">
-		</div>
-		<div class="remark_content">
-			<el-input type="textarea" :rows="3" placeholder="请输入备注" v-model="remark">
-			</el-input>
-		</div>
-		<div slot="footer" class="dialog_footer">
-			<el-button size="mini" @click="remark_dialog = false">关闭</el-button>
-			<el-button size="mini" type="primary" @click="confirmRemark">提交</el-button>
-		</div>
-	</el-dialog> -->
 	<!-- 单个审批弹窗 -->
 	<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" destroy-on-close @close="allClose" :visible.sync="refused_dialog" width="30%">
 		<div slot="title" class="dialog_title">
@@ -560,6 +553,7 @@
 				select_main_dept_id:[], //所有部门列表
 				user_list:[],			//所有用户列表
 				select_userid:[],		//选中的用户列表
+				maintainer:"",			//对接人
 				store_list:[],			//店铺列表
 				shop_code:[],			//选中的店铺
 				supplier_list:[],		//供应商列表
@@ -811,6 +805,7 @@
 					demand_type:this.demand_type.join(','),
 					status:this.status_id,
 					select_userid:this.select_userid.join(','),
+					maintainer:this.maintainer,
 					select_main_dept_id:this.select_main_dept_id.join(','),
 					shop_code:this.shop_code.join(','),
 					supplier_id:this.supplier_ids.join(','),
@@ -909,29 +904,6 @@
 					}
 				})
 			},
-			//点击添加备注
-			// addRemark(select_id,remark){
-			// 	this.select_id = select_id;
-			// 	this.remark = remark?remark:'';
-			// 	this.remark_dialog = true;
-			// },
-			//提交备注
-			// confirmRemark(){
-			// 	let arg = {
-			// 		select_id:this.select_id,
-			// 		remark:this.remark
-			// 	}
-			// 	resource.addSelectRemark(arg).then(res => {
-			// 		if(res.data.code == 1){
-			// 			this.$message.success(res.data.msg);
-			// 			this.remark_dialog = false;
-			// 				//获取列表
-			// 			this.getGoodsList();
-			// 		}else{
-			// 			this.$message.warning(res.data.msg);
-			// 		}
-			// 	})
-			// },
 			//导出
 			exportFn() {
 				MessageBox.confirm("确认导出?", "提示", {
@@ -944,6 +916,7 @@
 						demand_type:this.demand_type.join(','),
 						status:this.status_id,
 						select_userid:this.select_userid.join(','),
+						maintainer:this.maintainer,
 						select_main_dept_id:this.select_main_dept_id.join(','),
 						shop_code:this.shop_code.join(','),
 						supplier_id:this.supplier_ids.join(','),

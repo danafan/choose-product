@@ -39,15 +39,13 @@
 							</el-option>
 						</el-select>
 					</el-form-item>
-					<!-- <el-form-item label="调价审核状态：">
-						<el-select v-model="price_status" clearable placeholder="全部">
-							<el-option v-for="item in adjust_status_list" :key="item.id" :label="item.name" :value="item.id">
-							</el-option>
-						</el-select>
-					</el-form-item> -->
 					<el-form-item label="上新日期：">
 						<el-date-picker v-model="date" size="mini" type="daterange" unlink-panels value-format="yyyy-MM-dd" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions">
 						</el-date-picker>
+					</el-form-item>
+					<el-form-item label="对接人：">
+						<el-input placeholder="对接人" v-model="maintainer">
+						</el-input>
 					</el-form-item>
 					<el-form-item>
 						<el-input type="textarea" :autosize="{ minRows: 1, maxRows: 4}" placeholder="款号/款式编码" v-model="search">
@@ -60,17 +58,15 @@
 				<el-divider></el-divider>
 				<TableTitle title="数据列表" id="table_title">
 					<el-button size="mini" type="primary" v-if="button_list.edit_i_id == 1" @click="importFn('1')">修改款式编码</el-button>
-					<!-- <el-button size="mini" type="primary" @click="allSetting('adjust')" v-if="button_list.price_btn == 1">调价审批</el-button> -->
 					<el-button size="mini" type="primary" v-if="is_check == 1 && button_list.agree_refuse == 1" @click="allSetting('audit_1')">批量同意</el-button>
 					<el-button size="mini" type="primary" v-if="is_check == 1 && button_list.agree_refuse == 1" @click="allSetting('audit_2')">批量拒绝</el-button>
 					<el-button size="mini" type="primary" @click="allSetting('1')" v-if="button_list.in_out == 1">批量上架</el-button>
 					<el-button size="mini" type="primary" @click="allSetting('0')" v-if="button_list.in_out == 1">批量下架</el-button>
 					<el-button size="mini" type="primary" @click="allSetting('3')" v-if="button_list.del == 1">批量删除</el-button>
 					<el-button size="mini" type="primary" @click="allSetting('2')" v-if="button_list.abu == 1">批量对接推单</el-button>
-					<!-- <el-button size="mini" type="primary" @click="$router.push('/edit_goods?page_type=goods&goods_type=1')" v-if="button_list.add == 1">添加</el-button> -->
 					<el-button size="mini" type="primary" @click="editFn('','添加商品','1')" v-if="button_list.add == 1">添加</el-button>
 					<el-button size="mini" type="primary" @click="importFn('2')" v-if="button_list.add == 1">导入</el-button>
-					<el-button size="mini" type="primary" @click="exportFn">导出</el-button>
+					<el-button size="mini" type="primary" @click="export_dialog = true">导出</el-button>
 				</TableTitle>
 				<el-table ref="table" size="mini" :data="data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" @selection-change="handleSelectionChange" v-loading="loading">
 					<el-table-column type="selection" width="55" fixed>
@@ -228,6 +224,7 @@
 				</el-tabs>
 				<img class="close_icon view_close_icon" src="../../../../static/close_icon.png" @click="view_dialog = false">
 			</div>
+			<!-- <div class="primary_color">上新时间：{{view_shooting_style_list[view_active_index].style_new_time}}</div> -->
 			<el-carousel style="width: 100%;height: 310px;" trigger="hover" indicator-position="none" :autoplay="false" :initial-index="default_img_index" v-if="view_shooting_style_list.length > 0">
 				<el-carousel-item v-for="item in view_shooting_style_list[parseInt(view_active_index)].view_img" :key="item">
 					<el-image :z-index="2999" class="view_image" :src="item" fit="scale-down" :preview-src-list="view_shooting_style_list[parseInt(view_active_index)].view_img"></el-image>
@@ -250,6 +247,23 @@
 		</div>
 		<div slot="footer" class="dialog_footer" v-if="goods_type == '3'">
 			<el-button size="small" @click="edit_dialog = false">关闭</el-button>
+		</div>
+	</el-dialog>
+	<!-- 导出 -->
+	<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" destroy-on-close @close="export_type = 1" :visible.sync="export_dialog" width="30%">
+		<div slot="title" class="dialog_title">
+			<div>导出</div>
+			<img class="close_icon" src="../../../../static/close_icon.png" @click="export_dialog = false">
+		</div>
+		<div class="remark_content">
+			<el-radio-group size="small" v-model="export_type">
+				<el-radio :label="1">款式资料</el-radio>
+				<el-radio :label="2">风格资料</el-radio>
+			</el-radio-group>
+		</div>
+		<div slot="footer" class="dialog_footer">
+			<el-button size="mini" @click="export_dialog = false">取消</el-button>
+			<el-button size="mini" type="primary" @click="exportFn">确认</el-button>
 		</div>
 	</el-dialog>
 </div>
@@ -392,6 +406,7 @@
 					],
 				}, 
 				search:"",				//款式编码
+				maintainer:"",			//对接人
 				max_height:0,	
 				page:1,
 				data:[],				//获取的数据
@@ -417,7 +432,9 @@
 				edit_dialog:false,			//编辑/重新提交弹窗
 				edit_dialog_title:"",		//编辑/重新提交标题
 				goods_type:'',				//类型
-				off_title:'确认下架？',			//下架弹窗标题
+				off_title:'确认下架？',		//下架弹窗标题
+				export_dialog:false,		//导出弹窗
+				export_type:1,				//导出类型（1:款式资料；2:风格资料）
 			}
 		},
 		created(){
@@ -599,6 +616,8 @@
 						start_time:this.date && this.date.length > 0?this.date[0]:"",
 						end_time:this.date && this.date.length > 0?this.date[1]:"",
 						check_status:this.check_status_id,
+						maintainer:this.maintainer,
+						export_type:this.export_type
 					}
 					if(this.multiple_selection.length > 0){
 						let goods_ids = this.multiple_selection.map(item => {
@@ -627,7 +646,7 @@
 							arr.push(`${k}=${arg[k]}`)
 						}
 					}
-
+					this.export_dialog = false;
 					let baseURL = `${location.origin}/api/productstyle/derivegetallproductstyle?${arr.join('&')}`
 					window.open(baseURL)
 				})
@@ -649,6 +668,7 @@
 					start_time:this.date && this.date.length > 0?this.date[0]:"",
 					end_time:this.date && this.date.length > 0?this.date[1]:"",
 					check_status:this.check_status_id,
+					maintainer:this.maintainer,
 					page:this.page,
 					pagesize:100
 				}

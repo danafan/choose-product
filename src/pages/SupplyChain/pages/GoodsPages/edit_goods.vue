@@ -144,115 +144,115 @@
 				</el-form-item>
 				<el-form-item label="爆款图片：" v-if="arg.hot_style">
 					<UploadFile :img_list="bk_img_list" :is_multiple="true" :current_num="bk_img.length" :size="80" :max_num="9" :only_view="is_detail || info_edit_fields.indexOf('hot_style') > -1 || info_edit_fields.indexOf('hot_url') > -1 || info_edit_fields.indexOf('hot_img') > -1" @callbackFn="bkCallbackFn"/>
-				</el-form-item>
-				<el-form-item label="主推款：">
-					<div v-if="is_detail || data_status === 0">{{arg.data_style == 1?'是':'否'}}</div>
-					<el-radio-group v-model="arg.data_style" :disabled="info_edit_fields.indexOf('data_style') > -1 || info_edit_fields.indexOf('data_num') > -1 || info_edit_fields.indexOf('data_price') > -1 || info_edit_fields.indexOf('data_remark') > -1" v-else>
-						<el-radio :label="1">是</el-radio>
-						<el-radio :label="0">否</el-radio>
-					</el-radio-group>
-				</el-form-item>
-				<el-form-item label="库存数：" v-if="arg.data_style">
-					<div v-if="is_detail || info_edit_fields.indexOf('data_style') > -1 || info_edit_fields.indexOf('data_num') > -1 || info_edit_fields.indexOf('data_price') > -1 || info_edit_fields.indexOf('data_remark') > -1">{{kcs}}</div>
-					<el-input type="number" v-model="kcs" v-else>
-					</el-input>
-				</el-form-item>
-				<el-form-item label="调价：" v-if="arg.data_style">
-					<div v-if="is_detail || info_edit_fields.indexOf('data_style') > -1 || info_edit_fields.indexOf('data_num') > -1 || info_edit_fields.indexOf('data_price') > -1 || info_edit_fields.indexOf('data_remark') > -1">{{tj}}</div>
-					<el-input type="number" v-model="tj" v-else>
-					</el-input>
-				</el-form-item>
-				<el-form-item label="备注：" v-if="arg.data_style">
-					<div v-if="is_detail || info_edit_fields.indexOf('data_style') > -1 || info_edit_fields.indexOf('data_num') > -1 || info_edit_fields.indexOf('data_price') > -1 || info_edit_fields.indexOf('data_remark') > -1">{{bz}}</div>
-					<el-input type="textarea" :rows="3" placeholder="请输入备注" v-model="bz" v-else>
-					</el-input>
-				</el-form-item>
-				<el-form-item label="独家款：">
-					<div v-if="is_detail">{{arg.sole_style == 1?'是':'否'}}</div>
-					<el-radio-group v-model="arg.sole_style" :disabled="info_edit_fields.indexOf('sole_style') > -1" v-else>
-						<el-radio :label="1">是</el-radio>
-						<el-radio :label="0">否</el-radio>
-					</el-radio-group>
-				</el-form-item>
-				<el-form-item label="自主款：">
-					<div v-if="is_detail">{{arg.again_style == 1?'是':'否'}}</div>
-					<el-radio-group v-model="arg.again_style" :disabled="info_edit_fields.indexOf('again_style') > -1" v-else>
-						<el-radio :label="1">是</el-radio>
-						<el-radio :label="0">否</el-radio>
-					</el-radio-group>
-				</el-form-item>
-				<el-form-item label="深度库存 ：">
-					<div v-if="is_detail || depth_inventory_status === 0">{{arg.depth_inventory == 1?'是':'否'}}</div>
-					<el-radio-group v-model="arg.depth_inventory" :disabled="info_edit_fields.indexOf('depth_inventory') > -1" v-else>
-						<el-radio :label="1">是</el-radio>
-						<el-radio :label="0">否</el-radio>
-					</el-radio-group>
-				</el-form-item>
-				<el-form-item label="视频款：">
-					<div v-if="is_detail || video_style_status === 0">{{arg.video_style == 1?'是':'否'}}</div>
-					<el-radio-group v-model="arg.video_style" :disabled="info_edit_fields.indexOf('video_style') > -1" v-else>
-						<el-radio :label="1">是</el-radio>
-						<el-radio :label="0">否</el-radio>
-					</el-radio-group>
-				</el-form-item>
-			</el-form>
-		</div>
-		<div class="form_row">
-			<el-form size="small" label-width="100px">
-				<el-form-item label="拍摄风格：" required>
-					<div>
-						<div class="flex" style="margin-bottom:10px">
-							<el-popover ref="stylePopover" placement="right-start" width="400" trigger="click">
-								<div>
-									<el-select v-model="selected_style" multiple filterable placeholder="全部风格">
-										<el-option
-										v-for="item in style_table_data"
-										:key="item.shooting_style_id"
-										:label="item.shooting_style_name"
-										:value="item.shooting_style_id">
-									</el-option>
-								</el-select>
-								<div class="dialog_footer">
-									<el-button size="small" type="primary" @click="setStyleFn">保存</el-button>
+					</el-form-item>
+					<el-form-item label="主推款：">
+						<div v-if="is_detail || data_status === 0">{{arg.data_style == 1?'是':'否'}}</div>
+						<el-radio-group v-model="arg.data_style" :disabled="info_edit_fields.indexOf('data_style') > -1 || info_edit_fields.indexOf('data_num') > -1 || info_edit_fields.indexOf('data_price') > -1 || info_edit_fields.indexOf('data_remark') > -1" v-else>
+							<el-radio :label="1">是</el-radio>
+							<el-radio :label="0">否</el-radio>
+						</el-radio-group>
+					</el-form-item>
+					<el-form-item label="库存数：" v-if="arg.data_style">
+						<div v-if="is_detail || info_edit_fields.indexOf('data_style') > -1 || info_edit_fields.indexOf('data_num') > -1 || info_edit_fields.indexOf('data_price') > -1 || info_edit_fields.indexOf('data_remark') > -1">{{kcs}}</div>
+						<el-input type="number" v-model="kcs" v-else>
+						</el-input>
+					</el-form-item>
+					<el-form-item label="调价：" v-if="arg.data_style">
+						<div v-if="is_detail || info_edit_fields.indexOf('data_style') > -1 || info_edit_fields.indexOf('data_num') > -1 || info_edit_fields.indexOf('data_price') > -1 || info_edit_fields.indexOf('data_remark') > -1">{{tj}}</div>
+						<el-input type="number" v-model="tj" v-else>
+						</el-input>
+					</el-form-item>
+					<el-form-item label="备注：" v-if="arg.data_style">
+						<div v-if="is_detail || info_edit_fields.indexOf('data_style') > -1 || info_edit_fields.indexOf('data_num') > -1 || info_edit_fields.indexOf('data_price') > -1 || info_edit_fields.indexOf('data_remark') > -1">{{bz}}</div>
+						<el-input type="textarea" :rows="3" placeholder="请输入备注" v-model="bz" v-else>
+						</el-input>
+					</el-form-item>
+					<el-form-item label="独家款：">
+						<div v-if="is_detail">{{arg.sole_style == 1?'是':'否'}}</div>
+						<el-radio-group v-model="arg.sole_style" :disabled="info_edit_fields.indexOf('sole_style') > -1" v-else>
+							<el-radio :label="1">是</el-radio>
+							<el-radio :label="0">否</el-radio>
+						</el-radio-group>
+					</el-form-item>
+					<el-form-item label="自主款：">
+						<div v-if="is_detail">{{arg.again_style == 1?'是':'否'}}</div>
+						<el-radio-group v-model="arg.again_style" :disabled="info_edit_fields.indexOf('again_style') > -1" v-else>
+							<el-radio :label="1">是</el-radio>
+							<el-radio :label="0">否</el-radio>
+						</el-radio-group>
+					</el-form-item>
+					<el-form-item label="深度库存 ：">
+						<div v-if="is_detail || depth_inventory_status === 0">{{arg.depth_inventory == 1?'是':'否'}}</div>
+						<el-radio-group v-model="arg.depth_inventory" :disabled="info_edit_fields.indexOf('depth_inventory') > -1" v-else>
+							<el-radio :label="1">是</el-radio>
+							<el-radio :label="0">否</el-radio>
+						</el-radio-group>
+					</el-form-item>
+					<el-form-item label="视频款：">
+						<div v-if="is_detail || video_style_status === 0">{{arg.video_style == 1?'是':'否'}}</div>
+						<el-radio-group v-model="arg.video_style" :disabled="info_edit_fields.indexOf('video_style') > -1" v-else>
+							<el-radio :label="1">是</el-radio>
+							<el-radio :label="0">否</el-radio>
+						</el-radio-group>
+					</el-form-item>
+				</el-form>
+			</div>
+			<div class="form_row">
+				<el-form size="small" label-width="100px">
+					<el-form-item label="拍摄风格：" required>
+						<div>
+							<div class="flex" style="margin-bottom:10px">
+								<el-popover ref="stylePopover" placement="right-start" width="400" trigger="click">
+									<div>
+										<el-select v-model="selected_style" multiple filterable placeholder="全部风格">
+											<el-option
+											v-for="item in style_table_data"
+											:key="item.shooting_style_id"
+											:label="item.shooting_style_name"
+											:value="item.shooting_style_id">
+										</el-option>
+									</el-select>
+									<div class="dialog_footer">
+										<el-button size="small" type="primary" @click="setStyleFn">保存</el-button>
+									</div>
 								</div>
-							</div>
-							<el-button size="mini" type="primary" slot="reference" v-if="goods_type != '3' && goods_type != '4' && info_edit_fields.indexOf('styles_data') == -1">添加</el-button>
-						</el-popover>
-					</div>
-					<div class="flex relative style_row" v-for="(item,index) in style_card_list">
-						<div class="relative style_item flex ac jc" >
-							<div>{{item.shooting_style_name}}</div>
-							<img class="delete_style_icon" src="../../../../static/delete_style_icon.png" v-if="goods_type != '3' && goods_type != '4' && info_edit_fields.indexOf('styles_data') == -1 && (item.edit_status == 1 || !item.edit_status)" @click.stop="deleteStyleTab(index)">
+								<el-button size="mini" type="primary" slot="reference" v-if="goods_type != '3' && goods_type != '4' && info_edit_fields.indexOf('styles_data') == -1">添加</el-button>
+							</el-popover>
 						</div>
-						<div class="flex-1">
-							<UploadFile :index="index" :size="80" :request_del="goods_type == '1'" :is_multiple="true" :max_num="9" :current_num="style_card_list[index].image_arr.length" :img_list="style_card_list[index].image_arr" :only_view="goods_type == '3' || goods_type == '4' || info_edit_fields.indexOf('styles_data') > -1 || item.edit_status == 0" @callbackFn="currentStyleImgCallBackFn(index,arguments)"/>
+						<div class="flex relative style_row" v-for="(item,index) in style_card_list">
+							<div class="relative style_item flex ac jc" >
+								<div>{{item.shooting_style_name}}</div>
+								<img class="delete_style_icon" src="../../../../static/delete_style_icon.png" v-if="goods_type != '3' && goods_type != '4' && info_edit_fields.indexOf('styles_data') == -1 && (item.edit_status == 1 || !item.edit_status)" @click.stop="deleteStyleTab(index)">
+								<div class="primary_color style_new_time" v-if="goods_type == '3' || goods_type == '4'">上新时间：{{item.style_new_time}}</div>
 							</div>
-							<div class="audit_ing" v-if="item.edit_status == 0">审核中</div>
+							<div class="flex-1">
+								<UploadFile :index="index" :size="80" :request_del="goods_type == '1'" :is_multiple="true" :max_num="9" :current_num="style_card_list[index].image_arr.length" :img_list="style_card_list[index].image_arr" :only_view="goods_type == '3' || goods_type == '4' || info_edit_fields.indexOf('styles_data') > -1 || item.edit_status == 0" @callbackFn="currentStyleImgCallBackFn(index,arguments)"/>
+								</div>
+								<div class="audit_ing" v-if="item.edit_status == 0">审核中</div>
+							</div>			
 						</div>
-						
-					</div>
-				</el-form-item>
-			</el-form>
+					</el-form-item>
+				</el-form>
+			</div>
+			<div class="bottom_row" v-if="goods_type == '1' || goods_type == '2' || goods_type == '5' || page_type == 'feedback'">
+				<el-button size="small" type="primary" @click="commitEditGoods">提交</el-button>
+			</div>
+			<div class="bottom_row" v-if="goods_type == '4'">
+				<el-button size="small" type="primary" @click="auditFn('1')">同意</el-button>
+				<el-button size="small" type="primary" @click="auditFn('2')">拒绝</el-button>
+			</div>
 		</div>
-		<div class="bottom_row" v-if="goods_type == '1' || goods_type == '2' || goods_type == '5' || page_type == 'feedback'">
-			<el-button size="small" type="primary" @click="commitEditGoods">提交</el-button>
-		</div>
-		<div class="bottom_row" v-if="goods_type == '4'">
-			<el-button size="small" type="primary" @click="auditFn('1')">同意</el-button>
-			<el-button size="small" type="primary" @click="auditFn('2')">拒绝</el-button>
-		</div>
-	</div>
-</template>
-<script>
-	import commonResource from '../../../../api/common_resource.js'
-	import resource from '../../../../api/chain_resource.js'
+	</template>
+	<script>
+		import commonResource from '../../../../api/common_resource.js'
+		import resource from '../../../../api/chain_resource.js'
 
-	import UploadFile from '../../../../components/upload_file.vue'
-	let that;
-	export default{
-		data(){
-			return{
-				that:this,
+		import UploadFile from '../../../../components/upload_file.vue'
+		let that;
+		export default{
+			data(){
+				return{
+					that:this,
 				is_detail:false,		//是否是详情
 				page_type:'',			//页面来源（goods:商品；feekback:反馈）
 				supplier_list:[],		//供应商列表
@@ -969,6 +969,10 @@
 				margin-right: 6rem;
 				width: 14rem;
 				height: 14rem;
+			}
+			.style_new_time{
+				position: absolute;
+				bottom: -65rem;
 			}
 		}
 		.border_bottom{
