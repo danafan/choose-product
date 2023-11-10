@@ -28,7 +28,7 @@
 					<el-table-column label="供应商" prop="supplier_name" width="160"></el-table-column>
 					<el-table-column label="拍摄风格" prop="shooting_style_name" width="150">
 					</el-table-column>
-					<el-table-column label="上新时间" prop="new_time_name" width="150">
+					<el-table-column label="上新时间" prop="style_new_time" width="150">
 					</el-table-column>
 					<el-table-column label="供应商款号" prop="style_name"></el-table-column>
 					<el-table-column label="款式编码" width="240">

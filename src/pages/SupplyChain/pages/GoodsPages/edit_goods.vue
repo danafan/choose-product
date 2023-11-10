@@ -223,7 +223,10 @@
 							<div class="relative style_item flex ac jc" >
 								<div>{{item.shooting_style_name}}</div>
 								<img class="delete_style_icon" src="../../../../static/delete_style_icon.png" v-if="goods_type != '3' && goods_type != '4' && info_edit_fields.indexOf('styles_data') == -1 && (item.edit_status == 1 || !item.edit_status)" @click.stop="deleteStyleTab(index)">
-								<div class="primary_color style_new_time" v-if="goods_type == '3' || goods_type == '4'">上新时间：{{item.style_new_time}}</div>
+								<div class="primary_color style_new_time flex space-nowrap" v-if="goods_type == '3' || goods_type == '4'">
+									<div>上新时间：</div>
+									<div style="width:70px">{{item.style_new_time}}</div>
+								</div>
 							</div>
 							<div class="flex-1">
 								<UploadFile :index="index" :size="80" :request_del="goods_type == '1'" :is_multiple="true" :max_num="9" :current_num="style_card_list[index].image_arr.length" :img_list="style_card_list[index].image_arr" :only_view="goods_type == '3' || goods_type == '4' || info_edit_fields.indexOf('styles_data') > -1 || item.edit_status == 0" @callbackFn="currentStyleImgCallBackFn(index,arguments)"/>
@@ -465,6 +468,7 @@
 						shooting_style_id:item.shooting_style_id,
 						shooting_style_name:item.shooting_style_name,
 						image_arr:item.imgs,
+						style_new_time:item.style_new_time,
 						edit_status:item.edit_status
 					}
 					this.style_card_list.push(style_card_item)
@@ -914,7 +918,6 @@
 <style lang="less" scoped>
 	.chain_page_content{
 		width: 100%;
-		// max-height: 980rem;
 		max-height: 820rem;
 		padding: 24rem;
 		display: flex;
@@ -947,7 +950,7 @@
 			justify-content: center;
 		}
 		.style_row{
-			margin-bottom: 15rem;
+			margin-bottom: 25rem;
 		}
 		.style_item{
 			border: 1px solid #FFC998;
@@ -972,7 +975,8 @@
 			}
 			.style_new_time{
 				position: absolute;
-				bottom: -65rem;
+				bottom: -45rem;
+				right: 0;
 			}
 		}
 		.border_bottom{

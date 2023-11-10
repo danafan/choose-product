@@ -6,13 +6,12 @@ module.exports = {
 	devServer: {
 		proxy: {
 			'/': {
-				// target: 'http://selectiontest.92nu.com',
-				target: 'http://selection.92nu.com',
+				target: 'http://selectiontest.92nu.com',
+				// target: 'http://selection.92nu.com',
 				ws: true,
 				changOlrigin: true,		
 			}
-		},
-		host:"0.0.0.0",  
+		}
 	},
 	// assetsDir: "clothes",
 	// publicPath:'../',

@@ -139,7 +139,7 @@
 					<el-table-column label="分类" prop="classification"></el-table-column>
 					<el-table-column label="合作模式" prop="mode"></el-table-column>
 					<el-table-column label="备注" prop="remark"></el-table-column>
-					<el-table-column label="上新时间" width="160" prop="new_time_name"></el-table-column>
+					<el-table-column label="上新时间" width="160" prop="style_new_time"></el-table-column>
 					<el-table-column label="审核状态" prop="common_text">
 						<template slot-scope="scope">
 							<div v-if="scope.row.check_status == 1">上架待审核</div>
@@ -224,7 +224,7 @@
 				</el-tabs>
 				<img class="close_icon view_close_icon" src="../../../../static/close_icon.png" @click="view_dialog = false">
 			</div>
-			<!-- <div class="primary_color">上新时间：{{view_shooting_style_list[view_active_index].style_new_time}}</div> -->
+			<div class="primary_color mb15" v-if="view_shooting_style_list.length > 0">上新时间：{{view_shooting_style_list[parseInt(view_active_index)].style_new_time}}</div>
 			<el-carousel style="width: 100%;height: 310px;" trigger="hover" indicator-position="none" :autoplay="false" :initial-index="default_img_index" v-if="view_shooting_style_list.length > 0">
 				<el-carousel-item v-for="item in view_shooting_style_list[parseInt(view_active_index)].view_img" :key="item">
 					<el-image :z-index="2999" class="view_image" :src="item" fit="scale-down" :preview-src-list="view_shooting_style_list[parseInt(view_active_index)].view_img"></el-image>
@@ -327,6 +327,9 @@
 	.view_image{
 		width: 100%;
 		height: 320px;
+	}
+	.mb15{
+		margin-bottom: 15rem;
 	}
 </style>
 <script>

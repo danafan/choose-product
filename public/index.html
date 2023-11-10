@@ -194,7 +194,11 @@
         var html = document.documentElement;
         var windowWidth = parseInt(html.clientWidth);       //html宽度
         var availwidth = parseInt(screen.availWidth);       //屏幕实际宽度
-        html.style.fontSize = windowWidth /1920 + 'px';
+        if(availwidth <= 500){
+           html.style.fontSize = '1px';
+         }else{
+           html.style.fontSize = windowWidth /1920 + 'px';
+         }
         // html.style.fontSize = '1px';
       } 
     })();

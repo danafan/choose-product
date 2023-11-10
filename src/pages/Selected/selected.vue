@@ -164,7 +164,7 @@
 					</div>
 					<div class="detail_row">
 						<div class="lable">上新时间</div>
-						<div class="value">{{goods_info.new_time_name}}</div>
+						<div class="value">{{goods_info.style_new_time}}</div>
 					</div>
 					<div class="detail_row">
 						<div class="lable">市场</div>
