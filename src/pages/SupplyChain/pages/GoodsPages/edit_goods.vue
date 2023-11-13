@@ -1,7 +1,7 @@
 <template>
 	<div class="chain_page_content">
 		<div class="form_row">
-			<el-form size="small" style="width: 50%" label-width="130px">
+			<el-form size="small" style="width: 50%" label-width="140px">
 				<el-form-item label="提交人：" v-if="is_detail">
 					<div>{{add_admin_name}}</div>
 				</el-form-item>
@@ -19,6 +19,22 @@
 					<div v-if="is_detail">{{arg.supplier_ksbm}}</div>
 					<el-input type="textarea" autosize placeholder="多个请用分号间隔" v-model="arg.supplier_ksbm" :disabled="info_edit_fields.indexOf('supplier_ksbm') > -1" v-else>
 					</el-input>
+				</el-form-item>
+				<el-form-item label="二开品牌款式编码：">
+					<div class="ekpp">
+						<el-form size="small" label-width="65px">
+							<el-form-item label="海澜：">
+								<div v-if="is_detail">{{海澜_ksbm}}</div>
+								<el-input type="textarea" autosize placeholder="多个请用分号间隔" v-model="海澜_ksbm" v-else>
+								</el-input>
+							</el-form-item>
+							<el-form-item label="JEEP：">
+								<div v-if="is_detail">{{JEEP_ksbm}}</div>
+								<el-input type="textarea" autosize placeholder="多个请用分号间隔" v-model="JEEP_ksbm" v-else>
+								</el-input>
+							</el-form-item>
+						</el-form>
+					</div>
 				</el-form-item>
 				<el-form-item label="供应商：" :required="!is_detail && goods_type != '2' && goods_type != '5' && info_edit_fields.indexOf('supplier_id') == -1 && page_type != 'feedback'">
 					<div v-if="is_detail || page_type == 'feedback'">{{arg.supplier_id | filterSupplier}}</div>
@@ -300,6 +316,8 @@
 					remark:"",				//备注
 					off_reason:"",			//下架原因
 				},							//可传递的参数
+				海澜_ksbm:"",
+				JEEP_ksbm:"",
 				default_hot_style:0,		//默认是否爆款
 				default_data_style:0,		//默认是否主推款
 				hot_status:10,				//爆款审核状态
@@ -460,6 +478,24 @@
 				this.tj = data_info.data_price;
 				this.bz = data_info.data_remark;
 
+				//处理海澜和jeep
+				let brand_ksbm = data_info.brand_ksbm;
+				if(!brand_ksbm){
+					this.海澜_ksbm = '';
+					this.JEEP_ksbm = '';
+				}else{
+					if(brand_ksbm.indexOf(';') > -1){
+						let new_brand_ksbm_arr = brand_ksbm.split(';');
+						new_brand_ksbm_arr.map(item => {
+							//给海澜和jeep赋值
+							this.setHJValue(item)
+						})
+					}else{
+						//给海澜和jeep赋值
+						this.setHJValue(brand_ksbm)
+					}
+				}
+
 				//拍摄风格
 				let styles_data = data_info.styles_data;
 
@@ -500,6 +536,15 @@
 							this.arg[key] = data_info[k];
 						}
 					}
+				}
+			},
+			//给海澜和jeep赋值
+			setHJValue(name){
+				var name_arr = name.split('_');
+				if(name_arr[0] == '海澜'){
+					this.海澜_ksbm = name_arr[1].replaceAll(",", ";")
+				}else if(name_arr[0] == 'JEEP'){
+					this.JEEP_ksbm = name_arr[1].replaceAll(",", ";")
 				}
 			},
 			//获取供应商列表
@@ -705,6 +750,34 @@
 					arg.data_price = this.tj;
 					arg.data_remark = this.bz;
 
+					//处理海澜和jeep
+					var new_海澜_ksbm = '';
+					if (!this.海澜_ksbm) {
+						new_海澜_ksbm = '';
+					}else if (this.海澜_ksbm.indexOf(";") > -1) {
+						new_海澜_ksbm = '海澜_' + this.海澜_ksbm.replaceAll(";", ",");
+					}else{
+						new_海澜_ksbm = '海澜_' + this.海澜_ksbm;
+					}
+					var new_JEEP_ksbm = '';
+					if (!this.JEEP_ksbm) {
+						new_JEEP_ksbm = '';
+					}else if (this.JEEP_ksbm.indexOf(";") > -1) {
+						new_JEEP_ksbm = 'JEEP_' + this.JEEP_ksbm.replaceAll(";", ",");
+					}else{
+						new_JEEP_ksbm = 'JEEP_' + this.JEEP_ksbm;
+					}
+					if(new_海澜_ksbm && new_JEEP_ksbm){
+						arg['brand_ksbm'] = new_海澜_ksbm + ';' + new_JEEP_ksbm;
+					}else if(!new_海澜_ksbm && !new_JEEP_ksbm){
+						arg['brand_ksbm'] = '';
+					}else{
+						if(new_海澜_ksbm){
+							arg['brand_ksbm'] = new_海澜_ksbm;
+						}else{
+							arg['brand_ksbm'] = new_JEEP_ksbm;
+						}
+					}
 
 					this.$confirm(`确认${this.goods_type == '1'?'添加':'编辑'}此商品吗?`, '提示', {
 						confirmButtonText: '确定',
@@ -716,7 +789,6 @@
 								if(res.data.code == 1){
 									this.$message.success(res.data.msg);
 									this.$emit('callBack');
-									// this.$router.go(-1);
 								}else{
 									this.$message.warning(res.data.msg);
 								}
@@ -978,6 +1050,12 @@
 				bottom: -45rem;
 				right: 0;
 			}
+		}
+		.ekpp{
+			border: 1px solid #DCDFE6;
+			border-radius: 3px;
+			padding-top: 25rem;
+			padding-right: 10rem;
 		}
 		.border_bottom{
 			border-bottom:1px solid #DDDDDD;

@@ -116,7 +116,7 @@
 				</el-table-column>
 				<el-table-column label="操作" width="120" fixed="right">
 					<template slot-scope="scope">
-						<el-button type="text" size="small" @click="undoSelected(scope.row.select_id)" v-if="scope.row.audit_status == 1">撤销</el-button>
+						<el-button type="text" size="small" @click="undoSelected(scope.row.select_id)" v-if="scope.row.audit_status == 1 && scope.row.is_self_select == 1">撤销</el-button>
 						<el-button type="text" size="small" @click="selectedInfo(scope.row.select_id)">详情</el-button>
 					</template>
 				</el-table-column>

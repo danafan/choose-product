@@ -1,10 +1,10 @@
 <template>
 	<div class="goods_info">
 		<div class="goods_name">{{goods_info.title}}</div>
-		<div class="info_content">
+		<div class="info_content" :class="{'delist_info_content':goods_info.check_status == 5}">
 			<div class="content_row">
 				<div class="row_lable">成本价</div>
-				<div class="row_price">¥{{goods_info.cost_price}}</div>
+				<div class="row_price" :class="{'delist_price':goods_info.check_status == 5}">¥{{goods_info.cost_price}}</div>
 			</div>
 			<div class="content_row">
 				<div class="row_lable">档口批价</div>
@@ -22,6 +22,19 @@
 				<div class="row_lable">BD款式编码</div>
 				<div class="row_value">{{goods_info.bd_i_id}}</div>
 			</div>
+			<div class="ek_content">
+				<div class="row_lable mb13">二开品牌款式编码</div>
+				<div class="ek_value flex fc jsb" :class="{'delist_ek_value':goods_info.check_status == 5}">
+					<div class="flex">
+						<div class="ek_row_lable space-nowrap">海澜</div>
+						<div class="row_value pre-line">{{goods_info.hl_ksbm}}</div>
+					</div>
+					<div class="flex">
+						<div class="ek_row_lable space-nowrap">JEEP</div>
+						<div class="row_value pre-line">{{goods_info.jeep_ksbm}}</div>
+					</div>
+				</div>
+			</div>
 			<div class="content_row">
 				<div class="row_lable">供应商款号</div>
 				<div class="row_value">{{goods_info.style_name}}</div>
@@ -30,148 +43,148 @@
 				<div class="row_lable space-nowrap">替代款款号</div>
 				<div class="flex-1 pre_wrap">
 					<span class="row_value" :class="{'link':item.style_id > 0}" @click="getDetail(item.style_id)" v-for="(item,index) in goods_info.replace_ksbm_data">{{item.ksbm}}<span v-if="index < goods_info.replace_ksbm_data.length - 1">，</span>
-					</span>
+				</span>
+			</div>
+		</div>
+		<div class="content_row">
+			<div class="row_lable">类目</div>
+			<div class="row_value">{{goods_info.category_name}}</div>
+		</div>
+		<div class="content_row">
+			<div class="row_lable">分类</div>
+			<div class="row_value">{{goods_info.classification_name}}</div>
+		</div>
+		<div class="content_row">
+			<div class="row_lable">颜色</div>
+			<div class="row_value">{{goods_info.color}}</div>
+		</div>
+		<div class="content_row">
+			<div class="row_lable">尺码</div>
+			<div class="row_value">{{goods_info.size}}</div>
+		</div>
+		<div class="content_row">
+			<div class="row_lable">面料</div>
+			<div class="row_value">{{goods_info.fabric}}</div>
+		</div>
+		<div class="content_row">
+			<div class="row_lable">网盘地址</div>
+			<div class="flex-1 link" :class="{'delist_link':goods_info.check_status == 5}" @click="windowOpen(goods_info.net_disk_address)">{{goods_info.or_net_disk_address}}</div>
+		</div>
+		<div class="content_row">
+			<div class="row_lable">备注</div>
+			<div class="row_value">{{goods_info.remark}}</div>
+		</div>
+	</div>
+	<div class="button_row">
+		<div class="button_item add" :class="{'delist_add':goods_info.check_status == 5}" @click="addCar">
+			<img class="add_car" src="../../../static/delist_add_car.png" v-if="goods_info.check_status == 5">
+			<img class="add_car" src="../../../static/add_car.png" v-else>
+			<div>加入选中</div>
+		</div>
+		<div class="button_item select" :class="{'drak_back':goods_info.cost_price == '' || goods_info.check_status == 5}" @click="selectStyle">
+			<div>立即选款</div>
+		</div>
+	</div>
+	<!-- 选款弹窗 -->
+	<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" @close="closeDialog" destroy-on-close :visible.sync="show_select">
+		<div slot="title" class="dialog_title">
+			<div>选款</div>
+			<img class="close_icon" src="../../../static/close_icon.png" @click="show_select = false">
+		</div>
+		<div class="select_content">
+			<div class="content_top">
+				<div class="top_form">
+					<div class="form_item">
+						<div class="value">{{goods_info.title}}</div>
+					</div>
+					<div class="form_item">
+						<div class="lable">供应商：</div>
+						<div class="value">{{goods_info.supplier_name}}</div>
+					</div>
+					<div class="form_item">
+						<div class="lable">款号：</div>
+						<div class="value">{{goods_info.style_name}}</div>
+					</div>
+					<div class="form_item">
+						<div class="lable">价格：</div>
+						<div class="value">{{goods_info.cost_price}}</div>
+					</div>
+					<div class="form_item">
+						<div class="value">{{goods_info.new_time_name}}</div>
+					</div>
+					<div class="form_item">
+						<div class="lable"><span>*</span>店铺：</div>
+						<div class="value">
+							<el-select v-model="shop_code" size="mini" multiple collapse-tags filterable clearable placeholder="选择店铺">
+								<el-option v-for="item in store_list" :key="item.shop_code" :label="item.shop_name" :value="item.shop_code">
+								</el-option>
+							</el-select>
+						</div>
+					</div>
+					<div class="form_item">
+						<div class="lable"><span>*</span>需求类型：</div>
+						<div class="value">
+							<el-checkbox-group size="mini" v-model="demand_type">
+								<el-checkbox :label="item.name" v-for="item in need_type">{{item.name}}</el-checkbox>
+							</el-checkbox-group>
+						</div>
+					</div>
+					<div class="form_item">
+						<div class="lable"><span>*</span>发货类型：</div>
+						<div class="value">
+							<el-select v-model="send_type" size="mini"  multiple collapse-tags filterable clearable placeholder="选择发货类型">
+								<el-option v-for="item in delivery_type_list" :key="item.name" :label="item.name" :value="item.name">
+								</el-option>
+							</el-select>
+						</div>
+					</div>
+					<div class="form_item">
+						<div class="lable">需求日期：</div>
+						<div class="value">
+							<el-date-picker size="mini" v-model="demand_date" type="date" value-format="yyyy-MM-dd" placeholder="选择日期">
+							</el-date-picker>
+						</div>
+					</div>
+					<div class="form_item">
+						<div class="lable">售卖价格：</div>
+						<div class="value">
+							<el-input size="mini" type="number" clearable v-model="selling_price" placeholder="请输入售卖价格"></el-input>
+						</div>
+					</div>
+				</div>
+				<div class="banner">
+					<el-carousel indicator-position="none" arrow="never" @change="changeImage" ref="cardShow" class="el-carousel-container">
+						<el-carousel-item v-for="item in banner_list" :key="item">
+							<el-image :z-index="9999" class="image" :src="item" fit="scale-down" :preview-src-list="banner_list"></el-image>
+						</el-carousel-item>
+					</el-carousel>
+					<div class="indicator_box">
+						<div class="indicator" :class="{'is_active':active_index == index}" v-for="(item,index) in banner_list" @mouseenter="checkIndex(index)"></div>
+					</div>
 				</div>
 			</div>
-			<div class="content_row">
-				<div class="row_lable">类目</div>
-				<div class="row_value">{{goods_info.category_name}}</div>
-			</div>
-			<div class="content_row">
-				<div class="row_lable">分类</div>
-				<div class="row_value">{{goods_info.classification_name}}</div>
-			</div>
-			<div class="content_row">
-				<div class="row_lable">颜色</div>
-				<div class="row_value">{{goods_info.color}}</div>
-			</div>
-			<div class="content_row">
-				<div class="row_lable">尺码</div>
-				<div class="row_value">{{goods_info.size}}</div>
-			</div>
-			<div class="content_row">
-				<div class="row_lable">面料</div>
-				<div class="row_value">{{goods_info.fabric}}</div>
-			</div>
-			<div class="content_row">
-				<div class="row_lable">网盘地址</div>
-				<div class="flex-1 link" @click="windowOpen(goods_info.net_disk_address)">{{goods_info.or_net_disk_address}}</div>
-			</div>
-			<div class="content_row">
-				<div class="row_lable">备注</div>
-				<div class="row_value">{{goods_info.remark}}</div>
-			</div>
+			<QuillEditor @callback="getEditor"/>
 		</div>
-		<div class="button_row">
-			<div class="button_item add" @click="addCar">
-				<img class="add_car" src="../../../static/add_car.png">
-				<div>加入选中</div>
-			</div>
-			<div class="button_item select" :class="{'drak_back':goods_info.cost_price == ''}" @click="selectStyle">
-				<div>立即选款</div>
-			</div>
-			<div class="button_row_dialog flex ac jc" v-if="goods_info.check_status == 5">款式已下架</div>
-		</div>
-		<!-- 选款弹窗 -->
-		<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" @close="closeDialog" destroy-on-close :visible.sync="show_select">
+		<!-- 提示弹窗 -->
+		<el-dialog :close-on-click-modal="false" width="35%" :close-on-press-escape="false" :show-close="false" :visible.sync="toast_dialog" append-to-body>
 			<div slot="title" class="dialog_title">
-				<div>选款</div>
-				<img class="close_icon" src="../../../static/close_icon.png" @click="show_select = false">
+				<div>温馨提示</div>
+				<img class="close_icon" src="../../../static/close_icon.png" @click="toast_dialog = false">
 			</div>
-			<div class="select_content">
-				<div class="content_top">
-					<div class="top_form">
-						<div class="form_item">
-							<div class="value">{{goods_info.title}}</div>
-						</div>
-						<div class="form_item">
-							<div class="lable">供应商：</div>
-							<div class="value">{{goods_info.supplier_name}}</div>
-						</div>
-						<div class="form_item">
-							<div class="lable">款号：</div>
-							<div class="value">{{goods_info.style_name}}</div>
-						</div>
-						<div class="form_item">
-							<div class="lable">价格：</div>
-							<div class="value">{{goods_info.cost_price}}</div>
-						</div>
-						<div class="form_item">
-							<div class="value">{{goods_info.new_time_name}}</div>
-						</div>
-						<div class="form_item">
-							<div class="lable"><span>*</span>店铺：</div>
-							<div class="value">
-								<el-select v-model="shop_code" size="mini" multiple collapse-tags filterable clearable placeholder="选择店铺">
-									<el-option v-for="item in store_list" :key="item.shop_code" :label="item.shop_name" :value="item.shop_code">
-									</el-option>
-								</el-select>
-							</div>
-						</div>
-						<div class="form_item">
-							<div class="lable"><span>*</span>需求类型：</div>
-							<div class="value">
-								<el-checkbox-group size="mini" v-model="demand_type">
-									<el-checkbox :label="item.name" v-for="item in need_type">{{item.name}}</el-checkbox>
-								</el-checkbox-group>
-							</div>
-						</div>
-						<div class="form_item">
-							<div class="lable"><span>*</span>发货类型：</div>
-							<div class="value">
-								<el-select v-model="send_type" size="mini"  multiple collapse-tags filterable clearable placeholder="选择发货类型">
-									<el-option v-for="item in delivery_type_list" :key="item.name" :label="item.name" :value="item.name">
-									</el-option>
-								</el-select>
-							</div>
-						</div>
-						<div class="form_item">
-							<div class="lable">需求日期：</div>
-							<div class="value">
-								<el-date-picker size="mini" v-model="demand_date" type="date" value-format="yyyy-MM-dd" placeholder="选择日期">
-								</el-date-picker>
-							</div>
-						</div>
-						<div class="form_item">
-							<div class="lable">售卖价格：</div>
-							<div class="value">
-								<el-input size="mini" type="number" clearable v-model="selling_price" placeholder="请输入售卖价格"></el-input>
-							</div>
-						</div>
-					</div>
-					<div class="banner">
-						<el-carousel indicator-position="none" arrow="never" @change="changeImage" ref="cardShow" class="el-carousel-container">
-							<el-carousel-item v-for="item in banner_list" :key="item">
-								<el-image :z-index="9999" class="image" :src="item" fit="scale-down" :preview-src-list="banner_list"></el-image>
-							</el-carousel-item>
-						</el-carousel>
-						<div class="indicator_box">
-							<div class="indicator" :class="{'is_active':active_index == index}" v-for="(item,index) in banner_list" @mouseenter="checkIndex(index)"></div>
-						</div>
-					</div>
-				</div>
-				<QuillEditor @callback="getEditor"/>
+			<div class="toast_content">
+				<div class="toast_text">{{toast_content}}</div>
+				<el-checkbox :true-label="1" :false-label="0" v-model="type">24小时内不再提示</el-checkbox>
 			</div>
-			<!-- 提示弹窗 -->
-			<el-dialog :close-on-click-modal="false" width="35%" :close-on-press-escape="false" :show-close="false" :visible.sync="toast_dialog" append-to-body>
-				<div slot="title" class="dialog_title">
-					<div>温馨提示</div>
-					<img class="close_icon" src="../../../static/close_icon.png" @click="toast_dialog = false">
-				</div>
-				<div class="toast_content">
-					<div class="toast_text">{{toast_content}}</div>
-					<el-checkbox :true-label="1" :false-label="0" v-model="type">24小时内不再提示</el-checkbox>
-				</div>
-				<div slot="footer" class="dialog_footer">
-					<el-button size="small" @click="toast_dialog = false">取消</el-button>
-					<el-button type="primary" size="small" @click="confirmSelect(1)">继续选择</el-button>
-				</div>
-			</el-dialog>
 			<div slot="footer" class="dialog_footer">
-				<el-button type="primary" :disabled="disabled" size="small" @click="confirmSelect(0)">确认选择</el-button>
+				<el-button size="small" @click="toast_dialog = false">取消</el-button>
+				<el-button type="primary" size="small" @click="confirmSelect(1)">继续选择</el-button>
 			</div>
 		</el-dialog>
-	</div>
+		<div slot="footer" class="dialog_footer">
+			<el-button type="primary" :disabled="disabled" size="small" @click="confirmSelect(0)">确认选择</el-button>
+		</div>
+	</el-dialog>
+</div>
 </template>
 <script>
 	import QuillEditor from '../../../components/quill_editor.vue'
@@ -181,6 +194,8 @@
 	export default{
 		data(){
 			return{
+				hl_ksbm:"",
+				jeep_ksbm:"",				
 				show_select:false,		//选款弹窗
 				store_list:[],			//店铺列表
 				shop_code:[],			//选中的店铺
@@ -234,7 +249,7 @@
 			},	
 			//点击选款
 			selectStyle(){
-				if(this.goods_info.cost_price != ''){
+				if(this.goods_info.cost_price != '' && this.goods_info.check_status != 5){
 					//获取选款轮播图
 					this.chooseBeforGetImg();
 					//获取店铺列表
@@ -243,7 +258,11 @@
 					this.getAllDemandSendType();
 					this.show_select = true;
 				}else{
-					this.$message.warning('该商品没有成本价,不能选款!')
+					if(this.goods_info.cost_price == ''){
+						this.$message.warning('该商品没有成本价,不能选款!')
+					}else{
+						this.$message.warning('该商品已下架,不能选款!')
+					}
 				}
 			},
 			//缓存选款的店铺、需求类型、发货类型参数
@@ -424,7 +443,7 @@
 			},
 			//点击加入购物车
 			addCar(){
-				if(this.goods_info.cost_price != ''){
+				if(this.goods_info.cost_price != '' && this.goods_info.check_status != 5){
 					let arg = {
 						style_id:this.goods_info.style_id
 					}
@@ -441,7 +460,11 @@
 						}
 					})
 				}else{
-					this.$message.warning('该商品没有成本价,不能加入待选!')
+					if(this.goods_info.cost_price == ''){
+						this.$message.warning('该商品没有成本价,不能加入待选!')
+					}else{
+						this.$message.warning('该商品已下架,不能加入待选!')
+					}
 				}
 			},
 			windowOpen(url){
@@ -474,7 +497,6 @@
 <style lang="less" scoped>
 	.goods_info{
 		width: 512rem;
-		// width: 912rem;
 		display: flex;
 		flex-direction: column;
 		.goods_name{
@@ -491,7 +513,7 @@
 				margin-bottom: 13rem;
 				display: flex;
 				.row_lable{
-					width: 135rem;
+					width: 155rem;
 					font-size:12rem;
 					color: #666666;
 				}
@@ -500,10 +522,8 @@
 					font-size:24rem;
 					font-weight: 500;
 				}
-				.row_value{
-					flex:1;
-					font-size:12rem;
-					color: #333333;
+				.delist_price{
+					color: #494744;
 				}
 				.link{
 					font-size: 12px;
@@ -515,7 +535,38 @@
 					line-height: 16px;
 					color: #f37605;
 				}
+				.delist_link{
+					color: #333333;
+				}
 			}
+			.mb13{
+				margin-bottom: 13rem;
+			}
+			.ek_value{
+				overflow-y: scroll;
+				padding: 12rem;
+				margin-bottom: 13rem;
+				height: 63px;
+				background: #FFF6EE;
+				border: 1px solid #FFDFC1;
+			}
+			.delist_ek_value{
+				background: #F2F2F2;
+				border: 1px solid #CCCCCC;
+			}
+			.ek_row_lable{
+				width: 143rem;
+				font-size:12rem;
+				color: #666666;
+			}
+			.row_value{
+				flex:1;
+				font-size:12rem;
+				color: #333333;
+			}
+		}
+		.delist_info_content{
+			background: #F6F6F6;
 		}
 		.button_row{
 			position: relative;
@@ -544,25 +595,21 @@
 				background: #FEEDDD;
 				color: var(--color);
 			}
+			.delist_add{
+				border: 1px solid #494744;
+				cursor: not-allowed;
+				background: #CDCDCD;
+				color: #494744;
+			}
 			.select{
 				background: var(--color);
 				color: #ffffff;
 			}
 			.drak_back{
-				border:1px solid #999999;
-				background-color: #999999;
+				cursor: not-allowed;
+				border:1px solid #494744;
+				background-color: #494744;
 			}
-		}
-		.button_row_dialog{
-			background: rgba(71, 71, 71, .4);
-			position: absolute;
-			top: 0;
-			left: 0;
-			width: 100%;
-			height: 100%;
-			font-size: 16rem;
-			color: #ffffff;
-			font-weight: bold;
 		}
 		.select_content{
 			padding: 18rem;

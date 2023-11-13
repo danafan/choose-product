@@ -1,6 +1,11 @@
 <template>
 	<div class="image_box">
-		<el-image :z-index="2006" class="goods_image" :src="current_image_list[0]" fit="scale-down" :preview-src-list="current_image_list"></el-image>
+		<div class="main_image">
+			<el-image :z-index="2006" class="goods_image" :src="current_image_list[0]" fit="scale-down" :preview-src-list="current_image_list"></el-image>
+			<div class="delist_box flex ac jc" v-if="checkStatus == 5">
+				<img class="delist_icon" src="../../../static/delist_icon.png">
+			</div>
+		</div>
 		<div class="img_list_title">图片列表</div>
 		<div class="carousel_content">
 			<img class="detail_arrow" src="../../../static/detail_left.png" @click="checkBanner(-1)">
@@ -17,49 +22,70 @@
 	</div>
 </template>
 <style lang="less" scoped>
-.image_box{
-	border: 1px solid #E8E8E8;
-	width: 420rem;
-	height: 546rem;
-	.goods_image{
+	.image_box{
+		border: 1px solid #E8E8E8;
 		width: 420rem;
-		height: 420rem;
-	}
-	.img_list_title{
-		padding-left: 20rem;
-		height: 38rem;
-		line-height: 38rem;
-		font-size: 12rem;
-		color: #333333;
-	}
-	.carousel_content{
-		width: 420rem;
-		display: flex;
-		align-items: center;
-		.detail_arrow{
-			margin-left: 8rem;
-			margin-right: 8rem;
-			width: 17rem;
-			height: 30rem;
-		}
-		.carousel_box{
-			height: 66rem !important;
-			flex: 1 !important;
-			overflow-y: hidden;
-			.carousel_item{
-				display: flex;
-				justify-content: space-between;
-				.img_list_item{
-					width: 66rem;
-					height: 66rem;
+		height: 546rem;
+		.main_image{
+			position: relative;
+			width: 420rem;
+			height: 420rem;
+			.goods_image{
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+			}
+			.delist_box{
+				background: rgba(0, 0, 0, .54);
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				z-index:9;
+				.delist_icon{
+					width: 165rem;
+					height: 165rem;
 				}
-				.border_style{
-					border:1px solid var(--color);
+			}
+		}
+		.img_list_title{
+			padding-left: 20rem;
+			height: 38rem;
+			line-height: 38rem;
+			font-size: 12rem;
+			color: #333333;
+		}
+		.carousel_content{
+			width: 420rem;
+			display: flex;
+			align-items: center;
+			.detail_arrow{
+				margin-left: 8rem;
+				margin-right: 8rem;
+				width: 17rem;
+				height: 30rem;
+			}
+			.carousel_box{
+				height: 66rem !important;
+				flex: 1 !important;
+				overflow-y: hidden;
+				.carousel_item{
+					display: flex;
+					justify-content: space-between;
+					.img_list_item{
+						width: 66rem;
+						height: 66rem;
+					}
+					.border_style{
+						border:1px solid var(--color);
+					}
 				}
 			}
 		}
 	}
-}
 </style>
 <script>
 	export default{
@@ -73,7 +99,12 @@
 			//所有图片列表
 			image_list:{
 				type:Array,
-				default:[]
+			default:[]
+			},
+			//是否下架状态
+			checkStatus:{
+				type:Number,
+			default:null
 			}
 		},
 		computed:{

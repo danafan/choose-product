@@ -1,6 +1,7 @@
 <template>
 	<div class="store_info_container">
-		<img class="store_info_back" src="../../../static/store_info_back.png">
+		<img class="store_info_back" src="../../../static/delist_store_info_back.png" v-if="goods_info.check_status == 5">
+		<img class="store_info_back" src="../../../static/store_info_back.png" v-else>
 		<div class="store_info">
 			<div class="store_info_row">
 				<div class="store_info_lable">供应商</div>
@@ -26,8 +27,7 @@
 			</div>
 		</div>
 		<div class="detail_box">
-			<div class="get_detail" @click="supplierDetail">查看详情</div>
-			<div class="button_row_dialog flex ac jc" v-if="goods_info.check_status == 5">款式已下架</div>
+			<div class="get_detail" :class="{'delist_get_detail':goods_info.check_status == 5}" @click="supplierDetail">查看详情</div>
 		</div>
 	</div>
 </template>
@@ -42,9 +42,13 @@
 		methods:{
 			//点击跳转供应商详情
 			supplierDetail(){
-				let active_path = `/supplier_detail?supplier_id=${this.goods_info.supplier_id}`;
-				const routeData = this.$router.resolve(active_path);
-				window.open(routeData.href);
+				if(this.goods_info.check_status == 5){
+					this.$message.warning('该商品已下架!')
+				}else{
+					let active_path = `/supplier_detail?supplier_id=${this.goods_info.supplier_id}`;
+					const routeData = this.$router.resolve(active_path);
+					window.open(routeData.href);
+				}
 			}
 		}
 	}
@@ -113,16 +117,11 @@
 				color: var(--color);
 				cursor:pointer;
 			}
-			.button_row_dialog{
-				background: rgba(71, 71, 71, .4);
-				position: absolute;
-				top: 0;
-				left: 0;
-				width: 100%;
-				height: 100%;
-				font-size: 16rem;
-				color: #ffffff;
-				font-weight: bold;
+			.delist_get_detail{
+				border:1px solid #494744;
+				background: #EEEEEE;
+				color: #494744;
+				cursor:not-allowed;
 			}
 		}
 	}

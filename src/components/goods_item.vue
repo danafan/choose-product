@@ -10,6 +10,9 @@
 			<el-image class="popover_image" fit="scale-down" :src="domain + info.img"></el-image>
 			<el-image class="goods_img" :src="domain + info.img" slot="reference" fit="scale-down"></el-image>
 		</el-popover>
+		<div class="delist_box flex ac jc">
+			<img class="delist_icon" src="../static/delist_icon.png">
+		</div>
 	</div>
 	<img class="image_box" :class="[{'default_img_width':!is_enlarge},{'enlarge_img_width':is_enlarge}]" src="../static/load_failure.png" @click="getMoreImage" v-else>
 	<div class="goods_info" @click.stop="getDetail" @mousedown="mouseDownFn" @mouseup="mouseUpFn">
@@ -155,8 +158,7 @@
 			<div class="flex ac">
 				<img class="enlarge_icon" src="../static/enlarge_icon.png" @click.stop="$emit('enlargeFn',info)" v-if="!is_enlarge">
 				<div class="feek_back" @click.stop="feekback_dialog = true">反馈</div>
-			</div>
-			
+			</div>		
 		</div>
 	</div>
 	<!-- 选款弹窗 -->
@@ -328,8 +330,8 @@
 </style>
 <style lang="less" scoped>
 	.primary_color{
-				color: #F37605;
-			}
+		color: #F37605;
+	}
 	.default_width{
 		width: 265rem;
 	}
@@ -351,6 +353,19 @@
 				left: 0;
 				width: 100%;
 				height: 100%;
+			}
+			.delist_box{
+				background: rgba(0, 0, 0, .54);
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				z-index:9;
+				.delist_icon{
+					width: 84rem;
+					height: 84rem;
+				}
 			}
 		}
 		.default_img_width{
