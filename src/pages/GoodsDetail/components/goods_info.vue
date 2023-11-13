@@ -512,11 +512,6 @@
 			.content_row{
 				margin-bottom: 13rem;
 				display: flex;
-				.row_lable{
-					width: 155rem;
-					font-size:12rem;
-					color: #666666;
-				}
 				.row_price{
 					color: var(--color);
 					font-size:24rem;
@@ -542,14 +537,21 @@
 			.mb13{
 				margin-bottom: 13rem;
 			}
+			.row_lable{
+				width: 155rem;
+				font-size:12rem;
+				color: #666666;
+			}
 			.ek_value{
+				width: 294rem;
 				overflow-y: scroll;
 				padding: 12rem;
 				margin-bottom: 13rem;
-				height: 63px;
+				height: 63rem;
 				background: #FFF6EE;
 				border: 1px solid #FFDFC1;
 			}
+			.ek_value::-webkit-scrollbar{display:none}
 			.delist_ek_value{
 				background: #F2F2F2;
 				border: 1px solid #CCCCCC;

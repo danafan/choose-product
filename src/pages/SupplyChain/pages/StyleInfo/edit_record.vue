@@ -71,7 +71,7 @@
 											<el-image :z-index="2006" class="edit_image" :src="iii" fit="scale-down" :preview-src-list="scope.row.edit_info_arr[index]" v-for="iii in scope.row.edit_info_arr[index]"></el-image>
 										</div>
 									</div>
-									<div style="width:180px;text-align: start" v-else>{{scope.row.edit_info_arr[index]}}</div>
+									<div style="width:180px;text-align: start" v-html="scope.row.edit_info_arr[index]" v-else></div>
 								</div>
 							</div>
 						</template>
@@ -370,7 +370,14 @@
 										})
 									}
 									edit_info_arr.push(all_imgs_arr)
-								}else{
+								}
+								// else if(k == 'brand_ksbm'){
+								// 	edit_info_arr.push(`${this.label_filter(k)}：<br/>${item.edit_info[k]}`)
+								// 	item.edit_info[k].split(';').map(item => {
+								// 		edit_info_arr.push(item)
+								// 	})
+								// }
+								else{
 									edit_info_arr.push(`${this.label_filter(k)}：${item.edit_info[k]}`)
 								}
 							}
@@ -456,6 +463,8 @@
 					return '图片'
 				case 'replace_ksbm':
 					return '替代款'
+				case 'brand_ksbm':
+					return '二开品牌款式编码'
 				}
 			},
 			//切换页码

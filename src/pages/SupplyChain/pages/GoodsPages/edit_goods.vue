@@ -25,12 +25,12 @@
 						<el-form size="small" label-width="65px">
 							<el-form-item label="海澜：">
 								<div v-if="is_detail">{{海澜_ksbm}}</div>
-								<el-input type="textarea" autosize placeholder="多个请用分号间隔" v-model="海澜_ksbm" v-else>
+								<el-input type="textarea" autosize placeholder="多个请用分号间隔" v-model="海澜_ksbm" :disabled="info_edit_fields.indexOf('brand_ksbm') > -1" v-else>
 								</el-input>
 							</el-form-item>
 							<el-form-item label="JEEP：">
 								<div v-if="is_detail">{{JEEP_ksbm}}</div>
-								<el-input type="textarea" autosize placeholder="多个请用分号间隔" v-model="JEEP_ksbm" v-else>
+								<el-input type="textarea" autosize placeholder="多个请用分号间隔" v-model="JEEP_ksbm" :disabled="info_edit_fields.indexOf('brand_ksbm') > -1" v-else>
 								</el-input>
 							</el-form-item>
 						</el-form>

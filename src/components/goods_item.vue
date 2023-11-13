@@ -10,7 +10,7 @@
 			<el-image class="popover_image" fit="scale-down" :src="domain + info.img"></el-image>
 			<el-image class="goods_img" :src="domain + info.img" slot="reference" fit="scale-down"></el-image>
 		</el-popover>
-		<div class="delist_box flex ac jc">
+		<div class="delist_box flex ac jc" v-if="info.showOffShelf">
 			<img class="delist_icon" src="../static/delist_icon.png">
 		</div>
 	</div>
@@ -79,12 +79,13 @@
 		<div class="line mt-6"></div>
 		<div class="set_row">
 			<div class="button_row">
-				<div class="add" @click.stop="addCar(info.cost_price)" v-if="info.in_cart == 0">
-					<img class="add_car" src="../static/add_car.png">
+				<div class="add" :class="{'delist_add':info.showOffShelf}" @click.stop="addCar(info.cost_price)" v-if="info.in_cart == 0">
+					<img class="add_car" src="../static/delist_add_car.png" v-if="info.showOffShelf">
+					<img class="add_car" src="../static/add_car.png" v-else>
 					<div>待选</div>
 				</div>
 				<div class="yjr" v-else @click.stop>已加入</div>
-				<div class="xk" :class="{'drak_back':info.cost_price == ''}" @click.stop="selectStyle(info.style_id)">选款</div>
+				<div class="xk" :class="{'drak_back':info.cost_price == '' || info.showOffShelf}" @click.stop="selectStyle(info.style_id)">选款</div>
 			</div>
 			<div class="flex ac">
 				<div class="grade_name">{{info.grade_name}}</div>
@@ -491,6 +492,11 @@
 							height: 12rem;
 						}
 					}
+					.delist_add{
+						cursor: not-allowed;
+						border:1px solid #484643;
+						color: #474541;
+					}
 					.yjr{
 						font-size: 12rem;
 						color: #999999;
@@ -506,7 +512,9 @@
 						color: #ffffff;
 					}
 					.drak_back{
-						background-color: #999999;
+						cursor: not-allowed;
+						border: 1px solid #494744;
+						background: #494744;
 					}
 				}
 				.grade_name{
@@ -761,7 +769,7 @@
 			is_enlarge:{
 				type:Boolean,
 			default:false
-			},
+			}
 		},
 		watch:{
 			active_tab_index:function(n,o){
@@ -776,7 +784,7 @@
 			//切换24小时内不提示
 			type:function(n,o){
 				this.checkToast(n);
-			},
+			}
 		},
 		computed:{
 			//图片前缀
@@ -802,7 +810,7 @@
 			},
 			//点击选款
 			selectStyle(style_id){
-				if(this.info.cost_price != ''){
+				if(this.info.cost_price != '' && !this.info.showOffShelf){
 					//获取选款轮播图
 					this.chooseBeforGetImg(style_id);
 					//获取店铺列表
@@ -811,7 +819,11 @@
 					this.getAllDemandSendType();
 					this.show_select = true;
 				}else{
-					this.$message.warning('该商品没有成本价,不能选款!')
+					if(this.info.showOffShelf){
+						this.$message.warning('该商品已下架,不能选款!')
+					}else if(this.info.cost_price == ''){
+						this.$message.warning('该商品没有成本价,不能选款!')
+					}
 				}
 			},
 			//缓存选款的店铺、需求类型、发货类型参数
@@ -1030,10 +1042,15 @@
 			},
 			//点击加入购物车
 			addCar(cost_price){
+				if(this.info.showOffShelf){
+					this.$message.warning('该商品已下架，不能加入待选！')
+					return;
+				}
 				if(cost_price == ''){
 					this.$message.warning('该商品没有成本价，不能加入待选！')
 					return;
 				}
+				
 				let arg = {
 					style_id:this.info.style_id
 				}

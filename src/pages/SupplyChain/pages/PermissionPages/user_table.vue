@@ -6,6 +6,12 @@
 					<el-input placeholder="搜索姓名" clearable v-model="search">
 					</el-input>
 				</el-form-item>
+				<el-form-item label="角色：">
+						<el-select v-model="ajax_role_ids" clearable multiple filterable collapse-tags placeholder="全部">
+							<el-option v-for="item in ajax_role_list" :key="item.menu_role_id" :label="item.menu_role_name" :value="item.menu_role_id">
+							</el-option>
+						</el-select>
+					</el-form-item>
 				<el-form-item class="form_item">
 					<el-button type="primary" @click="checkPage(1)">查询</el-button>
 				</el-form-item>
@@ -85,6 +91,8 @@
 	export default{
 		data(){
 			return{
+				ajax_role_list:[],			//筛选项角色列表
+				ajax_role_ids:[],			//选中的角色列表
 				search:"",
 				loading:false,
 				data:{},					//返回数据
@@ -117,6 +125,8 @@
 			}
 		},
 		created(){
+			//获取角色列表
+			this.ajaxRoleList();
 			//获取列表
 			this.getData();
 		},
@@ -143,10 +153,21 @@
 					"px";
 				});
 			},
+			//获取角色列表
+			ajaxRoleList(){
+				commonResource.ajaxRoleList().then(res => {
+					if(res.data.code == 1){
+						this.ajax_role_list = res.data.data;
+					}else{
+						this.$message.warning(res.data.msg);
+					}
+				})
+			},
 			//获取列表
 			getData(){
 				let arg = {
 					search:this.search,
+					menu_role_id:this.ajax_role_ids.join(','),
 					pagesize:10,
 					page:this.page
 				}
