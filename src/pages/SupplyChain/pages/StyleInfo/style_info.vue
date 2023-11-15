@@ -152,7 +152,7 @@
 					</el-table-column>
 					<el-table-column label="操作" width="180" fixed="right">
 						<template slot-scope="scope">
-							<el-button type="text" size="small" v-if="(scope.row.check_status == 1 || scope.row.check_status == 4) && button_list.agree_refuse == 1" @click="editFn(scope.row.goods_id,'审核商品','4')">审核</el-button>
+							<el-button type="text" size="small" v-if="(scope.row.check_status == 1 || scope.row.check_status == 4) && button_list.agree_refuse == 1 && scope.row.is_enable == 1" @click="editFn(scope.row.goods_id,'审核商品','4')">审核</el-button>
 							<el-button type="text" size="small" v-if="(scope.row.check_status == 2 || scope.row.check_status == 6) && button_list.in_out == 1" @click="checkStatus(scope.row.goods_id,scope.row.check_status)">下架</el-button>
 							<el-button type="text" size="small" v-if="scope.row.check_status == 5 && button_list.in_out == 1 && scope.row.is_enable == 1" @click="checkStatus(scope.row.goods_id,scope.row.check_status)">上架</el-button>
 							<el-button size="small" type="text" @click="adjustAudit(scope.row.style_id,scope.row.cost_price,scope.row.edit_price)" v-if="scope.row.price_status == '1' && button_list.price_btn == 1">调价审批</el-button>
@@ -776,36 +776,46 @@
 					})
 					unset_num = total_num - unset_list.length;
 				}else if(type.indexOf('audit') > -1){	//批量审批
-					let ids = [];
-					this.multiple_selection.map(item => {
-						ids.push(item.goods_id)
+					title = `确认批量${type.split('_')[1] == 1?'同意':'拒绝'}？`;
+					let unset_list = this.multiple_selection.filter(item => {
+						return item.is_enable == 1;
 					})
-					this.$confirm(`确认批量${type.split('_')[1] == 1?'同意':'拒绝'}？`, '提示', {
-						confirmButtonText: '确定',
-						cancelButtonText: '取消',
-						type: 'warning'
-					}).then(() => {
-						let arg = {
-							goods_id:ids.join(','),
-							type:type.split('_')[1]
-						}
-						resource.auditGoods(arg).then(res => {
-							if(res.data.code == 1){
-								this.$message.success(res.data.msg);
-								//获取列表
-								this.getGoodsList();
-							}else{
-								this.$message.warning(res.data.msg);
-							}
-						})
-					}).catch(() => {
-						this.$message({
-							type: 'info',
-							message: '已取消'
-						});          
-					});
-					return;
+					unset_list.map(item => {
+						style_id.push(item.goods_id)
+					})
+					unset_num = total_num - unset_list.length;
 				}
+				// else if(type.indexOf('audit') > -1){	//批量审批
+				// 	let ids = [];
+				// 	this.multiple_selection.map(item => {
+				// 		ids.push(item.goods_id)
+				// 	})
+				// 	this.$confirm(`确认批量${type.split('_')[1] == 1?'同意':'拒绝'}？`, '提示', {
+				// 		confirmButtonText: '确定',
+				// 		cancelButtonText: '取消',
+				// 		type: 'warning'
+				// 	}).then(() => {
+				// 		let arg = {
+				// 			goods_id:ids.join(','),
+				// 			type:type.split('_')[1]
+				// 		}
+				// 		resource.auditGoods(arg).then(res => {
+				// 			if(res.data.code == 1){
+				// 				this.$message.success(res.data.msg);
+				// 				//获取列表
+				// 				this.getGoodsList();
+				// 			}else{
+				// 				this.$message.warning(res.data.msg);
+				// 			}
+				// 		})
+				// 	}).catch(() => {
+				// 		this.$message({
+				// 			type: 'info',
+				// 			message: '已取消'
+				// 		});          
+				// 	});
+				// 	return;
+				// }
 				
 				if(total_num == unset_num){
 					this.$message.warning('没有符合操作条件的记录！');
@@ -856,6 +866,20 @@
 							goods_id:style_id.join(',')
 						}
 						resource.delGoods(arg).then(res => {
+							if(res.data.code == 1){
+								this.$message.success(res.data.msg);
+								//获取列表
+								this.getGoodsList();
+							}else{
+								this.$message.warning(res.data.msg);
+							}
+						})
+					}else if(type.indexOf('audit') > -1){	//批量审核
+						let arg = {
+							goods_id:style_id.join(','),
+							type:type.split('_')[1]
+						}
+						resource.auditGoods(arg).then(res => {
 							if(res.data.code == 1){
 								this.$message.success(res.data.msg);
 								//获取列表

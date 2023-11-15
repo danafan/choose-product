@@ -60,7 +60,7 @@
 											<el-image :z-index="2006" class="edit_image" :src="iii" fit="scale-down":preview-src-list="scope.row.info_arr[index]" v-for="iii in scope.row.info_arr[index]"></el-image>
 										</div>
 									</div>
-									<div style="width:180px;text-align: start;margin-right:10px" v-else>{{scope.row.info_arr[index]}}</div>
+									<div style="width:180px;text-align: start;margin-right:10px" v-html="scope.row.info_arr[index]" v-else></div>
 
 									<div class="flex as" style="width:180px;text-align: start;margin-right:10px" v-if="scope.row.edit_info_arr[index].indexOf('：') == -1">
 										<div class="flex fc ac">
@@ -348,6 +348,17 @@
 										})
 									}
 									info_arr.push(all_imgs_arr)
+								}else if(k == 'brand_ksbm'){
+									let brand_ksbm_str = `${this.label_filter(k)}：`;
+
+									let arr = item.info[k].split(';');
+									if(arr.length > 0){
+										brand_ksbm_str += `<br/>`
+										arr.map(info_item => {
+											brand_ksbm_str += `${info_item}<br/>`
+										})
+										info_arr.push(brand_ksbm_str)
+									}
 								}else{
 									info_arr.push(`${this.label_filter(k)}：${item.info[k]}`)
 								}
@@ -370,14 +381,18 @@
 										})
 									}
 									edit_info_arr.push(all_imgs_arr)
-								}
-								// else if(k == 'brand_ksbm'){
-								// 	edit_info_arr.push(`${this.label_filter(k)}：<br/>${item.edit_info[k]}`)
-								// 	item.edit_info[k].split(';').map(item => {
-								// 		edit_info_arr.push(item)
-								// 	})
-								// }
-								else{
+								}else if(k == 'brand_ksbm'){
+									let brand_ksbm_str = `${this.label_filter(k)}：`;
+
+									let arr = item.edit_info[k].split(';');
+									if(arr.length > 0){
+										brand_ksbm_str += `<br/>`
+										arr.map(edit_item => {
+											brand_ksbm_str += `${edit_item}<br/>`
+										})
+										edit_info_arr.push(brand_ksbm_str)
+									}
+								}else{
 									edit_info_arr.push(`${this.label_filter(k)}：${item.edit_info[k]}`)
 								}
 							}

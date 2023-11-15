@@ -1,6 +1,6 @@
 <template>
 	<div class="padding_page white_back" ref="paddingPageContent" id="white_back">
-		<div class="padding_page_content">
+		<div class="padding_page_content" :style="{width:windowWidth>500?1430 + 'rem':windowWidth + 'px'}">
 			<PageTitle title="选品详情"/>
 			<div class="detail_content">
 				<div class="detail_top_row">
@@ -53,6 +53,7 @@
 	export default{
 		data(){
 			return{
+				windowWidth:0,
 				over_loading:false,	//是否加载完成
 				style_id:"",		//商品ID
 				goods_info:{},		//商品详情
@@ -61,6 +62,10 @@
 			}
 		},
 		created(){
+			var html = document.documentElement;
+        	this.windowWidth = parseInt(html.clientWidth);       //html宽度
+        	console.log(this.windowWidth)
+
 			this.style_id = this.$route.query.style_id;
 			//获取商品详情
 			this.getGoodsInfo();
@@ -155,7 +160,6 @@
 		overflow-y: scroll;
 	}
 	.padding_page_content{
-		width: 1430rem;
 		height: 100%;
 		display: flex;
 		flex-direction: column;
@@ -245,6 +249,9 @@
 				}
 			}
 		}
+	}
+	.content_page{
+		width: 1430rem;
 	}
 	.white_back::-webkit-scrollbar{display:none}
 	.scroll_top{
