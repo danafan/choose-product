@@ -84,7 +84,7 @@
 					<ScreeningWidget id="screen_widget" v-if="show_screen" :total_num="total" page_type="supplier" @callback="screenFn"/>
 					<div class="scroll_view" v-if="goods_list.length > 0">
 						<div class="goods_list" id="goods_list">
-							<GoodsItem :info="item" @setStatus="setStatus" v-for="item in goods_list" @enlargeFn="enlargeFn"/>
+							<GoodsItem :info="item" :showOffShelf="arg.check_status == 5" @setStatus="setStatus" v-for="item in goods_list" @callback="getList" @enlargeFn="enlargeFn"/>
 							<div class="padding_item" v-for="i in 6-(goods_list.length%6) == 6?0:6-(goods_list.length%6)"></div>
 						</div>
 						<PaginationWidget :total="total" :page="page" :pagesize="pagesize" :show_multiple="false" @checkPage="checkPage"/>
@@ -253,6 +253,9 @@
 					if(res.data.code == 1){
 						let data = res.data.data;
 						this.goods_list = data.data;
+						this.goods_list.map(item => {
+							item['showOffShelf'] = this.arg.show_offshelf;
+						})
 						this.total = data.total;
 						this.loading = false;
 					}else{
