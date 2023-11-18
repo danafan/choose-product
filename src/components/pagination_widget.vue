@@ -21,6 +21,7 @@
 	.selection_length{
 		font-weight: bold;
 		color: var(--color);
+		font-size: 12px;
 	}
 	.el-pagination{
 		display: flex;

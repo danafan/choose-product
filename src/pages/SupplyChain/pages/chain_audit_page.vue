@@ -34,8 +34,10 @@
 						</el-select>
 					</el-form-item>
 					<el-form-item label="对接人：">
-						<el-input placeholder="对接人" v-model="maintainer">
-						</el-input>
+						<el-select v-model="maintainer_ids" clearable multiple filterable collapse-tags placeholder="全部">
+							<el-option v-for="item in user_list" :key="item.ding_user_id" :label="item.ding_user_name" :value="item.ding_user_id">
+							</el-option>
+						</el-select>
 					</el-form-item>
 					<el-form-item label="分类：">
 						<el-select v-model="classification_ids" clearable multiple filterable collapse-tags placeholder="全部">
@@ -192,7 +194,6 @@
 						<div class="lable">对接人</div>
 						<div class="value">{{goods_info.maintainer}}</div>
 					</div>
-
 					<div class="detail_row">
 						<div class="lable">供应商款式编码</div>
 						<div class="value">{{goods_info.supplier_ksbm}}</div>
@@ -553,7 +554,7 @@
 				select_main_dept_id:[], //所有部门列表
 				user_list:[],			//所有用户列表
 				select_userid:[],		//选中的用户列表
-				maintainer:"",			//对接人
+				maintainer_ids:[],		//选中的对接人
 				store_list:[],			//店铺列表
 				shop_code:[],			//选中的店铺
 				supplier_list:[],		//供应商列表
@@ -576,9 +577,7 @@
 				button_list:{},
 				detail_dialog:false,	//详情弹窗
 				goods_info:{},			//详情
-				// remark_dialog:false,
 				select_id:"",			//当前点击的记录ID
-				// remark:"",				//备注内容
 				refused_dialog:false,	//拒绝弹窗
 				err_msg:"",				//拒绝备注
 				multiple_selection:[],
@@ -805,7 +804,7 @@
 					demand_type:this.demand_type.join(','),
 					status:this.status_id,
 					select_userid:this.select_userid.join(','),
-					maintainer:this.maintainer,
+					maintainer:this.maintainer_ids.join(','),
 					select_main_dept_id:this.select_main_dept_id.join(','),
 					shop_code:this.shop_code.join(','),
 					supplier_id:this.supplier_ids.join(','),
@@ -916,7 +915,7 @@
 						demand_type:this.demand_type.join(','),
 						status:this.status_id,
 						select_userid:this.select_userid.join(','),
-						maintainer:this.maintainer,
+						maintainer:this.maintainer_ids.join(','),
 						select_main_dept_id:this.select_main_dept_id.join(','),
 						shop_code:this.shop_code.join(','),
 						supplier_id:this.supplier_ids.join(','),

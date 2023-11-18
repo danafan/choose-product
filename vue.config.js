@@ -12,6 +12,8 @@ module.exports = {
 				changOlrigin: true,		
 			}
 		}
+		// hot: false,
+		// liveReload: false
 	},
 	// assetsDir: "clothes",
 	// publicPath:'../',

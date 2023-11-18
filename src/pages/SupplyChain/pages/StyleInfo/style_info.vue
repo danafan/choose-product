@@ -44,8 +44,10 @@
 						</el-date-picker>
 					</el-form-item>
 					<el-form-item label="对接人：">
-						<el-input placeholder="对接人" v-model="maintainer">
-						</el-input>
+						<el-select v-model="maintainer_ids" clearable multiple filterable collapse-tags placeholder="全部">
+							<el-option v-for="item in user_list" :key="item.ding_user_id" :label="item.ding_user_name" :value="item.ding_user_id">
+							</el-option>
+						</el-select>
 					</el-form-item>
 					<el-form-item>
 						<el-input type="textarea" :autosize="{ minRows: 1, maxRows: 4}" placeholder="款号/款式编码" v-model="search">
@@ -409,7 +411,8 @@
 					],
 				}, 
 				search:"",				//款式编码
-				maintainer:"",			//对接人
+				user_list:[],
+				maintainer_ids:[],			//对接人
 				max_height:0,	
 				page:1,
 				data:[],				//获取的数据
@@ -441,6 +444,8 @@
 			}
 		},
 		created(){
+			//获取用户列表
+			this.getUserList();
 			//获取供应商列表
 			this.ajaxSupplierList();
     		//获取类目列表
@@ -493,6 +498,16 @@
 					let form_height = document.getElementById("form_height").offsetHeight;
 					this.max_height = card_box_height - form_height + 70 + "px";
 				});
+			},
+			//获取用户列表
+			getUserList(){
+				commonResource.getUserList().then(res => {
+					if(res.data.code == 1){
+						this.user_list = res.data.data;
+					}else{
+						this.$message.warning(res.data.msg);
+					}
+				})
 			},
     		//获取供应商列表
 			ajaxSupplierList(){
@@ -604,13 +619,7 @@
 			},
 			//导出
 			exportFn() {
-				MessageBox.confirm("确认导出?", "提示", {
-					confirmButtonText: "确定",
-					cancelButtonText: "取消",
-					type: "warning",
-				})
-				.then(() => {
-					let arg = {
+				let arg = {
 						supplier_id:this.supplier_ids.join(','),
 						category_id:this.category_ids.join(','),
 						market_id:this.market_ids.join(','),
@@ -619,7 +628,7 @@
 						start_time:this.date && this.date.length > 0?this.date[0]:"",
 						end_time:this.date && this.date.length > 0?this.date[1]:"",
 						check_status:this.check_status_id,
-						maintainer:this.maintainer,
+						maintainer:this.maintainer_ids.join(','),
 						export_type:this.export_type
 					}
 					if(this.multiple_selection.length > 0){
@@ -652,13 +661,61 @@
 					this.export_dialog = false;
 					let baseURL = `${location.origin}/api/productstyle/derivegetallproductstyle?${arr.join('&')}`
 					window.open(baseURL)
-				})
-				.catch(() => {
-					Message({
-						type: "info",
-						message: "取消导出",
-					});
-				});
+				// MessageBox.confirm("确认导出?", "提示", {
+				// 	confirmButtonText: "确定",
+				// 	cancelButtonText: "取消",
+				// 	type: "warning",
+				// })
+				// .then(() => {
+				// 	let arg = {
+				// 		supplier_id:this.supplier_ids.join(','),
+				// 		category_id:this.category_ids.join(','),
+				// 		market_id:this.market_ids.join(','),
+				// 		classification_id:this.classification_ids.join(','),
+				// 		shooting_id:this.shooting_style_ids.join(','),
+				// 		start_time:this.date && this.date.length > 0?this.date[0]:"",
+				// 		end_time:this.date && this.date.length > 0?this.date[1]:"",
+				// 		check_status:this.check_status_id,
+				// 		maintainer:this.maintainer_ids.join(','),
+				// 		export_type:this.export_type
+				// 	}
+				// 	if(this.multiple_selection.length > 0){
+				// 		let goods_ids = this.multiple_selection.map(item => {
+				// 			return item.goods_id
+				// 		})
+				// 		arg['goods_ids'] = goods_ids.join(',');
+				// 	}
+				// 	let search = JSON.parse(JSON.stringify(this.search));
+				// 	if(search.indexOf("\n") > -1 || search.indexOf(" ") > -1 || search.indexOf("+") > -1){
+				// 		if (search.indexOf("\n") > -1) {
+				// 			search = search.replaceAll("\n", ",");
+				// 		}
+				// 		if (search.indexOf(" ") > -1) {
+				// 			search = search.replaceAll(" ", ",");
+				// 		}
+				// 		if (search.indexOf("+") > -1) {
+				// 			search = search.replaceAll("+", "%2B");
+				// 		}
+				// 	}
+					
+				// 	arg.search = search;
+
+				// 	var arr = [];
+				// 	for(let k in arg){
+				// 		if(arg[k]){
+				// 			arr.push(`${k}=${arg[k]}`)
+				// 		}
+				// 	}
+				// 	this.export_dialog = false;
+				// 	let baseURL = `${location.origin}/api/productstyle/derivegetallproductstyle?${arr.join('&')}`
+				// 	window.open(baseURL)
+				// })
+				// .catch(() => {
+				// 	Message({
+				// 		type: "info",
+				// 		message: "取消导出",
+				// 	});
+				// });
 			},
 			//获取列表
 			getGoodsList(){
@@ -671,7 +728,7 @@
 					start_time:this.date && this.date.length > 0?this.date[0]:"",
 					end_time:this.date && this.date.length > 0?this.date[1]:"",
 					check_status:this.check_status_id,
-					maintainer:this.maintainer,
+					maintainer:this.maintainer_ids.join(','),
 					page:this.page,
 					pagesize:100
 				}

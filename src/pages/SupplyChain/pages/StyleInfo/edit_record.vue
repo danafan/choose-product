@@ -25,9 +25,15 @@
 					<el-form-item label="提交人">
 						<el-input placeholder="提交人" v-model="username"></el-input>
 					</el-form-item>
-					<el-form-item label="对接人：">
+					<!-- <el-form-item label="对接人：">
 						<el-input placeholder="对接人" v-model="maintainer">
 						</el-input>
+					</el-form-item> -->
+					<el-form-item label="对接人：">
+						<el-select v-model="maintainer_ids" clearable multiple filterable collapse-tags placeholder="全部">
+							<el-option v-for="item in user_list" :key="item.ding_user_id" :label="item.ding_user_name" :value="item.ding_user_id">
+							</el-option>
+						</el-select>
 					</el-form-item>
 					<el-form-item class="form_item">
 						<el-button type="primary" @click="checkPage(1)">查询</el-button>
@@ -188,7 +194,8 @@
 				supplier_ids:[],		//选中的供应商
 				style_name:"",			//款式编码
 				username:"",			//提交人
-				maintainer:"",			//对接人
+				user_list:[],
+				maintainer_ids:[],			//对接人
 				status_list:[{
 					name:'待审核',
 					id:1
@@ -257,6 +264,8 @@
 				return item.web_url == "edit_record";
 			})
 			if(edit_record_arr.length > 0){
+				//获取用户列表
+				this.getUserList();
 				//获取供应商列表
 				this.ajaxSupplierList();
 				//获取列表
@@ -302,6 +311,16 @@
 					this.max_height = card_box_height - form_height + 70 + "px";
 				});
 			},
+			//获取用户列表
+			getUserList(){
+				commonResource.getUserList().then(res => {
+					if(res.data.code == 1){
+						this.user_list = res.data.data;
+					}else{
+						this.$message.warning(res.data.msg);
+					}
+				})
+			},
 			//获取供应商列表
 			ajaxSupplierList(){
 				commonResource.ajaxSupplierList().then(res => {
@@ -321,7 +340,7 @@
 					start_date:this.date && this.date.length > 0?this.date[0]:"",
 					end_date:this.date && this.date.length > 0?this.date[1]:"",
 					username:this.username,
-					maintainer:this.maintainer,
+					maintainer:this.maintainer_ids.join(','),
 					page:this.page,
 					pagesize:100
 				}
