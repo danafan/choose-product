@@ -4,7 +4,10 @@
 		<div class="info_content" :class="{'delist_info_content':goods_info.check_status == 5}">
 			<div class="content_row">
 				<div class="row_lable">成本价</div>
-				<div class="row_price" :class="{'delist_price':goods_info.check_status == 5}">¥{{goods_info.cost_price}}</div>
+				<div class="row_price flex" :class="{'delist_price':goods_info.check_status == 5}">
+					<div class="price_tag">¥</div>
+					<div class="price_value">{{goods_info.cost_price}}</div>
+				</div>
 			</div>
 			<div class="content_row">
 				<div class="row_lable">档口批价</div>
@@ -512,10 +515,19 @@
 			.content_row{
 				margin-bottom: 13rem;
 				display: flex;
+				align-items:center;
 				.row_price{
 					color: var(--color);
-					font-size:24rem;
-					font-weight: 500;
+					.price_tag{
+						position: relative;
+						margin-right: 3rem;
+						top: 5rem;
+						font-size:20rem;
+					}
+					.price_value{
+						font-size:26rem;
+						font-weight:bold;
+					}
 				}
 				.delist_price{
 					color: #494744;

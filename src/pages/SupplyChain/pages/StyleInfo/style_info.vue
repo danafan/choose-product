@@ -45,7 +45,7 @@
 					</el-form-item>
 					<el-form-item label="对接人：">
 						<el-select v-model="maintainer_ids" clearable multiple filterable collapse-tags placeholder="全部">
-							<el-option v-for="item in user_list" :key="item.ding_user_id" :label="item.ding_user_name" :value="item.ding_user_id">
+							<el-option v-for="item in maintainer_list" :key="item.maintainer_id" :label="item.maintainer" :value="item.maintainer_id">
 							</el-option>
 						</el-select>
 					</el-form-item>
@@ -411,7 +411,7 @@
 					],
 				}, 
 				search:"",				//款式编码
-				user_list:[],
+				maintainer_list:[],
 				maintainer_ids:[],			//对接人
 				max_height:0,	
 				page:1,
@@ -445,7 +445,7 @@
 		},
 		created(){
 			//获取用户列表
-			this.getUserList();
+			this.ajaxSupplierMaintainer();
 			//获取供应商列表
 			this.ajaxSupplierList();
     		//获取类目列表
@@ -499,11 +499,11 @@
 					this.max_height = card_box_height - form_height + 70 + "px";
 				});
 			},
-			//获取用户列表
-			getUserList(){
-				commonResource.getUserList().then(res => {
+			//供应商维护人
+			ajaxSupplierMaintainer(){
+				commonResource.ajaxSupplierMaintainer().then(res => {
 					if(res.data.code == 1){
-						this.user_list = res.data.data;
+						this.maintainer_list = res.data.data;
 					}else{
 						this.$message.warning(res.data.msg);
 					}

@@ -57,17 +57,17 @@
 	.store_info_container{
 		position: relative;
 		width: 298rem;
-		height: 330rem;
+		height: 360rem;
 		.store_info_back{
 			position: absolute;
-			top: 0;
+			top: 30rem;
 			left: 0;
 			width: 100%;
 			height: 100%;
 		}
 		.store_info{
 			position: absolute;
-			top: 0;
+			top: 30rem;
 			left: 0;
 			width: 100%;
 			height: 100%;

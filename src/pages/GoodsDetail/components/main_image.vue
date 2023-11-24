@@ -24,6 +24,7 @@
 <style lang="less" scoped>
 	.image_box{
 		border: 1px solid #E8E8E8;
+		margin-right: 12rem;
 		width: 420rem;
 		height: 546rem;
 		.main_image{
@@ -34,7 +35,7 @@
 				position: absolute;
 				top: 0;
 				left: 0;
-				width: 100%;
+				width: 418rem;
 				height: 100%;
 			}
 			.delist_box{

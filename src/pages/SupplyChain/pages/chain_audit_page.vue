@@ -35,7 +35,7 @@
 					</el-form-item>
 					<el-form-item label="对接人：">
 						<el-select v-model="maintainer_ids" clearable multiple filterable collapse-tags placeholder="全部">
-							<el-option v-for="item in user_list" :key="item.ding_user_id" :label="item.ding_user_name" :value="item.ding_user_id">
+							<el-option v-for="item in maintainer_list" :key="item.maintainer_id" :label="item.maintainer" :value="item.maintainer_id">
 							</el-option>
 						</el-select>
 					</el-form-item>
@@ -79,9 +79,9 @@
 					</el-form-item>
 					<el-form-item>
 						<el-radio-group v-model="up_type">
-							<el-radio :label="1">今日上新</el-radio>
-							<el-radio :label="3">三日上新</el-radio>
-							<el-radio :label="7">七日上新</el-radio>
+							<el-radio :label="1">今日选款</el-radio>
+							<el-radio :label="3">三日选款</el-radio>
+							<el-radio :label="7">七日选款</el-radio>
 						</el-radio-group>
 					</el-radio-group>
 				</el-form-item>
@@ -554,6 +554,7 @@
 				select_main_dept_id:[], //所有部门列表
 				user_list:[],			//所有用户列表
 				select_userid:[],		//选中的用户列表
+				maintainer_list:[],		//对接人列表
 				maintainer_ids:[],		//选中的对接人
 				store_list:[],			//店铺列表
 				shop_code:[],			//选中的店铺
@@ -599,6 +600,8 @@
 			this.getAllDemandSendType();
 			//获取部门列表
 			this.getDeptList();
+			//供应商维护人
+			this.ajaxSupplierMaintainer();
 			//获取用户列表
 			this.getUserList();
 			//获取所有店铺列表
@@ -676,6 +679,16 @@
 				commonResource.getDeptList().then(res => {
 					if(res.data.code == 1){
 						this.dept_list = res.data.data;
+					}else{
+						this.$message.warning(res.data.msg);
+					}
+				})
+			},
+			//供应商维护人
+			ajaxSupplierMaintainer(){
+				commonResource.ajaxSupplierMaintainer().then(res => {
+					if(res.data.code == 1){
+						this.maintainer_list = res.data.data;
 					}else{
 						this.$message.warning(res.data.msg);
 					}
