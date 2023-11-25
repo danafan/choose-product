@@ -180,7 +180,6 @@
 	import { getNowDate,getCurrentDate } from "../../../../api/date.js";
 
 	import { MessageBox, Message } from "element-ui";
-	import { exportPost } from "../../../../api/export.js";
 
 	import TableTitle from '../../components/table_title.vue'
 	import PaginationWidget from '../../../../components/pagination_widget.vue'
@@ -440,11 +439,14 @@
 						username:this.username,
 						maintainer:this.maintainer_ids.join(','),
 					}
-					resource.editlogExport(arg).then((res) => {
-						if (res) {
-							exportPost("\ufeff" + res.data, "修改记录");
+					var arr = [];
+					for(let k in arg){
+						if(arg[k]){
+							arr.push(`${k}=${arg[k]}`)
 						}
-					});
+					}
+					let baseURL = `${location.origin}/api/editlog/export?${arr.join('&')}`;
+					window.open(baseURL)
 				})
 				.catch(() => {
 					Message({

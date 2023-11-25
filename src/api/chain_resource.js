@@ -112,7 +112,6 @@ let path = {
   delEvaluate:'api/supplier_manager/del_evaluate',          //删除评价记录
   gysybkDetail:'api/supplier/reserve_info',                 //供应商预备库直接进入详情
   editLogList:'api/editlog/list',                            //款式资料修改记录表
-  editlogExport:'api/editlog/export',                        //款式资料修改记录表导出
   editlogAudit:'api/editlog/audit',                         //修改记录审核
   editLogRevoke:'api/editlog/revoke',                       //撤销修改
   studioList:'api/supplier_manager/studio_list',            //工作室列表
@@ -628,10 +627,6 @@ export default {
   //款式资料修改记录表
   editLogList(params) {
     return http.get(path.editLogList, params);
-  },
-  //款式资料修改记录表导出
-  editlogExport(params) {
-    return http.post(path.editlogExport, params);
   },
   //审核修改记录
   editlogAudit(params) {
