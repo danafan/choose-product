@@ -661,61 +661,6 @@
 					this.export_dialog = false;
 					let baseURL = `${location.origin}/api/productstyle/derivegetallproductstyle?${arr.join('&')}`
 					window.open(baseURL)
-				// MessageBox.confirm("确认导出?", "提示", {
-				// 	confirmButtonText: "确定",
-				// 	cancelButtonText: "取消",
-				// 	type: "warning",
-				// })
-				// .then(() => {
-				// 	let arg = {
-				// 		supplier_id:this.supplier_ids.join(','),
-				// 		category_id:this.category_ids.join(','),
-				// 		market_id:this.market_ids.join(','),
-				// 		classification_id:this.classification_ids.join(','),
-				// 		shooting_id:this.shooting_style_ids.join(','),
-				// 		start_time:this.date && this.date.length > 0?this.date[0]:"",
-				// 		end_time:this.date && this.date.length > 0?this.date[1]:"",
-				// 		check_status:this.check_status_id,
-				// 		maintainer:this.maintainer_ids.join(','),
-				// 		export_type:this.export_type
-				// 	}
-				// 	if(this.multiple_selection.length > 0){
-				// 		let goods_ids = this.multiple_selection.map(item => {
-				// 			return item.goods_id
-				// 		})
-				// 		arg['goods_ids'] = goods_ids.join(',');
-				// 	}
-				// 	let search = JSON.parse(JSON.stringify(this.search));
-				// 	if(search.indexOf("\n") > -1 || search.indexOf(" ") > -1 || search.indexOf("+") > -1){
-				// 		if (search.indexOf("\n") > -1) {
-				// 			search = search.replaceAll("\n", ",");
-				// 		}
-				// 		if (search.indexOf(" ") > -1) {
-				// 			search = search.replaceAll(" ", ",");
-				// 		}
-				// 		if (search.indexOf("+") > -1) {
-				// 			search = search.replaceAll("+", "%2B");
-				// 		}
-				// 	}
-					
-				// 	arg.search = search;
-
-				// 	var arr = [];
-				// 	for(let k in arg){
-				// 		if(arg[k]){
-				// 			arr.push(`${k}=${arg[k]}`)
-				// 		}
-				// 	}
-				// 	this.export_dialog = false;
-				// 	let baseURL = `${location.origin}/api/productstyle/derivegetallproductstyle?${arr.join('&')}`
-				// 	window.open(baseURL)
-				// })
-				// .catch(() => {
-				// 	Message({
-				// 		type: "info",
-				// 		message: "取消导出",
-				// 	});
-				// });
 			},
 			//获取列表
 			getGoodsList(){

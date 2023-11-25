@@ -38,6 +38,7 @@
 				<el-divider></el-divider>
 				<TableTitle title="数据列表" id="table_title">
 					<el-button size="mini" type="primary" v-if="button_list.audit == 1" @click="allSetting('1')">批量审核</el-button>
+					<el-button size="mini" type="primary" @click="exportFn" v-if="button_list.export == 1">导出</el-button>
 				</TableTitle>
 				<el-table ref="table" size="mini" :data="data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" @selection-change="handleSelectionChange" v-loading="loading">
 					<el-table-column type="selection" width="55" :selectable="setStatus" fixed>
@@ -179,6 +180,7 @@
 	import { getNowDate,getCurrentDate } from "../../../../api/date.js";
 
 	import { MessageBox, Message } from "element-ui";
+	import { exportPost } from "../../../../api/export.js";
 
 	import TableTitle from '../../components/table_title.vue'
 	import PaginationWidget from '../../../../components/pagination_widget.vue'
@@ -420,6 +422,36 @@
 						this.$message.warning(res.data.msg);
 					}
 				})
+			},
+			//导出
+			exportFn(){
+				MessageBox.confirm("确认导出?", "提示", {
+					confirmButtonText: "确定",
+					cancelButtonText: "取消",
+					type: "warning",
+				})
+				.then(() => {
+					let arg = {
+						supplier_id:this.supplier_ids.join(','),
+						status:this.status,
+						style_name:this.style_name,
+						start_date:this.date && this.date.length > 0?this.date[0]:"",
+						end_date:this.date && this.date.length > 0?this.date[1]:"",
+						username:this.username,
+						maintainer:this.maintainer_ids.join(','),
+					}
+					resource.editlogExport(arg).then((res) => {
+						if (res) {
+							exportPost("\ufeff" + res.data, "修改记录");
+						}
+					});
+				})
+				.catch(() => {
+					Message({
+						type: "info",
+						message: "取消导出",
+					});
+				});
 			},
 			//判断是否可以选中
 			setStatus(row){

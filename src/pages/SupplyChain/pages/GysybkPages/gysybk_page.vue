@@ -239,7 +239,7 @@
 								<div v-else>{{info_arg.classification}}</div>
 							</el-form-item>
 							<el-form-item label="是否石狮：" required>
-								<el-select v-model="info_arg.is_ss" style="width: 120px;" placeholder="全部" v-if="add_type == '1' || add_type == '2'">
+								<el-select v-model="info_arg.is_ss" style="width: 120px;" @change="changeSs" placeholder="全部" v-if="add_type == '1' || add_type == '2'">
 									<el-option label="是" :value="1"></el-option>
 									<el-option label="否" :value="0"></el-option>
 								</el-select>
@@ -247,7 +247,7 @@
 							</el-form-item>
 							<el-form-item label="区域：" required>
 								<el-select v-model="info_arg.area" clearable placeholder="全部" v-if="add_type == '1' || add_type == '2'">
-									<el-option :label="item" :value="item" v-for="item in area_list"></el-option>
+									<el-option :label="item" :value="item" :disabled="isSs(item)" v-for="item in area_list"></el-option>
 								</el-select>
 								<div v-else>{{info_arg.area}}</div>
 							</el-form-item>
@@ -688,7 +688,7 @@
 					developer_id:"",
 					classification:"",
 					is_ss:1,
-					area:"",
+					area:"石狮",
 					supply_free_factory:1,
 					supply_design:1,
 					settlement_method:"",
@@ -820,6 +820,16 @@
 						this.$message.warning(res.data.msg);
 					}
 				})
+			},
+			//切换是否石狮
+			changeSs(v){
+				if(v){
+					this.info_arg.area = '石狮';
+				}
+			},
+			//判断是否石狮下面区域除石狮外不能选择
+			isSs(area_name){
+				return this.info_arg.is_ss == 1 && area_name != '石狮';
 			},
 			//点击查询
 			searchData(){
