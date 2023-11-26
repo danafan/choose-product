@@ -15,7 +15,7 @@
 							</el-carousel>
 						</div>
 					</div>
-					<VogueWidget id="vogue_widget"/>
+					<VogueWidget id="vogue_widget" @enlargeFn="enlargeFn"/>
 					<el-card class="card_box" ref="card_box" id="card_box">
 						<ScreeningWidget id="screen_widget" v-if="show_screen" :total_num="total" @callback="screenFn"/>
 						<div class="scroll_view" v-if="goods_list.length > 0 || loading" v-loading='loading'>
@@ -24,207 +24,235 @@
 								<div class="padding_item" v-for="i in 6-(goods_list.length%6) == 6?0:6-(goods_list.length%6)"></div>
 							</div>
 							<PaginationWidget :total="total" :page="page" :pagesize="pagesize" :show_multiple="false" @checkPage="checkPage" v-if="goods_list.length > 0"/>
+							</div>
+							<EmptyPage :is_loading="loading" v-if="!loading && goods_list.length == 0"/>
+						</el-card>
+					</div>
+				</div>
+				<!-- 点击放大 -->
+				<el-dialog :visible.sync="enlarge_dialog" top="15px" :show-close="false" custom-class="custom_class">
+					<div slot="title" class="dialog_title" style="justify-content: flex-end;">
+						<img class="close_icon" src="../../static/close_icon.png" @click="enlarge_dialog = false">
+					</div>
+					<div class="flex jsb">
+						<GoodsItem :info="enlarge_item" @setStatus="setStatus" :is_enlarge="true"/>
+						<div class="chart_box">
+							<!-- 单个商品 -->
+							<SalenumChart :style_id="enlarge_item.style_id" v-if="enlarge_type == 'goods_item' && enlarge_dialog"/>
+							<!-- 控价预警 -->
+							<PriceControl :styleName="enlarge_item.style_name" :priceControl="enlarge_item.price_control" :time="time" :tableData="table_data" v-if="enlarge_type == 'vogue_widget'"/>
 						</div>
-						<EmptyPage :is_loading="loading" v-if="!loading && goods_list.length == 0"/>
-					</el-card>
-				</div>
+					</div>
+				</el-dialog>
+				<!-- 生成截屏 -->
+				<el-dialog :visible.sync="clipboard_dialog">
+					<div slot="title" class="dialog_title">
+						<div>生成图片</div>
+						<div class="flex ac">
+							<el-tooltip class="item" effect="dark" content="下载" placement="top-start">
+								<img class="download_image pointer" @click="downLoadImage" src="../../static/download_image.png">
+							</el-tooltip>
+
+							<img class="close_icon pointer" src="../../static/close_icon.png" @click="clipboard_dialog = false">
+						</div>
+					</div>
+					<img style="width:100%" :src="clipboard_url">
+				</el-dialog>
+				<FixedButtons :permission="[1,2,3,5]" @clipboardCallback="toClipboard" @scrollTopCallback="setScrollTop"/>
 			</div>
-			<!-- 点击放大 -->
-			<el-dialog :visible.sync="enlarge_dialog" top="15px" :show-close="false" custom-class="custom_class">
-				<div slot="title" class="dialog_title" style="justify-content: flex-end;">
-					<img class="close_icon" src="../../static/close_icon.png" @click="enlarge_dialog = false">
-				</div>
-				<div class="flex jsb">
-					<GoodsItem :info="enlarge_item" @setStatus="setStatus" :is_enlarge="true"/>
-					<div class="chart_box">
-						<SalenumChart :style_id="enlarge_item.style_id" v-if="enlarge_dialog"/>
-					</div>
-				</div>
-			</el-dialog>
-			<!-- 生成截屏 -->
-			<el-dialog :visible.sync="clipboard_dialog">
-				<div slot="title" class="dialog_title">
-					<div>生成图片</div>
-					<div class="flex ac">
-						<el-tooltip class="item" effect="dark" content="下载" placement="top-start">
-							<img class="download_image pointer" @click="downLoadImage" src="../../static/download_image.png">
-						</el-tooltip>
-						
-						<img class="close_icon pointer" src="../../static/close_icon.png" @click="clipboard_dialog = false">
-					</div>
-				</div>
-				<img style="width:100%" :src="clipboard_url">
-			</el-dialog>
-			<FixedButtons :permission="[1,2,3,5]" @clipboardCallback="toClipboard" @scrollTopCallback="setScrollTop"/>
-		</div>
-	</template>
-	<script>
-		import SearchWidget from '../../components/search_widget.vue'
-		import ScreeningWidget from '../../components/screening_widget.vue'
-		import GoodsItem from '../../components/goods_item.vue'
-		import PaginationWidget from '../../components/pagination_widget.vue'
-		import EmptyPage from '../../components/empty_page.vue'
-		import VogueWidget from '../../components/vogue_widget.vue'
-		import SalenumChart from '../GoodsDetail/components/salenum_chart'
-		import FixedButtons from '../../components/fixed_buttons.vue'
+		</template>
+		<script>
+			import SearchWidget from '../../components/search_widget.vue'
+			import ScreeningWidget from '../../components/screening_widget.vue'
+			import GoodsItem from '../../components/goods_item.vue'
+			import PaginationWidget from '../../components/pagination_widget.vue'
+			import EmptyPage from '../../components/empty_page.vue'
+			import VogueWidget from '../../components/vogue_widget.vue'
+			import SalenumChart from '../GoodsDetail/components/salenum_chart'
+			import PriceControl from '../GoodsDetail/components/price_control'
+			import FixedButtons from '../../components/fixed_buttons.vue'
 
-		import resource from '../../api/resource.js'
+			import resource from '../../api/resource.js'
 
-		import html2canvas from 'html2canvas'
-		export default{
-			data(){
-				return{
-					loading:true,
-					show_screen:true,
-				goods_list:[],	//商品列表
-				total:0,		//总数量
-				page:1,			//页码
-				pagesize:30,			//页码
-				search:"",
-				arg:{},
-				enlarge_dialog:false,
-				enlarge_item:{},
-				initialIndex:0,
-				new_notice_list:[],
-				zstChart:null,
-				clipboard_dialog:false,
-				clipboard_url:""
-
-			}
-		},
-		created(){
-			let arg = {
-				page:this.page,
-				pagesize:this.pagesize
-			} 
+			import html2canvas from 'html2canvas'
+			export default{
+				data(){
+					return{
+						loading:true,
+						show_screen:true,
+						goods_list:[],	//商品列表
+						total:0,		//总数量
+						page:1,			//页码
+						pagesize:30,			//页码
+						search:"",
+						arg:{},
+						enlarge_dialog:false,
+						enlarge_item:{},
+						initialIndex:0,
+						new_notice_list:[],
+						zstChart:null,
+						clipboard_dialog:false,
+						clipboard_url:"",
+						enlarge_type:'',	//放大的类型（goods_id:商品；vogue_widget:控价预警）
+						time:"",			//数据统计时间
+						table_data:[],		//店铺列表
+					}
+				},
+				created(){
+					let arg = {
+						page:this.page,
+						pagesize:this.pagesize
+					} 
 			//获取列表
-			this.getList(arg);
-			if(this.notice_list.length > 0){
-				this.new_notice_list = this.group_notice_list(this.notice_list);
-			}
-		},
-		watch:{
-			notice_list:function(n,o){
-				if(n.length > 0){
-					this.new_notice_list = this.group_notice_list(n);
-				}
-			}
-		},
-		computed: {
+					this.getList(arg);
+					if(this.notice_list.length > 0){
+						this.new_notice_list = this.group_notice_list(this.notice_list);
+					}
+				},
+				watch:{
+					notice_list:function(n,o){
+						if(n.length > 0){
+							this.new_notice_list = this.group_notice_list(n);
+						}
+					}
+				},
+				computed: {
       		//公告列表
-			notice_list() {
-				return this.$store.state.notice_list;
-			},
-		},
-		methods:{
-			setScrollTop(){
-				this.$refs.paddingPageContent.scrollTop = 0;
-			},
-			group_notice_list(array) {
-				let index = 0;
-				let newArray = [];
-				while(index < array.length) {
-					newArray.push(array.slice(index, index += 3));
-				}
-				if(newArray.length == 2){
-					newArray.unshift(newArray[1]);
-					newArray.push(newArray[1]);
-					this.initialIndex = 1;
-				}
-				return newArray;
-			},
+					notice_list() {
+						return this.$store.state.notice_list;
+					},
+			//图片前缀
+					domain(){
+						return this.$store.state.domain;
+					},
+				},
+				methods:{
+					setScrollTop(){
+						this.$refs.paddingPageContent.scrollTop = 0;
+					},
+					group_notice_list(array) {
+						let index = 0;
+						let newArray = [];
+						while(index < array.length) {
+							newArray.push(array.slice(index, index += 3));
+						}
+						if(newArray.length == 2){
+							newArray.unshift(newArray[1]);
+							newArray.push(newArray[1]);
+							this.initialIndex = 1;
+						}
+						return newArray;
+					},
 			//获取公告列表
-			getNotice(){
-				this.$store.dispatch('getNotice')
-			},
+					getNotice(){
+						this.$store.dispatch('getNotice')
+					},
 			//查看公告
-			noticeDetail(notice_id){
+					noticeDetail(notice_id){
         		//获取公告详情
-				let arg = {
-					notice_id:notice_id
-				}
-				resource.noticeInfo(arg).then(res => {
-					if(res.data.code == 1){
+						let arg = {
+							notice_id:notice_id
+						}
+						resource.noticeInfo(arg).then(res => {
+							if(res.data.code == 1){
             			//获取公告列表
-						this.getNotice();
-						let active_path = `/notice_page?notice_id=${notice_id}`;
-						const routeData = this.$router.resolve(active_path);
-						window.open(routeData.href);
-					}else{
-						this.$message.warning(res.data.msg);
-					}
-				})
-			},
-			//搜索
-			searchFn(value){
-				this.page = 1;
-				this.search = value;
-				this.arg = {
-					page:this.page
-				} 
-				//获取列表
-				this.getList(this.arg);
-				//重新加载筛选条件
-				this.show_screen = false;
-				this.$nextTick(() => {
-					this.show_screen = true;
-				})
-			},
-			//查询条件回调
-			screenFn(arg){
-				this.page = 1;
-				this.arg = arg;
-				let obj = {...this.arg,...{page:this.page}};
-				//获取列表
-				this.getList(obj);
-				//设置定位到列表顶部
-				this.setListTop();
-			},
-			//翻页
-			checkPage(val) {
-				this.page = val;
-				let obj = {...this.arg,...{page:this.page}};
-				//获取列表
-				this.getList(obj);
-				//设置定位到列表顶部
-				this.setListTop();
-			},
-			//获取列表
-			getList(arg){
-				arg.search = this.search;
-				this.loading = true;
-				resource.getGoodsList(arg).then(res => {
-					if(res.data.code == 1){
-						let data = res.data.data;
-						this.goods_list = data.data;
-						this.goods_list.map(item => {
-							item['showOffShelf'] = this.arg.show_offshelf;
+								this.getNotice();
+								let active_path = `/notice_page?notice_id=${notice_id}`;
+								const routeData = this.$router.resolve(active_path);
+								window.open(routeData.href);
+							}else{
+								this.$message.warning(res.data.msg);
+							}
 						})
-						this.total = data.total;
-						this.loading = false;
-					}else{
-						this.$message.warning(res.data.msg);
-					}
-				})
-			},
+					},
+			//搜索
+					searchFn(value){
+						this.page = 1;
+						this.search = value;
+						this.arg = {
+							page:this.page
+						} 
+				//获取列表
+						this.getList(this.arg);
+				//重新加载筛选条件
+						this.show_screen = false;
+						this.$nextTick(() => {
+							this.show_screen = true;
+						})
+					},
+			//查询条件回调
+					screenFn(arg){
+						this.page = 1;
+						this.arg = arg;
+						let obj = {...this.arg,...{page:this.page}};
+				//获取列表
+						this.getList(obj);
+				//设置定位到列表顶部
+						this.setListTop();
+					},
+			//翻页
+					checkPage(val) {
+						this.page = val;
+						let obj = {...this.arg,...{page:this.page}};
+				//获取列表
+						this.getList(obj);
+				//设置定位到列表顶部
+						this.setListTop();
+					},
+			//获取列表
+					getList(arg){
+						arg.search = this.search;
+						this.loading = true;
+						resource.getGoodsList(arg).then(res => {
+							if(res.data.code == 1){
+								let data = res.data.data;
+								this.goods_list = data.data;
+								this.goods_list.map(item => {
+									item['showOffShelf'] = this.arg.show_offshelf;
+								})
+								this.total = data.total;
+								this.loading = false;
+							}else{
+								this.$message.warning(res.data.msg);
+							}
+						})
+					},
 			//设置定位到列表顶部
-			setListTop(){
-				this.$nextTick(() => {
-					this.$refs.paddingPageContent.scrollTop = document.getElementById('search_box').offsetHeight + document.getElementById('vogue_widget').offsetHeight;
-				})
-			},
+					setListTop(){
+						this.$nextTick(() => {
+							this.$refs.paddingPageContent.scrollTop = document.getElementById('search_box').offsetHeight + document.getElementById('vogue_widget').offsetHeight;
+						})
+					},
 			//设置已加入
-			setStatus(goods_id){
-				this.goods_list.map(item => {
-					if(item.goods_id == goods_id){
-						item.in_cart = 1; 
-					}
-				})
-			},
+					setStatus(goods_id){
+						this.goods_list.map(item => {
+							if(item.goods_id == goods_id){
+								item.in_cart = 1; 
+							}
+						})
+					},
 			//点击放大
-			enlargeFn(info){
-				this.enlarge_item = info;
-				this.enlarge_dialog = true;
+					enlargeFn(arg){
+						this.enlarge_type = arg.type;
+				if(this.enlarge_type == 'goods_item'){		//单个商品
+					this.enlarge_item = arg.info;
+					this.enlarge_dialog = true;
+				}else{								//顶部爆款专区
+					resource.priceWarningDetail({goods_id:arg.goods_id}).then(res => {
+						if(res.data.code == 1){
+							let data = res.data.data;
+							let goods_info = data.info;
+							goods_info['img'] = goods_info.img.split(',');
+							this.enlarge_item = goods_info;
+							this.time = data.time;
+							this.table_data = data.shop_list;
+							this.enlarge_dialog = true;
+						}else{
+							this.$message.warning(res.data.msg);
+						}
+					})						
+				}
+				
 			},
 			//一键截图
 			toClipboard() {
@@ -260,6 +288,7 @@
 			EmptyPage,
 			VogueWidget,
 			SalenumChart,
+			PriceControl,
 			FixedButtons
 		}
 	}

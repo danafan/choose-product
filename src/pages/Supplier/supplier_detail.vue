@@ -192,8 +192,8 @@
 				this.$message.success('截图已保存至本地')
 			},
 			//点击放大
-			enlargeFn(info){
-				this.enlarge_item = info;
+			enlargeFn(arg){
+				this.enlarge_item = arg.info;
 				this.enlarge_dialog = true;
 			},
 			//供应商基本信息

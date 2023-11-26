@@ -157,7 +157,7 @@
 				<img class="info_icon" src="../static/yue_icon.png" v-if="info.supply_monthly_settlement == 1">
 			</div>
 			<div class="flex ac">
-				<img class="enlarge_icon" src="../static/enlarge_icon.png" @click.stop="$emit('enlargeFn',info)" v-if="!is_enlarge">
+				<img class="enlarge_icon" src="../static/enlarge_icon.png" @click.stop="$emit('enlargeFn',{type:'goods_item',info:info})" v-if="!is_enlarge">
 				<div class="feek_back" @click.stop="feekback_dialog = true">反馈</div>
 			</div>		
 		</div>

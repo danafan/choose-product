@@ -5,6 +5,12 @@
         <div class="banner_item pointer" :class="{'active_banner_item':banner_index == 0}" @click.stop="banner_index = 0">爆款专区</div>
         <div class="banner_item pointer" :class="{'active_banner_item':banner_index == 1}" @click.stop="banner_index = 1">新品热销</div>
         <div class="banner_item pointer" :class="{'active_banner_item':banner_index == 2}" @click.stop="banner_index = 2">降价精选</div>
+        <div class="banner_item pointer" :class="{'active_banner_item':banner_index == 3}" @click.stop="banner_index = 3">
+          <img class="warning_icon" src="../static/warning_active.png" v-if="banner_index == 3">
+          <img class="warning_icon" src="../static/warning_data.png" v-if="price_warning_list.length > 0 && banner_index != 3">
+          <img class="warning_icon" src="../static/warning_null.png" v-if="price_warning_list.length == 0 && banner_index != 3">
+          <div>控价预警</div>
+        </div>
       </div>
       <div class="selected_right">
         <div>{{screen_open?'收起':'展开'}}</div>
@@ -17,7 +23,21 @@
         <div v-if="goods_list.length == 0 && !loading">暂无数据</div>
         <el-carousel indicator-position="none" arrow="never" ref="hotCarousel" :autoplay="false" @change="changeIndicator">
           <el-carousel-item v-for="(array_item,index) in goods_list" :key="index">
-            <div class="width-100 flex jsb">
+            <!-- 控价预警 -->
+            <div class="width-100 flex jsb" v-if="banner_index == 3">
+              <div class="li-item pointer" v-for="item in array_item" :key="item.goods_id" @click.stop="getDetail(item.goods_id)">
+                <img class="goods_img" :data-obj="JSON.stringify(item)" :src="domain + item.img" style="object-fit: scale-down;">
+                <el-tooltip class="item" effect="dark" :content="`${item.supplier_name}：供应商款号：${item.style_name}`" placement="top">
+                  <div class="hot_sell_item_title table_header_text" :data-obj="JSON.stringify(item)">{{item.supplier_name}}：供应商款号：{{item.style_name}}</div>
+                </el-tooltip>
+                <div class="flex jc ac">
+                  <div class="hot_sell_item_price" :data-obj="JSON.stringify(item)" @click.stop="$emit('enlargeFn',{type:'vogue_widget',goods_id:item.goods_id})">{{item.num}}家店铺低于控价</div>
+                </div>
+              </div>
+              <div class="li-item" v-for="j in 7 - array_item.length"></div>
+            </div>
+            <!-- 除控价预警外的数据 -->
+            <div class="width-100 flex jsb" v-else>
               <div class="li-item pointer" v-for="item in array_item" :key="item.style_id" @click.stop="getDetail(item.style_id)">
                 <img class="goods_img" :data-obj="JSON.stringify(item)" :src="domain + item.img" style="object-fit: scale-down;">
                 <div class="hot_sell_item_title table_header_text" :data-obj="JSON.stringify(item)">{{item.title}}</div>
@@ -26,7 +46,6 @@
                   ="banner_index == 2">¥{{item.before_price}}&nbsp&nbsp→&nbsp&nbsp</div>
                   <div class="hot_sell_item_price" :data-obj="JSON.stringify(item)">¥{{item.cost_price}}</div>
                 </div>
-                
               </div>
               <div class="li-item" v-for="j in 7 - array_item.length"></div>
             </div>
@@ -35,7 +54,6 @@
       </div>
       <div class="absolute indicator" v-if="goods_list.length > 0">{{current_index + 1}}/{{goods_list.length}}</div>
       <img class="check_arrow pointer" src="../static/check_right_arrow.png" @click.stop="checkArrow('2')" v-if="goods_list.length > 0">
-      
     </div>
   </div>
 
@@ -53,6 +71,7 @@
         hot_list:[],              //爆款列表
         new_list:[],              //新品热销
         reduction_price_list:[],  //降价精选
+        price_warning_list:[],    //控价预警
         screen_open:true,
         loading:false,
       }
@@ -75,6 +94,9 @@
             break;
           case 2:
             this.goods_list = this.reduction_price_list;
+            break;
+          case 3:
+            this.goods_list = this.price_warning_list;
             break;
           }
           this.current_index = 0;
@@ -101,6 +123,9 @@
 
             let reduction_price_list = hot_sell_goods.reduction_price_list;
             this.reduction_price_list = this.groupArray(reduction_price_list, 7);
+
+            let price_warning_list = hot_sell_goods.price_warning_list;
+            this.price_warning_list = this.groupArray(price_warning_list, 7);
 
             this.goods_list = this.hot_list;
           }else{
@@ -159,11 +184,17 @@
     .banner_item{
       border-radius: 18px 18px 0 0;
       width: 140rem;
-      text-align: center;
       height: 30px;
-      line-height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       font-size: 14rem;
       color: #666666;
+    }
+    .warning_icon{
+      margin-right: 4rem;
+      width: 15rem;
+      height: 14rem;
     }
     .active_banner_item{
       background: #F37605;
