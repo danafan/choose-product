@@ -209,6 +209,9 @@
 				},{
 					name:'下架款',
 					id:8
+				},{
+					name:'控价款',
+					id:9
 				}],								//普通款式类型列表
 				gys_cate_style_list:[{
 					name:'合并同款',
@@ -591,6 +594,9 @@
 					arg.sole_style = this.cate_style_ids.indexOf(5) > -1?1:0;
 					arg.again_style = this.cate_style_ids.indexOf(6) > -1?1:0;
 					arg.show_offshelf = this.cate_style_ids.indexOf(8) > -1?1:0;
+					if(this.cate_style_ids.indexOf(9) > -1){
+						arg.price_control = 1;
+					}
 				}
 
 				//处理供应商

@@ -1,7 +1,7 @@
 <template>
 	<div class="p20">
 		<div class="f14 flex ac">
-			<span class="mr34">供应商款式编码：{{styleName}}</span>
+			<span class="mr34">供应商款号：{{styleName}}</span>
 			<span>控价：{{priceControl}}</span>
 		</div>
 		<div class="flex jse time">数据统计时间：{{time}}</div>
