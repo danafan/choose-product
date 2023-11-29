@@ -25,7 +25,7 @@
           <el-carousel-item v-for="(array_item,index) in goods_list" :key="index">
             <!-- 控价预警 -->
             <div class="width-100 flex jsb" v-if="banner_index == 3">
-              <div class="li-item pointer" v-for="item in array_item" :key="item.goods_id" @click.stop="getDetail(item.goods_id)">
+              <div class="li-item pointer" v-for="item in array_item" :key="item.style_id" @click.stop="getDetail(item.style_id)">
                 <img class="goods_img" :data-obj="JSON.stringify(item)" :src="domain + item.img" style="object-fit: scale-down;">
                 <el-tooltip class="item" effect="dark" :content="`${item.supplier_name}：供应商款号：${item.style_name}`" placement="top">
                   <div class="hot_sell_item_title table_header_text" :data-obj="JSON.stringify(item)">{{item.supplier_name}}：供应商款号：{{item.style_name}}</div>
