@@ -474,9 +474,9 @@
 					this.preview_bk_image.push(this.domain + item);
 				})
 				this.bk_img = data_info.hot_img;
-				this.kcs = data_info.data_num;
-				this.tj = data_info.data_price;
-				this.bz = data_info.data_remark;
+				this.kcs = data_info.data_num?data_info.data_num:'';
+				this.tj = data_info.data_price?data_info.data_price:'';
+				this.bz = data_info.data_remark?data_info.data_remark:'';
 
 				//处理海澜和jeep
 				let brand_ksbm = data_info.brand_ksbm;

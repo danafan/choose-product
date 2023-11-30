@@ -1,11 +1,12 @@
 export function exportPost(data, name,type) {
   var blob = null;
   if(type){
-    blob = new Blob([data], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,charset=UTF-8" });
+     blob = new Blob([data], { type: 'application/vnd.ms-excel'});
+    //blob = new Blob([data], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,charset=UTF-8" });
   }else{
     blob = new Blob([data], { type: "text/csv,charset=UTF-8" });
   }
-  
+
   let today = new Date();
   let tadayDate =
     today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate();

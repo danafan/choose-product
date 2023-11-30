@@ -325,7 +325,6 @@
 </template>
 <script>
 	import { MessageBox, Message } from "element-ui";
-	import { exportPost } from "../../api/export.js";
 	import resource from '../../api/resource.js'
 	import commonResource from '../../api/common_resource.js'
 

@@ -570,7 +570,6 @@
 				if(this.import_type == '1'){
 					window.open(`${this.downLoadUrl}/file/批量更新款式编码模板.xlsx`);
 				}else{
-					// window.open(`${this.downLoadUrl}/file/商品批量导入模板.xls`);
 					window.open(`${this.downLoadUrl}/file/商品批量导入模板.xlsx`);
 				}
 			},
@@ -620,47 +619,43 @@
 			//导出
 			exportFn() {
 				let arg = {
-						supplier_id:this.supplier_ids.join(','),
-						category_id:this.category_ids.join(','),
-						market_id:this.market_ids.join(','),
-						classification_id:this.classification_ids.join(','),
-						shooting_id:this.shooting_style_ids.join(','),
-						start_time:this.date && this.date.length > 0?this.date[0]:"",
-						end_time:this.date && this.date.length > 0?this.date[1]:"",
-						check_status:this.check_status_id,
-						maintainer:this.maintainer_ids.join(','),
-						export_type:this.export_type
+					supplier_id:this.supplier_ids.join(','),
+					category_id:this.category_ids.join(','),
+					market_id:this.market_ids.join(','),
+					classification_id:this.classification_ids.join(','),
+					shooting_id:this.shooting_style_ids.join(','),
+					start_time:this.date && this.date.length > 0?this.date[0]:"",
+					end_time:this.date && this.date.length > 0?this.date[1]:"",
+					check_status:this.check_status_id,
+					maintainer:this.maintainer_ids.join(','),
+					export_type:this.export_type
+				}
+				if(this.multiple_selection.length > 0){
+					let goods_ids = this.multiple_selection.map(item => {
+						return item.goods_id
+					})
+					arg['goods_ids'] = goods_ids.join(',');
+				}
+				let search = JSON.parse(JSON.stringify(this.search));
+				if(search.indexOf("\n") > -1 || search.indexOf(" ") > -1 || search.indexOf("+") > -1){
+					if (search.indexOf("\n") > -1) {
+						search = search.replaceAll("\n", ",");
 					}
-					if(this.multiple_selection.length > 0){
-						let goods_ids = this.multiple_selection.map(item => {
-							return item.goods_id
-						})
-						arg['goods_ids'] = goods_ids.join(',');
+					if (search.indexOf(" ") > -1) {
+						search = search.replaceAll(" ", ",");
 					}
-					let search = JSON.parse(JSON.stringify(this.search));
-					if(search.indexOf("\n") > -1 || search.indexOf(" ") > -1 || search.indexOf("+") > -1){
-						if (search.indexOf("\n") > -1) {
-							search = search.replaceAll("\n", ",");
-						}
-						if (search.indexOf(" ") > -1) {
-							search = search.replaceAll(" ", ",");
-						}
-						if (search.indexOf("+") > -1) {
-							search = search.replaceAll("+", "%2B");
-						}
+					if (search.indexOf("+") > -1) {
+						search = search.replaceAll("+", "%2B");
 					}
-					
-					arg.search = search;
+				}
+				
+				arg.search = search;
 
-					var arr = [];
-					for(let k in arg){
-						if(arg[k]){
-							arr.push(`${k}=${arg[k]}`)
-						}
+				resource.styleInfoExport(arg).then((res) => {
+					if (res) {
+						exportPost(res.data, `${this.export_type == 1?'款式资料数据':'风格资料数据'}`,true);
 					}
-					this.export_dialog = false;
-					let baseURL = `${location.origin}/api/productstyle/derivegetallproductstyle?${arr.join('&')}`
-					window.open(baseURL)
+				});
 			},
 			//获取列表
 			getGoodsList(){

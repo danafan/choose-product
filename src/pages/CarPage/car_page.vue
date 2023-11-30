@@ -149,7 +149,6 @@
 <script>
 	import resource from '../../api/resource.js'
 	import commonResource from '../../api/common_resource.js'
-	import { exportPost } from "../../api/export.js";
 	import { MessageBox, Message } from "element-ui";
 
 	import TableTitle from '../SupplyChain/components/table_title.vue'

@@ -126,6 +126,7 @@ let path = {
   addBrand:'api/setting/add_brand',                         //创建品牌
   editBrand:'api/setting/edit_brand',                       //编辑品牌
   ajaxSupplierDeveloper:'api/supplier_manager/ajax_supplier_developer', //供应商预备库开发员筛选项
+  styleInfoExport:'api/productstyle/derivegetallproductstyle',  //款式资料导出
 };    
 export default {
   //类目列表接口
@@ -687,5 +688,9 @@ export default {
   //供应商预备库开发员筛选项
   ajaxSupplierDeveloper(params) {
     return http.get(path.ajaxSupplierDeveloper, params);
+  },
+  //款式资料导出
+  styleInfoExport(params) {
+    return http.exportRequest(path.styleInfoExport, params);
   },
 };

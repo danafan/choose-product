@@ -629,8 +629,6 @@
 		}
 	</style>
 	<script>
-		import { exportPost } from "../../../../api/export.js";
-
 		import { MessageBox, Message } from "element-ui";
 		import resource from '../../../../api/chain_resource.js'
 		import commonResource from '../../../../api/common_resource.js'

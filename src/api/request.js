@@ -67,17 +67,17 @@ export function middleWare(params, type) {
   }
 }
   //sign
-  var sign = md5(sign_arr.join("&"));
+var sign = md5(sign_arr.join("&"));
 
   //token
-  var token_target = {
-    login_token: login_token,
-    secret_key: secret_key,
-    timestamp: (new Date().getTime() / 1000).toString().split(".")[0],
-  };
-  var Base64 = require("js-base64").Base64;
-  var token_obj = { ...token_target, ...{ sign: sign } };
-  var token = Base64.encode(JSON.stringify(token_obj));
+var token_target = {
+  login_token: login_token,
+  secret_key: secret_key,
+  timestamp: (new Date().getTime() / 1000).toString().split(".")[0],
+};
+var Base64 = require("js-base64").Base64;
+var token_obj = { ...token_target, ...{ sign: sign } };
+var token = Base64.encode(JSON.stringify(token_obj));
 
 
   //组织参数
@@ -105,9 +105,16 @@ export default {
     var str = middleWare(params, "get");
     return axios.get(`${path}?${str}`);
   },
+  //post导出表格
+  exportRequest(path, params = {}){
+   var form = middleWare(params, "post");
+   return axios.post(`${path}`, form,{
+    responseType: 'blob'
+  });
+ },
   //下载专用
-  downLoad(path, params = {}) {
-    var str = middleWare(params, "get");
-    window.open(`${location.origin}/api/${path}?${str}`);
-  },
+ downLoad(path, params = {}) {
+  var str = middleWare(params, "get");
+  window.open(`${location.origin}/api/${path}?${str}`);
+},
 };

@@ -525,7 +525,6 @@
 	import commonResource from '../../../api/common_resource.js'
 	import resource from '../../../api/chain_resource.js'
 	import { getNowDate,getCurrentDate } from "../../../api/date.js";
-	import { exportPost } from "../../../api/export.js";
 
 	import { MessageBox, Message } from "element-ui";
 	import TableTitle from '../components/table_title.vue'
