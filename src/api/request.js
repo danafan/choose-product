@@ -8,10 +8,11 @@ export function middleWare(params, type) {
     if (typeof params[k] == "string" && params[k] != "") {
       //去掉两边
       params[k] = params[k].toString().replace(/(^\s*)|(\s*$)/g,"");
+    }
+    if(typeof params[k] == "string" && params[k] != "" && type == 'get'){
       //去掉#
       params[k] = params[k].toString().replace(/[#]/g, "");
     }
-
     if (type == 'get' && params[k].toString().indexOf('+') > -1) {
       params[k] = params[k].split('+').join('%2B')
     }
@@ -85,6 +86,7 @@ var token = Base64.encode(JSON.stringify(token_obj));
   // var req = { ...params, ...{ admin_id: "8318",utype:'1' } };
   // var req = { ...params, ...{ admin_id: "15924463779402331" ,utype:'1'} }; //测试
   // var req = { ...params, ...{ admin_id: "16161349938228000",utype:'1' } }; //陈鑫杰
+  console.log(req)
   var get_arr = [];
   //post请求参数
   var form = new FormData();

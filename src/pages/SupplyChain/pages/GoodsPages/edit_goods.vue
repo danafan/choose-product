@@ -292,7 +292,7 @@
 					i_id:"",				//款式编码
 					bd_i_id:"",				//bd款式编码
 					supplier_ksbm:"",		//供应商款式编码
-					style_name:"",			//商品款号
+					style_name:"",			//供应商款号
 					supplier_id:"",			//选中的供应商
 					title:"",				//标题
 					category_id:"",			//选中的类目
@@ -697,7 +697,7 @@
 			//底部提交
 			commitEditGoods(){
 				if(!this.arg.style_name){
-					this.$message.warning('请输入商品款号!');
+					this.$message.warning('请输入供应商款号!');
 				}else if(!this.arg.supplier_id){
 					this.$message.warning('请选择供应商!');
 				}else if(!this.arg.category_id){
