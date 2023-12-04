@@ -152,6 +152,7 @@
 		border-radius: 8rem 0px 0px 8rem;
 		padding-top:10rem;
 		padding-bottom:10rem;
+		z-index: 9;
 		.fixed_item{
 			position: relative;
 			width: 100%;

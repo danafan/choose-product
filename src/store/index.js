@@ -26,6 +26,7 @@ const store = new Vuex.Store({
     hot_num:0,            //爆款主推款审核待处理数量
     notice_num:"",        //待处理公告数量
     refund_num:0,         //已选款式被拒绝的数量
+    windowWidth:0,
   },
   mutations: {
     //设置用户信息
@@ -88,6 +89,10 @@ const store = new Vuex.Store({
     setHistory(state, status){
       state.show_history = status;
     },
+    //是否是移动端
+    setEquipment(state, windowWidth){
+      state.windowWidth = windowWidth;
+    },
   },
   actions: {
     // 获取公告列表
@@ -120,7 +125,7 @@ const store = new Vuex.Store({
         Message.warning(res.data.msg);
        }
      })
-    },
+    }
   }
 });
 export default store;

@@ -1,6 +1,6 @@
 <template>
-	<div class="padding_page white_back" ref="paddingPageContent" id="white_back">
-		<div class="padding_page_content" :style="{width:windowWidth>500?1430 + 'rem':windowWidth + 'px'}">
+	<div class="padding_page white_back" :class="{'mobile_total_width':windowWidth <= 750}" ref="paddingPageContent">
+		<div class="padding_page_content" :class="{'mobile_width':windowWidth <= 750}">
 			<PageTitle title="选品详情"/>
 			<div class="detail_content">
 				<div class="detail_top_row">
@@ -53,7 +53,6 @@
 	export default{
 		data(){
 			return{
-				windowWidth:0,
 				over_loading:false,	//是否加载完成
 				style_id:"",		//商品ID
 				goods_info:{},		//商品详情
@@ -62,10 +61,7 @@
 			}
 		},
 		created(){
-			var html = document.documentElement;
-        	this.windowWidth = parseInt(html.clientWidth);       //html宽度
-        	console.log(this.windowWidth)
-
+			console.log(this.windowWidth)
 			this.style_id = this.$route.query.style_id;
 			//获取商品详情
 			this.getGoodsInfo();
@@ -74,7 +70,11 @@
 			//图片前缀
 			domain(){
 				return this.$store.state.domain;
-			}
+			},
+			//屏幕宽度
+			windowWidth(){
+				return this.$store.state.windowWidth;
+			},
 		},
 		methods:{
 			setScrollTop(){
@@ -159,8 +159,10 @@
 		background: #ffffff;
 		overflow-y: scroll;
 	}
+	.white_back::-webkit-scrollbar{display:none}
 	.padding_page_content{
 		height: 100%;
+		width: 1430rem;
 		display: flex;
 		flex-direction: column;
 		position: relative;
@@ -250,33 +252,12 @@
 			}
 		}
 	}
-	.content_page{
-		width: 1430rem;
+	.mobile_total_width{
+		width: 1920px;
+		height: 100%;
 	}
-	.white_back::-webkit-scrollbar{display:none}
-	.scroll_top{
-		position: fixed;
-		top: 70%;
-		right: 16rem;
-		width: 60rem;
-		height: 60rem;
-		z-index: 9;
-		cursor:pointer;
-		display:flex;
-		flex-direction:column;
-		align-items:center;
-		justify-content: center;
-		background: #FFFFFF;
-		box-shadow: 0px 2px 11px 0px #FFEAD8;
-		border-radius: 30rem;
-		.scroll_top_icon{
-			margin-bottom: 2rem;
-			width: 20rem;
-			height: 14rem;
-		}
-		.icon_text{
-			color: var(--color);
-			font-size: 12rem;
-		}
+	.mobile_width{
+		width: 1430px;
+		height: 100%;
 	}
 </style>

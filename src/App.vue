@@ -28,7 +28,26 @@
         document.title = n.name;
       }
     },
+    mounted() {
+      //获取分辨率设置设备类型
+      this.setEquipment();
+      window.onresize = () => {
+        //获取分辨率设置设备类型
+        this.setEquipment();
+      }
+    },
     methods: {
+      //获取分辨率设置设备类型
+      setEquipment(){
+        var html = document.documentElement;
+        var windowWidth = parseInt(html.clientWidth);       //html宽度
+        this.$store.commit('setEquipment',windowWidth);
+        if(windowWidth > 750){
+          html.style.fontSize = windowWidth /1920 + 'px';
+        }else{
+          html.style.fontSize = 1 + 'px';
+        }
+      },
         //获取code
       getCode(){
         dd.ready(() => {

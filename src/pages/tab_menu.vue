@@ -1,6 +1,6 @@
 <template>
   <div class="container" @click="closeFn">
-    <div class="page_header">
+    <div class="page_header" :class="{'mobile_width':windowWidth <= 750}">
       <!-- logo -->
       <img class="logo_icon pointer" src="../static/logo_icon.png" v-if="active_path == '/supply_chain' || notice_list.length == 0" @click.stop="checkIndex(0)">
       <!-- 公告 -->
@@ -51,7 +51,7 @@
     </el-popconfirm>
   </div>
 </div>
-<div class="content">
+<div class="content" :class="{'mobile_width':windowWidth <= 750}">
   <keep-alive>
     <router-view v-if="$route.meta.keepAlive">
     </router-view>
@@ -200,6 +200,9 @@
       flex: 1;
       position: relative;
     }
+    .mobile_width{
+      width: 1920px;
+    }
     .page_foot {
       background-color: #ffffff;
       width: 100%;
@@ -233,7 +236,6 @@
   export default {
     data() {
       return {
-        // active_index:0,
         edit_dialog:false,      //修改密码弹窗
         old_password:"",        //旧密码
         password:"",            //新密码
@@ -307,6 +309,10 @@
       //用户名称
     ding_user_name() {
       return this.$store.state.ding_user_name;
+    },
+    //屏幕宽度
+    windowWidth(){
+      return this.$store.state.windowWidth;
     },
   },
   methods: {

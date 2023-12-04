@@ -1,6 +1,6 @@
 <template>
-	<div class="padding_page" @click.stop>
-		<div class="index_container">
+	<div class="padding_page" :class="{'mobile_total_width':windowWidth <= 750}" ref="paddingPageContent" @click.stop>
+		<div class="index_container" :class="{'mobile_width':windowWidth <= 750}">
 			<div class="padding_page_content scroll-y" ref="paddingPageContent">
 				<div class="flex ac" id="search_box">
 					<SearchWidget page_path="index_history" @callback="searchFn" placeholder="输入款式编码、款号、标题关键字、供应商进行搜索"/>
@@ -125,6 +125,10 @@
 					domain(){
 						return this.$store.state.domain;
 					},
+					//屏幕宽度
+			windowWidth(){
+				return this.$store.state.windowWidth;
+			},
 				},
 				methods:{
 					setScrollTop(){
@@ -433,6 +437,12 @@
 			width: 500rem;
 			height: 350rem;
 		}
+	}
+	.mobile_total_width{
+		width: 1920px;
+	}
+	.mobile_width{
+		width: 1725px;
 	}
 </style>
 
