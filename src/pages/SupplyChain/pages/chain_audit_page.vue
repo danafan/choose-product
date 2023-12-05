@@ -74,8 +74,10 @@
 						</el-input>
 					</el-form-item>
 					<el-form-item label="选款日期：">
-						<el-date-picker v-model="date" size="mini" type="daterange" unlink-panels value-format="yyyy-MM-dd" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" @change="up_type = null">
-						</el-date-picker>
+						<div @click.once="changeInitCalendarPage">
+							<el-date-picker v-model="date" size="mini" type="daterange" unlink-panels value-format="yyyy-MM-dd" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" @change="up_type = null">
+							</el-date-picker>
+						</div>
 					</el-form-item>
 					<el-form-item>
 						<el-radio-group v-model="up_type">
@@ -649,6 +651,14 @@
 			}
 		},
 		methods: {
+			//将日期筛选改为默认上月到当前月
+			changeInitCalendarPage() {
+				let nodeList = document.querySelectorAll("button.el-picker-panel__icon-btn.el-icon-arrow-left");
+				nodeList[0].click()
+				setTimeout(() => {
+					nodeList[1].click()
+				},10);
+			},
     		//监听屏幕大小变化
 			onResize() {
 				this.$nextTick(() => {

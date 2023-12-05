@@ -27,15 +27,18 @@
 							</el-select>
 						</el-form-item>
 						<el-form-item label="时间：">
-							<el-date-picker
-							v-model="date_time"
-							type="datetimerange"
-							value-format="yyyy-MM-dd HH"
-							format="yyyy-MM-dd HH"
-							range-separator="至"
-							start-placeholder="开始时间"
-							end-placeholder="结束时间">
-						</el-date-picker>
+							<div @click.once="changeInitCalendarPage">
+								<el-date-picker
+								v-model="date_time"
+								unlink-panels
+								type="datetimerange"
+								value-format="yyyy-MM-dd HH"
+								format="yyyy-MM-dd HH"
+								range-separator="至"
+								start-placeholder="开始时间"
+								end-placeholder="结束时间">
+							</el-date-picker>
+						</div>
 					</el-form-item>
 					<el-form-item class="form_item">
 						<el-button type="primary" @click="checkPage(1)">查询</el-button>
@@ -406,6 +409,14 @@
 			}
 		},
 		methods: {
+			//将日期筛选改为默认上月到当前月
+			changeInitCalendarPage() {
+				let nodeList = document.querySelectorAll("button.el-picker-panel__icon-btn.el-icon-arrow-left");
+				nodeList[0].click()
+				setTimeout(() => {
+					nodeList[1].click()
+				},10);
+			},
 			focus(){
 				this.$nextTick(() => {
 					document

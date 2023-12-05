@@ -119,8 +119,11 @@
 					<el-checkbox class="custom_checkbox" :label="3">三日上新</el-checkbox>
 					<el-checkbox class="custom_checkbox" :label="7">七日上新</el-checkbox>
 				</el-checkbox-group>
-				<el-date-picker style="width: 220px;" v-model="date" size="mini" type="daterange" unlink-panels value-format="yyyy-MM-dd" range-separator="至" start-placeholder="上新时间" end-placeholder="上新时间" @change="changeDate">
-				</el-date-picker>
+				<div @click.once="changeInitCalendarPage">
+					<el-date-picker style="width: 220px;" v-model="date" size="mini" type="daterange" unlink-panels value-format="yyyy-MM-dd" range-separator="至" start-placeholder="上新时间" end-placeholder="上新时间" @change="changeDate">
+					</el-date-picker>
+				</div>
+				
 			</div>
 		</div>
 		<div class="cate_box_bottom" @click.stop>
@@ -276,6 +279,14 @@
 			}
 		},
 		methods:{
+			//将日期筛选改为默认上月到当前月
+			changeInitCalendarPage() {
+				let nodeList = document.querySelectorAll("button.el-picker-panel__icon-btn.el-icon-arrow-left");
+				nodeList[0].click()
+				setTimeout(() => {
+					nodeList[1].click()
+				},10);
+			},
 			//切换上新类型
 			upTypeChange(value){
 				if(this.up_type.length > 1){
