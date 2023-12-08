@@ -163,7 +163,7 @@
 				<el-table-column label="商品备注" prop="remark"></el-table-column>
 				<el-table-column label="操作" width="160" fixed="right">
 					<template slot-scope="scope">
-						<el-button type="text" size="small" v-if="button_list.info == 1 && scope.row.check_status != 5" @click="selectedInfo(scope.row.select_id)">查看</el-button>
+						<el-button type="text" size="small" v-if="button_list.info == 1" @click="selectedInfo(scope.row.select_id)">查看</el-button>
 						<el-button type="text" size="small" v-if="button_list.edit_i_id == 1 && scope.row.check_status != 5" @click="editInfo(scope.row.select_id,scope.row.i_id,scope.row.bd_i_id,scope.row.supplier_ksbm)">编辑</el-button>
 						<el-button type="text" size="small" v-if="scope.row.audit_status == 1 && scope.row.check_status != 5 && button_list.aff == 1" @click="auditFn('1',scope.row.select_id)">确认需求</el-button>
 						<el-button type="text" size="small" v-if="(scope.row.audit_status == 1 || scope.row.audit_status == 2) && button_list.ref == 1" @click="auditFn('2',scope.row.select_id)">拒绝需求</el-button>
