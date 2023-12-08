@@ -167,7 +167,7 @@
 						<el-button type="text" size="small" v-if="button_list.edit_i_id == 1 && scope.row.check_status != 5" @click="editInfo(scope.row.select_id,scope.row.i_id,scope.row.bd_i_id,scope.row.supplier_ksbm)">编辑</el-button>
 						<el-button type="text" size="small" v-if="scope.row.audit_status == 1 && scope.row.check_status != 5 && button_list.aff == 1" @click="auditFn('1',scope.row.select_id)">确认需求</el-button>
 						<el-button type="text" size="small" v-if="(scope.row.audit_status == 1 || scope.row.audit_status == 2) && button_list.ref == 1" @click="auditFn('2',scope.row.select_id)">拒绝需求</el-button>
-						<div style="color:red" v-if="scope.row.check_status == 5">款式已下架</div>
+						<div style="color:red" v-if="scope.row.check_status == 5">（款式已下架）</div>
 					</template>
 				</el-table-column>
 			</el-table>
@@ -375,7 +375,10 @@
 			<img class="close_icon" src="../../../static/close_icon.png" @click="allAuditDialog = false">
 		</div>
 		<div class="down_box">
-			<el-form :inline="true" size="mini">
+			<el-form size="mini">
+				<el-form-item v-if="audit_type == 1">
+					<div style="color:red">已勾选{{multiple_selection.length}}条，{{multiple_selection.length - select_ids.length}}条已下架，{{multiple_selection.length == (multiple_selection.length - select_ids.length)?'无法确认需求':'是否继续审核？'}}</div>
+				</el-form-item>
 				<el-form-item label="类型：">
 					<el-radio-group v-model="audit_type">
 						<el-radio :label="1">确认需求</el-radio>
@@ -396,7 +399,7 @@
 </div>
 <div slot="footer" class="dialog_footer">
 	<el-button size="mini" @click="allAuditDialog = false">取消</el-button>
-	<el-button size="mini" type="primary" @click="commitAllAudit">确认</el-button>
+	<el-button size="mini" type="primary" :disabled="(multiple_selection.length == (multiple_selection.length - select_ids.length)) && audit_type == 1" @click="commitAllAudit">确认</el-button>
 </div>
 </el-dialog>
 <!-- 编辑 -->
@@ -462,7 +465,7 @@
 		}
 		
 		.down_box{
-			display:flex;
+			// display:flex;
 			padding:30rem 15rem;
 			.upload_box{
 				margin-left: 10px;
@@ -583,6 +586,7 @@
 				refused_dialog:false,	//拒绝弹窗
 				err_msg:"",				//拒绝备注
 				multiple_selection:[],
+				select_ids:[],			//已勾选的ids
 				allAuditDialog:false,
 				audit_type:1,			//批量审批的类型（1:同意；2:拒绝）
 				msg:"",					//同意备注
@@ -633,6 +637,22 @@
 					break;
 				default:
 					return
+				}
+			},
+			//批量审批类型
+			audit_type:function(n,o){
+				if(n == 1){			//确认
+					this.select_ids = [];
+					this.multiple_selection.map(item => {
+						if(item.check_status != 5){
+							this.select_ids.push(item.select_id);
+						}
+					})
+				}else{				//拒绝
+					this.select_ids = [];
+					this.multiple_selection.map(item => {
+						this.select_ids.push(item.select_id);
+					})
 				}
 			}
 		},
@@ -766,6 +786,12 @@
 			//切换多选
 			handleSelectionChange(val) {
 				this.multiple_selection = val;
+				this.select_ids = [];
+				this.multiple_selection.map(item => {
+					if(item.check_status != 5){
+						this.select_ids.push(item.select_id);
+					}
+				})
 			},
 			//设置不可勾选
 			checkboxInit(row) {
@@ -790,19 +816,15 @@
 				this.msg = "";
 				this.err_msg = "";
 			},
-		    //提价批量审批
+		    //提交批量审批
 			commitAllAudit(){
-				let ids = [];
-				this.multiple_selection.map(item => {
-					ids.push(item.select_id);
-				})
 		    	if(this.audit_type == 1){	//同意
 		    		if(this.msg == ''){
 		    			this.$message.warning('请输入同意备注!');
 		    			return;
 		    		}
 		    		let arg = {
-		    			select_id:ids.join(','),
+		    			select_id:this.select_ids.join(','),
 		    			msg:this.msg
 		    		}
 					//同意
@@ -813,7 +835,7 @@
 						return;
 					}
 					let arg = {
-						select_id:ids.join(','),
+						select_id:this.select_ids.join(','),
 						err_msg:this.refuse_remark
 					}
 					//拒绝
