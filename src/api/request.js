@@ -82,10 +82,10 @@ var token = Base64.encode(JSON.stringify(token_obj));
 
 
   //组织参数
-  // var req = { ...params, ...{ sign: sign, token: token } };
+  var req = { ...params, ...{ sign: sign, token: token } };
   // var req = { ...params, ...{ admin_id: "8318",utype:'1' } };
   // var req = { ...params, ...{ admin_id: "15924463779402331" ,utype:'1'} }; //测试
-  var req = { ...params, ...{ admin_id: "16161349938228000",utype:'1' } }; //陈鑫杰
+  // var req = { ...params, ...{ admin_id: "16161349938228000",utype:'1' } }; //陈鑫杰
   console.log(req)
   var get_arr = [];
   //post请求参数
