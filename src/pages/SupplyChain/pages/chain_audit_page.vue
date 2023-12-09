@@ -376,8 +376,12 @@
 		</div>
 		<div class="down_box">
 			<el-form size="mini">
-				<el-form-item v-if="audit_type == 1">
-					<div style="color:red">已勾选{{multiple_selection.length}}条，{{multiple_selection.length - select_ids.length}}条已下架，只能确认{{select_ids.length}}条，{{multiple_selection.length == (multiple_selection.length - select_ids.length)?'无法确认需求':'是否继续审核？'}}</div>
+				<el-form-item>
+					<div class="flex">
+						<div style="color:red">已勾选{{multiple_selection.length}}条</div>
+						<div style="color:red" v-if="select_ids.length == 0 && audit_type == 1">，{{multiple_selection.length}}条已下架，只能确认{{select_ids.length}}条，无法确认需求</div>
+						<div style="color:red" v-if="select_ids.length > 0 && select_ids.length < multiple_selection.length && audit_type == 1">，{{multiple_selection.length - select_ids.length}}条已下架，只能确认{{select_ids.length}}条，是否继续审核？</div>
+					</div>
 				</el-form-item>
 				<el-form-item label="类型：">
 					<el-radio-group v-model="audit_type">
