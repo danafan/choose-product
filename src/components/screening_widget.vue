@@ -95,7 +95,7 @@
 				</div>
 			</div>
 		</el-card>
-		<div class="cate_box">
+		<div class="cate_box" id="position_id">
 			<div class="flex" @click.stop>
 				<div class="sort_row">
 					<div class="sort_item" :class="{'active_color':item.sort != 'default'}" v-for="(item,index) in sort_list" @click.stop="sortFn(index)">

@@ -11,7 +11,8 @@ module.exports = {
 				ws: true,
 				changOlrigin: true,		
 			}
-		}
+		},
+		port: '9999',
 		// hot: false,
 		// liveReload: false
 	},

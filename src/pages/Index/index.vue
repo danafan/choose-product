@@ -1,5 +1,5 @@
 <template>
-	<div class="padding_page" :class="{'mobile_total_width':windowWidth <= 750}" ref="paddingPageContent" @click.stop>
+	<div class="padding_page" :class="{'mobile_total_width':windowWidth <= 750}" @click.stop>
 		<div class="index_container" :class="{'mobile_width':windowWidth <= 750}">
 			<div class="padding_page_content scroll-y" ref="paddingPageContent">
 				<div class="flex ac" id="search_box">
@@ -224,7 +224,7 @@
 			//设置定位到列表顶部
 					setListTop(){
 						this.$nextTick(() => {
-							this.$refs.paddingPageContent.scrollTop = document.getElementById('search_box').offsetHeight + document.getElementById('vogue_widget').offsetHeight;
+							this.$refs.paddingPageContent.scrollTop = document.getElementById('position_id').offsetTop;
 						})
 					},
 			//设置已加入
