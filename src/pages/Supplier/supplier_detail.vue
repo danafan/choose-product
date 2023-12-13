@@ -266,7 +266,7 @@
 			//设置定位到列表顶部
 			setListTop(){
 				this.$nextTick(() => {
-					this.$refs.paddingPageContent.scrollTop = document.getElementById('search_box').offsetHeight + document.getElementById('top_content').offsetHeight + 30;
+					this.$refs.paddingPageContent.scrollTop = document.getElementById('position_id').offsetTop;
 				})
 			},
 			//设置已加入
