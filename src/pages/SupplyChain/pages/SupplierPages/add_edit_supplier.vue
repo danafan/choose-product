@@ -68,13 +68,11 @@
 		<el-form style="width: 50%" size="small" label-width="140px">
 			<el-form-item label="结算方式：" :required="supplier_type == '2'">
 				<el-select v-model="supply_monthly_settlement" clearable placeholder="请选择结算方式" v-if="supplier_type == '2'">
-					<el-option v-for="item in payment_method" :key="item.id" :label="item.name" :value="item.id">
+					<el-option v-for="item in settlement_method_list" :key="item.id" :label="item.name" :value="item.id">
 					</el-option>
 				</el-select>
 				<div v-else>
-					<div v-if="supply_monthly_settlement==0">现结</div>
-					<div v-if="supply_monthly_settlement==1">月结</div>
-					<div v-if="supply_monthly_settlement==2">半月结</div>
+					{{filterSettlement(supply_monthly_settlement)}}
 				</div>
 			</el-form-item>
 			<el-form-item label="核心供应商：">
@@ -149,16 +147,7 @@
 				contactor:"",			//联系人
 				description:"",			//介绍
 				weixin:"",				//供应商微信
-				payment_method:[{
-					name:'现结',
-					id:0
-				},{
-					name:'月结',
-					id:1
-				},{
-					name:'半月结',
-					id:2
-				}],						//结算方式
+				settlement_method_list:[],						//结算方式
 				supply_monthly_settlement:"",//选中的结算方式
 				is_core:0,				//核心供应商
 				grade_list:[],			//供应商等级列表
@@ -195,6 +184,8 @@
 			this.selectionMap();
 			//获取供应商等级列表
 			this.ajaxSupplierGradeList();
+			//结算方式下拉框筛选项
+			this.selectionMap();
 			//获取用户列表
 			this.getUserList();
 		},
@@ -231,6 +222,17 @@
 				commonResource.getUserList().then(res => {
 					if(res.data.code == 1){
 						this.user_list = res.data.data;
+					}else{
+						this.$message.warning(res.data.msg);
+					}
+				})
+			},
+			//结算方式下拉框筛选项
+			selectionMap(){
+				resource.selectionMap().then(res => {
+					if(res.data.code == 1){
+						let data = res.data.data;
+						this.settlement_method_list = data.settlement_method;//结算方式
 					}else{
 						this.$message.warning(res.data.msg);
 					}
@@ -290,6 +292,13 @@
 					}
 				})
 			},
+			//获取结算方式
+			filterSettlement(id){
+				let settlement_method = this.settlement_method_list.filter(item => {
+					return item.id == id;
+				})
+				return settlement_method.length > 0?settlement_method[0].name:'';
+			},
 			//点击提交
 			commitFn(){
 				if(this.supplier_name == ''){
@@ -342,26 +351,6 @@
 								this.$message.warning(res.data.msg);
 							}
 						})
-						// if(this.type == '1'){		//添加
-						// 	resource.addSupplierManager(arg).then(res => {
-						// 		if(res.data.code == 1){
-						// 			this.$message.success(res.data.msg);
-						// 			this.$router.go(-1);
-						// 		}else{
-						// 			this.$message.warning(res.data.msg);
-						// 		}
-						// 	})
-						// }else{	//编辑
-						// 	arg.supplier_id = this.supplier_id;
-						// 	resource.supplierManagerEdit(arg).then(res => {
-						// 		if(res.data.code == 1){
-						// 			this.$message.success(res.data.msg);
-						// 			this.$router.go(-1);
-						// 		}else{
-						// 			this.$message.warning(res.data.msg);
-						// 		}
-						// 	})
-						// }
 					}).catch(() => {
 						this.$message({
 							type: 'info',

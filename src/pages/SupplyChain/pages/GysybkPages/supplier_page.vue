@@ -47,9 +47,7 @@
 					</el-form-item>
 					<el-form-item label="结算方式：">
 						<el-select v-model="supply_monthly_settlement" clearable placeholder="全部">
-							<el-option label="现结" :value="0"></el-option>
-							<el-option label="月结" :value="1"></el-option>
-							<el-option label="半月结" :value="2"></el-option>
+							<el-option :label="item.name" :value="item.id" v-for="item in settlement_method_list"></el-option>
 						</el-select>
 					</el-form-item>
 					<el-form-item label="品牌：">
@@ -110,11 +108,9 @@
 							{{scope.row.supply_warehousing == 1?'是':'否'}}
 						</template>
 					</el-table-column>
-					<el-table-column label="结算">
+					<el-table-column label="结算方式">
 						<template slot-scope="scope">
-							<div v-if="scope.row.supply_monthly_settlement == 0">现结</div>
-							<div v-if="scope.row.supply_monthly_settlement == 1">月结</div>
-							<div v-if="scope.row.supply_monthly_settlement == 2">半月结</div>
+							<div>{{filterSettlement(scope.row.supply_monthly_settlement)}}</div>
 						</template>
 					</el-table-column>
 					<el-table-column label="供应商等级" prop="grade_name"></el-table-column>
@@ -273,6 +269,7 @@
 				supply_exchange_goods:'',//是否换货
 				supply_replace_send:'',	//是否代发
 				supply_warehousing:'',	//是否入仓
+				settlement_method_list:[],		//结算方式列表
 				supply_monthly_settlement:'',	//结算方式
 				grade_list:[],			//供应商等级
 				grade_list_ids:[],		//选中的供应商等级
@@ -359,6 +356,24 @@
 						this.$message.warning(res.data.msg);
 					}
 				})
+			},
+			//结算方式下拉框筛选项
+			selectionMap(){
+				resource.selectionMap().then(res => {
+					if(res.data.code == 1){
+						let data = res.data.data;
+						this.settlement_method_list = data.settlement_method;//结算方式
+					}else{
+						this.$message.warning(res.data.msg);
+					}
+				})
+			},
+			//获取结算方式
+			filterSettlement(id){
+				let settlement_method = this.settlement_method_list.filter(item => {
+					return item.id == id;
+				})
+				return settlement_method.length > 0?settlement_method[0].name:'';
 			},
     		//获取供应商列表
 			supplierManagerList(){
