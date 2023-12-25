@@ -18,6 +18,7 @@ let path = {
   getDeptList:'api/selected/getdeptlist',                       //获取部门列表
   ajaxSupplierMaintainer:'api/supplier_manager/ajax_supplier_maintainer', //供应商维护人
   ajaxRoleList:'api/user/ajaxrolelist',                             //获取角色列表
+  getHtmlGoods:'api/productstyle/gethtmlgoods',           //创建商品资料获取信息
 }
 export default {
   //类目列表
@@ -91,5 +92,9 @@ export default {
   //获取角色列表
   ajaxRoleList(params) {
     return http.get(path.ajaxRoleList, params);
+  },
+   //创建商品资料获取信息
+  getHtmlGoods(params) {
+    return http.post(path.getHtmlGoods, params);
   },
 };

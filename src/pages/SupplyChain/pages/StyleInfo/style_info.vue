@@ -247,29 +247,64 @@
 			<img class="close_icon" src="../../../../static/close_icon.png" @click="edit_dialog = false">
 		</div>
 		<div class="remark_content">
-			<EditGoods v-if="edit_dialog" :edit_goods_id="goods_id" :goods_type="goods_type" @callBack="editCallBack"/>
+			<!-- <el-button type="text" v-if="goods_type == '1'" @click="getInfoDialog = true">获取资料</el-button> -->
+			<el-form size="small" label-width="140px" v-if="goods_type == '1'">
+				<el-form-item label="获取52电商资料：">
+					<el-button type="text" @click="getInfoDialog = true">获取资料</el-button>
+				</el-form-item>
+			</el-form>
+			<EditGoods ref="editGoods" v-if="edit_dialog" :edit_goods_id="goods_id" :goods_type="goods_type" @callBack="editCallBack"/>
 		</div>
-		<div slot="footer" class="dialog_footer" v-if="goods_type == '3'">
-			<el-button size="small" @click="edit_dialog = false">关闭</el-button>
-		</div>
-	</el-dialog>
-	<!-- 导出 -->
-	<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" destroy-on-close @close="export_type = 1" :visible.sync="export_dialog" width="30%">
-		<div slot="title" class="dialog_title">
-			<div>导出</div>
-			<img class="close_icon" src="../../../../static/close_icon.png" @click="export_dialog = false">
-		</div>
-		<div class="remark_content">
-			<el-radio-group size="small" v-model="export_type">
-				<el-radio :label="1">款式资料</el-radio>
-				<el-radio :label="2">风格资料</el-radio>
-			</el-radio-group>
+		<el-dialog width="30%" :visible.sync="getInfoDialog" append-to-body>
+			<div slot="title" class="dialog_title">
+				<div>获取资料</div>
+				<img class="close_icon" src="../../../../static/close_icon.png" @click="getInfoDialog = false">
+			</div>
+			<div class="remark_content">
+				<el-form size="small" label-width="80px">
+					<el-form-item label="链接：" required>
+						<el-input placeholder="请输入链接" v-model="url">
+						</el-input>
+					</el-form-item>
+					<el-form-item label="风格：" required v-if="show_style">
+						<el-select v-model="selected_style" filterable placeholder="请选择">
+							<el-option
+							v-for="item in style_list"
+							:key="item.shooting_style_id"
+							:label="item.shooting_style_name"
+							:value="item.shooting_style_id">
+						</el-option>
+					</el-select>
+				</el-form-item>
+			</el-form>
 		</div>
 		<div slot="footer" class="dialog_footer">
-			<el-button size="mini" @click="export_dialog = false">取消</el-button>
-			<el-button size="mini" type="primary" @click="exportFn">确认</el-button>
+			<el-button size="small" @click="getInfoDialog = false">取消</el-button>
+			<el-button size="small" type="primary" @click="getHtmlGoods" v-if="!show_style">获取</el-button>
+			<el-button size="small" type="primary" @click="setHtmlData" v-else>确定</el-button>
 		</div>
 	</el-dialog>
+	<div slot="footer" class="dialog_footer" v-if="goods_type == '3'">
+		<el-button size="small" @click="edit_dialog = false">关闭</el-button>
+	</div>
+</el-dialog>
+<!-- 导出 -->
+<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" destroy-on-close @close="export_type = 1" :visible.sync="export_dialog" width="30%">
+	<div slot="title" class="dialog_title">
+		<div>导出</div>
+		<img class="close_icon" src="../../../../static/close_icon.png" @click="export_dialog = false">
+	</div>
+	<div class="remark_content">
+		<el-radio-group size="small" v-model="export_type">
+			<el-radio :label="1">款式资料</el-radio>
+			<el-radio :label="2">风格资料</el-radio>
+		</el-radio-group>
+	</div>
+	<div slot="footer" class="dialog_footer">
+		<el-button size="mini" @click="export_dialog = false">取消</el-button>
+		<el-button size="mini" type="primary" @click="exportFn">确认</el-button>
+	</div>
+</el-dialog>
 </div>
 </template>
 <style type="text/css">
@@ -363,7 +398,8 @@
 				shooting_style_ids:[],	//选中的拍摄风格
 				class_list:[],			//分类列表
 				classification_ids:[],	//选中的分类
-				check_status_list:[{
+				check_status_list:[
+				{
 					name:'上架待审核',
 					id:1
 				},{
@@ -443,6 +479,11 @@
 				off_title:'确认下架？',		//下架弹窗标题
 				export_dialog:false,		//导出弹窗
 				export_type:1,				//导出类型（1:款式资料；2:风格资料）
+				getInfoDialog:false,		//获取风格弹窗
+				html_data:null,				//获取的数据
+				url:"",						//输入的链接
+				show_style:false,			//选择风格下拉框
+				selected_style:"",			//已选中的风格ID
 			}
 		},
 		created(){
@@ -1093,6 +1134,61 @@
 						this.$message.warning(res.data.msg);
 					}
 				})
+			},
+			//获取信息
+			getHtmlGoods(){
+				if(this.url == ''){
+					this.$message.warning('请输入链接');
+					return;
+				}
+				this.show_style = true;
+				commonResource.getHtmlGoods({url:this.url}).then(res => {
+					if(res.data.code == 1){
+						this.html_data = res.data.data;
+					}else{
+						this.$message.warning(res.data.msg);
+					}
+				})
+			},
+			//设置数据
+			setHtmlData(){
+				if(this.selected_style == ""){
+					this.$message.warning('请选择风格');
+					return;
+				}
+				let arg = this.$refs.editGoods.arg;
+				for(let a_k in arg){
+					for(let k in this.html_data){
+						if(a_k == k){
+							arg[a_k] = this.html_data[k]
+						}
+					}
+				}
+				this.$refs.editGoods.selected_style.push(this.selected_style);
+
+				//拍摄风格
+				let shooting_style_name = "";
+				this.style_list.map(item => {
+					if(this.selected_style == item.shooting_style_id){
+						shooting_style_name = item.shooting_style_name
+					}
+				})
+				let style_card_item = {
+					shooting_style_id:this.selected_style,
+					shooting_style_name:shooting_style_name,
+					image_arr:this.html_data.images,
+					edit_status:1
+				}
+				this.$refs.editGoods.style_card_list.push(style_card_item);
+				//清除数据
+				this.clearForm();
+				this.getInfoDialog = false;
+			},
+			//清除数据
+			clearForm(){
+				this.show_style = false;
+				this.url = "";					//输入的链接
+				this.selected_style = "";			//已选中的风格ID
 			}
 		},
 		components:{
