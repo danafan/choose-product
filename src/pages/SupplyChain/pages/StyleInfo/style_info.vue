@@ -249,7 +249,7 @@
 		<div class="remark_content">
 			<el-form size="small" label-width="165px" v-if="goods_type == '1'">
 				<el-form-item label="获取52电商资料：">
-					<el-button type="text" @click="getInfoDialog = true">获取资料</el-button>
+					<el-button type="text" @click="getInfoDialog = true">点击获取</el-button>
 				</el-form-item>
 			</el-form>
 			<EditGoods ref="editGoods" v-if="edit_dialog" :edit_goods_id="goods_id" :goods_type="goods_type" @callBack="editCallBack" @setInfo="setInfo"/>
