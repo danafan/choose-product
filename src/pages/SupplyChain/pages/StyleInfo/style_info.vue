@@ -247,13 +247,12 @@
 			<img class="close_icon" src="../../../../static/close_icon.png" @click="edit_dialog = false">
 		</div>
 		<div class="remark_content">
-			<!-- <el-button type="text" v-if="goods_type == '1'" @click="getInfoDialog = true">获取资料</el-button> -->
-			<el-form size="small" label-width="140px" v-if="goods_type == '1'">
+			<el-form size="small" label-width="165px" v-if="goods_type == '1'">
 				<el-form-item label="获取52电商资料：">
 					<el-button type="text" @click="getInfoDialog = true">获取资料</el-button>
 				</el-form-item>
 			</el-form>
-			<EditGoods ref="editGoods" v-if="edit_dialog" :edit_goods_id="goods_id" :goods_type="goods_type" @callBack="editCallBack"/>
+			<EditGoods ref="editGoods" v-if="edit_dialog" :edit_goods_id="goods_id" :goods_type="goods_type" @callBack="editCallBack" @setInfo="setInfo"/>
 		</div>
 		<el-dialog width="30%" :visible.sync="getInfoDialog" append-to-body>
 			<div slot="title" class="dialog_title">
@@ -266,10 +265,10 @@
 						<el-input placeholder="请输入链接" v-model="url">
 						</el-input>
 					</el-form-item>
-					<el-form-item label="风格：" required v-if="show_style">
+					<el-form-item label="风格：" required>
 						<el-select v-model="selected_style" filterable placeholder="请选择">
 							<el-option
-							v-for="item in style_list"
+							v-for="item in style_table_data"
 							:key="item.shooting_style_id"
 							:label="item.shooting_style_name"
 							:value="item.shooting_style_id">
@@ -280,8 +279,7 @@
 		</div>
 		<div slot="footer" class="dialog_footer">
 			<el-button size="small" @click="getInfoDialog = false">取消</el-button>
-			<el-button size="small" type="primary" @click="getHtmlGoods" v-if="!show_style">获取</el-button>
-			<el-button size="small" type="primary" @click="setHtmlData" v-else>确定</el-button>
+			<el-button size="small" type="primary" :loading="get_info_loading" @click="getHtmlGoods">确定</el-button>
 		</div>
 	</el-dialog>
 	<div slot="footer" class="dialog_footer" v-if="goods_type == '3'">
@@ -483,7 +481,9 @@
 				html_data:null,				//获取的数据
 				url:"",						//输入的链接
 				show_style:false,			//选择风格下拉框
+				style_table_data:[],		//可选的列表
 				selected_style:"",			//已选中的风格ID
+				get_info_loading:false,		//获取数据按钮加载状态
 			}
 		},
 		created(){
@@ -595,6 +595,7 @@
 				commonResource.ajaxStyleList().then(res => {
 					if(res.data.code == 1){
 						this.style_list = res.data.data;
+						this.style_table_data = res.data.data;
 					}else{
 						this.$message.warning(res.data.msg);
 					}
@@ -1091,6 +1092,9 @@
 				this.edit_dialog_title = edit_dialog_title;
 				this.goods_id = goods_id.toString();
 				this.goods_type = goods_type;
+				if(this.goods_type == '1'){
+					this.style_table_data = this.style_list;
+				}
 				this.edit_dialog = true;
 			},
 			//编辑和重新提交之后的回调
@@ -1141,52 +1145,55 @@
 					this.$message.warning('请输入链接');
 					return;
 				}
-				this.show_style = true;
+				if(this.selected_style == ""){
+					this.$message.warning('请选择风格');
+					return;
+				}
+				this.get_info_loading = true;
 				commonResource.getHtmlGoods({url:this.url}).then(res => {
+					this.get_info_loading = false;
 					if(res.data.code == 1){
 						this.html_data = res.data.data;
+						
+						let arg = this.$refs.editGoods.arg;
+						for(let a_k in arg){
+							for(let k in this.html_data){
+								if(a_k == k){
+									arg[a_k] = this.html_data[k]
+								}
+							}
+						}
+						this.$refs.editGoods.selected_style.push(this.selected_style);
+
+						//拍摄风格
+						let shooting_style_name = "";
+						this.style_list.map(item => {
+							if(this.selected_style == item.shooting_style_id){
+								shooting_style_name = item.shooting_style_name
+							}
+						})
+						let style_card_item = {
+							shooting_style_id:this.selected_style,
+							shooting_style_name:shooting_style_name,
+							image_arr:this.html_data.images
+						}
+						this.$refs.editGoods.setStyleFn(style_card_item);
+						//清除数据
+						this.clearForm();
+						this.getInfoDialog = false;
 					}else{
 						this.$message.warning(res.data.msg);
 					}
 				})
 			},
-			//设置数据
-			setHtmlData(){
-				if(this.selected_style == ""){
-					this.$message.warning('请选择风格');
-					return;
-				}
-				let arg = this.$refs.editGoods.arg;
-				for(let a_k in arg){
-					for(let k in this.html_data){
-						if(a_k == k){
-							arg[a_k] = this.html_data[k]
-						}
-					}
-				}
-				this.$refs.editGoods.selected_style.push(this.selected_style);
-
-				//拍摄风格
-				let shooting_style_name = "";
-				this.style_list.map(item => {
-					if(this.selected_style == item.shooting_style_id){
-						shooting_style_name = item.shooting_style_name
-					}
-				})
-				let style_card_item = {
-					shooting_style_id:this.selected_style,
-					shooting_style_name:shooting_style_name,
-					image_arr:this.html_data.images,
-					edit_status:1
-				}
-				this.$refs.editGoods.style_card_list.push(style_card_item);
-				//清除数据
-				this.clearForm();
-				this.getInfoDialog = false;
+			//同步可选的风格列表
+			setInfo(style_table_data){
+				this.style_table_data = style_table_data;
 			},
 			//清除数据
 			clearForm(){
 				this.show_style = false;
+				this.html_data = null;
 				this.url = "";					//输入的链接
 				this.selected_style = "";			//已选中的风格ID
 			}

@@ -604,19 +604,22 @@
 				})
 			},
 			//确认商品风格多选
-			setStyleFn(){
+			setStyleFn(style_info){
 				this.selected_style.map(item => {
 					let name_arr = this.style_table_data.filter(i => {
 						return i.shooting_style_id == item;
 					})
 					let style_card_item = {
-						shooting_style_id:item,
-						shooting_style_name:name_arr[0].shooting_style_name,
-						image_arr:[]
+						shooting_style_id:style_info.shooting_style_id?style_info.shooting_style_id:item,
+						shooting_style_name:style_info.shooting_style_name?style_info.shooting_style_name:name_arr[0].shooting_style_name,
+						image_arr:style_info.image_arr?style_info.image_arr:[]
 					}
 					this.style_card_list.push(style_card_item);
 				})
 				this.style_table_data = this.filterStyle(this.style_table_data,this.style_card_list);
+				if(this.goods_type == '1'){
+					this.$emit('setInfo',this.style_table_data)
+				}
 				this.selected_style = [];
 				this.$refs.stylePopover.doClose()
 			},
@@ -629,6 +632,7 @@
 					type: 'warning'
 				}).then(() => {
 					this.style_table_data.unshift(current_style);
+					this.$emit('setInfo',this.style_table_data)
 					this.style_card_list.splice(index,1);
 				}).catch(() => {
 					this.$message({
@@ -990,7 +994,7 @@
 <style lang="less" scoped>
 	.chain_page_content{
 		width: 100%;
-		max-height: 820rem;
+		max-height: 720rem;
 		padding: 24rem;
 		display: flex;
 		flex-direction: column;
