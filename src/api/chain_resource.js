@@ -127,10 +127,7 @@ let path = {
   editBrand:'api/setting/edit_brand',                       //编辑品牌
   ajaxSupplierDeveloper:'api/supplier_manager/ajax_supplier_developer', //供应商预备库开发员筛选项
   styleInfoExport:'api/productstyle/derivegetallproductstyle',  //款式资料导出
-  supplierManagerStock:'api/supplier_manager/stock',        //库存信息（分仓）列表
-  ajaxCkwz:'api/supplier_manager/ajax_ckwz',                //仓库位置列表
-  ajaxKsbm:'api/supplier_manager/ajax_ksbm',                //款式编码列表
-  ajaxSupplierNo:'api/supplier_manager/ajax_supplier_no',   //供应商编号列表
+  
 };    
 export default {
   //类目列表接口
@@ -697,20 +694,5 @@ export default {
   styleInfoExport(params) {
     return http.exportRequest(path.styleInfoExport, params);
   },
-  //库存信息（分仓）列表
-  supplierManagerStock(params) {
-    return http.get(path.supplierManagerStock, params);
-  },
-  //仓库位置列表
-  ajaxCkwz(params) {
-    return http.get(path.ajaxCkwz, params);
-  },
-  //款式编码列表
-  ajaxKsbm(params) {
-    return http.get(path.ajaxKsbm, params);
-  },
-  //供应商编号列表
-  ajaxSupplierNo(params) {
-    return http.get(path.ajaxSupplierNo, params);
-  },
+  
 };
