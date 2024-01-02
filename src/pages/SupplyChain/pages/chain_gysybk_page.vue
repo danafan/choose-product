@@ -10,6 +10,7 @@
 			<SupplierPage v-if="web_url == 'supplier_page'"/>
 			<GysybkPage v-if="web_url == 'gysybk_page'"/>
 			<VisitLog v-if="web_url == 'visit_log'"/>
+			<InventoryInfo v-if="web_url == 'inventory_info'"/>
 		</div>
 	</div>
 </template>
@@ -17,6 +18,7 @@
 	import SupplierPage from './GysybkPages/supplier_page.vue'
 	import GysybkPage from './GysybkPages/gysybk_page.vue'
 	import VisitLog from './GysybkPages/visit_log.vue'
+	import InventoryInfo from './GysybkPages/inventory_info.vue'
 	export default{
 		data(){
 			return{
@@ -50,7 +52,8 @@
 		components:{
 			SupplierPage,
 			GysybkPage,
-			VisitLog
+			VisitLog,
+			InventoryInfo
 		}
 	}
 </script>
