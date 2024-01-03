@@ -449,6 +449,12 @@
 						username:this.username,
 						maintainer:this.maintainer_ids.join(','),
 					}
+					if(this.multiple_selection.length > 0){
+						let log_ids = this.multiple_selection.map(item => {
+							return item.log_id
+						})
+						arg['log_id'] = log_ids.join(',');
+					}
 					var arr = [];
 					for(let k in arg){
 						if(arg[k]){
