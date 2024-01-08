@@ -68,6 +68,12 @@
 					<el-form-item class="form_item">
 						<el-input clearable v-model="address" placeholder="搜索供应商地址"></el-input>
 					</el-form-item>
+					<el-form-item label="白坯二开类型：">
+						<el-select v-model="supplier_type_value" clearable placeholder="全部">
+							<el-option label="内部" :value="1"></el-option>
+							<el-option label="外部" :value="2"></el-option>
+						</el-select>
+					</el-form-item>
 					<el-form-item class="form_item">
 						<el-button type="primary" @click="checkPage(1)">查询</el-button>
 					</el-form-item>
@@ -264,6 +270,7 @@
 				loading:false,
 				search:"",				//供应商、主营
 				address:"",				//地址
+				supplier_type_value:"",
 				supply_photograph:'',	//是否拍照
 				supply_return_goods:'',	//是否退货
 				supply_exchange_goods:'',//是否换货
@@ -380,6 +387,7 @@
 				let arg = {
 					search:this.search,
 					address:this.address,
+					supplier_type:this.supplier_type_value,
     				supply_photograph:this.supply_photograph,	//是否拍照
 					supply_return_goods:this.supply_return_goods,	//是否退货
 					supply_exchange_goods:this.supply_exchange_goods,//是否换货
@@ -418,6 +426,7 @@
 					let arg = {
 						search:this.search,
 						address:this.address,
+						supplier_type:this.supplier_type_value,
 						supply_photograph:this.supply_photograph,	
 						supply_return_goods:this.supply_return_goods,	
 						supply_exchange_goods:this.supply_exchange_goods,

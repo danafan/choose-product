@@ -3,6 +3,7 @@
     <div class="vogue_title flex ac jsb" :class="[{'title_radius':!screen_open},{'border_bottom':screen_open}]" @click.stop="screen_open = !screen_open">
       <div class="flex">
         <div class="banner_item pointer" :class="{'active_banner_item':banner_index == 0}" @click.stop="banner_index = 0">爆款专区</div>
+        <div class="banner_item pointer" :class="{'active_banner_item':banner_index == 4}" @click.stop="banner_index = 4">白坯二开</div>
         <div class="banner_item pointer" :class="{'active_banner_item':banner_index == 1}" @click.stop="banner_index = 1">新品热销</div>
         <div class="banner_item pointer" :class="{'active_banner_item':banner_index == 2}" @click.stop="banner_index = 2">降价精选</div>
         <div class="banner_item pointer" :class="{'active_banner_item':banner_index == 3}" @click.stop="banner_index = 3">
@@ -65,13 +66,14 @@
   export default {
     data () {
       return {
-        banner_index:0,           //0:爆款专区；1:新品热销；2:降价精选
+        banner_index:0,           //0:爆款专区；1:新品热销；2:降价精选；3:控价预警；4:白坯二开
         current_index:0,          //当前幻灯片的索引
         goods_list:[],            //当前显示的商品列表
         hot_list:[],              //爆款列表
         new_list:[],              //新品热销
         reduction_price_list:[],  //降价精选
         price_warning_list:[],    //控价预警
+        tofo_list:[],             //白坯二开
         screen_open:true,
         loading:false,
       }
@@ -97,6 +99,9 @@
             break;
           case 3:
             this.goods_list = this.price_warning_list;
+            break;
+          case 4:
+            this.goods_list = this.tofo_list;
             break;
           }
           this.current_index = 0;
@@ -126,6 +131,9 @@
 
             let price_warning_list = hot_sell_goods.price_warning_list;
             this.price_warning_list = this.groupArray(price_warning_list, 7);
+
+            let tofo_list = hot_sell_goods.tofo_list;
+            this.tofo_list = this.groupArray(tofo_list, 7);
 
             this.goods_list = this.hot_list;
           }else{

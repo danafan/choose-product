@@ -97,6 +97,12 @@
 							<el-option label="转合格拒绝" :value="5"></el-option>
 						</el-select>
 					</el-form-item>
+					<el-form-item label="白坯二开类型：">
+						<el-select v-model="supplier_type" clearable placeholder="全部">
+							<el-option label="内部" :value="1"></el-option>
+							<el-option label="外部" :value="2"></el-option>
+						</el-select>
+					</el-form-item>
 					<el-form-item class="form_item">
 						<el-button type="primary" @click="searchData">查询</el-button>
 					</el-form-item>
@@ -334,6 +340,13 @@
 							<el-form-item label="联系人微信：">
 								<el-input clearable v-model="info_arg.weixin" style="width: 120px;" placeholder="联系人微信" v-if="add_type == '1' || add_type == '2'"></el-input>
 								<div v-else>{{info_arg.weixin}}</div>
+							</el-form-item>
+							<el-form-item label="白坯二开类型：">
+								<el-select v-model="info_arg.supplier_type" clearable placeholder="全部" v-if="add_type == '1' || add_type == '2'">
+									<el-option label="内部" :value="1"></el-option>
+									<el-option label="外部" :value="2"></el-option>
+								</el-select>
+								<div v-else>{{info_arg.supplier_type}}</div>
 							</el-form-item>
 						</el-form>
 						<el-form size="mini" style="width: 360px;">
@@ -670,6 +683,7 @@
 				supply_exchange_goods:"",		//是否可换货
 				supply_replace_send:"",			//是否可代发
 				status:"",						//状态
+				supplier_type:"",
 				max_height:0,	
 				page:1,
 				data:{},						//获取的数据
@@ -700,6 +714,7 @@
 					contact_information:"",
 					contactor_position:"",
 					weixin:"",
+					supplier_type:"",
 					payee:"",
 					payee_account:"",
 					payee_bank_name:"",
@@ -860,6 +875,7 @@
 					cooperativeness:this.cooperativeness,				//合作程度
 					brand:this.arg_brand_ids.join(','),						//品牌列表
 					status:this.status,									//合格状态
+					supplier_type:this.supplier_type,
 					pagesize:20,
 					page:this.page
 				}

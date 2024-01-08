@@ -87,6 +87,12 @@
 						</el-radio-group>
 					</el-radio-group>
 				</el-form-item>
+				<el-form-item label="白坯二开类型：">
+						<el-select v-model="supplier_type" clearable placeholder="全部">
+							<el-option label="内部" :value="1"></el-option>
+							<el-option label="外部" :value="2"></el-option>
+						</el-select>
+					</el-form-item>
 				<el-form-item class="form_item">
 					<el-button type="primary" @click="checkPage(1)">查询</el-button>
 				</el-form-item>
@@ -577,8 +583,9 @@
 				send_type_list:[],		//发货类型列表
 				send_type:[],			//选中的发货类型
 				i_id:"",				//款式编码
-				up_type:null,					//上新类型
+				up_type:null,			//上新类型
 				date:[],				//选款日期
+				supplier_type:"",
 				max_height:0,	
 				page:1,
 				data:[],				//获取的数据
@@ -855,6 +862,7 @@
 					maintainer:this.maintainer_ids.join(','),
 					select_main_dept_id:this.select_main_dept_id.join(','),
 					shop_code:this.shop_code.join(','),
+					supplier_type:this.supplier_type,
 					supplier_id:this.supplier_ids.join(','),
 					category_id:this.category_ids.join(','),
 					market_id:this.market_ids.join(','),
@@ -966,6 +974,7 @@
 						maintainer:this.maintainer_ids.join(','),
 						select_main_dept_id:this.select_main_dept_id.join(','),
 						shop_code:this.shop_code.join(','),
+						supplier_type:this.supplier_type,
 						supplier_id:this.supplier_ids.join(','),
 						category_id:this.category_ids.join(','),
 						market_id:this.market_ids.join(','),

@@ -122,6 +122,13 @@
 				</el-select>
 				<div v-else>{{maintainer}}</div>
 			</el-form-item>
+			<el-form-item label="白坯二开类型：">
+				<el-select v-model="supplier_type_value" clearable placeholder="全部" v-if="supplier_type == '2'">
+					<el-option label="内部" :value="1"></el-option>
+					<el-option label="外部" :value="2"></el-option>
+				</el-select>
+				<div v-else>{{supplier_type_name}}</div>
+			</el-form-item>
 		</el-form>
 	</div>
 </template>
@@ -163,6 +170,8 @@
 				user_list:[],			//所有用户列表
 				maintainer_id:"",		//供应商维护人钉钉ID
 				maintainer:"",			//供应商维护人姓名
+				supplier_type_value:"",	
+				supplier_type_name:"",
 			}
 		},
 		props:{
@@ -270,6 +279,11 @@
 						this.company_name = data.company_name?data.company_name:'';
 						this.maintainer = data.maintainer?data.maintainer:'';
 						this.maintainer_id = data.maintainer_id?data.maintainer_id:'';
+						if(this.supplier_type == '1'){
+							this.supplier_type_name = data.supplier_type === 0?"":data.supplier_type === '1'?"内部":"外部";
+						}
+						this.supplier_type_value = data.supplier_type === 0?"":data.supplier_type;
+						
 						this.weixin = data.weixin?data.weixin:"";
 						this.grade_id = data.grade_id?data.grade_id:'';
 						this.grade_name = data.grade_name?data.grade_name:'';
@@ -335,7 +349,8 @@
 						mode:this.mode,
 						brand:this.brand_id,
 						maintainer:this.maintainer,
-						maintainer_id:this.maintainer_id
+						maintainer_id:this.maintainer_id,
+						supplier_type:this.supplier_type_value
 					}
 					this.$confirm('确认提交?', '提示', {
 						confirmButtonText: '确定',

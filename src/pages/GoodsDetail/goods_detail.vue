@@ -9,8 +9,8 @@
 					<!-- 商品信息 -->
 					<GoodsInfo :goods_info="goods_info"/>
 					<!-- 店铺信息 -->
-					<div>
-						<StoreInfo :goods_info="goods_info"/>
+					<div class="kuang">
+						<StoreInfo :goods_info="goods_info" v-if="goods_info.supplier_type == 0"/>
 					</div>
 				</div>
 				<div class="flex as">
@@ -259,5 +259,8 @@
 	.mobile_width{
 		width: 1430px;
 		height: 100%;
+	}
+	.kuang{
+		width: 298px;
 	}
 </style>

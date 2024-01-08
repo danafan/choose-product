@@ -11,7 +11,8 @@
 				<div class="tj_row" v-else>
 					<img class="right_arrow" src="../static/down_arrow.png" v-if="page_type == 'index'">
 					<div v-if="supplier_list.length > 0 && page_type == 'index'">供应商（{{supplier_index == -1?'全部':supplier_list[supplier_index].supplier_name}}）</div>
-					<img class="right_arrow" src="../static/down_arrow.png" v-if="page_type == 'index'">
+					<div v-if="a_item == '白坯二开' && page_type == 'index'">供应商（白坯二开）</div>
+					<img class="right_arrow" src="../static/down_arrow.png" v-if="supplier_list.length > 0 && page_type == 'index'">
 					<div v-if="market_list.length > 0 && page_type == 'index'">市场（{{market_list[market_index].market_name}}）</div>
 					<img class="right_arrow" src="../static/down_arrow.png">
 					<div v-if="category_list.length > 0">类目（{{category_list[category_index].category_name}}）</div>
@@ -225,7 +226,7 @@
 				date:[],						//上新日期 
 				start_price:"",
 				end_price:"",
-				FristPin: ["全部","A", "B", "C", "D", "E", "F", "G", "H", "I" ,"J", "K", "L", "M", "N", "O","P", "Q", "R", "S", "T", "U","V","W", "X", "Y", "Z","#"],
+				FristPin: ["全部","白坯二开","A", "B", "C", "D", "E", "F", "G", "H", "I" ,"J", "K", "L", "M", "N", "O","P", "Q", "R", "S", "T", "U","V","W", "X", "Y", "Z","#"],
 				a_item:"全部",
 				cityjson: {},
 				open_more:false,		//是否更多
@@ -269,7 +270,7 @@
 				if(n != ''){
 					this.supplier_list = this.cityjson[n];
 					this.supplier_index = -1;
-					if(n == '全部'){
+					if(n == '全部' || n == '白坯二开'){
 						//获取当前条件并传递
 						this.callbackFn();
 					}
@@ -611,8 +612,12 @@
 				}
 
 				//处理供应商
-				if(this.page_type == 'index' && this.supplier_index >= 0){
-					arg.supplier_id = this.supplier_list[this.supplier_index].supplier_id;
+				if(this.page_type == 'index' && (this.a_item == '白坯二开' || this.supplier_index >= 0)){
+					if(this.supplier_index >= 0){
+						arg.supplier_id = this.supplier_list[this.supplier_index].supplier_id;
+					}else{
+						arg.supplier_id = this.a_item;
+					}
 				}
 				//处理市场
 				if(this.market_index > 0){
