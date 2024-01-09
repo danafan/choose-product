@@ -98,7 +98,7 @@
 						</el-select>
 					</el-form-item>
 					<el-form-item label="白坯二开类型：">
-						<el-select v-model="supplier_type" clearable placeholder="全部">
+						<el-select v-model="supplier_type" clearable multiple filterable collapse-tags placeholder="全部">
 							<el-option label="内部" :value="1"></el-option>
 							<el-option label="外部" :value="2"></el-option>
 						</el-select>
@@ -223,7 +223,7 @@
 								<div v-else>{{info_arg.supplier_code}}</div>
 							</el-form-item>
 							<el-form-item label="开发员：" required>
-								<el-select v-model="info_arg.developer" style="width: 120px;" clearable filterable placeholder="全部" @change="changeUser" v-if="add_type == '1' || add_type == '2'">
+								<el-select v-model="info_arg.developer" style="width: 120px;" clearable filterable placeholder="请选择" @change="changeUser" v-if="add_type == '1' || add_type == '2'">
 									<el-option v-for="item in user_list" :key="item.user_id" :label="item.real_name" :value="item.user_id">
 									</el-option>
 								</el-select>
@@ -239,7 +239,7 @@
 								<div v-else>{{info_arg.introducer}}</div>
 							</el-form-item>
 							<el-form-item label="分类：" required>
-								<el-select v-model="info_arg.classification" clearable placeholder="全部" v-if="add_type == '1' || add_type == '2'">
+								<el-select v-model="info_arg.classification" clearable placeholder="请选择" v-if="add_type == '1' || add_type == '2'">
 									<el-option :label="item.name" :value="item.id" v-for="item in classification_list"></el-option>
 								</el-select>
 								<div v-else>{{info_arg.classification}}</div>
@@ -252,25 +252,25 @@
 								<div v-else>{{info_arg.is_ss}}</div>
 							</el-form-item>
 							<el-form-item label="区域：" required>
-								<el-select v-model="info_arg.area" clearable placeholder="全部" v-if="add_type == '1' || add_type == '2'">
+								<el-select v-model="info_arg.area" clearable placeholder="请选择" v-if="add_type == '1' || add_type == '2'">
 									<el-option :label="item" :value="item" :disabled="isSs(item)" v-for="item in area_list"></el-option>
 								</el-select>
 								<div v-else>{{info_arg.area}}</div>
 							</el-form-item>
 							<el-form-item label="主营：" required>
-								<el-select v-model="info_arg_main_business" multiple filterable clearable placeholder="全部" v-if="add_type == '1' || add_type == '2'">
+								<el-select v-model="info_arg_main_business" multiple filterable clearable placeholder="请选择" v-if="add_type == '1' || add_type == '2'">
 									<el-option :label="item.name" :value="item.id" v-for="item in main_business_list"></el-option>
 								</el-select>
 								<div v-else>{{info_main_business_value}}</div>
 							</el-form-item>
 							<el-form-item label="擅长品类：" required>
-								<el-select v-model="info_arg_scpl" multiple filterable clearable placeholder="全部" v-if="add_type == '1' || add_type == '2'">
+								<el-select v-model="info_arg_scpl" multiple filterable clearable placeholder="请选择" v-if="add_type == '1' || add_type == '2'">
 									<el-option :label="item.name" :value="item.id" v-for="item in scpl_list"></el-option>
 								</el-select>
 								<div v-else>{{info_scpl_value}}</div>
 							</el-form-item>
 							<el-form-item label="品牌：">
-								<el-select v-model="brand_id" clearable filterable placeholder="全部" v-if="add_type == '1' || add_type == '2'">
+								<el-select v-model="brand_id" clearable filterable placeholder="请选择" v-if="add_type == '1' || add_type == '2'">
 									<el-option :label="item.name" :value="item.id" v-for="item in brand_list"></el-option>
 								</el-select>
 								<div v-else>{{brand}}</div>
@@ -320,7 +320,7 @@
 								<div v-else>{{info_arg.supply_replace_send}}</div>
 							</el-form-item>
 							<el-form-item label="结算方式：" required>
-								<el-select v-model="info_arg.settlement_method" clearable placeholder="全部" v-if="add_type == '1' || add_type == '2'">
+								<el-select v-model="info_arg.settlement_method" clearable placeholder="请选择" v-if="add_type == '1' || add_type == '2'">
 									<el-option :label="item.name" :value="item.id" v-for="item in settlement_method_list"></el-option>
 								</el-select>
 								<div v-else>{{info_arg.settlement_method}}</div>
@@ -342,7 +342,7 @@
 								<div v-else>{{info_arg.weixin}}</div>
 							</el-form-item>
 							<el-form-item label="白坯二开类型：">
-								<el-select v-model="info_arg.supplier_type" clearable placeholder="全部" v-if="add_type == '1' || add_type == '2'">
+								<el-select v-model="info_arg.supplier_type" clearable placeholder="请选择" v-if="add_type == '1' || add_type == '2'">
 									<el-option label="内部" :value="1"></el-option>
 									<el-option label="外部" :value="2"></el-option>
 								</el-select>
@@ -363,7 +363,7 @@
 								<div v-else>{{info_arg.payee_bank_name}}</div>
 							</el-form-item>
 							<el-form-item label="创建SCM系统：" required>
-								<el-select v-model="info_arg.is_scm" clearable placeholder="全部" v-if="add_type == '1' || add_type == '2'">
+								<el-select v-model="info_arg.is_scm" clearable placeholder="请选择" v-if="add_type == '1' || add_type == '2'">
 									<el-option :label="item.name" :value="item.id" v-for="item in scm_list"></el-option>
 								</el-select>
 								<div v-else>{{info_arg.is_scm}}</div>
@@ -376,13 +376,13 @@
 								<div v-else>{{info_arg.start_price}}~{{info_arg.end_price}}</div>
 							</el-form-item>
 							<el-form-item label="性价比：" required>
-								<el-select v-model="info_arg.cost_performance" clearable placeholder="全部" v-if="add_type == '1' || add_type == '2'">
+								<el-select v-model="info_arg.cost_performance" clearable placeholder="请选择" v-if="add_type == '1' || add_type == '2'">
 									<el-option :label="item.name" :value="item.id" v-for="item in cost_performance_list"></el-option>
 								</el-select>
 								<div v-else>{{info_arg.cost_performance}}</div>
 							</el-form-item>
 							<el-form-item label="合作程度：" required>
-								<el-select v-model="info_arg.cooperativeness" clearable placeholder="全部" v-if="add_type == '1' || add_type == '2'">
+								<el-select v-model="info_arg.cooperativeness" clearable placeholder="请选择" v-if="add_type == '1' || add_type == '2'">
 									<el-option :label="item.name" :value="item.id" v-for="item in cooperativeness_list"></el-option>
 								</el-select>
 								<div v-else>{{info_arg.cooperativeness}}</div>
@@ -683,7 +683,7 @@
 				supply_exchange_goods:"",		//是否可换货
 				supply_replace_send:"",			//是否可代发
 				status:"",						//状态
-				supplier_type:"",
+				supplier_type:[],
 				max_height:0,	
 				page:1,
 				data:{},						//获取的数据
@@ -875,7 +875,7 @@
 					cooperativeness:this.cooperativeness,				//合作程度
 					brand:this.arg_brand_ids.join(','),						//品牌列表
 					status:this.status,									//合格状态
-					supplier_type:this.supplier_type,
+					supplier_type:this.supplier_type.join(','),
 					pagesize:20,
 					page:this.page
 				}

@@ -34,7 +34,7 @@
 						</el-select>
 					</el-form-item>
 					<el-form-item label="白坯二开类型：">
-						<el-select v-model="supplier_type" clearable placeholder="全部">
+						<el-select v-model="supplier_type" clearable multiple filterable collapse-tags placeholder="全部">
 							<el-option label="内部" :value="1"></el-option>
 							<el-option label="外部" :value="2"></el-option>
 						</el-select>
@@ -201,7 +201,7 @@
 				username:"",			//提交人
 				maintainer_list:[],
 				maintainer_ids:[],			//对接人
-				supplier_type:"",			
+				supplier_type:[],			
 				status_list:[{
 					name:'待审核',
 					id:1
@@ -356,7 +356,7 @@
 					username:this.username,
 					maintainer:this.maintainer_ids.join(','),
 					maintainer_ids:this.maintainer_ids,
-					supplier_type:this.supplier_type,
+					supplier_type:this.supplier_type.join(','),
 					page:this.page,
 					pagesize:100
 				}
@@ -458,7 +458,7 @@
 						username:this.username,
 						maintainer:this.maintainer_ids.join(','),
 						maintainer_ids:this.maintainer_ids,
-						supplier_type:this.supplier_type
+						supplier_type:this.supplier_type.join(',')
 					}
 					if(this.multiple_selection.length > 0){
 						let log_ids = this.multiple_selection.map(item => {

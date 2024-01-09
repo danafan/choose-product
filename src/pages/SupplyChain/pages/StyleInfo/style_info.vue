@@ -52,7 +52,7 @@
 						</el-select>
 					</el-form-item>
 					<el-form-item label="白坯二开类型：">
-						<el-select v-model="supplier_type" clearable placeholder="全部">
+						<el-select v-model="supplier_type" clearable multiple filterable collapse-tags placeholder="全部">
 							<el-option label="内部" :value="1"></el-option>
 							<el-option label="外部" :value="2"></el-option>
 						</el-select>
@@ -456,7 +456,7 @@
 				search:"",				//款式编码
 				maintainer_list:[],
 				maintainer_ids:[],			//对接人
-				supplier_type:"",			//白坯二开类型
+				supplier_type:[],			//白坯二开类型
 				max_height:0,	
 				page:1,
 				data:[],				//获取的数据
@@ -688,7 +688,7 @@
 					end_time:this.date && this.date.length > 0?this.date[1]:"",
 					check_status:this.check_status_id,
 					maintainer:this.maintainer_ids.join(','),
-					supplier_type:this.supplier_type,
+					supplier_type:this.supplier_type.join(','),
 					export_type:this.export_type
 				}
 				if(this.multiple_selection.length > 0){
@@ -730,7 +730,7 @@
 					end_time:this.date && this.date.length > 0?this.date[1]:"",
 					check_status:this.check_status_id,
 					maintainer:this.maintainer_ids.join(','),
-					supplier_type:this.supplier_type,
+					supplier_type:this.supplier_type.join(','),
 					page:this.page,
 					pagesize:100
 				}

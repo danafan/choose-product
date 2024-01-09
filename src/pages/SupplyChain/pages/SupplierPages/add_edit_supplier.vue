@@ -116,14 +116,14 @@
 				<UploadFile v-if="loading" :img_list="company_img" :is_multiple="true" :current_num="company_img.length" :max_num="6" @callbackFn="companyCallbackFn" :only_view="supplier_type == '1'"/>
 			</el-form-item>
 			<el-form-item label="供应商维护人：">
-				<el-select v-model="maintainer_id" clearable filterable placeholder="全部" @change="changeUser" v-if="supplier_type == '2'">
+				<el-select v-model="maintainer_id" clearable filterable placeholder="请选择" @change="changeUser" v-if="supplier_type == '2'">
 					<el-option v-for="item in user_list" :key="item.ding_user_id" :label="item.ding_user_name" :value="item.ding_user_id">
 					</el-option>
 				</el-select>
 				<div v-else>{{maintainer}}</div>
 			</el-form-item>
 			<el-form-item label="白坯二开类型：">
-				<el-select v-model="supplier_type_value" clearable placeholder="全部" v-if="supplier_type == '2'">
+				<el-select v-model="supplier_type_value" clearable placeholder="请选择" v-if="supplier_type == '2'">
 					<el-option label="内部" :value="1"></el-option>
 					<el-option label="外部" :value="2"></el-option>
 				</el-select>
