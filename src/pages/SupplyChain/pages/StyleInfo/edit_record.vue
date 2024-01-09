@@ -356,6 +356,7 @@
 					username:this.username,
 					maintainer:this.maintainer_ids.join(','),
 					maintainer_ids:this.maintainer_ids,
+					supplier_type:this.supplier_type,
 					page:this.page,
 					pagesize:100
 				}
@@ -456,7 +457,8 @@
 						end_date:this.date && this.date.length > 0?this.date[1]:"",
 						username:this.username,
 						maintainer:this.maintainer_ids.join(','),
-						maintainer_ids:this.maintainer_ids
+						maintainer_ids:this.maintainer_ids,
+						supplier_type:this.supplier_type
 					}
 					if(this.multiple_selection.length > 0){
 						let log_ids = this.multiple_selection.map(item => {

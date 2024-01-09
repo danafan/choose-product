@@ -979,6 +979,12 @@
 									}else{
 										data[k] = '';
 									}
+								}else if(k == 'supplier_type'){
+									if(data[k] == 0){
+										this.info_arg[k] = "";
+									}else{
+										this.info_arg[k] = data[k];
+									}
 								}else{
 									this.info_arg[k] = data[k];
 								}
