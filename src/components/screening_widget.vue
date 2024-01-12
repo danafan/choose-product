@@ -22,8 +22,8 @@
 					<div v-if="class_list.length > 0">分类（{{class_list[class_index].classification_name}}）</div>
 					<img class="right_arrow" src="../static/down_arrow.png">
 					<div v-if="style_list.length > 0">拍摄风格（{{style_list[style_index].shooting_style_name}}）</div>
-					<img class="right_arrow" src="../static/down_arrow.png" v-if="page_type == 'index'">
-					<div v-if="season_list.length > 0 && page_type == 'index'">季节（{{season_list[season_index].season_name}}）</div>
+					<img class="right_arrow" src="../static/down_arrow.png" v-if="page_type == 'index' || page_type == 'supplier'">
+					<div v-if="season_list.length > 0 && (page_type == 'index' || page_type == 'supplier')">季节（{{season_list[season_index].season_name}}）</div>
 
 					<img class="right_arrow" src="../static/down_arrow.png">
 					<div v-if="rating_list.length > 0 && page_type != 'gys_supplier' && page_type != 'supplier'">等级（{{rating_list[rating_index].grade_name}}）</div>
@@ -83,7 +83,7 @@
 					<div class="item" :class="{'active_item':style_index == index}" v-for="(item,index) in style_list" @click.stop="checkIndex('style',index)">{{item.shooting_style_name}}</div>
 				</div>
 			</div>
-			<div class="conditions_row" v-if="page_type == 'index'" @click.stop>
+			<div class="conditions_row" v-if="page_type == 'index' || page_type == 'supplier'" @click.stop>
 				<div class="lable">季节：</div>
 				<div class="list">
 					<div class="item" :class="{'active_item':season_index == index}" v-for="(item,index) in season_list" @click.stop="checkIndex('season',index)">{{item.season_name}}</div>
@@ -640,7 +640,7 @@
 					arg.shooting_style_id = this.style_list[this.style_index].shooting_style_id;
 				}
 				//处理季节
-				if(this.page_type == 'index' && this.season_index > 0){
+				if((this.page_type == 'index' || this.page_type == 'supplier') && this.season_index > 0){
 					arg.season_id = this.season_list[this.season_index].season_id;
 				}
 				//处理评级

@@ -49,7 +49,7 @@
 					<el-button size="mini" type="primary" @click="exportFn" v-if="button_list.export == 1">导出</el-button>
 				</TableTitle>
 				<el-table ref="table" size="mini" :data="data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" @selection-change="handleSelectionChange" v-loading="loading">
-					<el-table-column type="selection" width="55" :selectable="setStatus" fixed>
+					<el-table-column type="selection" width="55" fixed>
 					</el-table-column>
 					<el-table-column label="款号" prop="style_name"></el-table-column>
 					<el-table-column label="供应商" prop="supplier_name"></el-table-column>
@@ -87,9 +87,9 @@
 							</div>
 						</template>
 					</el-table-column>
-					<el-table-column label="修改提交时间" width="120" prop="add_time"></el-table-column>
+					<el-table-column label="修改提交时间" width="140" prop="add_time"></el-table-column>
 					<el-table-column label="修改提交人" prop="add_admin_name"></el-table-column>
-					<el-table-column label="审核状态" prop="common_text">
+					<el-table-column label="审核状态" prop="common_text" width="150">
 						<template slot-scope="scope">
 							<div class="flex jc">
 								<div>{{scope.row.check_status | check_status_filter}}</div>
@@ -111,7 +111,7 @@
 		<!-- 审批 -->
 		<el-dialog :visible.sync="audit_dialog" @close="audit_status = 1" width="30%">
 			<div slot="title" class="dialog_title">
-				<div>审核</div>
+				<div>{{audit_title}}</div>
 				<img class="close_icon" src="../../../../static/close_icon.png" @click="audit_dialog = false">
 			</div>
 			<div class="down_box">
@@ -254,6 +254,7 @@
 				log_id:"",				//单个或批量选中的id
 				audit_dialog:false,		//审批弹窗
 				audit_status:1,			//审批类型
+				audit_title:"",
 			}
 		},
 		created(){
@@ -482,14 +483,6 @@
 					});
 				});
 			},
-			//判断是否可以选中
-			setStatus(row){
-				if (row.check_status == '1') { 
-					return true;  
-				}else{
-					return false;
-				}
-			},
 			label_filter(v){
 				switch(v){
 				case 'title':
@@ -572,17 +565,23 @@
 			},
 			//批量操作
 			allSetting(type,log_id){
-				if(type == '1'){		//批量编辑
+				if(type == '1'){		//批量审核
 					if(this.multiple_selection.length == 0){
 						this.$message.warning('还没有选中的数据哦～')
 					}else{
-						let log_ids = this.multiple_selection.map(item => {
+						let unset_list = this.multiple_selection.filter(item => {
+							return item.check_status == 1;
+						})
+						let log_ids = unset_list.map(item => {
 							return item.log_id;
-						}); 
+						})
+						let unset_num = this.multiple_selection.length - unset_list.length;
+						this.audit_title = `您选择了${this.multiple_selection.length}项，其中不可操作${unset_num}项，确认批量审核？`;
 						this.log_id = log_ids.join(',');
 						this.audit_dialog = true;
 					}
-				}else{					//单个编辑
+				}else{					//单个审核
+					this.audit_title = '审核';
 					this.log_id = log_id.toString();
 					this.audit_dialog = true;
 				}
@@ -593,7 +592,6 @@
 					log_id:this.log_id,
 					status:this.audit_status
 				}
-
 				resource.editlogAudit(arg).then(res => {
 					if(res.data.code == 1){
 						this.$message.success(res.data.msg);

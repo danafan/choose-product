@@ -10,31 +10,31 @@
 						</el-select>
 					</el-form-item>
 					<el-form-item label="类目：">
-						<el-select v-model="category_ids" clearable multiple filterable collapse-tags placeholder="全部">
+						<el-select v-model="category_ids" style="width: 160px;" clearable multiple filterable collapse-tags placeholder="全部">
 							<el-option v-for="item in cate_list" :key="item.category_id" :label="item.category_name" :value="item.category_id">
 							</el-option>
 						</el-select>
 					</el-form-item>
 					<el-form-item label="拍摄风格：">
-						<el-select v-model="shooting_style_ids" clearable multiple filterable collapse-tags placeholder="全部">
+						<el-select v-model="shooting_style_ids" style="width: 160px;" clearable multiple filterable collapse-tags placeholder="全部">
 							<el-option v-for="item in style_list" :key="item.shooting_style_id" :label="item.shooting_style_name" :value="item.shooting_style_id">
 							</el-option>
 						</el-select>
 					</el-form-item>
 					<el-form-item label="市场：">
-						<el-select v-model="market_ids" clearable multiple filterable collapse-tags placeholder="全部">
+						<el-select v-model="market_ids" style="width: 160px;" clearable multiple filterable collapse-tags placeholder="全部">
 							<el-option v-for="item in market_list" :key="item.market_id" :label="item.market_name" :value="item.market_id">
 							</el-option>
 						</el-select>
 					</el-form-item>
 					<el-form-item label="分类：">
-						<el-select v-model="classification_ids" clearable multiple filterable collapse-tags placeholder="全部">
+						<el-select v-model="classification_ids" style="width: 160px;" clearable multiple filterable collapse-tags placeholder="全部">
 							<el-option v-for="item in class_list" :key="item.classification_id" :label="item.classification_name" :value="item.classification_id">
 							</el-option>
 						</el-select>
 					</el-form-item>
 					<el-form-item label="审核状态：">
-						<el-select v-model="check_status_id" clearable placeholder="全部">
+						<el-select v-model="check_status_id" style="width: 160px;" clearable placeholder="全部">
 							<el-option v-for="item in check_status_list" :key="item.id" :label="item.name" :value="item.id">
 							</el-option>
 						</el-select>
@@ -46,19 +46,19 @@
 						</div>
 					</el-form-item>
 					<el-form-item label="对接人：">
-						<el-select v-model="maintainer_ids" clearable multiple filterable collapse-tags placeholder="全部">
+						<el-select v-model="maintainer_ids" style="width: 160px;" clearable multiple filterable collapse-tags placeholder="全部">
 							<el-option v-for="item in maintainer_list" :key="item.maintainer_id" :label="item.maintainer" :value="item.maintainer_id">
 							</el-option>
 						</el-select>
 					</el-form-item>
 					<el-form-item label="白坯二开类型：">
-						<el-select v-model="supplier_type" clearable multiple filterable collapse-tags placeholder="全部">
+						<el-select v-model="supplier_type" style="width: 160px;" clearable multiple filterable collapse-tags placeholder="全部">
 							<el-option label="内部" :value="1"></el-option>
 							<el-option label="外部" :value="2"></el-option>
 						</el-select>
 					</el-form-item>
 					<el-form-item label="季节：">
-						<el-select v-model="season_ids" clearable multiple filterable collapse-tags placeholder="全部">
+						<el-select v-model="season_ids" style="width: 160px;" clearable multiple filterable collapse-tags placeholder="全部">
 							<el-option v-for="item in season_list" :key="item.season_id" :label="item.season_name" :value="item.season_id">
 							</el-option>
 						</el-select>
