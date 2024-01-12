@@ -14,6 +14,7 @@ import 'quill/dist/quill.bubble.css'
 
 import pinyin from 'js-pinyin' 
 
+import '@/fonts/font.css'
 
 Vue.use(ElementUI);
 Vue.use(VueQuillEditor);

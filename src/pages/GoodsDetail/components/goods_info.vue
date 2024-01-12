@@ -2,6 +2,11 @@
 	<div class="goods_info">
 		<div class="goods_name">{{goods_info.title}}</div>
 		<div class="info_content" :class="{'delist_info_content':goods_info.check_status == 5}">
+			<div class="season_box flex ac jc" v-if="goods_info.season_name">
+				<div class="season_small_box flex ac jc">
+					{{goods_info.season_name}}
+				</div>
+			</div>
 			<div class="content_row">
 				<div class="row_lable">成本价</div>
 				<div class="row_price flex" :class="{'delist_price':goods_info.check_status == 5}">
@@ -509,9 +514,31 @@
 			font-weight: bold;
 		}
 		.info_content{
+			position: relative;
 			flex:1;
 			padding: 10rem 20rem;
 			background: #FFF8F2;
+			.season_box{
+				position: absolute;
+				top: 10rem;
+				right: 10rem;
+				min-width: 48rem;
+				height: 30rem;
+				padding: 2rem;
+				border-radius: 6px;
+				border: 1px solid #FF7900;
+				.season_small_box{
+					font-family: Ma;
+					color: var(--color);
+					font-size: 18rem;
+					font-weight: bold;
+					width: 100%;
+					padding-left: 4px;
+					padding-right: 4px;
+					border-radius: 4px;
+					border: 1px solid #FF7900;
+				}
+			}
 			.content_row{
 				margin-bottom: 13rem;
 				display: flex;

@@ -108,6 +108,13 @@
 						</el-option>
 					</el-select>
 				</el-form-item>
+				<el-form-item label="季节：" required>
+					<div v-if="is_detail">{{arg.season_id | filterSeason}}</div>
+					<el-select v-model="arg.season_id" clearable placeholder="请选择季节" :disabled="info_edit_fields.indexOf('season_id') > -1" v-else>
+						<el-option v-for="item in season_list" :key="item.season_id" :label="item.season_name" :value="item.season_id">
+						</el-option>
+					</el-select>
+				</el-form-item>
 				<el-form-item label="分类：">
 					<div v-if="is_detail">{{arg.classification_id | filterClass}}</div>
 					<el-select v-model="arg.classification_id" clearable placeholder="请选择分类" :disabled="info_edit_fields.indexOf('classification_id') > -1" v-else>
@@ -278,6 +285,7 @@
 				cate_list:[],			//类目列表
 				market_list:[],			//市场列表
 				class_list:[],			//分类列表
+				season_list:[],			//季节列表
 				preview_image:[],		//查看详情的图片列表
 				preview_bk_image:[],	//查看详情的爆款图片列表
 				img_list:[],			
@@ -297,6 +305,7 @@
 					title:"",				//标题
 					category_id:"",			//选中的类目
 					market_id:"",			//选中的市场
+					season_id:"",
 					classification_id:"",	//选中的分类
 					fabric:"",				//面料
 					cost_price:"",			//成本价
@@ -378,6 +387,8 @@
 				await this.ajaxCateList();
 				//市场列表
 				await this.ajaxMarketList();
+				//季节列表
+				await this.ajaxSeasonList();
 				//拍摄风格列表
 				await this.ajaxStyleList();
 				//分类列表
@@ -533,6 +544,9 @@
 							if((k == 'i_id' || k == 'bd_i_id' || k == 'supplier_ksbm' || k == 'replace_ksbm') && data_info[k].indexOf(',') > -1){
 								data_info[k] = data_info[k].replaceAll(",", ";");
 							}
+							// if(data_info.season_id == 0){
+							// 	data_info[k] = '';
+							// }
 							this.arg[key] = data_info[k];
 						}
 					}
@@ -601,6 +615,16 @@
 							this.$message.warning(res.data.msg);
 						}
 					})
+				})
+			},
+			//获取季节列表
+			ajaxSeasonList(){
+				commonResource.ajaxSeasonList().then(res => {
+					if(res.data.code == 1){
+						this.season_list = res.data.data;
+					}else{
+						this.$message.warning(res.data.msg);
+					}
 				})
 			},
 			//确认商品风格多选
@@ -708,6 +732,8 @@
 					this.$message.warning('请选择类目!');
 				}else if(!this.arg.market_id){
 					this.$message.warning('请选择市场!');
+				}else if(!this.arg.season_id){
+					this.$message.warning('请选择季节!');
 				}else if(this.style_card_list.length == 0){
 					this.$message.warning('至少上传一个拍摄风格!');
 				}else{
@@ -957,6 +983,15 @@
 						return item.market_id == market_id;
 					});
 					return market_obj.market_name;
+				}
+			},
+			//季节
+			filterSeason:function(season_id){
+				if(season_id && that.season_list.length > 0){
+					let season_obj = that.season_list.find(item => {
+						return item.season_id == season_id;
+					});
+					return season_obj.season_name;
 				}
 			},
 			//分类

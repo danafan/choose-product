@@ -506,6 +506,8 @@
 					return '供应商'
 				case 'market_name':
 					return '市场'
+				case 'season_name':
+					return '季节'
 				case 'category_name':
 					return '类目'
 				case 'classification_name':

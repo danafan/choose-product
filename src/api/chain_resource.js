@@ -127,6 +127,7 @@ let path = {
   editBrand:'api/setting/edit_brand',                       //编辑品牌
   ajaxSupplierDeveloper:'api/supplier_manager/ajax_supplier_developer', //供应商预备库开发员筛选项
   styleInfoExport:'api/productstyle/derivegetallproductstyle',  //款式资料导出
+  allEditSeason:'api/productstyle/edit_season',                 //批量维护季节
   
 };    
 export default {
@@ -693,6 +694,10 @@ export default {
   //款式资料导出
   styleInfoExport(params) {
     return http.exportRequest(path.styleInfoExport, params);
+  },
+  //批量维护季节
+  allEditSeason(params) {
+    return http.post(path.allEditSeason, params);
   },
   
 };

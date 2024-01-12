@@ -36,6 +36,7 @@ let path = {
   styleDayChart:'api/home/style_day_chart',               //商品的7天和30天销量趋势图
   getRefundNum:'api/selected/getrefundnum',               //获取已选款式被拒绝的数量
   priceWarningDetail:'api/home/price_warning_detail',     //低于控价预警详情
+  
 }   
 export default {
   //钉钉登陆

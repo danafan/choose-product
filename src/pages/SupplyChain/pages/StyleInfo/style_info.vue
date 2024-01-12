@@ -57,11 +57,16 @@
 							<el-option label="外部" :value="2"></el-option>
 						</el-select>
 					</el-form-item>
+					<el-form-item label="季节：">
+						<el-select v-model="season_ids" clearable multiple filterable collapse-tags placeholder="全部">
+							<el-option v-for="item in season_list" :key="item.season_id" :label="item.season_name" :value="item.season_id">
+							</el-option>
+						</el-select>
+					</el-form-item>
 					<el-form-item>
 						<el-input type="textarea" :autosize="{ minRows: 1, maxRows: 4}" placeholder="款号/款式编码" v-model="search">
 						</el-input>
 					</el-form-item>
-					
 					<el-form-item class="form_item">
 						<el-button type="primary" @click="checkPage(1)">查询</el-button>
 					</el-form-item>
@@ -71,13 +76,20 @@
 					<el-button size="mini" type="primary" v-if="button_list.edit_i_id == 1" @click="importFn('1')">修改款式编码</el-button>
 					<el-button size="mini" type="primary" v-if="is_check == 1 && button_list.agree_refuse == 1" @click="allSetting('audit_1')">批量同意</el-button>
 					<el-button size="mini" type="primary" v-if="is_check == 1 && button_list.agree_refuse == 1" @click="allSetting('audit_2')">批量拒绝</el-button>
-					<el-button size="mini" type="primary" @click="allSetting('1')" v-if="button_list.in_out == 1">批量上架</el-button>
-					<el-button size="mini" type="primary" @click="allSetting('0')" v-if="button_list.in_out == 1">批量下架</el-button>
-					<el-button size="mini" type="primary" @click="allSetting('3')" v-if="button_list.del == 1">批量删除</el-button>
-					<el-button size="mini" type="primary" @click="allSetting('2')" v-if="button_list.abu == 1">批量对接推单</el-button>
 					<el-button size="mini" type="primary" @click="editFn('','添加商品','1')" v-if="button_list.add == 1">添加</el-button>
 					<el-button size="mini" type="primary" @click="importFn('2')" v-if="button_list.add == 1">导入</el-button>
 					<el-button size="mini" type="primary" @click="export_dialog = true">导出</el-button>
+					<el-dropdown style="margin-left: 10px;" size="small" @command="allSetting">
+						<el-button  type="primary" size="mini">
+							批量操作<i class="el-icon-arrow-down el-icon--right"></i>
+						</el-button>
+						<el-dropdown-menu slot="dropdown">
+							<el-dropdown-item command="4" v-if="button_list.del == 1">批量维护季节</el-dropdown-item>
+							<el-dropdown-item command="1" v-if="button_list.in_out == 1">批量上架</el-dropdown-item>
+							<el-dropdown-item command="0" v-if="button_list.in_out == 1">批量下架</el-dropdown-item>
+							<el-dropdown-item command="3" v-if="button_list.del == 1">批量删除</el-dropdown-item>
+						</el-dropdown-menu>
+					</el-dropdown>
 				</TableTitle>
 				<el-table ref="table" size="mini" :data="data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" @selection-change="handleSelectionChange" v-loading="loading">
 					<el-table-column type="selection" width="55" fixed>
@@ -310,6 +322,30 @@
 		<el-button size="mini" type="primary" @click="exportFn">确认</el-button>
 	</div>
 </el-dialog>
+<!-- 维护季节 -->
+<el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" destroy-on-close @close="season_id = ''" :visible.sync="season_dialog" width="30%">
+	<div slot="title" class="dialog_title">
+		<div>批量维护季节</div>
+		<img class="close_icon" src="../../../../static/close_icon.png" @click="season_dialog = false">
+	</div>
+	<div class="remark_content">
+		<el-form size="small" label-width="80px">
+			<el-form-item label="提示：">
+				<div>确认批量维护{{multiple_selection.length}}个款式季节吗？</div>
+			</el-form-item>
+			<el-form-item label="修改为：" required>
+				<el-select v-model="season_id" clearable filterable placeholder="请选择">
+					<el-option v-for="item in season_list" :key="item.season_id" :label="item.season_name" :value="item.season_id">
+					</el-option>
+				</el-select>
+			</el-form-item>
+	</el-form>
+</div>
+<div slot="footer" class="dialog_footer">
+	<el-button size="mini" @click="season_dialog = false">取消</el-button>
+	<el-button size="mini" type="primary" @click="editSeason">确认</el-button>
+</div>
+</el-dialog>
 </div>
 </template>
 <style type="text/css">
@@ -422,7 +458,7 @@
 				},{
 					name:'下架审核拒绝',
 					id:6
-				}],						//审核状态列表
+				}],	//审核状态列表
 				check_status_id:"",		//选中的审核状态
 				date:[],				//上新日期
 				pickerOptions: {
@@ -457,6 +493,8 @@
 				maintainer_list:[],
 				maintainer_ids:[],			//对接人
 				supplier_type:[],			//白坯二开类型
+				season_list:[],				//季节列表
+				season_ids:[],				//选中的季节
 				max_height:0,	
 				page:1,
 				data:[],				//获取的数据
@@ -492,6 +530,8 @@
 				style_table_data:[],		//可选的列表
 				selected_style:"",			//已选中的风格ID
 				get_info_loading:false,		//获取数据按钮加载状态
+				season_dialog:false,		//批量维护季节
+				season_id:"",				//选中的季节
 			}
 		},
 		created(){
@@ -507,6 +547,8 @@
 			this.ajaxStyleList();
     		//分类列表
 			this.ajaxClassList();
+			//获取季节列表
+			this.ajaxSeasonList();
 			//获取列表
 			this.getGoodsList();
 		},
@@ -619,6 +661,16 @@
 					}
 				})
 			},
+			//获取季节列表
+			ajaxSeasonList(){
+				commonResource.ajaxSeasonList().then(res => {
+					if(res.data.code == 1){
+						this.season_list = res.data.data;
+					}else{
+						this.$message.warning(res.data.msg);
+					}
+				})
+			},
 			//点击批量编辑或导入
 			importFn(type){
 				this.import_type = type;
@@ -689,6 +741,7 @@
 					check_status:this.check_status_id,
 					maintainer:this.maintainer_ids.join(','),
 					supplier_type:this.supplier_type.join(','),
+					season_id:this.season_ids.join(','),
 					export_type:this.export_type
 				}
 				if(this.multiple_selection.length > 0){
@@ -731,6 +784,7 @@
 					check_status:this.check_status_id,
 					maintainer:this.maintainer_ids.join(','),
 					supplier_type:this.supplier_type.join(','),
+					season_id:this.season_ids.join(','),
 					page:this.page,
 					pagesize:100
 				}
@@ -819,13 +873,15 @@
 						style_id.push(item.goods_id)
 					})
 					unset_num = total_num - unset_list.length;
-				}else if(type == '2'){	//对接推单
-					title = '确认对接推单？'
-					this.multiple_selection.map(item => {
-						style_id.push(item.goods_id)
-					})
-					unset_num = 0;
-				}else if(type == '3'){	//删除
+				}
+				// else if(type == '2'){	//对接推单
+				// 	title = '确认对接推单？'
+				// 	this.multiple_selection.map(item => {
+				// 		style_id.push(item.goods_id)
+				// 	})
+				// 	unset_num = 0;
+				// }
+				else if(type == '3'){	//删除
 					title = '确认批量删除？'
 					let unset_list = this.multiple_selection.filter(item => {
 						return item.check_status == 3 || item.check_status == 5;
@@ -834,6 +890,11 @@
 						style_id.push(item.goods_id)
 					})
 					unset_num = total_num - unset_list.length;
+				}else if(type == '4'){	//维护季节
+					this.multiple_selection.map(item => {
+						style_id.push(item.goods_id)
+					})
+					unset_num = 0;
 				}else if(type.indexOf('audit') > -1){	//批量审批
 					title = `确认批量${type.split('_')[1] == 1?'同意':'拒绝'}？`;
 					let unset_list = this.multiple_selection.filter(item => {
@@ -844,37 +905,6 @@
 					})
 					unset_num = total_num - unset_list.length;
 				}
-				// else if(type.indexOf('audit') > -1){	//批量审批
-				// 	let ids = [];
-				// 	this.multiple_selection.map(item => {
-				// 		ids.push(item.goods_id)
-				// 	})
-				// 	this.$confirm(`确认批量${type.split('_')[1] == 1?'同意':'拒绝'}？`, '提示', {
-				// 		confirmButtonText: '确定',
-				// 		cancelButtonText: '取消',
-				// 		type: 'warning'
-				// 	}).then(() => {
-				// 		let arg = {
-				// 			goods_id:ids.join(','),
-				// 			type:type.split('_')[1]
-				// 		}
-				// 		resource.auditGoods(arg).then(res => {
-				// 			if(res.data.code == 1){
-				// 				this.$message.success(res.data.msg);
-				// 				//获取列表
-				// 				this.getGoodsList();
-				// 			}else{
-				// 				this.$message.warning(res.data.msg);
-				// 			}
-				// 		})
-				// 	}).catch(() => {
-				// 		this.$message({
-				// 			type: 'info',
-				// 			message: '已取消'
-				// 		});          
-				// 	});
-				// 	return;
-				// }
 				
 				if(total_num == unset_num){
 					this.$message.warning('没有符合操作条件的记录！');
@@ -884,6 +914,11 @@
 					this.off_title = `您选择了${total_num}项，其中不可操作${unset_num}项，${title}`;
 					this.goods_id = style_id.join(',');
 					this.delist_dialog = true;
+					return;
+				}
+				if(type == '4'){	//维护季节
+					this.goods_id = style_id.join(',');
+					this.season_dialog = true;
 					return;
 				}
 
@@ -906,21 +941,23 @@
 								this.$message.warning(res.data.msg);
 							}
 						})
-					}else if(type == '2'){	//对接推单
-						let arg = {
-							goods_id:style_id.join(','),
-							type:1
-						}
-						resource.setAbutmentType(arg).then(res => {
-							if(res.data.code == 1){
-								this.$message.success(res.data.msg);
-								//获取列表
-								this.getGoodsList();
-							}else{
-								this.$message.warning(res.data.msg);
-							}
-						})
-					}else if(type == '3'){	//删除
+					}
+					// else if(type == '2'){	//对接推单
+					// 	let arg = {
+					// 		goods_id:style_id.join(','),
+					// 		type:1
+					// 	}
+					// 	resource.setAbutmentType(arg).then(res => {
+					// 		if(res.data.code == 1){
+					// 			this.$message.success(res.data.msg);
+					// 			//获取列表
+					// 			this.getGoodsList();
+					// 		}else{
+					// 			this.$message.warning(res.data.msg);
+					// 		}
+					// 	})
+					// }
+					else if(type == '3'){	//删除
 						let arg = {
 							goods_id:style_id.join(',')
 						}
@@ -948,7 +985,6 @@
 							}
 						})
 					}
-					
 					
 				}).catch(() => {
 					this.$message({
@@ -1062,6 +1098,27 @@
 					this.off_title = '确认下架？';
 					this.delist_dialog = true;
 				}	
+			},
+			//批量维护季节
+			editSeason(){
+				if(this.season_id == ''){
+					this.$message.warning('请选择需要维护的季节!');
+					return;
+				}
+				let arg = {
+					goods_ids:this.goods_id,
+					season_id:this.season_id
+				}
+				resource.allEditSeason(arg).then(res => {
+					if(res.data.code == 1){
+						this.$message.success(res.data.msg);
+								//获取列表
+						this.getGoodsList();
+						this.season_dialog = false;
+					}else{
+						this.$message.warning(res.data.msg);
+					}
+				})
 			},
 			//点击下架
 			clickDelist(){

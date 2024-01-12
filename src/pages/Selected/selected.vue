@@ -174,6 +174,10 @@
 						<div class="value">{{goods_info.market_name}}</div>
 					</div>
 					<div class="detail_row">
+						<div class="lable">季节</div>
+						<div class="value">{{goods_info.season_name}}</div>
+					</div>
+					<div class="detail_row">
 						<div class="lable">类目</div>
 						<div class="value">{{goods_info.category_name}}</div>
 					</div>
