@@ -189,12 +189,10 @@
 		created(){
 			//获取详情
 			this.supplierManagerInfo();
-			//获取品牌列表下拉框筛选项
+			//获取品牌列表、结算方式下拉框筛选项
 			this.selectionMap();
 			//获取供应商等级列表
 			this.ajaxSupplierGradeList();
-			//结算方式下拉框筛选项
-			this.selectionMap();
 			//获取用户列表
 			this.getUserList();
 		},
@@ -205,12 +203,13 @@
 			}
 		},
 		methods:{
-			//获取品牌列表下拉框筛选项
+			//获取品牌列表、结算方式下拉框筛选项
 			selectionMap(){
 				resource.selectionMap({type:8}).then(res => {
 					if(res.data.code == 1){
 						let data = res.data.data;
 						this.brand_list = data.brand;
+						this.settlement_method_list = data.settlement_method;//结算方式
 					}else{
 						this.$message.warning(res.data.msg);
 					}
@@ -231,17 +230,6 @@
 				commonResource.getUserList().then(res => {
 					if(res.data.code == 1){
 						this.user_list = res.data.data;
-					}else{
-						this.$message.warning(res.data.msg);
-					}
-				})
-			},
-			//结算方式下拉框筛选项
-			selectionMap(){
-				resource.selectionMap().then(res => {
-					if(res.data.code == 1){
-						let data = res.data.data;
-						this.settlement_method_list = data.settlement_method;//结算方式
 					}else{
 						this.$message.warning(res.data.msg);
 					}
