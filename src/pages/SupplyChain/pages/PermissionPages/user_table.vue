@@ -2,16 +2,16 @@
 	<div class="setting_content">
 		<el-card class="card_box" id="card_box">
 			<el-form :inline="true" size="mini" @submit.native.prevent>
-				<el-form-item>
-					<el-input placeholder="搜索姓名" clearable v-model="search">
+				<el-form-item label="角色：">
+					<el-select v-model="ajax_role_ids" clearable multiple filterable collapse-tags placeholder="全部">
+						<el-option v-for="item in ajax_role_list" :key="item.menu_role_id" :label="item.menu_role_name" :value="item.menu_role_id">
+						</el-option>
+					</el-select>
+				</el-form-item>
+				<el-form-item label="姓名">
+					<el-input placeholder="输入姓名搜索" clearable v-model="search">
 					</el-input>
 				</el-form-item>
-				<el-form-item label="角色：">
-						<el-select v-model="ajax_role_ids" clearable multiple filterable collapse-tags placeholder="全部">
-							<el-option v-for="item in ajax_role_list" :key="item.menu_role_id" :label="item.menu_role_name" :value="item.menu_role_id">
-							</el-option>
-						</el-select>
-					</el-form-item>
 				<el-form-item class="form_item">
 					<el-button type="primary" @click="checkPage(1)">查询</el-button>
 				</el-form-item>

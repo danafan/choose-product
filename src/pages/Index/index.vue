@@ -3,7 +3,7 @@
 		<div class="index_container" :class="{'mobile_width':windowWidth <= 750}">
 			<div class="padding_page_content scroll-y" ref="paddingPageContent">
 				<div class="flex ac" id="search_box">
-					<SearchWidget page_path="index_history" @callback="searchFn" placeholder="输入款式编码、款号、标题关键字、供应商进行搜索"/>
+					<SearchWidget page_path="index_history" @callback="searchFn" placeholder="输入款式编码/款号/标题关键字/供应商搜索"/>
 					<div class="carousel_box" v-if="new_notice_list.length > 0">
 						<img class="top_line" src="../../static/notice_top_line.png">
 						<el-carousel class="custom_carousel" direction="vertical" indicator-position="none" :initial-index="initialIndex">

@@ -70,8 +70,14 @@
 						</el-select>
 					</el-form-item>
 					<el-form-item label="款式编码：">
-						<el-input placeholder="款式编码" clearable v-model="i_id">
+						<el-input placeholder="输入款式编码搜索" clearable v-model="i_id">
 						</el-input>
+					</el-form-item>
+					<el-form-item label="白坯二开类型：">
+						<el-select v-model="supplier_type" clearable multiple filterable collapse-tags placeholder="全部">
+							<el-option label="内部" :value="1"></el-option>
+							<el-option label="外部" :value="2"></el-option>
+						</el-select>
 					</el-form-item>
 					<el-form-item label="选款日期：">
 						<div @click.once="changeInitCalendarPage">
@@ -87,12 +93,6 @@
 						</el-radio-group>
 					</el-radio-group>
 				</el-form-item>
-				<el-form-item label="白坯二开类型：">
-						<el-select v-model="supplier_type" clearable multiple filterable collapse-tags placeholder="全部">
-							<el-option label="内部" :value="1"></el-option>
-							<el-option label="外部" :value="2"></el-option>
-						</el-select>
-					</el-form-item>
 				<el-form-item class="form_item">
 					<el-button type="primary" @click="checkPage(1)">查询</el-button>
 				</el-form-item>
@@ -155,7 +155,7 @@
 				<el-table-column label="需求日期" prop="demand_date"></el-table-column>
 				<el-table-column label="需求类型" prop="demand_type"></el-table-column>
 				<el-table-column label="发货类型" prop="send_type"></el-table-column>
-				<el-table-column label="提交时间" prop="select_time"></el-table-column>
+				<el-table-column width="95" label="提交时间" prop="select_time"></el-table-column>
 				<el-table-column label="供应商" prop="supplier_name"></el-table-column>
 				<el-table-column label="需求状态" prop="common_text" width="120">
 					<template slot-scope="scope">

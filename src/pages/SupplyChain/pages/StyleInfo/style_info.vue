@@ -63,8 +63,8 @@
 							</el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item>
-						<el-input type="textarea" :autosize="{ minRows: 1, maxRows: 4}" placeholder="款号/款式编码" v-model="search">
+					<el-form-item label="款号/款式编码：">
+						<el-input type="textarea" :autosize="{ minRows: 1, maxRows: 4}" placeholder="输入款号/款式编码搜索" v-model="search">
 						</el-input>
 					</el-form-item>
 					<el-form-item class="form_item">

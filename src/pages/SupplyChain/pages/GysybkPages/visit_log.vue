@@ -4,7 +4,7 @@
 			<div class="scroll_box flex-1 flex-scroll-y" id="scroll_box">
 				<el-form style="padding-top: 20px;" :inline="true" size="mini" id="form_height">
 					<el-form-item label="供应商：">
-						<el-input placeholder="供应商名称" v-model="supplier_name">
+						<el-input placeholder="输入供应商搜索" v-model="supplier_name">
 						</el-input>
 					</el-form-item>
 					<el-form-item label="区域：">

@@ -10,7 +10,7 @@
 						</div>
 					</el-form-item>
 					<el-form-item class="form_item" label="操作人：">
-						<el-input clearable v-model="username" placeholder="请输入关键字"></el-input>
+						<el-input clearable v-model="username" placeholder="输入操作人搜索"></el-input>
 					</el-form-item>
 					<el-form-item label="操作分类：">
 						<el-select v-model="type" clearable placeholder="全部">

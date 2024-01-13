@@ -62,17 +62,17 @@
 							<el-option label="已禁用" :value="0"></el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item class="form_item">
-						<el-input clearable v-model="search" placeholder="搜索供应商、主营"></el-input>
-					</el-form-item>
-					<el-form-item class="form_item">
-						<el-input clearable v-model="address" placeholder="搜索供应商地址"></el-input>
-					</el-form-item>
 					<el-form-item label="白坯二开类型：">
 						<el-select v-model="supplier_type_value" clearable multiple filterable collapse-tags placeholder="全部">
 							<el-option label="内部" :value="1"></el-option>
 							<el-option label="外部" :value="2"></el-option>
 						</el-select>
+					</el-form-item>
+					<el-form-item class="form_item" label="供应商/主营：">
+						<el-input clearable v-model="search" placeholder="输入供应商/主营搜索"></el-input>
+					</el-form-item>
+					<el-form-item class="form_item" label="供应商地址：">
+						<el-input clearable v-model="address" placeholder="输入供应商地址搜索"></el-input>
 					</el-form-item>
 					<el-form-item class="form_item">
 						<el-button type="primary" @click="checkPage(1)">查询</el-button>

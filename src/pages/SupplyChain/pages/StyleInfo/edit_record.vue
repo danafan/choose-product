@@ -21,12 +21,6 @@
 							</el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item label="款号">
-						<el-input placeholder="款号" v-model="style_name"></el-input>
-					</el-form-item>
-					<el-form-item label="提交人">
-						<el-input placeholder="提交人" v-model="username"></el-input>
-					</el-form-item>
 					<el-form-item label="对接人：">
 						<el-select v-model="maintainer_ids" clearable multiple filterable collapse-tags placeholder="全部">
 							<el-option v-for="item in maintainer_list" :key="item.maintainer_id" :label="item.maintainer" :value="item.maintainer_id">
@@ -38,6 +32,12 @@
 							<el-option label="内部" :value="1"></el-option>
 							<el-option label="外部" :value="2"></el-option>
 						</el-select>
+					</el-form-item>
+					<el-form-item label="款号：">
+						<el-input placeholder="输入款号搜索" v-model="style_name"></el-input>
+					</el-form-item>
+					<el-form-item label="提交人：">
+						<el-input placeholder="输入提交人搜索" v-model="username"></el-input>
 					</el-form-item>
 					<el-form-item class="form_item">
 						<el-button type="primary" @click="checkPage(1)">查询</el-button>

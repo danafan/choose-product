@@ -16,8 +16,8 @@
 							<el-option label="视频款" :value="4"></el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item>
-						<el-input clearable v-model="search" placeholder="款号/款式编码"></el-input>
+					<el-form-item label="款号/款式编码：">
+						<el-input clearable v-model="search" placeholder="输入款号/款式编码搜索"></el-input>
 					</el-form-item>
 					<el-form-item class="form_item">
 						<el-button type="primary" @click="checkPage(1)">查询</el-button>
@@ -78,7 +78,7 @@
 					</el-table-column>
 					<el-table-column label="库存" prop="data_num"></el-table-column>
 					<el-table-column label="调价" prop="data_price"></el-table-column>
-					<el-table-column label="提交时间" prop="add_time"></el-table-column>
+					<el-table-column width="95" label="提交时间" prop="add_time"></el-table-column>
 					<el-table-column label="主推款备注" prop="remark"></el-table-column>
 					<el-table-column label="当前状态" prop="status">
 						<template slot-scope="scope">

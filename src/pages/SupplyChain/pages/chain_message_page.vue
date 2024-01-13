@@ -3,8 +3,8 @@
 		<el-card class="card_box height-100 flex fc">
 			<div class="scroll_box flex-1 scroll-y" id="scroll_box">
 				<el-form style="padding-top: 20px;" :inline="true" size="mini" id="form_height" @submit.native.prevent>
-					<el-form-item class="form_item">
-						<el-input clearable v-model="keyword" placeholder="请输入关键字"></el-input>
+					<el-form-item class="form_item" label="公告内容：">
+						<el-input clearable v-model="keyword" placeholder="请输入关键字搜索"></el-input>
 					</el-form-item>
 					<el-form-item class="form_item">
 						<el-button type="primary" @click="checkPage(1)">查询</el-button>
@@ -15,8 +15,8 @@
 					<el-button size="mini" type="primary" @click="addFn('1')" v-if="button_list.add == 1">添加公告</el-button>
 				</TableTitle>
 				<el-table ref="table" size="mini" :data="data.data" tooltip-effect="dark" style="width: 100%" :header-cell-style="{'background':'#f4f4f4','text-align': 'center'}" :cell-style="{'text-align':'center'}" :max-height="max_height" v-loading="loading">
-					<el-table-column label="公告标题" prop="notice_title"></el-table-column>
-					<el-table-column label="公告内容" prop="notice_content"></el-table-column>
+					<el-table-column width="140" label="公告标题" prop="notice_title"></el-table-column>
+					<el-table-column width="180" label="公告内容" prop="notice_content"></el-table-column>
 					<el-table-column label="图片" width="150">
 						<template slot-scope="scope">
 							<div v-if="scope.row.images.length == 0">暂无</div>
@@ -27,9 +27,9 @@
 							</el-carousel>
 						</template>
 					</el-table-column>
-					<el-table-column label="发布日期" prop="add_time"></el-table-column>
-					<el-table-column label="开始时间" prop="start_day"></el-table-column>
-					<el-table-column label="结束时间" prop="end_day"></el-table-column>
+					<el-table-column width="95" label="发布日期" prop="add_time"></el-table-column>
+					<el-table-column width="95" label="开始时间" prop="start_day"></el-table-column>
+					<el-table-column width="95" label="结束时间" prop="end_day"></el-table-column>
 					<el-table-column label="发布人" prop="add_user_name"></el-table-column>
 					<el-table-column label="审核状态">
 						<template slot-scope="scope">

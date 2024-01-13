@@ -4,13 +4,13 @@
 			<div class="scroll_box flex-1 scroll-y" id="scroll_box">
 				<el-form style="padding-top: 20px;" :inline="true" size="mini" id="form_height">
 					<el-form-item class="form_item" label="工作室：">
-						<el-input clearable v-model="studio_name" placeholder="工作室名称"></el-input>
+						<el-input clearable v-model="studio_name" placeholder="输入工作室搜索"></el-input>
 					</el-form-item>
 					<el-form-item class="form_item" label="联系人：">
-						<el-input clearable v-model="contacter" placeholder="联系人"></el-input>
+						<el-input clearable v-model="contacter" placeholder="输入联系人搜索"></el-input>
 					</el-form-item>
 					<el-form-item class="form_item" label="风格：">
-						<el-input clearable v-model="style" placeholder="风格"></el-input>
+						<el-input clearable v-model="style" placeholder="输入风格搜索"></el-input>
 					</el-form-item>
 					<el-form-item class="form_item">
 						<el-button type="primary" @click="checkPage(1)">查询</el-button>

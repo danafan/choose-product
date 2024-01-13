@@ -544,9 +544,7 @@
 							if((k == 'i_id' || k == 'bd_i_id' || k == 'supplier_ksbm' || k == 'replace_ksbm') && data_info[k].indexOf(',') > -1){
 								data_info[k] = data_info[k].replaceAll(",", ";");
 							}
-							// if(data_info.season_id == 0){
-							// 	data_info[k] = '';
-							// }
+							data_info.classification_id = data_info.classification_id === 0?'':data_info.classification_id;
 							this.arg[key] = data_info[k];
 						}
 					}
