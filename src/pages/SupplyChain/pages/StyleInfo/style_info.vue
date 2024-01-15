@@ -128,11 +128,10 @@
 								<div v-if="scope.row.shooting_style_list[parseInt(scope.row.active_index)].img.length == 0 && !scope.row.style_loading">暂无</div>
 								<el-carousel trigger="hover" indicator-position="none" :autoplay="false" height="100px" v-if="scope.row.shooting_style_list[parseInt(scope.row.active_index)].img.length > 0 && !scope.row.style_loading">
 									<el-carousel-item v-for="(item,index) in scope.row.shooting_style_list[parseInt(scope.row.active_index)].img" :key="item">
-										<el-image :z-index="2006" class="image" :src="domain + item" fit="scale-down" @click="viewImage(scope.row.shooting_style_list,scope.row.active_index,index)"></el-image>
+										<el-image :z-index="2006" class="image" :src="`${domain}${item}?imageMogr2/thumbnail/200x200`" fit="scale-down" @click="viewImage(scope.row.shooting_style_list,scope.row.active_index,index)"></el-image>
 									</el-carousel-item>
 								</el-carousel>
 							</div>
-							
 						</template>
 					</el-table-column>
 					<el-table-column label="网盘地址">

@@ -8,7 +8,7 @@
 						</el-option>
 					</el-select>
 				</el-form-item>
-				<el-form-item label="姓名">
+				<el-form-item label="姓名：">
 					<el-input placeholder="输入姓名搜索" clearable v-model="search">
 					</el-input>
 				</el-form-item>

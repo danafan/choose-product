@@ -49,7 +49,7 @@
 							<div v-if="scope.row.images.length == 0"></div>
 							<el-carousel trigger="hover" indicator-position="none" :autoplay="false" height="100px" v-else>
 								<el-carousel-item v-for="item in scope.row.images" :key="item">
-									<el-image :z-index="2006" class="image" :src="item" fit="scale-down" :preview-src-list="scope.row.images"></el-image>
+									<el-image :z-index="2006" class="image" :src="`${item}?imageMogr2/thumbnail/200x200`" fit="scale-down" :preview-src-list="scope.row.images"></el-image>
 								</el-carousel-item>
 							</el-carousel>
 						</template>
@@ -66,7 +66,7 @@
 							<div v-if="scope.row.hot_images.length == 0"></div>
 							<el-carousel trigger="hover" indicator-position="none" :autoplay="false" height="100px" v-else>
 								<el-carousel-item v-for="item in scope.row.hot_images" :key="item">
-									<el-image :z-index="2006" class="image" :src="item" fit="scale-down" :preview-src-list="scope.row.hot_images"></el-image>
+									<el-image :z-index="2006" class="image" :src="`${item}?imageMogr2/thumbnail/200x200`" fit="scale-down" :preview-src-list="scope.row.hot_images"></el-image>
 								</el-carousel-item>
 							</el-carousel>
 						</template>

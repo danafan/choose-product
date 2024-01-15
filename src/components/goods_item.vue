@@ -7,8 +7,8 @@
 			placement="right-start"
 			trigger="hover"
 			>
-			<el-image class="popover_image" fit="scale-down" :src="domain + info.img"></el-image>
-			<el-image class="goods_img" :src="domain + info.img" slot="reference" fit="scale-down"></el-image>
+			<el-image class="popover_image" fit="scale-down" :src="`${domain}${info.img}?imageMogr2/thumbnail/800x800`"></el-image>
+			<el-image lazy class="goods_img" :src="`${domain}${info.img}?imageMogr2/thumbnail/400x400`" slot="reference" fit="scale-down"></el-image>
 		</el-popover>
 		<div class="delist_box flex ac jc" v-if="info.showOffShelf">
 			<img class="delist_icon" src="../static/delist_icon.png">

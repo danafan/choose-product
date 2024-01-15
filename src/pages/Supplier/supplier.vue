@@ -27,7 +27,7 @@
 						</div>
 						<div class="image_list jsb">
 							<div v-for="i in item.goods_list" @click="getDetail(i.style_id)">
-								<el-image :z-index="2006" class="image_item pointer" :src="domain + i.img" fit="scale-down" v-if='i.img'></el-image>
+								<el-image :z-index="2006" class="image_item pointer" :src="`${domain}${i.img}?imageMogr2/thumbnail/400x400`" fit="scale-down" v-if='i.img'></el-image>
 								<img class="image_item" src="../../static/load_failure.png" v-else>
 							</div>
 							<div class="image_item" v-for="i in 6 - item.goods_list.length"></div>

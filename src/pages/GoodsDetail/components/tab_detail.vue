@@ -33,7 +33,7 @@
 			<div class="style_item">拍摄风格：{{shooting_style_name}}</div>
 		</div>
 		<div class="image_box">
-			<el-image :z-index="2006" class="style_image" :src="item" fit="scale-down" :preview-src-list="style_image_list" v-for="item in style_image_list"></el-image>
+			<el-image lazy :z-index="2006" class="style_image" :src="item" fit="scale-down" :preview-src-list="style_image_list" v-for="item in style_image_list"></el-image>
 			<div class="style_image" v-if="style_image_list.length%2 > 0"></div>
 		</div>
 	</div>

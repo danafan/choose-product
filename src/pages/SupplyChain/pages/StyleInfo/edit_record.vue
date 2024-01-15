@@ -55,7 +55,7 @@
 					<el-table-column label="供应商" prop="supplier_name"></el-table-column>
 					<el-table-column label="图片" width="200">
 						<template slot-scope="scope">
-							<el-image :z-index="2006" class="image" :src="domain + scope.row.img" fit="scale-down" :preview-src-list="[domain + scope.row.img]" v-if="scope.row.img != ''"></el-image>
+							<el-image :z-index="2006" class="image" :src="`${domain}${scope.row.img}?imageMogr2/thumbnail/200x200`" fit="scale-down" :preview-src-list="[domain + scope.row.img]" v-if="scope.row.img != ''"></el-image>
 						</template>
 					</el-table-column>
 					<el-table-column label="原商品信息/修改后商品信息" width="400">
@@ -68,7 +68,7 @@
 											<div>图片：</div>
 										</div>
 										<div class="flex-1 flex-warp" v-if="scope.row.info_arr[index].length > 0">
-											<el-image :z-index="2006" class="edit_image" :src="iii" fit="scale-down":preview-src-list="scope.row.info_arr[index]" v-for="iii in scope.row.info_arr[index]"></el-image>
+											<el-image :z-index="2006" class="edit_image" :src="`${iii}?imageMogr2/thumbnail/30x30`" fit="scale-down":preview-src-list="scope.row.info_arr[index]" v-for="iii in scope.row.info_arr[index]"></el-image>
 										</div>
 									</div>
 									<div style="width:180px;text-align: start;margin-right:10px" v-html="scope.row.info_arr[index]" v-else></div>
@@ -79,7 +79,7 @@
 											<div>图片：</div>
 										</div>
 										<div class="flex-1 flex-warp" v-if="scope.row.edit_info_arr[index].length > 0">
-											<el-image :z-index="2006" class="edit_image" :src="iii" fit="scale-down" :preview-src-list="scope.row.edit_info_arr[index]" v-for="iii in scope.row.edit_info_arr[index]"></el-image>
+											<el-image :z-index="2006" class="edit_image" :src="`${iii}?imageMogr2/thumbnail/30x30`" fit="scale-down" :preview-src-list="scope.row.edit_info_arr[index]" v-for="iii in scope.row.edit_info_arr[index]"></el-image>
 										</div>
 									</div>
 									<div style="width:180px;text-align: start" v-html="scope.row.edit_info_arr[index]" v-else></div>

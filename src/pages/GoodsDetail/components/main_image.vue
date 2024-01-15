@@ -1,7 +1,7 @@
 <template>
 	<div class="image_box">
 		<div class="main_image">
-			<el-image :z-index="2006" class="goods_image" :src="current_image_list[0]" fit="scale-down" :preview-src-list="current_image_list"></el-image>
+			<el-image :z-index="2006" class="goods_image" :src="`${current_image_list[0]}`" fit="scale-down" :preview-src-list="current_image_list"></el-image>
 			<div class="delist_box flex ac jc" v-if="checkStatus == 5">
 				<img class="delist_icon" src="../../../static/delist_icon.png">
 			</div>

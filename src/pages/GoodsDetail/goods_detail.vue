@@ -19,7 +19,7 @@
 						<div class="recommended_title" :class="{'delist_recommended_title':goods_info.check_status == 5}">推荐商品</div>
 						<div class="flex fc ac">
 							<div class="li-item" v-for="(item, index) in goods_info.recommend_list" :key="index" @click="getDetail(item.style_id)">
-								<el-image class="goods_img" :src="domain + item.img" fit="scale-down"></el-image>
+								<el-image lazy class="goods_img" :src="`${domain}${item.img}?imageMogr2/thumbnail/468x468`" fit="scale-down"></el-image>
 								<div class="hot_sell_item_price">¥{{item.cost_price}}</div>
 								<div class="hot_sell_item_title table_header_text">{{item.title}}</div>
 							</div>

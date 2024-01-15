@@ -27,7 +27,7 @@
             <!-- 控价预警 -->
             <div class="width-100 flex jsb" v-if="banner_index == 3">
               <div class="li-item pointer" v-for="item in array_item" :key="item.style_id" @click.stop="getDetail(item.style_id)">
-                <img class="goods_img" :data-obj="JSON.stringify(item)" :src="domain + item.img" style="object-fit: scale-down;">
+                <img class="goods_img" :data-obj="JSON.stringify(item)" :src="`${domain}${item.img}?imageMogr2/thumbnail/200x200`" style="object-fit: scale-down;">
                 <el-tooltip class="item" effect="dark" :content="`${item.supplier_name}：供应商款号：${item.style_name}`" placement="top">
                   <div class="hot_sell_item_title table_header_text" :data-obj="JSON.stringify(item)">{{item.supplier_name}}：供应商款号：{{item.style_name}}</div>
                 </el-tooltip>
@@ -40,7 +40,7 @@
             <!-- 除控价预警外的数据 -->
             <div class="width-100 flex jsb" v-else>
               <div class="li-item pointer" v-for="item in array_item" :key="item.style_id" @click.stop="getDetail(item.style_id)">
-                <img class="goods_img" :data-obj="JSON.stringify(item)" :src="domain + item.img" style="object-fit: scale-down;">
+                <img class="goods_img" :data-obj="JSON.stringify(item)" :src="`${domain}${item.img}?imageMogr2/thumbnail/200x200`" style="object-fit: scale-down;">
                 <div class="hot_sell_item_title table_header_text" :data-obj="JSON.stringify(item)">{{item.title}}</div>
                 <div class="flex jc ac">
                   <div class="hot_sell_item_price" :data-obj="JSON.stringify(item)" v-if

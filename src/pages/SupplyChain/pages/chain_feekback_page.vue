@@ -43,7 +43,7 @@
 					<el-table-column prop="feedback_content" label="反馈内容" align="center"></el-table-column>
 					<el-table-column label="反馈截图" width="200">
 						<template slot-scope="scope">
-							<el-image :z-index="2006" class="image" :src="scope.row.images[0]" fit="scale-down" :preview-src-list="scope.row.images" v-if="scope.row.images.length > 0"></el-image>
+							<el-image :z-index="2006" class="image" :src="`${scope.row.images[0]}?imageMogr2/thumbnail/200x200`" fit="scale-down" :preview-src-list="scope.row.images" v-if="scope.row.images.length > 0"></el-image>
 							<div class="ddd" v-else>暂无图片</div>
 						</template>
 					</el-table-column>
@@ -239,8 +239,8 @@
 		.card_box{
 			.scroll_box{
 				.image{
-					width: 165rem;
-					height: 68rem;
+					width: 100px;
+					height: 100px;
 				}
 				
 			}
